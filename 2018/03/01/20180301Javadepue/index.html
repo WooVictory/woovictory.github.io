@@ -14,11 +14,11 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <title>
         
-          Vector란? - VictoryWoo | Blog
+          deque란? - VictoryWoo | Blog
         
     </title>
 
-    <link rel="canonical" href="http://yoursite-url/2018/03/01/20180301JavaCollection/">
+    <link rel="canonical" href="http://yoursite-url/2018/03/01/20180301Javadepue/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -69,7 +69,7 @@
 <style type="text/css">
     header.intro-header{
         
-            background-image: url('good.jpg')
+            background-image: url('null')
             /*post*/
         
     }
@@ -93,7 +93,7 @@
                               <a class="tag" href="/tags/#java" title="java">java</a>
                             
                         </div>
-                        <h1>Vector란?</h1>
+                        <h1>deque란?</h1>
                         <h2 class="subheading"></h2>
                         <span class="meta">
                             Posted by VictoryWoo on
@@ -214,79 +214,93 @@
                 col-md-10 col-md-offset-1
                 post-container">
 
-                <p><code>Vector 클래스</code>에 대해서 공부해보았습니다.</p>
-<h1><span id="vector-클래스">Vector 클래스</span></h1>
+                <p><strong>자료구조</strong>란 자료(data)를 컴퓨터에서 효율적으로 사용하도록 해주는 <strong>알고리즘</strong>을 뜻합니다.<br>
+<code>(효율적 : 실행시간 최소화, 계산의 간편화 등등)</code></p>
+<h1><span id="deque">Deque</span></h1>
 <hr>
 <blockquote>
-<p><code>List 인터페이스를 구현한 클래스</code>이며, <strong>java.util.Vector</strong>에 있다.</p>
+<p><code>java.util.Deque</code>를 import합니다.<br>
+<strong>Double-Ended Queue</strong>의 줄임말으로, 큐의 <code>양쪽 끝에서 삽입과 삭제</code>가 모두 발생할 수 있는 큐를 말합니다. 또한, &quot;Queue + Stack&quot;의 기능을 가지고 있습니다.</p>
 </blockquote>
-<h2><span id="특징">특징</span></h2>
+<p><img src="/img/deque.png" alt=""></p>
+<h2><span id="method">Method</span></h2>
+<hr>
+<h3><span id="추가하기">추가하기</span></h3>
+<hr>
+<h4><span id="add">add</span></h4>
 <hr>
 <ol>
-<li>객체들을 <strong>삽입, 삭제, 검색</strong>할 수 있는 컨테이너 클래스입니다.</li>
-<li>배열의 <code>길이 제한 단점을 극복</code>할 수 있습니다.</li>
-<li>삽입되는 객체의 수가 많아지면 <code>자동으로 크기가 조절</code>됩니다.</li>
-<li>아이템을 벡터의 <strong>맨 마지막</strong>이나 <strong>중간에 삽입</strong>할 수 있습니다.</li>
-<li><code>벡터 맨 뒤에 객체 추가</code> : 벡터 공간이 모자라면 자동으로 늘림</li>
-<li><code>벡터 중간에 객체 삽입</code> : 뒤에 존재하던 객체는 한칸씩 뒤로 이동</li>
-<li><code>임의의 위치에 있는 객체 삭제</code> : 객체 삭제 후 한칸씩 앞으로 자동으로 이동</li>
+<li><code>add(E e)</code> : Deque의 마지막에 Element를 삽입</li>
+<li><code>addFirst(E e)</code> : Deque의 front에 요소 삽입</li>
+<li><code>addLast(E e)</code> : Deque의 rear에 요소 삽입</li>
 </ol>
-<h3><span id="요소에-접근">요소에 접근</span></h3>
+<h4><span id="put">put</span></h4>
 <hr>
-<p><img src="/img/dd.png" alt=""></p>
-<p>위의 그림은 벡터 객체 내부의 구조와 <code>add(),get() 메소드</code>를 이용하여 객체를 다루는 모습을 보여주고 있습니다.<br>
-벡터에는 <strong>String,Integer,Person</strong>등의 <code>다양한 타입의 객체가 삽입 가능</code>합니다. 벡터 내부에 삽입된 요소들은 <code>인덱스</code>로 관리하며 인덱스는 0부터 시작합니다. <code>add()</code>메소드를 이용하여 <strong>객체를 삽입</strong>하고, <code>get()</code>메소드를 이용하여 인덱스에 해당하는 <code>객체를 얻습니다.</code></p>
-<h3><span id="벡터의-생성">벡터의 생성</span></h3>
+<blockquote>
+<p>add와 동일하게 작용합니다.</p>
+</blockquote>
+<ol>
+<li><code>put(E e)</code> : Deque의 마지막에 Element를 삽입</li>
+<li><code>putFirst(E e)</code> : Deque의 front에 Element를 삽입</li>
+<li><code>putLast(E e)</code> : Deque의 rear에 Element를 삽입</li>
+</ol>
+<h4><span id="offer">offer</span></h4>
 <hr>
-<figure class="highlight gauss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Vector</span> v = <span class="keyword">new</span> <span class="built_in">Vector</span>();</span><br><span class="line"><span class="built_in">Vector</span>&lt;<span class="keyword">String</span>&gt; v2 = <span class="keyword">new</span> <span class="built_in">Vector</span>&lt;<span class="keyword">String</span>&gt;(<span class="number">3</span>);</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>add와 동일하게 작용합니다.</p>
+</blockquote>
+<ol>
+<li><code>offer(E e)</code> : Deque의 마지막에 Element를 삽입</li>
+<li><code>offerFirst(E e)</code> : Deque의 front에 Element를 삽입</li>
+<li><code>offerLast(E e)</code> : Deque의 rear에 Element를 삽입</li>
+</ol>
+<h4><span id="push">push</span></h4>
+<hr>
+<ol>
+<li><code>push(E e)</code> : Deque의 앞 부분에 Element를 삽입</li>
+</ol>
+<h4><span id="사용법">사용법</span></h4>
+<hr>
+<figure class="highlight processing"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Deque&lt;<span class="keyword">String</span>&gt; test = <span class="keyword">new</span> ArrayDeque&lt;<span class="keyword">String</span>&gt;();</span><br><span class="line"></span><br><span class="line">test.<span class="built_in">add</span>(<span class="string">"add : 0"</span>);</span><br><span class="line">test.<span class="built_in">add</span>(<span class="string">"add : 1"</span>);</span><br><span class="line">test.addFirst(<span class="string">"First : 2"</span>);</span><br><span class="line">test.addLast(<span class="string">"Last : 3"</span>);</span><br><span class="line"></span><br><span class="line">Iterator&lt;<span class="keyword">String</span>&gt; e = test.iterator();</span><br><span class="line"><span class="keyword">while</span>(e.hasNext())&#123;</span><br><span class="line">	System.out.<span class="built_in">println</span>(e.next());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <ul>
-<li>v는 어떠한 타입이라도 담을 수 있습니다.</li>
-<li>v2는 Vector 객체에 String 객체를 담을 수 있으며, 용량은 3이며 size가 용량을 초과했을 때, 3의 크기만큼 증가합니다. (매개변수를 지정하지 않았을 경우에는 기본 용량:10,증가 용량:10)<br>
-<img src="/img/abc.png" alt=""></li>
+<li>결과<br>
+<img src="/img/result.png" alt=""></li>
 </ul>
-<h3><span id="벡터에-요소-삽입">벡터에 요소 삽입</span></h3>
+<h3><span id="삭제하기">삭제하기</span></h3>
 <hr>
-<p>벡터에 삽입할 수 있는 요소는 <code>Object</code>를 상속받은 모든 종류의 객체들이 가능합니다.<br>
-add() 메소는 요소를 벡터의 맨 뒤에 삽입합니다.</p>
-<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">v.add(<span class="string">"Hello"</span>)<span class="comment">;</span></span><br><span class="line">v.add(new Integer(<span class="number">4</span>))<span class="comment">;</span></span><br><span class="line">v.add(new Person())<span class="comment">;</span></span><br><span class="line">v2.addElement(<span class="string">"이승우"</span>)<span class="comment">;</span></span><br><span class="line">v2.addElement(<span class="string">"정지현"</span>)<span class="comment">;</span></span><br><span class="line">v2.addElement(<span class="string">"탁형민"</span>)<span class="comment">;</span></span><br><span class="line">v2.addElement(<span class="string">"홍주영"</span>)<span class="comment">;</span></span><br></pre></td></tr></table></figure>
+<h4><span id="poll">poll</span></h4>
+<hr>
+<ol>
+<li><code>poll()</code> : Deque의 제일 앞 Element를 제거합니다. Queue에서 Element를 제거하는 것이라고 생각하면 됩니다.</li>
+<li><code>pollFirst()</code> : Deque의 제일 앞 Element를 제거합니다.</li>
+<li><code>pollLast()</code> : Deque의 제일 마지막 Element를 제거합니다.</li>
+</ol>
+<h4><span id="pop">pop</span></h4>
+<hr>
+<ol>
+<li><code>pop()</code> : Deque의 제일 앞 Element를 제거합니다. Stack에서 Element를 제거하는 것이라고 생각하면 됩니다.</li>
+</ol>
+<h3><span id="참고">참고</span></h3>
+<hr>
 <ul>
-<li>v2에는 addElement() 메소드를 이용해서 String 객체를 담을 수 있습니다.<br>
-<img src="/img/bcd.png" alt=""></li>
-<li>자바에서 제공하는 기본 타입 역시 벡터에 삽입할 수 있습니다.</li>
+<li><code>Queue</code>의 경우에는 <strong>FIFO:선입선출</strong>이기 때문에 제거해야 할 Element가 <code>제일 처음에 들어온 것</code>입니다. <strong>[add로 맨 처음에 들어온 것]</strong>, 즉 제일 앞에 있는 Element</li>
+<li><code>Stack</code>의 경우에는 <strong>LIFO:후입선출</strong>이기 때문에 제거해야 할 Element가 <code>제일 나중에 들어온 것</code>입니다. <strong>[push로 맨 나중에 들어온 것]</strong>, 즉 제일 앞에 있는 Element</li>
 </ul>
-<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">v.<span class="keyword">add</span>(<span class="number">1</span>); <span class="comment">// int형 데이터(Integer 타입으로 전환되어 벡터에 저장)</span></span><br><span class="line">v.<span class="keyword">add</span>(<span class="string">'r'</span>); <span class="comment">// char형 데이터(Character 타입으로 전환되어 벡터에 저장)</span></span><br><span class="line">v.<span class="keyword">add</span>(<span class="number">3.14</span>); <span class="comment">// double형 데이터(Double 타입으로 전환되어 저장)</span></span><br></pre></td></tr></table></figure>
-<h3><span id="벡터-내의-객체-알아내기">벡터 내의 객체 알아내기</span></h3>
+<h3><span id="값을-제거하지-않고-확인만-하기">값을 제거하지 않고 확인만 하기</span></h3>
 <hr>
-<p>벡터 내에 존재하는 요소 객체를 알아내기 위해서는 <code>get(), elementAt()</code>등의 메소드를 이용합니다.</p>
-<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Integer obj = (Integer)v.<span class="built_in">get</span>(<span class="number">1</span>); <span class="comment">// 벡터의 1번째 요소를 Integer 타입으로 형 변환</span></span><br><span class="line"><span class="keyword">int</span> i = obj.intValue(); <span class="comment">// obj에 있는 정수를 알아냅니다. 값은 4</span></span><br></pre></td></tr></table></figure>
-<h3><span id="벡터의-용량과-개수-알아내기">벡터의 용량과 개수 알아내기</span></h3>
+<h4><span id="peek">peek</span></h4>
 <hr>
-<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> n = v.<span class="built_in">size</span>(); <span class="comment">// 4</span></span><br><span class="line"><span class="keyword">int</span> c = v.capacity(); <span class="comment">// 10</span></span><br><span class="line"><span class="keyword">int</span> n2 = v2.<span class="built_in">size</span>(); <span class="comment">// 4</span></span><br><span class="line"><span class="keyword">int</span> c2 = v2.capacity(); <span class="comment">// 6</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li><code>벡터의 크기(size)</code> : <strong>벡터에 들어 있는 요소의 개수</strong></li>
-<li><code>벡터의 용량(capacity)</code> : <strong>요소를 수용할 수 있는 크기</strong>[벡터는 자동으로 조절 가능]</li>
-</ul>
-<h3><span id="요소-객체-중간에-삽입하기">요소 객체 중간에 삽입하기</span></h3>
+<p>1.<code>peek</code> : Deque의 제일 앞 Element를 return 받습니다. Element를 제거하지 않습니다.<br>
+2.<code>peekFirst</code> : Deque의 제일 앞 Element를 return 받습니다.</p>
+<ol start="3">
+<li><code>peekLast</code> : Deque의 제일 마지막 Element를 return 받습니다.</li>
+</ol>
+<h4><span id="get">get</span></h4>
 <hr>
-<p>벡터에 있는 데이터는 <code>인덱스</code>로 관리할 수 있기 때문에, 인덱스 값을 이용해서 중간에 객체 삽입이 가능합니다.</p>
-<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">v.add(<span class="number">2</span>,<span class="string">"Sahni"</span>); <span class="regexp">//</span> 벡터 내의 인덱스가 <span class="number">2</span>인 위치에 <span class="string">"Shani"</span> 삽입</span><br></pre></td></tr></table></figure>
-<p><img src="/img/cde.png" alt=""></p>
-<h3><span id="벡터에서-벡터-요소-삭제">벡터에서 벡터 요소 삭제</span></h3>
-<hr>
-<p>벡터 내에 임의의 인덱스에 있는 요소를 삭제할 수 있다. <code>remove()</code>메소드 사용</p>
-<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">v.<span class="built_in">remove</span>(<span class="number">1</span>); <span class="comment">// 정수 4가 삭제됨</span></span><br></pre></td></tr></table></figure>
-<p><img src="/img/def.png" alt=""></p>
-<h3><span id="벡터에서-모든-요소-삭제하기">벡터에서 모든 요소 삭제하기</span></h3>
-<hr>
-<p>벡터 내에 존재하는 모든 요소를 한번에 삭제할 수 있습니다. <code>removeAllElements()</code>메소드 사용</p>
-<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">v</span><span class="selector-class">.removeAllElements</span>(); <span class="comment">// 벡터 내 모든 요소 삭제</span></span><br></pre></td></tr></table></figure>
-<p><img src="/img/efg.png" alt=""></p>
-<h2><span id="벡터-클래스의-주요-메소드">벡터 클래스의 주요 메소드</span></h2>
-<hr>
-<p><img src="/img/aad.png" alt=""></p>
-<h2><span id="벡터-생성자">벡터 생성자</span></h2>
-<hr>
-<p><img src="/img/lmc.png" alt=""></p>
+<ol>
+<li><code>getFirst</code> : First에 있는 Element를 return 받습니다.</li>
+<li><code>getLast</code> : Last에 있는 Element를 return 받습니다.</li>
+</ol>
 
                 
 
@@ -294,13 +308,9 @@ add() 메소는 요소를 벡터의 맨 뒤에 삽입합니다.</p>
                 <!-- Pager -->
                 <ul class="pager">
                     
-                        <li class="previous">
-                            <a href="/2018/03/01/20180301Javadepue/" data-toggle="tooltip" data-placement="top" title="deque란?">&larr; Previous Post</a>
-                        </li>
-                    
                     
                         <li class="next">
-                            <a href="/2018/03/01/20180301Java개념4/" data-toggle="tooltip" data-placement="top" title="[Java] 개념 다지기 (4)">Next Post &rarr;</a>
+                            <a href="/2018/03/01/20180301JavaCollection/" data-toggle="tooltip" data-placement="top" title="Vector란?">Next Post &rarr;</a>
                         </li>
                     
                 </ul>
@@ -330,7 +340,7 @@ add() 메소는 요소를 벡터의 맨 뒤에 삽입합니다.</p>
         <div id="toc" class="toc-article">
         <strong class="toc-title">Contents</strong>
         
-          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">Vector 클래스</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">특징</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.1.1.</span> <span class="toc-nav-text">요소에 접근</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.1.2.</span> <span class="toc-nav-text">벡터의 생성</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.1.3.</span> <span class="toc-nav-text">벡터에 요소 삽입</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.1.4.</span> <span class="toc-nav-text">벡터 내의 객체 알아내기</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.1.5.</span> <span class="toc-nav-text">벡터의 용량과 개수 알아내기</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.1.6.</span> <span class="toc-nav-text">요소 객체 중간에 삽입하기</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.1.7.</span> <span class="toc-nav-text">벡터에서 벡터 요소 삭제</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.1.8.</span> <span class="toc-nav-text">벡터에서 모든 요소 삭제하기</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text">벡터 클래스의 주요 메소드</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.3.</span> <span class="toc-nav-text">벡터 생성자</span></a></li></ol></li></ol>
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">Deque</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">Method</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.1.1.</span> <span class="toc-nav-text">추가하기</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.1.1.1.</span> <span class="toc-nav-text">add</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.1.1.2.</span> <span class="toc-nav-text">put</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.1.1.3.</span> <span class="toc-nav-text">offer</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.1.1.4.</span> <span class="toc-nav-text">push</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.1.1.5.</span> <span class="toc-nav-text">사용법</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.1.2.</span> <span class="toc-nav-text">삭제하기</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.1.2.1.</span> <span class="toc-nav-text">poll</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.1.2.2.</span> <span class="toc-nav-text">pop</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.1.3.</span> <span class="toc-nav-text">참고</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.1.4.</span> <span class="toc-nav-text">값을 제거하지 않고 확인만 하기</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.1.4.1.</span> <span class="toc-nav-text">peek</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.1.4.2.</span> <span class="toc-nav-text">get</span></a></li></ol></li></ol></li></ol></li></ol>
         
         </div>
       </aside>
@@ -385,8 +395,8 @@ add() 메소는 요소를 벡터의 맨 뒤에 삽입합니다.</p>
 <script type="text/javascript">
     /* * * CONFIGURATION VARIABLES * * */
     var disqus_shortname = "your-disqus-ID";
-    var disqus_identifier = "http://yoursite-url/2018/03/01/20180301JavaCollection/";
-    var disqus_url = "http://yoursite-url/2018/03/01/20180301JavaCollection/";
+    var disqus_identifier = "http://yoursite-url/2018/03/01/20180301Javadepue/";
+    var disqus_url = "http://yoursite-url/2018/03/01/20180301Javadepue/";
 
     (function() {
         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
