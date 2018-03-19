@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword"  content="">
+    <link rel="shortcut icon" href="/img/ironman-draw.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          Set이란?? - VictoryWoo | Blog
+        
+    </title>
+
+    <link rel="canonical" href="http://yoursite-url/2018/03/10/20180310JavaCollectionSet/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS --> 
+    <link rel="stylesheet" href="/css/beantech.min.css">
+    
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('null')
+            /*post*/
+        
+    }
+    
+    #signature{
+        background-image: url('/img/signature/BeanTechSign-white.png');
+    }
+    
+</style>
+
+<header class="intro-header" >
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#java" title="java">java</a>
+                            
+                        </div>
+                        <h1>Set이란??</h1>
+                        <h2 class="subheading"></h2>
+                        <span class="meta">
+                            Posted by VictoryWoo on
+                            2018-03-10
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+	
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">VictoryWoo</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <h2><span id="set">Set</span></h2>
+<hr>
+<p><strong>특징</strong></p>
+<ol>
+<li>순서가 없습니다.</li>
+<li>집합이므로 중복된 데이터가 들어갈 수 없습니다.</li>
+<li>중복되지 않는 숫자(데이터)를 구할 때 사용하면 유용합니다.</li>
+</ol>
+<p>Collection의 일부인데 <code>중복되는 element를 포함하지 않는 것</code>이 가장 큰 특징이며, <code>집합</code>을 의미합니다. <strong>Set</strong>인터페이스는 Collection를 상속받아서 만들어진 인터페이스입니다. 때문에 대부분의 함수들이 Collection에서 제공하는 함수들과 동일합니다.</p>
+<p><strong>List</strong>와 <strong>Set</strong>은 Collection 인터페이스를 구현한다는 점에서 비슷하다고 할 수 있습니다. 그러나 가장 큰 차이점은 <code>중복</code>에 대한 부분에서의 차이입니다.<br>
+<code>List</code>는 같은 값에 대한 중복 추가가 가능합니다. 그러나 <code>Set</code>은 같은 값을 넣었을 때 size()로 내부 엘리먼트의 개수를 출력해보면 1이 나오는 것을 확인할 수 있습니다.</p>
+<figure class="highlight processing"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">Set&lt;<span class="keyword">String</span>&gt; hSet = <span class="keyword">new</span> HashSet&lt;<span class="keyword">String</span>&gt;();</span><br><span class="line"></span><br><span class="line">hSet.<span class="built_in">add</span>(<span class="string">"자바"</span>);</span><br><span class="line">hSet.<span class="built_in">add</span>(<span class="string">"서블릿"</span>);</span><br><span class="line">hSet.<span class="built_in">add</span>(<span class="string">"스프링"</span>);</span><br><span class="line">hSet.<span class="built_in">add</span>(<span class="string">"안드로이드"</span>);</span><br><span class="line">hSet.<span class="built_in">add</span>(<span class="string">"자바"</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 사이즈는 4가 나옵니다. 중복을 제거함</span></span><br><span class="line">System.out.<span class="built_in">println</span>(<span class="string">"hSet의 개수:"</span>+hSet.<span class="built_in">size</span>());</span><br><span class="line"></span><br><span class="line">Iterator&lt;<span class="keyword">String</span>&gt; it = hSet.iterator();</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span>(it.hasNext())&#123;</span><br><span class="line">	System.out.<span class="built_in">println</span>(it.next());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>HashSet</strong>은 <code>Iterator</code>를 사용합니다. 이유는 set은 순서가 없기 때문에 데이터에 순서를 정해서 추출해야하기 때문입니다.</p>
+<p>중복이 안되는 것을 생각하면 <strong>Hashtable</strong>이나 <strong>HashMap</strong>과 같은 Map 형태가 떠오를 수 있습니다. 그러나 다른 점이라면, Map에서는 형태를 가진다는 점이 가장 큰차이입니다. 중복을 검사하는 대상 자체가 <strong>Key,Value</strong>이기 때문에 <code>Key를 기준으로 중복검사</code>를 하게 됩니다. <strong>이것은 value는 중복되더라도 상관없다는 이야기입니다.</strong></p>
+<h3><span id="hashset">HashSet</span></h3>
+<hr>
+<p>Set 인터페이스를 구현한 대표적인 <code>HashSet</code></p>
+<figure class="highlight pony"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">HashSet</span>&lt;<span class="type">Integer</span>&gt; hs = <span class="function"><span class="keyword">new</span> <span class="title">HashSet</span>&lt;<span class="title">Integer</span>&gt;();</span></span><br><span class="line"><span class="function"><span class="title">hs</span>.<span class="title">add</span>(<span class="number">1</span>);</span></span><br><span class="line"><span class="function"><span class="title">hs</span>.<span class="title">add</span>(<span class="number">2</span>);</span></span><br><span class="line"><span class="function"><span class="title">hs</span>.<span class="title">add</span>(<span class="number">3</span>);</span></span><br><span class="line"><span class="function"><span class="title">hs</span>.<span class="title">add</span>(<span class="number">4</span>);</span></span><br><span class="line"><span class="function"><span class="title">hs</span>.<span class="title">add</span>(<span class="number">5</span>);</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="title">HashSet</span>&lt;<span class="title">Integer</span>&gt; <span class="title">hs2</span> = <span class="title">new</span> <span class="title">HashSet</span>&lt;<span class="title">Integer</span>&gt;();</span></span><br><span class="line"><span class="function"><span class="title">hs2</span>.<span class="title">add</span>(<span class="number">3</span>);</span></span><br><span class="line"><span class="function"><span class="title">hs2</span>.<span class="title">add</span>(<span class="number">4</span>);</span></span><br><span class="line"><span class="function"><span class="title">hs2</span>.<span class="title">add</span>(<span class="number">5</span>);</span></span><br><span class="line"><span class="function"><span class="title">hs2</span>.<span class="title">add</span>(<span class="number">6</span>);</span></span><br><span class="line"><span class="function"><span class="title">hs2</span>.<span class="title">add</span>(<span class="number">7</span>);</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="comment">// 교집합을 구하기 위해서는 retainAll()이라는 메소드를 사용합니다.</span></span></span><br><span class="line"><span class="function"><span class="title">hs</span>.<span class="title">retainAll</span>(hs2);</span></span><br><span class="line"><span class="function"><span class="title">System</span>.<span class="title">out</span>.<span class="title">println</span>("교집합 : "+hs.toString());</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="comment">// 집합 hs2는 hs의 부분집합이다.</span></span></span><br><span class="line"><span class="function"><span class="comment">// 이것이 맞는지 알아보기 위해서는 containsAll()을 사용하면 된다.</span></span></span><br><span class="line"><span class="function"><span class="title">System</span>.<span class="title">out</span>.<span class="title">println</span>(hs.containsAll(hs2));</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="comment">// 차집합을 구하기 위해서는 removeAll()이라는 메소드를 사용합니다</span></span></span><br><span class="line"><span class="function"><span class="comment">// 집합 hs와 집합 hs2에서 집합 hs의 값들 중에서 집합 hs2에도 있는 값을</span></span></span><br><span class="line"><span class="function"><span class="comment">// 뺀 값들이 나옵니다. </span></span></span><br><span class="line"><span class="function"><span class="title">hs</span>.<span class="title">removeAll</span>(hs2);</span></span><br><span class="line"><span class="function"><span class="title">System</span>.<span class="title">out</span>.<span class="title">println</span>("차집합: "+hs.toString());</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="comment">// 합집합을 구하기 위해서는 addAll()이라는 메소드를 사용하면 됩니다. </span></span></span><br><span class="line"><span class="function"><span class="title">hs</span>.<span class="title">addAll</span>(hs2);</span></span><br><span class="line"><span class="function"><span class="title">System</span>.<span class="title">out</span>.<span class="title">println</span>("합집합 : "+hs.toString());</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>containsAll()</code> : 부분집합임을 알아보기 위해서 사용</li>
+<li><code>addAll()</code> : 합집합을 구하기 위해서 사용[합집합으로 합쳐집니다.]</li>
+<li><code>removeAll()</code> : 차집합을 구하기 위해서 사용[hs에서 hs2를 뺀 부분을 보여줍니다.]</li>
+<li><code>retainAll()</code> : 교집합을 구하기 위해서 사용[두 집합 중 공통된 값을 뽑아냅니다.]</li>
+</ul>
+<h3><span id="set을-정렬하는-방법">Set을 정렬하는 방법</span></h3>
+<hr>
+<p><code>Set</code>은 중복없이 값을 넣기 위한 객체입니다. 여기서는 <code>List</code>를 사용해서 <code>Set</code>을 정렬하는 방법을 공부해보았습니다.</p>
+<p>먼저, fruits의 객체가 있고, <strong>banana, apple, peach</strong>의 중복없는 값을 삽입합니다. 이렇게 삽입한 <code>Set</code>을 정렬하기 위해서는 fruits의 객체를 <code>List</code>로 변환을 해야합니다. 변환하는 방법은 ArrayList를 만드는 방식과 동일하고 생성자에 fruits를 넣어주면 리스트 형태로 변환이 됩니다. 여기서 공부했던 것을 떠올려보면 <code>List</code>를 정렬하기 위해서는 <strong>Collections</strong>를 사용하면 됩니다!!!</p>
+<figure class="highlight processing"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">Set fruits = <span class="keyword">new</span> HashSet();</span><br><span class="line"></span><br><span class="line">fruits.<span class="built_in">add</span>(<span class="string">"banana"</span>):</span><br><span class="line">fruits.<span class="built_in">add</span>(<span class="string">"apple"</span>):</span><br><span class="line">fruits.<span class="built_in">add</span>(<span class="string">"peach"</span>):</span><br><span class="line"></span><br><span class="line"><span class="comment">// Set을 List로 변환</span></span><br><span class="line">List fruitsList = <span class="keyword">new</span> ArrayList(fruits);</span><br><span class="line"><span class="comment">// List 정렬</span></span><br><span class="line">Collections.<span class="built_in">sort</span>(fruitsList);</span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">String</span> s : fruitsList)&#123;</span><br><span class="line">	System.out.<span class="built_in">println</span>(s);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 결과</span></span><br><span class="line">apple</span><br><span class="line">banana</span><br><span class="line">peach</span><br></pre></td></tr></table></figure>
+
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/2018/03/10/20180310JavaCollectionQueue/" data-toggle="tooltip" data-placement="top" title="Queue란??">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/2018/03/08/20180308JavaCollection/" data-toggle="tooltip" data-placement="top" title="Stack이란??">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                    <div class="comment">
+                        <div id="disqus_thread" class="disqus-thread"></div>
+                    </div>
+                
+                <!-- disqus comment end -->
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">Set</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">HashSet</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text">Set을 정렬하는 방법</span></a></li></ol></li></ol>
+        
+        </div>
+      </aside>
+    
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#java" title="java">java</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="http://beantech.org" target="_blank">Bean Tech</a></li>
+                    
+                        <li><a href="http://blog.kaijun.rocks" target="_blank">Kaijun&#39;s Blog</a></li>
+                    
+                        <li><a href="http://huangxuan.me" target="_blank">Hux Blog</a></li>
+                    
+                        <li><a href="#" target="_blank">It Helps SEO</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- disqus embedded js code start (one page only need to embed once) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "your-disqus-ID";
+    var disqus_identifier = "http://yoursite-url/2018/03/10/20180310JavaCollectionSet/";
+    var disqus_url = "http://yoursite-url/2018/03/10/20180310JavaCollectionSet/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus embedded js code start end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://www.facebook.com/WooVictory">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/WooVictory">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://www.linkedin.com/in/WooVictory">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; VictoryWoo 2018 
+                    <br>
+                    Theme by <a href="http://huangxuan.me">Hux</a> 
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span> 
+                    re-Ported by <a href="http://beantech.org">BeanTech</a> | 
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=YenYuHsuan&repo=hexo-theme-beantech&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("http://yoursite-url/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-XXXXXXXX-X';
+    var _gaDomain = 'yoursite';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+<img src="http://yoursite-url/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>
