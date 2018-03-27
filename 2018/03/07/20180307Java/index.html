@@ -215,27 +215,22 @@
                 post-container">
 
                 <p>이번에는 <code>Java</code>로 알고리즘을 공부하면서 입/출력을 받을 때 사용하는 함수에 대해서 공부해보았습니다.</p>
-<h1><span id="scanner">Scanner</span></h1>
-<hr>
+<h1 id="scanner">Scanner</h1>
 <figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Scanner sc = <span class="keyword">new</span> Scanner(System.<span class="keyword">in</span>);</span><br><span class="line"><span class="built_in">int</span> <span class="built_in">num</span> = sc.nextInt();</span><br></pre></td></tr></table></figure>
 <p>사용하기 편리하기 때문에 간단하게 코드를 짜는 경우는 <code>Scanner</code>를 쓰는 것이 좋아보입니다. 그러나 Scanner로 입력 받는 데에 한계를 느낄 때 사용하는 것이 <code>BufferedReader</code>입니다.</p>
-<h1><span id="bufferedreader">BufferedReader</span></h1>
-<hr>
-<h2><span id="사용방식">사용방식</span></h2>
-<hr>
+<h1 id="bufferedreader">BufferedReader</h1>
+<h2 id="사용방식">사용방식</h2>
 <figure class="highlight haxe"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">BufferedReader br = <span class="keyword">new</span> <span class="type">BufferedReader</span>(<span class="keyword">new</span> <span class="type">InputStreamReader</span>(System.<span class="keyword">in</span>));</span><br><span class="line">int number = Integer.parseInt(br.readLine());</span><br></pre></td></tr></table></figure>
 <p>선언하는 부분에만 유의하면 되고, 다른 점은 데이터를 <code>readLine()</code>함수를 이용해서 읽어올 경우 <strong>String</strong> 리턴값을 가진다는 점입니다. 그렇기 때문에 parseInt()` 함수를 이용하여 <strong>String</strong>을 <strong>int</strong>형으로 파싱해주었습니다.</p>
 <p><strong>Scanner</strong>의 경우 그냥 nextInt를 입력하면 알아서 공백 다음 숫자를 받기 때문에 어려움 없이 사용할 수 있지만, 이 부분에서도 BufferedReader를 사용할 경우에는 조금 다른 방식을 취해야합니다. <code>StringTokenizer</code>를 이용하는 방식입니다. 이름과 같이 String을 특정 <strong>구분자값</strong>을 통해 분리하는 함수입니다. 기본적으로는 공백을 기준으로 문자열을 가릅니다. <code>split()</code>함수와 비슷하다고 생각하면 됩니다.</p>
-<h3><span id="stringtokenizer">StringTokenizer</span></h3>
-<hr>
+<h3 id="stringtokenizer">StringTokenizer</h3>
 <figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">BufferedReader br</span> = new BufferedReader(new InputStreamReader(System.in));</span><br><span class="line"><span class="attribute">StringTokenizer st</span> = new StringTokenizer(br.readLine());</span><br><span class="line"></span><br><span class="line"><span class="attribute">int test</span> = Integer.parseInt(st.nextToken());</span><br><span class="line"><span class="attribute">int number</span> = Integer.parseInt(st.nextToken());</span><br></pre></td></tr></table></figure>
 <p>선언한 <strong>StringTokenizer</strong>에 <code>nextToken()</code> 함수를 이용하면 br.readLine()을 통해 입력받은 값을 <code>공백단위</code>로 구분하여 <code>nextToken()</code>을 통해 순서대로 호출할 수 있습니다. 기본적으로는 공백이 구분자로 사용되지만, StringTokenizer 선언시 2번째 파라미터로 별도로 구분자를 추가할 수 있습니다.</p>
-<h2><span id="bufferedwriter">BufferedWriter</span></h2>
-<hr>
+<h2 id="bufferedwriter">BufferedWriter</h2>
 <p>일반적으로는 <code>System.out.println()</code> 함수를 많이 사용합니다. 사실 해당 부분은 <code>테스트 케이스</code>가 작을 때에는 크게 속도 차이가 나지 않는다고 알고 있습니다. 그러나 <code>테스트 케이스</code>가 무척 <strong>커지면</strong> 이러한 사소한 부분에서도 실행 가능하고 불가능한 여부가 결정되기 때문에 알고리즘 문제를 풀 때에 <strong>BufferedWriter</strong>를 사용하는 편이 좋을 것입니다.</p>
 <figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">BufferedWriter <span class="literal">bw</span> = <span class="literal">new</span> BufferedWriter(<span class="literal">new</span> OutputStreamWriter(System.out));</span><br><span class="line"><span class="literal">bw</span>.writer(<span class="string">"Hello \b"</span>);</span><br><span class="line"><span class="literal">bw</span>.flush();</span><br><span class="line"><span class="literal">bw</span>.close();</span><br></pre></td></tr></table></figure>
 <p>System.out.println()과 동일하게 사용하면 됩니다. 하지만, 주의할 점은 마지막에 <code>flush()</code> 함수나 <code>close()</code> 함수를 쓰지 않은 경우 제대로 출력되지 않을 수 있다는 점입니다.</p>
-<h2><span id=""></span></h2>
+<h2 id=""></h2>
 
                 
 
@@ -279,7 +274,7 @@
         <div id="toc" class="toc-article">
         <strong class="toc-title">Contents</strong>
         
-          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">Scanner</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">BufferedReader</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">2.1.</span> <span class="toc-nav-text">사용방식</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">2.1.1.</span> <span class="toc-nav-text">StringTokenizer</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">2.2.</span> <span class="toc-nav-text">BufferedWriter</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">2.3.</span> <span class="toc-nav-text"></span></a></li></ol></li></ol>
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#scanner"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">Scanner</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#bufferedreader"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">BufferedReader</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#사용방식"><span class="toc-nav-number">2.1.</span> <span class="toc-nav-text">사용방식</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#stringtokenizer"><span class="toc-nav-number">2.1.1.</span> <span class="toc-nav-text">StringTokenizer</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#bufferedwriter"><span class="toc-nav-number">2.2.</span> <span class="toc-nav-text">BufferedWriter</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#"><span class="toc-nav-number">2.3.</span> <span class="toc-nav-text"></span></a></li></ol></li></ol>
         
         </div>
       </aside>
