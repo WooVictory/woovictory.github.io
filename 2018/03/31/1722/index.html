@@ -90,6 +90,12 @@
                     <div class="post-heading">
                         <div class="tags">
                             
+                              <a class="tag" href="/tags/#java" title="java">java</a>
+                            
+                              <a class="tag" href="/tags/#BOJ" title="BOJ">BOJ</a>
+                            
+                              <a class="tag" href="/tags/#algorithm" title="algorithm">algorithm</a>
+                            
                         </div>
                         <h1>[1722] 순열의 순서</h1>
                         <h2 class="subheading"></h2>
@@ -142,14 +148,14 @@
 
                         
                         <li>
-                            <a href="/about/">Career</a>
+                            <a href="/archive/">Archives</a>
                         </li>
                         
                     
 
                         
                         <li>
-                            <a href="/archive/">Archives</a>
+                            <a href="/about/">Career</a>
                         </li>
                         
                     
@@ -212,7 +218,15 @@
                 col-md-10 col-md-offset-1
                 post-container">
 
-                
+                <p>문제 : <a href="https://www.acmicpc.net/problem/1722" target="_blank" rel="noopener">https://www.acmicpc.net/problem/1722</a></p>
+<p><code>Key Point</code><br>
+N의 범위 : 0&lt;=N&lt;=20<br>
+그래서 next_permutation 함수를 구현해서 문제를 풀려고 하였는데, 시간초과가 발생하여서<br>
+다른 방식으로 풀어야 한다.</p>
+<p><code>Explain</code></p>
+<p><code>Code</code></p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line">public <span class="class"><span class="keyword">class</span> <span class="title">Exam1722</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	public <span class="keyword">static</span> <span class="keyword">void</span> main(<span class="built_in">String</span>[] args) &#123;</span><br><span class="line">		<span class="comment">// TODO Auto-generated method stub</span></span><br><span class="line">		Scanner sc = <span class="keyword">new</span> Scanner(System.<span class="keyword">in</span>);</span><br><span class="line">		<span class="built_in">int</span> <span class="built_in">num</span> = sc.nextInt();</span><br><span class="line">		<span class="built_in">int</span> check = sc.nextInt();</span><br><span class="line">		long[] fac = <span class="keyword">new</span> long[<span class="built_in">num</span>+<span class="number">1</span>];</span><br><span class="line">		boolean[] c = <span class="keyword">new</span> boolean[<span class="built_in">num</span>+<span class="number">1</span>];</span><br><span class="line">		</span><br><span class="line">		fac[<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line">		<span class="keyword">for</span>(<span class="built_in">int</span> i=<span class="number">1</span>;i&lt;=<span class="built_in">num</span>;i++) &#123;</span><br><span class="line">			fac[i] = fac[i<span class="number">-1</span>] * i;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="comment">// 팩토리얼 구하기</span></span><br><span class="line">		</span><br><span class="line">		<span class="keyword">if</span>(check == <span class="number">1</span>) &#123;</span><br><span class="line">			long where = sc.nextLong();</span><br><span class="line">			<span class="built_in">int</span>[] arr = <span class="keyword">new</span> <span class="built_in">int</span>[<span class="built_in">num</span>];</span><br><span class="line">			<span class="keyword">for</span>(<span class="built_in">int</span> i=<span class="number">0</span>;i&lt;<span class="built_in">num</span>;i++) &#123;</span><br><span class="line">				<span class="keyword">for</span>(<span class="built_in">int</span> j=<span class="number">1</span>;j&lt;=<span class="built_in">num</span>;j++) &#123;</span><br><span class="line">					<span class="keyword">if</span>(c[j] == <span class="keyword">true</span>) &#123;</span><br><span class="line">						<span class="keyword">continue</span>;</span><br><span class="line">					&#125;</span><br><span class="line">					</span><br><span class="line">					<span class="keyword">if</span>(fac[<span class="built_in">num</span>-i<span class="number">-1</span>]&lt;where) &#123;</span><br><span class="line">						where = where - fac[<span class="built_in">num</span>-i<span class="number">-1</span>];</span><br><span class="line">					&#125;<span class="keyword">else</span> &#123;</span><br><span class="line">						arr[i] = j;</span><br><span class="line">						c[j] = <span class="keyword">true</span>;</span><br><span class="line">						<span class="keyword">break</span>;</span><br><span class="line">					&#125;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">			</span><br><span class="line">			<span class="keyword">for</span>(<span class="built_in">int</span> i=<span class="number">0</span>;i&lt;<span class="built_in">num</span>;i++) &#123;</span><br><span class="line">				System.out.<span class="built_in">print</span>(arr[i]+<span class="string">" "</span>);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;<span class="keyword">else</span> <span class="keyword">if</span>(check == <span class="number">2</span>) &#123;</span><br><span class="line">			<span class="built_in">int</span>[] arr = <span class="keyword">new</span> <span class="built_in">int</span>[<span class="built_in">num</span>];</span><br><span class="line">			<span class="keyword">for</span>(<span class="built_in">int</span> i=<span class="number">0</span>;i&lt;<span class="built_in">num</span>;i++) &#123;</span><br><span class="line">				arr[i] = sc.nextInt();</span><br><span class="line">			&#125;</span><br><span class="line">			</span><br><span class="line">			long result = <span class="number">0</span>;</span><br><span class="line">			</span><br><span class="line">			<span class="keyword">for</span>(<span class="built_in">int</span> i=<span class="number">0</span>;i&lt;<span class="built_in">num</span>;i++) &#123;</span><br><span class="line">				<span class="keyword">for</span>(<span class="built_in">int</span> j=<span class="number">1</span>;j&lt;arr[i];j++) &#123;</span><br><span class="line">					<span class="keyword">if</span>(c[j] == <span class="keyword">false</span>) &#123;</span><br><span class="line">						result = result + fac[<span class="built_in">num</span>-i<span class="number">-1</span>];</span><br><span class="line">					&#125;</span><br><span class="line">				&#125;</span><br><span class="line">				c[arr[i]] = <span class="keyword">true</span>;</span><br><span class="line">			&#125;</span><br><span class="line">			System.out.println(result+<span class="number">1</span>);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
                 
 
                 <hr>
@@ -275,6 +289,12 @@
                     <h5><a href="/tags/">FEATURED TAGS</a></h5>
                     <div class="tags">
                        
+                          <a class="tag" href="/tags/#java" title="java">java</a>
+                        
+                          <a class="tag" href="/tags/#BOJ" title="BOJ">BOJ</a>
+                        
+                          <a class="tag" href="/tags/#algorithm" title="algorithm">algorithm</a>
+                        
                     </div>
                 </section>
                 
