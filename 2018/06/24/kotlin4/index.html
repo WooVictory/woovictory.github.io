@@ -15,7 +15,7 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <title>
         
-          [Kotlin] Chapter.4 - VictoryWoo | Blog
+          [Kotlin] Chapter4 - VictoryWoo | Blog
         
     </title>
 
@@ -96,7 +96,7 @@
                               <a class="tag" href="/tags/#Kotlin" title="Kotlin">Kotlin</a>
                             
                         </div>
-                        <h1>[Kotlin] Chapter.4</h1>
+                        <h1>[Kotlin] Chapter4</h1>
                         <h2 class="subheading"></h2>
                         <span class="meta">
                             Posted by VictoryWoo on
@@ -217,7 +217,66 @@
                 col-md-10 col-md-offset-1
                 post-container">
 
-                
+                <h1 id="activitylifecycle">ActivityLifeCycle</h1>
+<hr>
+<blockquote>
+<p>Activity</p>
+</blockquote>
+<p>애플리케이션의 가장 기초적인 구성요소로서 스마트폰 사용자가 일을 하기 위해 상호작용할 수 있는 화면을 제공한다. 즉, 뷰를 그릴 수 있는 캔버스</p>
+<p>하나의 Application은 여러 개의 Activity가 느슨하게 묶여져 있습니다. Activity는 여러가지 작업을 수행하기 위해서 다른 Activity를 시작할 수 있고, 새로운 Activity가 시작할 때마다 이전 Activity는 중단(stop)이 된다. 시스템은 중단된 Activity를 BackStack에 보존하고 있습니다. 그리고 새로운 Activity가 종료될 경우(Destroy) BackStack에 있던 Activity가 다시 로딩되서 화면에 보이게 됩니다(Restart). 이런 일련의 과정을 Activity 생명주기라고 하며 아래의 링크로 가서 내용을 확인할 수 있습니다.</p>
+<p><code>안드로이드 생명주기</code> : <a href="https://woovictory.github.io/2018/03/02/20180302Android1/">https://woovictory.github.io/2018/03/02/20180302Android1/</a></p>
+<blockquote>
+<p>왜 생명주기가 필요할까??</p>
+</blockquote>
+<ol>
+<li>사용자가 앱을 사용하는 도중에 전화가 걸려오거나 다른 앱으로 전환할 때 충돌하지 않도록 하기 위함입니다.</li>
+<li>사용자가 앱을 활발하게 사용하지 않는 경우, 소중한 시스템 리소스를 소비하지 않도록 합니다.</li>
+<li>사용자가 앱에서 나갔다가 나중에 돌아왔을 때 사용자의 진행 상태를 손실하지 않도록 합니다.</li>
+<li>화면이 가로 방향과 세로 방향 간에 회전할 경우, 충돌하거나 사용자의 진행 상태를 손실하지 않도록 합니다.</li>
+</ol>
+<p>복습을 하기 위해서 강의를 들으면서 다시 정리해보겠습니다.</p>
+<ul>
+<li>onCreate() : Activity가 생성될 때 한번만 호출됩니다.</li>
+<li>onStart() : onCreate()가 끝난 다음에 호출되는 함수이고, View가 그려지기 전에 호출되는 함수이다.</li>
+<li>onResume() : View가 그려지고 나서 호출된다. 사용자와 Activity가 통신하는 상태로서 앱이 활동하는 단계라고 생각할 수 있습니다.</li>
+<li>onPause() : Activity가 반만 가려졌을 경우 호출되는 함수입니다.</li>
+<li>onStop() : Activity가 완전히 닫힌 경우나 완전히 가려진 경우 호출되는 함수입니다</li>
+<li>onDestroy() : 안드로이드 OS나 JVM이 메모리를 정리할 때 자동적으로 호출하는 함수입니다.</li>
+</ul>
+<p>여기서 Activity LifeCycle이 중요한 이유는 전화를 받았다가 끄고 다시 원래 화면으로 돌아올 경우나 다른 Activity에서 원래 화면으로 돌아올 경우 onCreate() 부터 시작하지 않고 onResater() -&gt; onStart() -&gt; onResum()을 거쳐서 함수가 실행되기 때문에 빠르게 돌아올 수 있고, 이 순환이 반복됩니다.</p>
+<h1 id="intent">Intent</h1>
+<hr>
+<p>일종의 메시지 객체로서 이를 통해서 다른 앱의 구성요소나 액티비티 작업을 요청할 수 있습니다.<br>
+기본적으로는 아래와 같은 3가지 방식으로 사용됩니다.</p>
+<ol>
+<li>Activity 시작</li>
+<li>서비스 시작</li>
+<li>브로드캐스트 전달</li>
+</ol>
+<p>Activyt는 App안의 단일 화면을 나타냅니다. 만약, A Activity에서 B Activity로 넘어가기 위해서는 Intent에 B의 정보를 담고 startActivity() 함수를 호출하면 Android System은 새로운 B Activity를 만들게 됩니다.</p>
+<h1 id="permission">Permission</h1>
+<hr>
+<p>승인, 권한이라는 의미이며 안드로이드 OS에서 애플리케이션 권한을 획득해야 사용자 디바이스에 설치된 기능을 사용할 수 있습니다. Permission은 Manifest.xml 파일에 등록합니다.<br>
+아래는 자주 사용하는 Permission의 종류에 대한 정리입니다.<br>
+다양한 Permission이 궁금하다면 Google에 <strong>Android Permission</strong>을 검색하면 많은 권한을 확인할 수 있습니다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&lt;uses-permission android:name=<span class="string">"android.permission.ACCESS_COARSE_LOCATION"</span>/&gt;</span><br><span class="line">&lt;!-- 휴대폰 기지국, Wifi를 이용한 위치 확인 권한 허가--&gt;</span><br><span class="line"></span><br><span class="line">    &lt;uses-permission android:name=<span class="string">"android.permission.ACCESS_FINE_LOCATION"</span>/&gt; </span><br><span class="line">    &lt;!-- GPS를 이용한 위치 확인 권한 허가--&gt;</span><br><span class="line"></span><br><span class="line">    &lt;uses-permission android:name=<span class="string">"android.permission.ACCESS_NETWORK_STATE"</span>/&gt;</span><br><span class="line">    &lt;!--Wifi, Cell 연결 확인 권한 허가--&gt;</span><br><span class="line"></span><br><span class="line">    &lt;uses-permission android:name=<span class="string">"android.permission.ACCESS_WIFI_STATE"</span>/&gt;</span><br><span class="line">    &lt;!--Wifi 연결 확인 권한 허가--&gt;</span><br><span class="line"></span><br><span class="line">    &lt;uses-permission android:name=<span class="string">"android.permission.ANSWER_PHONE_CALLS"</span>/&gt;</span><br><span class="line">    &lt;!--전화 수신에 접근 할 수 있는 권한 허가--&gt;</span><br><span class="line"></span><br><span class="line">    &lt;uses-permission android:name=<span class="string">"android.permission.BLUETOOTH"</span>/&gt;</span><br><span class="line">    &lt;!--블루투스로 페어링된 디바이스 권한 허가--&gt;</span><br><span class="line"></span><br><span class="line">    &lt;uses-permission android:name=<span class="string">"android.permission.BLUETOOTH_ADMIN"</span>/&gt;</span><br><span class="line">    &lt;!--블루투스 장치 검색 및 페어링 권한 허가--&gt;</span><br><span class="line"></span><br><span class="line">    &lt;uses-permission android:name=<span class="string">"android.permission.BLUETOOTH_PRIVILEGED"</span>/&gt;</span><br><span class="line">    &lt;!--블루투스가 사용자의 허가없이 페어링 하지 못하도록 적용--&gt;</span><br><span class="line"></span><br><span class="line">    &lt;uses-permission android:name=<span class="string">"android.permission.BODY_SENSORS"</span>/&gt;</span><br><span class="line">    &lt;!--심장박동 및 신체 내부의 정보 센서 접근 권한 허가--&gt;</span><br><span class="line"></span><br><span class="line">    &lt;uses-permission android:name=<span class="string">"android.permission.CALL_PHONE"</span>/&gt;</span><br><span class="line">    &lt;!--앱이 다이얼 인터페이스를 거치지 않고 전화를 걸 수 있도록 권한 허가--&gt;</span><br><span class="line"></span><br><span class="line">    &lt;uses-permission android:name=<span class="string">"android.permission.CAMERA"</span>/&gt;</span><br><span class="line">    &lt;!--카메라 사용 권한 허가--&gt;</span><br><span class="line"></span><br><span class="line">    &lt;uses-permission android:name=<span class="string">"android.permission.INTERNET"</span>/&gt;</span><br><span class="line">    &lt;!--인터넷 사용 권한 허가--&gt;</span><br><span class="line"></span><br><span class="line">    &lt;uses-permission android:name=<span class="string">"android.permission.NFC"</span>/&gt;</span><br><span class="line">    &lt;!--NFC 사용 권한 허가--&gt;</span><br><span class="line"></span><br><span class="line">    &lt;uses-permission android:name=<span class="string">"android.permission.READ_EXTERNAL_STORAGE"</span>/&gt;</span><br><span class="line">    &lt;!--SD카드 읽기 권한 허가--&gt;</span><br><span class="line"></span><br><span class="line">    &lt;uses-permission android:name=<span class="string">"android.permission.WRITE_EXTERNAL_STORAGE"</span>/&gt;</span><br><span class="line">    &lt;!--SD카드 쓰기 권한 허가--&gt;</span><br><span class="line"></span><br><span class="line">    &lt;uses-permission android:name=<span class="string">"android.permission.READ_PHONE_NUMBERS"</span>/&gt;</span><br><span class="line">    &lt;!--현재 사용자 휴대폰 번호 읽기 권한 허가--&gt;</span><br><span class="line"></span><br><span class="line">    &lt;uses-permission android:name=<span class="string">"android.permission.RECORD_AUDIO"</span>/&gt;</span><br><span class="line">    &lt;!--녹음 기능 권한 허가--&gt;</span><br><span class="line"></span><br><span class="line">    &lt;uses-permission android:name=<span class="string">"android.permission.READ_SMS"</span>/&gt;</span><br><span class="line">    &lt;!--SMS읽기 권한 허가--&gt;</span><br><span class="line"></span><br><span class="line">    &lt;uses-permission android:name=<span class="string">"android.permission.SEND_SMS"</span>/&gt;</span><br><span class="line">    &lt;!--SMS보내기 권한 허가--&gt;</span><br><span class="line"></span><br><span class="line">    &lt;uses-permission android:name=<span class="string">"android.permission.RECEIVE_SMS"</span>/&gt;</span><br><span class="line">    &lt;!--도착한 SMS 읽기 권한 허가--&gt;</span><br><span class="line"></span><br><span class="line">    &lt;uses-permission android:name=<span class="string">"android.permission.SET_ALARM"</span>/&gt;</span><br><span class="line">    &lt;!--알림 세팅 권한 허가--&gt;</span><br><span class="line"></span><br><span class="line">    &lt;uses-permission android:name=<span class="string">"android.permission.WAKE_LOCK"</span>/&gt;</span><br><span class="line">    &lt;!--휴대폰 깨우기 권한 허가--&gt;</span><br><span class="line">    &lt;!--알람이 울릴 때 혹은 푸쉬 알람이 왔을 때 이 권한을 넣어주면 된다.--&gt;</span><br><span class="line"></span><br><span class="line">    &lt;uses-permission android:name=<span class="string">"android.permission.WRITE_CALENDAR"</span>/&gt;</span><br><span class="line">    &lt;!--캘린터 쓰기 권한 허가--&gt;</span><br><span class="line"></span><br><span class="line">    &lt;uses-permission android:name=<span class="string">"android.permission.READ_CALENDAR"</span>/&gt;</span><br><span class="line">    &lt;!--캘린터 읽기 권한 허가--&gt;</span><br><span class="line"></span><br><span class="line">    &lt;uses-permission android:name=<span class="string">"android.permission.WRITE_CONTACTS"</span>/&gt;</span><br><span class="line">    &lt;!--연락처 쓰기 읽기 권한 허가--&gt;</span><br><span class="line"></span><br><span class="line">    &lt;uses-permission android:name=<span class="string">"android.permission.READ_CONTACTS"</span>/&gt;</span><br><span class="line">    &lt;!--연락처 읽기 권한 허가--&gt;</span><br><span class="line"></span><br><span class="line">    &lt;uses-permission android:name=<span class="string">"android.permission.ADD_VOICEMAIL"</span>/&gt;</span><br><span class="line">    &lt;!--음성 메일 추가 권한 허가--&gt;</span><br><span class="line"></span><br><span class="line">    &lt;uses-permission android:name=<span class="string">"android.permission.READ_VOICEMAIL"</span>/&gt;</span><br><span class="line">    &lt;!--보이스 메일 읽기 권한 허가--&gt;</span><br><span class="line"></span><br><span class="line">    &lt;uses-permission android:name=<span class="string">"android.permission.WRITE_VOICEMAIL"</span>/&gt;</span><br><span class="line">    &lt;!--보이스 메일 읽기 권한 허가--&gt;</span><br></pre></td></tr></table></figure>
+<h1 id="request-permissions">Request Permissions</h1>
+<hr>
+<p>안드로이드 6.0(API 23 이상)부터는 사용자는 App이 설치될 때 권한을 부여하는 것이 아니고 App이 실행될 때 권한을 부여하게 됩니다. 이유는 App이 설치될 때 권한이 부여될 경우, 사용자의 기밀 데이터가 유출될 염려가 있기 때문입니다. Application 실행 중에 위험 권한을 넘겨줘도 되는지 사용자에게 요청하기 위함입니다.</p>
+<p>Requset Permission 즉, 위험 권한의 종류는 개인 정보와 관련된 권한이며 총 9가지가 있습니다. API 23 즉 마시멜로우 이상부터는 사용자의 허가를 받아야 정보에 접근할 수 있습니다.</p>
+<ol>
+<li>달력 : 사용자의 스케줄이 유출 될 수 있습니다.</li>
+<li>카메라 : 사진을 찍을 때 뿐만 아니라 사진에 접근할 때 유출될 가능성</li>
+<li>전화 : 전화 수신, 또는 통화목록 조회, 전화번호 접근</li>
+<li>마이크 : 마이크 권한을 잘못 사용할 경우 도청</li>
+<li>위치정보 : 위치 정보를 잘못 사용하면 위험</li>
+<li>SMS : 문자 내역 유출</li>
+<li>Storage : 중요 정보 유출</li>
+<li>Sensor : 사용자의 신체 관련된 값을 가져올 때 사용</li>
+<li>연락처 : 개인 정보 유출</li>
+</ol>
+<p><code>Github</code>: <a href="https://github.com/WooVictory/Kotlin_Practice" target="_blank" rel="noopener">https://github.com/WooVictory/Kotlin_Practice</a></p>
+
                 
 
                 <hr>
@@ -256,7 +315,7 @@
         <div id="toc" class="toc-article">
         <strong class="toc-title">Contents</strong>
         
-          <ol class="nav">none</ol>
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#activitylifecycle"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">ActivityLifeCycle</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#intent"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">Intent</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#permission"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">Permission</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#request-permissions"><span class="toc-nav-number">4.</span> <span class="toc-nav-text">Request Permissions</span></a></li></ol>
         
         </div>
       </aside>
