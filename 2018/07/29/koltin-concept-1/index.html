@@ -15,7 +15,7 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <title>
         
-          코틀린 1장 - VictoryWoo | Blog
+          커니의 코틀린 :: 1장 - VictoryWoo | Blog
         
     </title>
 
@@ -96,7 +96,7 @@
                               <a class="tag" href="/tags/#Kotlin" title="Kotlin">Kotlin</a>
                             
                         </div>
-                        <h1>코틀린 1장</h1>
+                        <h1>커니의 코틀린 :: 1장</h1>
                         <h2 class="subheading">kotlin이란?</h2>
                         <span class="meta">
                             Posted by VictoryWoo on
@@ -232,9 +232,9 @@
 </ul>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// java 코드</span></span><br><span class="line">String name = <span class="string">"이승우"</span>;</span><br><span class="line">Person person = <span class="keyword">new</span> Person(name);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//kotlin 코드</span></span><br><span class="line">val name = <span class="string">"이승우"</span></span><br><span class="line">val person = Person(name)</span><br></pre></td></tr></table></figure>
 <ol start="2">
-<li>널 안정성</li>
+<li>널 안정성<br>
+객체 타입의 변수에서 널(null) 값의 허용 여부를 구분하지 않던 자바와 달리, 코틀린은 이를 명확하게 구분합니다. 또한, 널 값의 허용 여부를 컴파일 단계에서 검사하므로 런타임에서 발생하는 오류를 대폭 줄일 수 있습니다.</li>
 </ol>
-<p>객체 타입의 변수에서 널(null) 값의 허용 여부를 구분하지 않던 자바와 달리, 코틀린은 이를 명확하게 구분합니다. 또한, 널 값의 허용 여부를 컴파일 단계에서 검사하므로 런타임에서 발생하는 오류를 대폭 줄일 수 있습니다.</p>
 <figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> foo : String? = <span class="literal">null</span> <span class="comment">// 널 값을 허용하는 문자열 타입</span></span><br><span class="line"><span class="keyword">var</span> bar : String = <span class="string">"bar"</span> <span class="comment">// 널 값을 허용하지 않는 문자열 타입</span></span><br></pre></td></tr></table></figure>
 <blockquote>
 <p>여기서 Complie과 Runtime의 차이점에 대해서 알아보겠습니다.</p>
@@ -248,9 +248,9 @@
 <p>즉, 컴파일 에러가 발생하지 않더라도 런타임 에러가 발생할 수 있습니다.</p>
 <p><img src="/img/compile_runtime.png" alt=""></p>
 <ol start="3">
-<li>가변/불변 구분</li>
+<li>가변/불변 구분<br>
+변수 및 변수 내 할당된 값의 불변 여부를 구분합니다. 변수의 불변 여부, 즉 최초 생성 시 할당된 값을 이후에도 변경할 수 있는지 여부는 변수 선언 시 사용하는 키워드인 <code>val과 var</code>로 구분합니다.</li>
 </ol>
-<p>변수 및 변수 내 할당된 값의 불변 여부를 구분합니다. 변수의 불변 여부, 즉 최초 생성 시 할당된 값을 이후에도 변경할 수 있는지 여부는 변수 선언 시 사용하는 키워드인 <code>val과 var</code>로 구분합니다.</p>
 <ul>
 <li><code>val</code> : 값을 한번 할당하고 나면 그 후에는 변경할 수 없는 변수. 이는 자바에서 final 키워드를 붙인 변수와 동일</li>
 <li><code>var</code> : 할당된 값을 자유자재로 바꿀 수 있는 변수. 이는 자바에서 final 키워드 없이 선언하는 변수와 동일</li>
@@ -259,6 +259,86 @@
 <p>변수의 가변/불변과 유사하게, <code>컬렉션 자료형</code>에 대해서도 가변/불변 여부를 구분합니다. 여기에선 객체에 할당된 값이 아닌 컬렉션 내 포함된 자료들을 <strong>추가하거나 삭제</strong>할 수 있는지 여부를 구분합니다.<br>
 자료의 가변/불변 여부는 <code>인터페이스(immutable / mutable)</code>로 구분하며, 불변 인터페이스의 경우 삽입/삭제/수정을 위함 함수가 존재하지 않습니다.</p>
 <figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 자료를 변경할 수 없는 리스트 생성</span></span><br><span class="line"><span class="keyword">val</span> immutable : ArrayList&lt;String&gt; = listOf(<span class="string">"foo"</span>,<span class="string">"bar"</span>,<span class="string">"baz"</span>)</span><br><span class="line"><span class="comment">// 컴파일 에러 : add 함수가 정의되어 있지 않습니다.</span></span><br><span class="line">imuutalbe.add(<span class="string">"Foo"</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 자료를 변경할 수 있는 리스트 생성</span></span><br><span class="line"><span class="keyword">val</span> mutable : MutableList&lt;String&gt; = listOf(<span class="string">"foo"</span>,<span class="string">"bar"</span>,<span class="string">"baz"</span>)</span><br><span class="line"><span class="comment">// 성공 : MutableList에는 자료를 수정할 수 있는 함수가 정의되어 있습니다. </span></span><br><span class="line">mutalbe.add(<span class="string">"Foo"</span>)</span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li>람다 표현식 지원<br>
+기존의 안드로이드에서는 개발 환경의 제약으로 람다 표현식을 사용하기 어려웠습니다. 하지만, 코틀린에서는 람다 표현식을 기본으로 지원하므로 특별한 제약 없이 코드를 더 간소화 할 수 있습니다.<br>
+또한, 자바로 작성된 인터페이스에 한해 <code>SAM</code>(Single Abstract Method) 변환을 지원하여 함수의 인자로 전달되는 인터페이스의 인스턴스를 람다식으로 표현할 수 있습니다.</li>
+</ol>
+<blockquote>
+<p>람다 표현식이란??</p>
+</blockquote>
+<p>람다 표현식은 간단히 말해서 메소드를 하나의 식으로 표현한 것입니다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 메소드</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">min</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y)</span></span>&#123;</span><br><span class="line">	<span class="keyword">return</span> x&lt;y? x : y;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 람다 표현식</span></span><br><span class="line">(x,y) -&gt; x&lt;y? x : y;</span><br></pre></td></tr></table></figure>
+<p>메소드를 람다 표현식으로 표현하면, 클래스를 작성하고 객체를 생성하지 않아도 메소드를 사용할 수 있습니다. 그런데 자바에서는 클래스의 선언과 동시에 객체를 생성합니다. 단 하나의 객체만을 생성할 수 있는 클래스를 익명 클래스라고 합니다. 따라서 자바에서 람다 표현식은 익명 클래스와 같다고 할 수 있습니다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 람다 표현식</span></span><br><span class="line">(x,y) -&gt; x&lt;y? x : y;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 익명 클래스</span></span><br><span class="line"><span class="keyword">new</span> Object()&#123;</span><br><span class="line">	<span class="function"><span class="keyword">int</span> <span class="title">min</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y)</span></span>&#123;</span><br><span class="line">		<span class="keyword">return</span> x&lt;y? x : y;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>이러한 람다 표현식은 메소드의 매개변수로 전달될 수도 있으며, 메소드의 결과값으로 반환될 수도 있습니다. 따라서 람다 표현식을 사용하면 <strong>기존의 불필요한 코드를 줄여주고</strong>, 작성된 <strong>코드의 가독성을 높여줍니다.</strong><br>
+Java SE 8 부터는 이러한 람다 표현식을 사용하여 자바에서도 함수형 프로그래밍을 할 수 있게 되었습니다.</p>
+<p>람다 표현식 작성</p>
+<p>자바에서는 화살표(-&gt;) 기호를 사용하여 람다 표현식을 작성할 수 있습니다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(매개변수 목록) -&gt;&#123;함수 몸체&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>유의 사항</strong></p>
+<p>(1). 매개변수의 타입을 추론할 수 있는 경우에는 타입을 생략할 수 있습니다.<br>
+(2). 매개변수가 하나인 경우에는 괄호 ()를 생략할 수 있습니다.<br>
+(3). 함수의 몸체가 하나의 명령문만으로 이루어진 경우에는 중괄호 {}를 생략할 수 있습니다. (이 때 세미콜론(;)은 붙이지 않음)<br>
+(4). 함수의 몸체가 하나의 return 문으로만 이루어진 경우에는 중괄호 {}를 생략할 수 없습니다.<br>
+(5). return 문 대신 표현식을 사용할 수 있으며, 이 때 반환값은 표현식의 결과값이 됩니다. (이 때 세미콜론(;)은 붙이지 않음)</p>
+<p><strong>예제</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable()&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"전통적인 방식의 일회용 스레드 생성"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;).strat();</span><br><span class="line"></span><br><span class="line"><span class="keyword">new</span> Thread(()-&gt;&#123;</span><br><span class="line">	System.out.println(<span class="string">"람다 표현식을 사용한 일회용 스레드 생성"</span>);</span><br><span class="line">&#125;).start();</span><br></pre></td></tr></table></figure>
+<p>람다 표현식을 사용하면 불필요한 코드를 줄일 수 있으며, 코드의 가독성이 훨씬 좋아집니다.</p>
+<p><strong>함수형 인터페이스</strong></p>
+<p>람다 표현식을 사용할 때는 람다 표현식을 저장하기 위한 참조 변수의 타입을 결정해야만 합니다.<br>
+문법 : 참조변수의 타입 참조변수의 이름 = 람다 표현식<br>
+위의 문법처럼 람다 표현식을 하나의 변수에 대입할 때 사용하는 참조 변수의 타입을 <code>함수형 인터페이스</code>라고 부릅니다.</p>
+<p>함수형 인터페이는 추상 클래스와는 달리 단 하나의 추상 메소드만을 가져야 합니다. 또한, <strong>어노테이션</strong>을 사용하여 함수형 인터페이스임을 명시할 수 있습니다.</p>
+<p>문법 : @FunctionalInterface<br>
+위와 같은 어노테이션을 인터페이스의 선언 앞에 붙이면, 컴파일러는 해당 인터페이스를 함수형 인터페이스로 인식합니다. 자바 컴파일러는 이렇게 명시된 함수형 인터페이스에 두 개 이상의 메소드가 선언되면 오류를 발생시킵니다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@FunctionalInterface</span></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Calc</span></span>&#123; <span class="comment">// 함수형 인터페이스의 선언</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">min</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y)</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Lambda</span></span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">		Calc minNum = (x,y) -&gt; x&lt;y? x : y; <span class="comment">// 추상 메소드의 구현</span></span><br><span class="line">		System.out.println(minNum.min(<span class="number">3</span>,<span class="number">4</span>)); <span class="comment">// 함수형 인터페이스의 사용</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>java.util.function 패키지를 통해 여러 상황에서 사용할 수 있는 다양한 함수형 인터페이스가 제공됩니다.</p>
+<ol start="5">
+<li>스트림 API 지원<br>
+자바 8은 컬렉션 내 자료를 다루는 데 유용한 <strong>스트림 API</strong>를 지원합니다. 하지만 안드로이드 버전 6.0 이상을 사용하는 플랫폼에서만 이 API를 사용할 수 있어 제약이 컸습니다.<br>
+코틀린에서는 이와 유사한 역할을 하는 함수들을 <strong>코틀린 표준 라이브러리</strong>를 통해 제공하며, 안드로이드 플랫폼 버전과 상관없이 사용할 수 있어 매우 유용합니다.</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">val items = listOf(10,2,3,5,6)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">// 리스트 내 항목 중 짝수의 합을 구함</span><br><span class="line">val sumOfEvens = items.filter&#123; it % 2 == 0 &#125;.sum()</span><br></pre></td></tr></table></figure>
+<ol start="6">
+<li>완벽한 자바 호환성<br>
+자바에서 코틀린을 사용하는 것과 코틀린에서 자바를 사용하는 것 모두 가능하므로 원하는 부분만 코틀린으로 작성하여 사용할 수 있습니다. 따라서 기존의 자바 코드를 오랜 시간에 걸쳐 천천히 코틀린 코드로 변환할 수 있습니다.<br>
+직접 작성한 자바 코드뿐 아니라, 자바로 작성된 라이브러리와도 모두 호환됩니다. 언어만 코틀린으로 바뀔 뿐 기존에 사용하던 자바 기반 환경을 그대로 사용할 수 있습니다. 따라서 새 언어 도입으로 인한 부담이 매우 적습니다.</li>
+</ol>
+<h2 id="코틀린의-주요-문법">코틀린의 주요 문법</h2>
+<hr>
+<p>여기서는 기본적인 문법만 확인해보고 다음에 공부할 때 더 자세한 설명을 토대로 공부할 예정입니다.</p>
+<ol>
+<li>값 및 변수 선언<br>
+타입을 먼저 적고 그 다음 이름을 적는 자바와 달리, 코틀린에서는 이름을 먼저 적고 타입을 적습니다. (타입은 상황에 따라 생략할 수 있습니다.)</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">// String 타입을 갖는 값 a</span><br><span class="line">val a : String = &quot;foo&quot;</span><br><span class="line"></span><br><span class="line">// 할당하는 자료의 타입에 따라 자동으로 타입을 추론하므로 타입을 생략할 수 있습니다.</span><br><span class="line">val b = &quot;bar&quot;</span><br><span class="line"></span><br><span class="line">// 선언 시 자료를 할당하지 않으면 타입을 꼭 붙여야 합니다.</span><br><span class="line">val c : String</span><br><span class="line">// 자료 할당</span><br><span class="line">c = &quot;baz&quot;</span><br><span class="line"></span><br><span class="line">// 변수 d 선언</span><br><span class="line">var d : Int = 0</span><br><span class="line">// 변수 값 변경</span><br><span class="line">d = 23</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>함수 선언<br>
+자바에 메소드에 대응하며, 값 및 변수 선언과 마찬가지로 반환 타입을 뒤에 적습니다.</li>
+</ol>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">greet</span><span class="params">(name : <span class="type">String</span>)</span></span> : <span class="built_in">Unit</span> &#123;</span><br><span class="line">	println(<span class="string">"Hello, <span class="variable">$name</span>!"</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 위 함수와 동일</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">greet</span><span class="params">(name : <span class="type">String</span>)</span></span>&#123;</span><br><span class="line">	println(<span class="string">"Hello, <span class="variable">$name</span>!"</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">sum</span><span class="params">(a:<span class="type">Int</span>, b:<span class="type">Int</span>)</span></span> : <span class="built_in">Int</span> &#123;</span><br><span class="line">	<span class="keyword">return</span> a+b</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>함수의 반환값에 사용하는 <strong>Unit</strong>은 자바의 void와 유사하게 사용하며 Unit을 반환하는 함수는 반환형을 생략할 수 있습니다.</p>
+<ol start="3">
+<li>클래스 및 인터페이스 선언<br>
+클래스와 인터페이스를 선언하는 방법은 자바와 크게 다르지 않습니다. 단, 클래스의 생성자를 정의하는 방법에 차이가 있습니다. 이 부분은 추후에 다시 공부하면서 포스팅하겠습니다.</li>
+</ol>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Foo</span></span>&#123;</span><br><span class="line">	<span class="keyword">val</span> foo : String = <span class="string">"foo"</span></span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">fun</span> <span class="title">foo</span><span class="params">()</span></span>&#123;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Bar</span></span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">fun</span> <span class="title">bar</span><span class="params">()</span></span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li>조건문<br>
+if-else 문은 자바와 사용 방법이 동일합니다.</li>
+</ol>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">max</span><span class="params">(a:<span class="type">Int</span>, b:<span class="type">Int</span>)</span></span> : <span class="built_in">Int</span> &#123;</span><br><span class="line">	<span class="keyword">if</span>(a&gt;b)&#123;</span><br><span class="line">		<span class="keyword">return</span> a</span><br><span class="line">	&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">		<span class="keyword">return</span> b</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>여러 조건을 효율적으로 처리하기 위해 사용하는 <strong>when</strong>문은 자바의 switch와 동일한 역할을 합니다.</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">countItems</span><span class="params">(count : <span class="type">Int</span>)</span></span>&#123;</span><br><span class="line">	<span class="keyword">when</span>(count)&#123;</span><br><span class="line">		<span class="number">1</span>-&gt;&#123;</span><br><span class="line">			println(<span class="string">"There is <span class="variable">$count</span> item."</span>)</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span>-&gt;&#123;</span><br><span class="line">			println(<span class="string">"There ard <span class="variable">$count</span> items."</span>)</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol start="5">
+<li>반복문<br>
+인덱스 기반 for문과 for-each문 모두 지원하는 자바와 달리 코틀린은 for-each문만 지원합니다.</li>
+</ol>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> items = listOf(<span class="string">"foo"</span>,<span class="string">"bar"</span>,<span class="string">"baz"</span>)</span><br><span class="line"><span class="keyword">for</span>(item : items)&#123;</span><br><span class="line">	println(<span class="string">"item : <span class="variable">$item</span>"</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> i = <span class="number">0</span></span><br><span class="line"><span class="keyword">while</span>(i&lt;items.size)&#123;</span><br><span class="line">	println(<span class="string">"item : <span class="subst">$&#123;items[i]&#125;</span>"</span>)</span><br><span class="line">	i++</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="참고">참고</h1>
+<p><a href="http://www.yes24.com/24/goods/56921334" target="_blank" rel="noopener">차세대 안드로이드 개발자를 위한 커니의 코틀린</a><br>
+<a href="http://tcpschool.com/java/java_lambda_concept" target="_blank" rel="noopener">코딩의 시작</a></p>
 
                 
 
@@ -298,7 +378,7 @@
         <div id="toc" class="toc-article">
         <strong class="toc-title">Contents</strong>
         
-          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#코틀린-소개"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">코틀린 소개</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#코틀린의-특징"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">코틀린의 특징</span></a></li></ol></li></ol>
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#코틀린-소개"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">코틀린 소개</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#코틀린의-특징"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">코틀린의 특징</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#코틀린의-주요-문법"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text">코틀린의 주요 문법</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#참고"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">참고</span></a></li></ol>
         
         </div>
       </aside>
