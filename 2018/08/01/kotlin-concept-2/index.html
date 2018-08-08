@@ -228,7 +228,7 @@
 <p>Integer 클래스로부터 생성된 객체는 하나의 int 값을 저장할 수 있습니다. <strong>wrapper class</strong>의 구성자는 저장할 기본형 타입 값을 받습니다.</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Integer age = <span class="keyword">new</span> Integer(<span class="number">30</span>);</span><br><span class="line">Double avg = <span class="keyword">new</span> Double(<span class="string">"3.145"</span>);</span><br></pre></td></tr></table></figure>
 <p>Integer 선언으로 객체가 선언되면 age 객체는 정수 30을 객체로 나타내며 기본형 타입이 아닌 객체가 필요한 곳에 사용될 수 있습니다.</p>
-<p><img src="/img/wrapper.png" alt=""></p>
+<img src="/img/wrapper.png" width="400" height="200"> 
 <blockquote>
 <p>원시 타입을 모두 객체로 처리하면 비효율적이지 않나요??</p>
 </blockquote>
@@ -264,6 +264,203 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//java</span></span><br><span class="line"><span class="keyword">char</span> c = <span class="number">65</span>; <span class="comment">// 문자 'A'의 아스키 코드 값</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//kotlin</span></span><br><span class="line">val c  : Char = <span class="number">65</span> <span class="comment">// 컴파일 에러 : Char 자료형 값에 Int 자료형인 65 대입 불가</span></span><br><span class="line"></span><br><span class="line">val c : Char = <span class="string">'A'</span> <span class="comment">// 성공</span></span><br></pre></td></tr></table></figure>
 <p>다른 자료형의 값을 문자 자료형에 대입하는 것이 불가피한 경우, <code>toChar()</code>를 사용하면 위의 문제를 해결할 수 있습니다.</p>
 <figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> code : <span class="built_in">Int</span> = <span class="number">65</span></span><br><span class="line"><span class="keyword">val</span> ch : <span class="built_in">Char</span> = code.toChar() <span class="comment">// code에 해당하는 문자를 할당</span></span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>논리<br>
+참과 거짓을 표현하기 위해 사용하는 자료형으로, 자바의 원시 타입인 boolean, 그 래퍼인 Boolean과 사용 방법이 동일합니다.</li>
+</ol>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> foo : <span class="built_in">Boolean</span> = <span class="literal">true</span></span><br><span class="line"><span class="keyword">var</span> bar : <span class="built_in">Boolean</span> = <span class="literal">false</span></span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li>문자열<br>
+자바의 문자열과 특징, 표현 및 사용법이 거의 유사합니다.</li>
+</ol>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> foo : String = <span class="string">"Lorem kotlin"</span></span><br></pre></td></tr></table></figure>
+<p>자바에서는 문자열 내 특정 위치에 접근하기 위해 <strong>charAt()</strong> 메소드를 사용하지만, 코틀린에서는 <strong>get()</strong> 메소드 혹은 대괄호 '[]'와 인덱스를 사용합니다.</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> foo : String = <span class="string">"Lorem ipsum"</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">val</span> ch1 : <span class="built_in">Char</span> = foo.<span class="keyword">get</span>(<span class="number">4</span>)</span><br><span class="line"><span class="comment">// ch1에 인덱스가 4인 문자 'm' 할당</span></span><br><span class="line"><span class="keyword">val</span> ch2 : <span class="built_in">Char</span> = foo[<span class="number">6</span>]</span><br><span class="line"><span class="comment">// ch2에 인덱스가 6인 문자 'i' 할당</span></span><br></pre></td></tr></table></figure>
+<p>규격화된 문자열을 사용하려면 자바와 동일하게 <code>String.format()</code> 함수를 사용할 수 있습니다.</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> length : <span class="built_in">Int</span> = <span class="number">3000</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// "Length : 3000 meters" 값 할당</span></span><br><span class="line"><span class="keyword">val</span> lengthText : String = String.format(<span class="string">"Length : %d meters"</span>,length)</span><br></pre></td></tr></table></figure>
+<p>코틀린에서 제공하는 <strong>문자열 템플릿</strong> 기능을 사용하면 String.format() 함수와 달리 템플릿 문자열 내에 직접 인자를 대입할 수 있습니다.</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> length : <span class="built_in">Int</span> = <span class="number">3000</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">val</span> lengthText : String = <span class="string">"Length : <span class="variable">$length</span> meters"</span></span><br></pre></td></tr></table></figure>
+<p>템플릿 문자열에 포함될 인자는 앞에 '달러 통화 기호($)'를 붙여 구분합니다. 인자로 값이나 변수 대신에 표현식을 넣고 싶다면 표현식 부분을 <strong>중괄호</strong>로 구분하면 됩니다.</p>
+<p>또한, 문자열 내에 달러 통화 기호를 포함해야 하는 경우에는 해당 기호가 탈출 문자(escape character)를 지원하지 않으므로 다음과 같이 표현해야 합니다.</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> text : String = <span class="string">"Lorem ipsum"</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">val</span> lengthText : String = <span class="string">"TextLength : <span class="subst">$&#123;text.length&#125;</span>"</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">val</span> price : <span class="built_in">Int</span> = <span class="number">10000</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">val</span> priceText : String = <span class="string">"Price : <span class="subst">$&#123;<span class="string">'$'</span>&#125;</span> <span class="variable">$price</span>"</span></span><br></pre></td></tr></table></figure>
+<p>이 기능은 자바에 비해서 코틀린이 가질 수 있는 유용하고 편리한 기능이라고 생각합니다.</p>
+<ol start="5">
+<li>배열<br>
+배열 타입이 별도로 존재하는 자바와 달리, 코틀린에서의 배열은 타입 인자를 갖는 Array 클래스로 표현합니다. 다음의 예를 통해서 비교 및 확인할 수 있습니다.</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// java</span></span><br><span class="line">String[] words = <span class="keyword">new</span> String[]&#123;<span class="string">"Lorem"</span>, <span class="string">"ipsum"</span>,<span class="string">"dolor"</span>,<span class="string">"sit"</span>&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// kotlin</span></span><br><span class="line">val words : Array&lt;String&gt; = arrayOf(<span class="string">"Lorem"</span>, <span class="string">"ipsum"</span>,<span class="string">"dolor"</span>,<span class="string">"sit"</span>)</span><br></pre></td></tr></table></figure>
+<p>arrayOf()는 코틀린 표준 라이브러리에 포함되어 있는 함수로, 입력받은 인자로 구성된 배열을 생성합니다. 자바의 원시 타입은 코틀린 배열 클래스의 타입 인자로 사용할 수 없습니다. 따라서 자바 원시 타입을 인자로 갖는 배열을 표현하기 위해서는 각 원시 타입에 대응하는 특수한 클래스를 제공합니다.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left"><center>Java</center></th>
+<th style="text-align:center"><center>Kotlin</center></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><center>byte[]</center></td>
+<td style="text-align:center"><center>kotlin.ByteArray</center></td>
+</tr>
+<tr>
+<td style="text-align:left"><center>double[]</center></td>
+<td style="text-align:center"><center>kotlin.DoubleArray</center></td>
+</tr>
+<tr>
+<td style="text-align:left"><center>float[]</center></td>
+<td style="text-align:center"><center>kotlin.FloatArray</center></td>
+</tr>
+<tr>
+<td style="text-align:left"><center>int[]</center></td>
+<td style="text-align:center"><center>kotlin.IntArray</center></td>
+</tr>
+<tr>
+<td style="text-align:left"><center>long[]</center></td>
+<td style="text-align:center"><center>kotlin.LongArray</center></td>
+</tr>
+<tr>
+<td style="text-align:left"><center>short[]</center></td>
+<td style="text-align:center"><center>kotlin.ShortArray</center></td>
+</tr>
+</tbody>
+</table>
+<p>일반 배열과 마찬가지로, 자바의 원시 타입을 위한 배열을 생성하는 함수 또한 코틀린 표준 라이브러리에 포함되어 있습니다. 아래의 코드를 통해 확인할 수 있습니다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// java code</span></span><br><span class="line"><span class="keyword">int</span>[] numbers = <span class="keyword">new</span> <span class="keyword">int</span>[]&#123;<span class="number">10</span>,<span class="number">20</span>,<span class="number">30</span>,<span class="number">40</span>&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// kotlin code</span></span><br><span class="line">val numbers : IntArray = intArrayOf(<span class="number">10</span>,<span class="number">20</span>,<span class="number">30</span>,<span class="number">40</span>)</span><br></pre></td></tr></table></figure>
+<p>원시 타입이 아닌 래퍼 타입 배열을 사용한다면 코틀린의 배열 형태를 그대로 사용할 수 있습니다. 다음은 래퍼 타입 배열을 선언하는 자바와 코틀린 코드입니다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Integer[] intArr = <span class="keyword">new</span> Int[]&#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>&#125;;</span><br><span class="line"></span><br><span class="line">val intArr : Array&lt;Int&gt; = arrayOf(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>)</span><br></pre></td></tr></table></figure>
+<p>자바로 작성된 코드에서 배열을 인자로 받거나 <strong>가변 인자</strong>를 사용하는 경우, <code>스프레드 연산자(*)</code>를 함께 사용해야 코틀린의 배열을 인자로 전달할 수 있습니다.<br>
+다음과 같이 작성된 자바 코드가 있다고 가정해 봅니다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">foo</span><span class="params">(<span class="keyword">int</span>[] arr)</span></span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">bar</span><span class="params">(String... args)</span></span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>코틀린에서는 이 메소드를 호출할 때 다음과 같이 스프레드 연산자를 사용하여 메소드의 인자로 배열을 전달합니다.</p>
+<p>코틀린으로 작성된 함수는, 가변인자에 배열을 전달하는 경우에만 <strong>스프레드 연산자</strong>를 사용합니다. 다음의 경우는 코틀린으로 작성된 함수에서 배열을 인자로 받은 경우와 가변인자를 받은 경우입니다.</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">foo</span><span class="params">(arr : <span class="type">Array</span>&lt;<span class="type">Int</span>&gt;)</span></span>&#123;</span><br><span class="line">    <span class="keyword">for</span>(i <span class="keyword">in</span> arr)</span><br><span class="line">        println(i)</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">bar</span><span class="params">(<span class="keyword">vararg</span> args : <span class="type">String</span>)</span></span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (i <span class="keyword">in</span> args)</span><br><span class="line">        println(i)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">val</span> intArr : Array&lt;<span class="built_in">Int</span>&gt; = arrayOf(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>)</span><br><span class="line">foo(intArr)</span><br><span class="line"></span><br><span class="line"><span class="keyword">val</span> str : String = <span class="string">"Example"</span></span><br><span class="line">bar(str)</span><br><span class="line"></span><br><span class="line"><span class="keyword">val</span> stringArr : Array&lt;String&gt; = arrayOf(<span class="string">"Lorem"</span>,<span class="string">"ipsun"</span>,<span class="string">"dolor"</span>,<span class="string">"sit"</span>)</span><br><span class="line">bar(*stringArr)</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>가변인자란?</p>
+</blockquote>
+<p>가변 인자 문법은 JDK 5.0 버전부터 추가되었습니다. 필요에 따라 매개변수(인수)를 조정할 수 있는 기술입니다.<br>
+메소드를 호출하는데 인자가 고정적이지 않을 때 가변 인자 문법을 사용하면 배열이나 Collection을 사용하지 않아도 되는 편리함이 있습니다.</p>
+<ul>
+<li>
+<p>가변 인자의 원리는 컴파일러가 가변 인자를 만나면 매개변수를 배열로 변환해줍니다.</p>
+<ul>
+<li>원본 : public static void display(String… args)</li>
+<li>컴파일러 변환 후 : public static void display(String[] args)</li>
+</ul>
+</li>
+<li>
+<p>메소드 호출 시 인자들을 이용해서 배열을 만들어 줍니다.</p>
+<ul>
+<li>원본 : display(“Hello”, “World”, “Korea”);</li>
+<li>컴파일러 변환 후 : display(new String[] {“Hello”, “World”, “Korea” });</li>
+</ul>
+</li>
+</ul>
+<h1 id="컬렉션">컬렉션</h1>
+<hr>
+<p>자바의 원시 타입 및 래퍼가 코틀린에서 사용하는 타입으로 처리되는 것과 달리, JVM을 기반으로 하는 코틀린에서 컬렉션(collection )은 자바에서 제공하는 클래스들을 그대로 사용합니다. 단, 이때 **타입 별칭(type alias)**을 사용하여 컬렉션 내 다른 클래스와의 일관성을 유지합니다.</p>
+<p>코틀린에서는 컬렉션 내 <strong>자료의 수정 가능 여부에 따라 컬렉션의 종류를 구분합니다.</strong> 이는 새로운 타입을 선언하는 방식이 아닌, 인터페이스를 통해 사용 가능한 함수를 제한하는 방식으로 구현되어 있습니다.</p>
+<p>자바의 List 인터페이스는 Iterable, Collection 인터페이스를 상속하고 있으며, 이들 내에는 자료를조회하고 수정하는 메소드가 모두 포함되어 있습니다.<br>
+코틀린의 컬렉션은 컬랙션 내 자료를 수정할 수 있는 <code>가변 타입(mutable)</code>과 수정이 불가한 <code>불변 타입(immutable)</code>으로 구분합니다.</p>
+<p>코틀린의 Collection, List 인터페이스는 자료를 조회하는 함수만 포함되어 있으므로 자료가 한번 할당되면 <strong>수정이 불가능합니다.</strong> 그 대신, 각 인터페이스를 상속한 <code>MutableCollection, MutableList</code> 인터페이스에 자료를 수정하는 함수가 포함되어 있습니다.<br>
+<strong>Set, Map</strong>도 이와 동일한 규칙이 지정되며 각각 두 종류의 인터페이스가 제공됩니다. 각각의 자료구조와 자료 수정 가능 여부에 따라 제공되는 인터페이스는 다음과 같습니다.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">자료구조</th>
+<th style="text-align:center">자료 수정 불가</th>
+<th style="text-align:center">자료 수정 가능</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">List</td>
+<td style="text-align:center">kotlin.collections.List</td>
+<td style="text-align:center">kotlin.collections.MutableList</td>
+</tr>
+<tr>
+<td style="text-align:left">Map</td>
+<td style="text-align:center">kotlin.collections.Map</td>
+<td style="text-align:center">kotlin.collections.MutableMap</td>
+</tr>
+<tr>
+<td style="text-align:left">Set</td>
+<td style="text-align:center">kotlin.collections.Set</td>
+<td style="text-align:center">kotlin.collections.MutableSet</td>
+</tr>
+</tbody>
+</table>
+<h2 id="코틀린의-가변불변-타입과-자바">코틀린의 가변/불변 타입과 자바</h2>
+<p>코틀린에서 인터페이스를 사용하여 컬렉션의 자료 수정 가능 여부를 제한할 수 있습니다. 하지만 이러한 제한 사항이 자바에서는 적용되지 않습니다.<br>
+코틀린에서 다음고 같이 함수를 정의합니다.</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 자료 수정이 불가능한 리스트 반환</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">immutable</span><span class="params">()</span></span> : List&lt;String&gt;&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 자료 수정이 가능한 리스트 반환</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">mutable</span><span class="params">()</span></span> : MutableList&lt;String&gt;&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>위 함수를 자바로 작성한 코드에서 호출하면, 두 함수가 반환하는 타입은 모두 자바의 <strong>List 인터페이스</strong>(java.util.List)로 반환됩니다. 때문에 두 함수가 반환하는 리스트 내 자료룰 모두 수정할 수 있습니다. 왜냐하면 두 함수 모두 자바의 List 인터페이스로 취급하기 때문이죠.</p>
+<p>따라서 자바와 코틀린 코드를 혼용하는 경우에는 자료의 수정 가능 여부를 제한할 때 코틀린에서 제공하는 인터페이스에만 의존하지 않도록 유의해야 합니다.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">함수명</th>
+<th style="text-align:center">자료 수정 가능 여부</th>
+<th style="text-align:left">반환 타입(실제 타입)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">listOf()</td>
+<td style="text-align:center">X</td>
+<td style="text-align:left">kotlin.collections.List</td>
+</tr>
+<tr>
+<td style="text-align:left">arrayListOf()</td>
+<td style="text-align:center">O</td>
+<td style="text-align:left">kotlin.collections.ArrayList(java.util.ArrayList)</td>
+</tr>
+<tr>
+<td style="text-align:left">SetOf()</td>
+<td style="text-align:center">X</td>
+<td style="text-align:left">kotlin.collections.Set</td>
+</tr>
+<tr>
+<td style="text-align:left">hashSetOf()</td>
+<td style="text-align:center">O</td>
+<td style="text-align:left">kotlin.collections.HashSet(java.util.HashSet)</td>
+</tr>
+<tr>
+<td style="text-align:left">linkedSetOf()</td>
+<td style="text-align:center">O</td>
+<td style="text-align:left">kotlin.collections.LinkedHashSet(java.util.LinkedHashSet)</td>
+</tr>
+<tr>
+<td style="text-align:left">sortedSetOf()</td>
+<td style="text-align:center">O</td>
+<td style="text-align:left">kotlin.collections.TreeSet(java.util.TreeSet)</td>
+</tr>
+<tr>
+<td style="text-align:left">mapOf()</td>
+<td style="text-align:center">X</td>
+<td style="text-align:left">kotlin.collections.Map</td>
+</tr>
+<tr>
+<td style="text-align:left">hashMapOf()</td>
+<td style="text-align:center">O</td>
+<td style="text-align:left">kotlin.collections.HashMap(java.util.HashMap)</td>
+</tr>
+<tr>
+<td style="text-align:left">linkedMapOf()</td>
+<td style="text-align:center">O</td>
+<td style="text-align:left">kotlin.collections.HashMap(java.util.LinkedHashMap)</td>
+</tr>
+<tr>
+<td style="text-align:left">sortedMapOf()</td>
+<td style="text-align:center">O</td>
+<td style="text-align:left">kotlin.collections.LinkedHashMap(java.util.SortedMap)</td>
+</tr>
+</tbody>
+</table>
+<p>다음의 코드는 컬렉션을 생성하는 함수와 자료의 수정 가능 여부를 결정하는 인터페이스를 사용합니다. 또한, 자바의 컬렉션에서는 자료에 포함된 특정 항목에 접근할 때 <code>get/set</code>과 같은 메소드를 하용합니다. 코틀린에서는 배열의 특정 원소에 접근하는 방법과 동일하게 컬렉션 내 항목에 접근할 수 있습니다.</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> immutableList : List&lt;String&gt; = listOf(<span class="string">"aa"</span>,<span class="string">"bb"</span>,<span class="string">"cc"</span>,<span class="string">"dd"</span>)</span><br><span class="line">immutableList.add(<span class="string">"ee"</span>) <span class="comment">// 자료 수정을 위한 함수를 지원하지 않음</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">val</span> mutableList : ArrayList&lt;String&gt; = arrayListOf(<span class="string">"aa"</span>,<span class="string">"bb"</span>,<span class="string">"cc"</span>,<span class="string">"dd"</span>)</span><br><span class="line">mutableList.add(<span class="string">"ee"</span>) <span class="comment">// 자료 수정을 위한 함수 지원함. 자료 수정 가능</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">val</span> firstItem : String = immutableList[<span class="number">0</span>] <span class="comment">// 첫 번째 항목 읽기 - get[0]과 동일</span></span><br><span class="line"><span class="keyword">val</span> secondItem : String = mutableList.<span class="keyword">get</span>(<span class="number">1</span>) <span class="comment">// 두 번째 항목 읽기 </span></span><br><span class="line"></span><br><span class="line">immutableList[<span class="number">0</span>] = <span class="string">"Lollypop"</span> <span class="comment">// 컴파일 에러 - 자료 수정 가능한 함수 없음</span></span><br><span class="line">mutableList[<span class="number">0</span>] = <span class="string">"Lollypop"</span> <span class="comment">//  자료 수정 가능</span></span><br></pre></td></tr></table></figure>
+<p>Map은 숫자 인덱스 대신 키 값을 넣어 각 항목에 접근할 수 있습니다.</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> immutableMap : Map&lt;String, <span class="built_in">Int</span>&gt; = mapOf(Pair(<span class="string">"A"</span>,<span class="number">65</span>), Pair(<span class="string">"B"</span>,<span class="number">66</span>))</span><br><span class="line"><span class="keyword">val</span> code : <span class="built_in">Int</span> = immutableMap[<span class="string">"A"</span>]!!</span><br><span class="line">println(code)</span><br><span class="line"></span><br><span class="line"><span class="keyword">val</span> mutableMap : HashMap&lt;String,<span class="built_in">Int</span>&gt; = hashMapOf(<span class="string">"A"</span> to <span class="number">65</span>, <span class="string">"B"</span> to <span class="number">66</span>)</span><br><span class="line"><span class="keyword">val</span> code2 : <span class="built_in">Int</span> = mutableMap[<span class="string">"B"</span>]!!</span><br><span class="line">mutableMap[<span class="string">"C"</span>] = <span class="number">67</span></span><br><span class="line">println(code2)</span><br><span class="line">println(mutableMap)</span><br></pre></td></tr></table></figure>
+<p><strong>Map</strong>을 생성하는 함수들은 키와 값을 인자로 받기 위해 <code>Pair</code> 클래스를 사용합니다. 이 때, 코틀린 표준 라이브러리에서 제공하는 <code>to</code> 함수를 사용하면 Pair 형태의 값을 좀 더 편리하게 생성할 수 있습니다. 이 함수를 사용하여 맵 자료구조를 생성하는 코드를 조금 더 간단히 표현할 수 있습니다.</p>
 
                 
 
@@ -307,7 +504,7 @@
         <div id="toc" class="toc-article">
         <strong class="toc-title">Contents</strong>
         
-          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#기본-자료형"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">기본 자료형</span></a></li></ol>
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#기본-자료형"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">기본 자료형</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#컬렉션"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">컬렉션</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#코틀린의-가변불변-타입과-자바"><span class="toc-nav-number">2.1.</span> <span class="toc-nav-text">코틀린의 가변/불변 타입과 자바</span></a></li></ol></li></ol>
         
         </div>
       </aside>
