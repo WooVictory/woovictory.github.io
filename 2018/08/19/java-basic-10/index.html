@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta name="google-site-verification" content="AFirxOxuB2W32dZY1PrMx4c6K3RsM3XVAkRIkCJEEpI" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword"  content="">
+    <link rel="shortcut icon" href="/img/android.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          Java :: 다형성 - VictoryWoo | Blog
+        
+    </title>
+
+    <link rel="canonical" href="https://woovictory.github.io/2018/08/19/java-basic-10/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS --> 
+    <link rel="stylesheet" href="/css/beantech.min.css">
+    
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('/img/header_img/blaise-vonlanthen-433128-unsplash.jpg')
+            /*post*/
+        
+    }
+    
+    #signature{
+        background-image: url('/null');
+    }
+    
+</style>
+
+<header class="intro-header" >
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#Java" title="Java">Java</a>
+                            
+                        </div>
+                        <h1>Java :: 다형성</h1>
+                        <h2 class="subheading">다형성(polymorphism)</h2>
+                        <span class="meta">
+                            Posted by VictoryWoo on
+                            2018-08-19
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+	
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">VictoryWoo</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">about</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <h1 id="다형성">다형성</h1>
+<hr>
+<p><code>다형성(polymorphism)</code>이란 <strong>하나의 객체가 여러가지 타입을 가질 수 있는 것을 의미합니다.</strong> 자바에서는 이러한 다형성을 부모 클래스 타입의 참조 변수로 자식 클래스 타입의 인스턴스를 참조할 수 있도록 하여 구현하고 있습니다. <strong>다형성</strong>은 상속, 추상화와 더불어 객체 지향 프로그래밍을 구성하는 중요한 특징 중 하나입니다.</p>
+<p>다시 말하면, 객체 지향 개념에서의 <code>다형성</code>이란 <strong>여러 가지 형태를 가질 수 있는 능력</strong>을 의미합니다. 자바에서는 한 타입의 참조 변수로 여러 타입의 객체를 참조할 수 있도록 함으로써 다형성을 프로그램적으로 구현합니다.</p>
+<h2 id="참조-변수의-다형성">참조 변수의 다형성</h2>
+<p>자바에서는 다형성을 구현하기 위해서 부모 클래스 타입의 참조 변수로 자식 클래스 타입의 인스턴스를 참조할 수 있도록 하고 있습니다. 이 때, 참조 변수가 사용할 수 있는 멤버의 개수가 실제 인스턴스의 멤버 개수보다 같거나 적어야 참조할 수 있습니다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Parent</span></span>&#123;</span><br><span class="line">    String name;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">showTV</span><span class="params">()</span></span>&#123; &#125;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">goSleep</span><span class="params">()</span></span>&#123; &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Child</span> <span class="keyword">extends</span> <span class="title">Parent</span></span>&#123;</span><br><span class="line">    String gender;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">goSchool</span><span class="params">()</span></span>&#123; &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">text</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">        Parent p = <span class="keyword">new</span> Parent(); <span class="comment">// 1</span></span><br><span class="line">        Parent pc = <span class="keyword">new</span> Child(); <span class="comment">// 2</span></span><br><span class="line">        Child c = <span class="keyword">new</span> Child(); <span class="comment">// 3</span></span><br><span class="line">        Child cp = <span class="keyword">new</span> Parent(): <span class="comment">// 4 </span></span><br><span class="line">    &#125;   </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>다음과 같은 특성을 가집니다.<br>
+<code>참조변수 a = new 인스턴스타입()</code></p>
+<p>특정 타입의 참조 변수로는 당연히 같은 타입의 인스턴스를 참조할 수 있습니다.<br>
+참조 변수가 사용할 수 있는 멤버의 개수가 실제 인스턴스의 맴버 개수와 같기 때문입니다.</p>
+<p>그리고 부모 클래스 타입의 참조 변수로도 자식 클래스 타입의 인스턴스를 참조할 수 있습니다.<br>
+참조 변수가 사용할 수 있는 멤버의 실제 인스턴스의 멤버 개수보다 적기 때문입니다.</p>
+<p>하지만, 반대의 경우 자식 클래스 타입의 참조 변수로는 부모 클래스 타입의 인스턴스를 참조할 수 없습니다. 참조 변수가 사용할 수 있는 멤버의 개수가 실제 인스턴스의 멤버 개수보다 많기 때문입니다.</p>
+<blockquote>
+<p>클래스는 상속을 통해 확장될 수는 있어도 축소될 수는 없으므로, 자식 클래스에서 사용할 수 있는 멤버의 개수가 언제나 부모 클래스와 같거나 많게 됩니다.</p>
+</blockquote>
+<ol>
+<li>기본적으로는 참조 변수와 인스턴스의 타입이 일치하는 걸 많이 씁니다.</li>
+<li>참조 변수보다 인스턴스 타입의 멤버가 범위가 더 넓어야 합니다.</li>
+</ol>
+<p><code>Parent p = new Child();</code><br>
+참조 변수 : 부모, 인스턴스 타입 : 자식 -&gt; 가능, 부모의 멤버만 참조가 가능합니다.<br>
+<code>Child d = new Parent();</code><br>
+참조 변수 : 자식, 인스턴스 타입 : 부모 -&gt; 불가능, 참조 변수의 멤버를 모두 충족하지 못합니다.</p>
+<h2 id="참조-변수의-타입-변환">참조 변수의 타입 변환</h2>
+<p>자바에서는 참조 변수도 다음과 같은 조건에 따라 타입 변환을 할 수 있습니다.</p>
+<ol>
+<li>서로 상속 관계에 있는 클래스 사이에만 타입 변환을 할 수 있습니다.</li>
+<li>자식 클래스 타입에서 부모 클래스 타입으로의 타입 변환은 생략할 수 있습니다.</li>
+<li>하지만 부모 클래스 타입에서 자식 클래스 타입으로의 타입 변환은 반드시 명시해야 합니다.</li>
+</ol>
+<p>참조 변수의 타입 변환도 기본 타입의 타입 변환과 마찬가지로 <code>타입 캐스트 연산자 ()</code>를 사용합니다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(변환할 타입의 클래스 이름) 변환할 참조 변수</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Parent</span></span>&#123; ... &#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Child</span> <span class="keyword">extends</span> <span class="title">Parent</span></span>&#123; ... &#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Brother</span> <span class="keyword">extends</span> <span class="title">Parent</span></span>&#123; ... &#125;</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line">Parent pa1 = <span class="keyword">null</span>;</span><br><span class="line">Child ch = <span class="keyword">new</span> Child();</span><br><span class="line">Parent pa2 = <span class="keyword">new</span> Parent();</span><br><span class="line">Brother bro = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">pa1 = ch; <span class="comment">// 1</span></span><br><span class="line">bro = (Brother)pa2; <span class="comment">// 2</span></span><br><span class="line">bro = (Brother)ch; <span class="comment">// 3</span></span><br></pre></td></tr></table></figure>
+<p>1 : pa1 = (Parent)ch; 와 같으며 자식 클래스 -&gt; 부모 클래스 타입으로의 변환이므로 타입 변환을 생략할 수 있습니다.<br>
+2 : 타입 변환을 생략할 수 없습니다. (부모 클래스 타입에서 자식 클래스 타입으로의 타입 변환은 반드시 명시해야 합니다.)<br>
+3 : 이 문장은 두 클래스 간의 직접적인 상속 관계가 아니므로 오류가 발생합니다.</p>
+<blockquote>
+<p>짚고 넘어가야 할 부분!</p>
+</blockquote>
+<ol>
+<li>자식 -&gt; 부모(Up-casting) : 형 변환 생략 가능<br>
+자식이 부모의 모든 걸 상속 받았으므로 자식이 더 범위가 넓다고 판단하여 손실이 없다고 판단하는지 형 변환의 생략이 가능합니다.</li>
+<li>부모 -&gt;자식(Down-casting) : 형 변환 생략 불가능</li>
+</ol>
+<p><code>TV2 t = new TV2();</code>와 <code>TV2 t = new CaptionTV();</code>의 차이점을 알아보자. 사실 <code>TV2 t = new CaptionTV();</code>는 다음을 줄인 것입니다.<br>
+<code>TV2 t = (TV2)new CaptionTV();</code> 업 캐스팅이므로 형 변환이 생략되어있던 것입니다. 이걸 또 풀어 쓰면 다음과 같습니다.</p>
+<ol>
+<li><code>CaptionTV c = new CaptionTV();</code></li>
+<li><code>TV2 t = (TV2)c</code><br>
+역시 업 캐스팅이므로 TV2는 생략이 가능합니다.</li>
+</ol>
+<p>그렇다면 차이점을 무엇일까???</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TV2</span> </span>&#123;</span><br><span class="line">    <span class="keyword">boolean</span> power;</span><br><span class="line">    <span class="keyword">int</span> channel;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">power</span><span class="params">()</span></span>&#123;&#125;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">channelUp</span><span class="params">()</span></span>&#123;&#125;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">channelDown</span><span class="params">()</span></span>&#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CaptionTV</span> <span class="keyword">extends</span> <span class="title">TV2</span> </span>&#123;</span><br><span class="line">    String text;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">caption</span><span class="params">()</span></span>&#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Test4</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        TV2 t = <span class="keyword">new</span> TV2();</span><br><span class="line">        TV2 t2 = <span class="keyword">new</span> CaptionTV();</span><br><span class="line">        System.out.println(((CaptionTV) t2).text); <span class="comment">// 1</span></span><br><span class="line">        <span class="comment">// t는 TV2 인스턴스여서 TV2의 멤버만 가지고 있으므로 CaptionTV 타입을 커버할 수가 없다.</span></span><br><span class="line">        <span class="comment">// 컴파일 시에는 올바른 형변환으로 보지만 런타임에서 체크 해보면 부모가 자식을 커버할 수 없는 원리와 같다.</span></span><br><span class="line">        <span class="comment">// CaptionTV c = (CaptionTV)t;</span></span><br><span class="line">        <span class="comment">// System.out.println(c.text);</span></span><br><span class="line">        <span class="comment">// t2는 CaptionTV 인스턴스를 강제로 TV2로 업캐스팅 해서 일단 CaptionTV 멤버를 들고는 있는데</span></span><br><span class="line">        <span class="comment">// 접근만 못할 뿐이라 CaptionTV 타입을 커버할 수 있다.</span></span><br><span class="line">        CaptionTV c2 = (CaptionTV)t2; <span class="comment">// 2</span></span><br><span class="line">        System.out.println(c2.text); <span class="comment">// null</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>t2는 CaptionTV 인스턴스를 강제로 TV2로 업캐스팅해서 일단 CaptionTV 멤버를 들고 있습니다. 그래서 접근을 하기 위해서는 1번과 같이 t2를 CaptionTV2로 다운 캐스팅 한 후에 접근해야 합니다.</p>
+<p>2번과 그 아래 코드는 1번에서 캐스팅 하고 text에 접근하는 과정을 풀어서 나타낸 것입니다.</p>
+<ol>
+<li>
+<p><code>TV2 t = new TV2();</code></p>
+<ul>
+<li>부모 참조 타입에 부모 인스턴스이면</li>
+<li><code>Caption c = (CaptionTV)t</code>;</li>
+<li>자식의 참조 타입으로 변환하지 못합니다.</li>
+<li>컴파일에서 에러가 발생하지는 않지만, 런타임에 에러가 발생합니다.</li>
+</ul>
+</li>
+<li>
+<p><code>TV2 t = new CaptionTV();</code></p>
+<ul>
+<li>부모 참조 타입에서 자식 인스턴스이면</li>
+<li><code>CaptionTV c = (CaptionTV)t;</code></li>
+<li>자식의 참조 타입으로 변환 가능합니다.</li>
+</ul>
+</li>
+</ol>
+<h2 id="instanceof-연산자">instanceof 연산자</h2>
+<p>이러한 다형성으로 인해 런타임에 참조 변수가 실제로 참조하고 있는 인스턴스의 타입을 확인할 필요성이 생깁니다. 자바에서는 이러한 instanceof 연산자를 제공하여, 참조 변수가 참조하고 있는 인스턴스의 실제 타입을 확인할 수 있도록 해줍니다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">참조변수 <span class="keyword">instanceof</span> 클래스이름</span><br></pre></td></tr></table></figure>
+<p>왼쪽에 전달된 참조 변수가 실제로 참조하고 있는 인스턴스의 타입이 오른쪽에 전달된 클래스 타입이면 <strong>true</strong>를 반환하고, 아니면 <strong>false</strong>를 반환합니다.<br>
+만약에 참조변수가 <strong>null</strong>을 가리키고 있으면 false를 반환합니다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Parent</span></span>&#123; ... &#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Child</span> <span class="keyword">extends</span> <span class="title">Parent</span></span>&#123; ... &#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Brother</span> <span class="keyword">extends</span> <span class="title">Parent</span></span>&#123; ... &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Exam</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">        Parent pa1 = <span class="keyword">new</span> Parent();</span><br><span class="line">        System.out.println(p <span class="keyword">instanceof</span> Object);</span><br><span class="line">        System.out.println(p <span class="keyword">instanceof</span> Parent);</span><br><span class="line">        System.out.println(p <span class="keyword">instanceof</span> Child);</span><br><span class="line">        System.out.println(p <span class="keyword">instanceof</span> Brother);</span><br><span class="line">        System.out.println();</span><br><span class="line"></span><br><span class="line">        Parent child = <span class="keyword">new</span> Child();</span><br><span class="line">        System.out.println(child <span class="keyword">instanceof</span> Object);</span><br><span class="line">        System.out.println(child <span class="keyword">instanceof</span> Parent);</span><br><span class="line">        System.out.println(child <span class="keyword">instanceof</span> Child);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 결과</span></span><br><span class="line"><span class="keyword">true</span></span><br><span class="line"><span class="keyword">true</span></span><br><span class="line"><span class="keyword">false</span></span><br><span class="line"><span class="keyword">false</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">true</span></span><br><span class="line"><span class="keyword">true</span></span><br><span class="line"><span class="keyword">true</span></span><br></pre></td></tr></table></figure>
+<h1 id="추상-클래스">추상 클래스</h1>
+<hr>
+<p>추상 클래스(abstract class)는 반드시 하나 이상의 <strong>추상 메소드</strong>를 가지며, 객체를 생성할 수 없습니다. 하지만, 슈퍼 클래스로 사용할 수는 있으며, 추상 메소드를 사용하기 위해서는 반드시 해당 메소드를 재정의 해서 사용해야만 합니다. 이러한 추상 클래스는 객체 지향 프로그래밍에서 중요한 특징인 <code>다형성</code>을 가지는 메소드의 집합을 정의할 수 있도록 해줍니다.<br>
+즉, 반드시 사용되어야 하는 메소드를 추상 클래스에 추상 메소드로 선언해 놓으면, 이 클래스를 상속받는 모든 클래스에서는 이 추상 메소드를 반드시 재정의해야 합니다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> 클래스이름</span>&#123;</span><br><span class="line">    <span class="keyword">abstract</span> 반환타입 메소드이름()&#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>이러한 추상 클래스는 동작이 정의되어 있이 않은 추상 메소드를 포함하고 있으므로, 인스턴스를 생성할 수 없습니다. 추상 클래스는 먼저 상속을 통해 자식 클래스를 만들고, 만든 자식 클래스에서 추상 클래스의 모든 추상 메소드를 오버라이딩하고 나서야 비로소 자식 클래스의 인스턴스를 생성할 수 있게 됩니다.</p>
+<blockquote>
+<p>추상 클래스는 추상 메소드를 포함하고 있다는 점을 제외하면, 일반 클래스와 모든 점이 같습니다. 즉, 생성자와 필드, 일반 메소드도 포함할 수 있습니다.</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Animal</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">cry</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Cat</span> <span class="keyword">extends</span> <span class="title">Animal</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">cry</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"냐옹~~냐용~~"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Dog</span> <span class="keyword">extends</span> <span class="title">Animal</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">cry</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"멍멍!! 멍멍!!"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Inheritance</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//Animal animal = new Animal();</span></span><br><span class="line">        Cat cat = <span class="keyword">new</span> Cat();</span><br><span class="line">        Dog dog = <span class="keyword">new</span> Dog();</span><br><span class="line">        cat.cry();</span><br><span class="line">        dog.cry();</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>위의 예제에서 추상 클래스인 Animal 클래스는 추상 메소드인 cr() 메소드를 가지고 있습니다. Animal 클래스를 상속받는 자식 클래스인 Dog 클래스와 Cat 클래스는 cry() 메소드를 오버라이딩해야만 비로소 인스턴스를 생성할 수 있습니다.</p>
+<h2 id="추상-메소드">추상 메소드</h2>
+<p>**추상 메소드(abstract method)**란 선언부만 작성하고 구현부는 작성하지 않은 채로 남겨둔 형태의 메소드입니다. 이와 같이 구현부를 작성하지 않는 이유는 메소드의 내용이 상속받는 클래스에 따라 달라지기 때문에 선언부만 작성하는 것입니다. 즉, 자식 클래스에서 반드시 오버라이딩해야만 사용할 수 있는 메소드를 의미합니다.</p>
+<p>다시 말해서, 자바에서 추상 메소드를 선언하여 사용하는 목적은 추상 메소드가 포함된 클래스를 상속받는 자식 클래스가 반드시 추상 메소드를 구현하도록 하기 위함입니다.</p>
+<p>예를 들어 모듈처럼 중복되는 부분이나 공통적인 부분은 미리 다 만들어진 것을 사용하고, 이를 받아 사용하는 쪽에서는 자신에게 필요한 부분만을 재정의하여 사용함으로써 <strong>생산성</strong>이 향상되고 배포 등이 쉬워지기 때문입니다.</p>
+<p>이러한 추상 메소드는 선언부만이 존재하며, 구현부는 작성되어 있지 않습니다. 바로 이 작성되어 있지 않은 구현부를 자식 클래스에서 <strong>오버라이딩</strong>하여 사용하는 것입니다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">abstract</span> 반환타입 메소드이름();</span><br></pre></td></tr></table></figure>
+<p>위와 같이 선언부만 있고 구현부가 없다는 의미로 선언부 끝에 바로 세미콜론을 추가합니다.</p>
+<h2 id="추상-메소드의-사용-목적">추상 메소드의 사용 목적</h2>
+<p>자바에서 추상 메소드를 선언하여 사용하는 목적은 <strong>추상 메소드가 포함된 클래스를 상속받는 자식 클래스가 반드시 추상 메소드를 구현하도록 하기 위함입니다.</strong> 만약 일반 메소드로 구현한다면 사용자에 따라 해당 메소드를 구현할 수도 있고, 안 할 수도 있습니다. 하지만 추상 메소드가 포함된 추상 클래스를 상속받은 모든 자식 클래스는 추상 메소드를 구현해야만 인스턴스를 생성할 수 있으므로, 반드시 구현하게 됩니다.</p>
+<h1 id="인터페이스">인터페이스</h1>
+<hr>
+<p>자식 클래스가 여러 부모 클래스를 상속받을 수 있다먄, 다양한 동작을 수행할 수 있다는 장점을 가지게 될 것입니다. 하지만, 클래스를 이용하여 다중 상속을 할 경우 메소드 출처의 모호성 등 여러가지 문제가 발생할 수 있어 자바에선느 클래스를 통한 다중 상속은 지원하지 않습니다.</p>
+<p>하지만 다중 상속의 이점을 버릴 수는 없기에 자바에서는 인터페이스라는 것을 통해 다중 상속을 지원하고 있습니다.<br>
+**인터페이스란(interface)**란 다른 클래스를 작성할 때 기본이 되는 틀을 제공하면서, 다른 클래스 사이의 중간 매개 역할까지 담당하는 일종의 추상 클래스를 의미합니다.</p>
+<p>자바에서 추상 클래스는 추상 메소드 뿐만 아니라 생성자, 필드, 일반 메소드도 포함할 수 있습니다. <strong>하지만 인터페이스는 오로지 추상 메소드와 상수만을 포함할 수 있습니다.</strong></p>
+<h2 id="인터페이스-선언">인터페이스 선언</h2>
+<p>자바에서 인터페이스를 선언하는 방법은 클래스를 작성하는 방법과 같습니다. 인터페이스를 선언할 때에는 접근 제어자와 함께 <code>interface</code> 키워드를 사용하면 됩니다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">접근제어자 <span class="class"><span class="keyword">interface</span> 인터페이스이름</span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> 타입 상수이름 = 값;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">abstract</span> 메소드이름(매개변수목록); <span class="comment">// 추상 메소드</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>단, 클래스와 달리 인터페이스의 모든 필드는 <code>public static final</code>이어야 하며, 모든 메소드는 <code>public abstract</code>이어야 합니다. 이 부분은 모든 인터페이스에 공통으로 적용되는 부분이므로 이 제어자는 생략할 수 있습니다. 이렇게 생략된 제어자는 컴파일 시 자바 컴파일러가 자동으로 추가해 줍니다.</p>
+<h2 id="인터페이스의-구현">인터페이스의 구현</h2>
+<p>인터페이스는 추상 클래스와 마찬가지로 자신이 직접 인스턴스를 생성할 수는 없습니다. 따라서 인터페이스가 포함하고 있는 추상 메소드를 구현해 줄 클래스를 작성해야만 합니다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> 클래스이름 <span class="keyword">implements</span> 인터페이스이름</span>&#123; ... &#125;</span><br></pre></td></tr></table></figure>
+<p>만약 모든 추상 메소드를 구현하지 않는다면, abstract 키워드를 사용하여 추상 클래스로 선언해야 합니다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">animal</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">cry</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Dog</span> <span class="keyword">implements</span> <span class="title">animal</span></span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">cry</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"멍멍!! 멍멍!!"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Cat</span> <span class="keyword">implements</span> <span class="title">animal</span></span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">cry</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"냐옹~~ 냐용~~"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Cow</span> <span class="keyword">implements</span> <span class="title">animal</span></span>&#123;</span><br><span class="line"> <span class="comment">// 추상 메소드를 구현하지 않고, abstract 키워드를 사용하여 추상 클래스로 선언</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">interfaceExam</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">        Dog dog1 = <span class="keyword">new</span> Dog();</span><br><span class="line">        Cat cat1 = <span class="keyword">new</span> Cat();</span><br><span class="line">        dog1.cry();</span><br><span class="line">        cat1.cry();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>자바에서는 또한 상속과 구현을 동시에 할 수 있습니다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> 클래스이름 <span class="keyword">extends</span> 상위클래스이름 <span class="keyword">implements</span> 인터페이스이름</span>&#123; ... &#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>인터페이스는 인터페이스로부터만 상속을 받을 수 있으며, 여러 인터페이스를 상속받을 수 있습니다.</p>
+</blockquote>
+<p>아래는 인터페이스를 이용한 다중 상속의 경우입니다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.company;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">animal</span></span>&#123; <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">cry</span><span class="params">()</span></span>;&#125;</span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Pet</span></span>&#123; <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">play</span><span class="params">()</span></span>;&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Dog</span> <span class="keyword">implements</span> <span class="title">animal</span>,<span class="title">Pet</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">cry</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"멍멍!! 멍멍!!"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">play</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"쥐 잡기 놀이하자~!"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Cat</span> <span class="keyword">implements</span> <span class="title">animal</span>, <span class="title">Pet</span></span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">cry</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"냐옹~~ 냐용~~"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">play</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"산책가자~!"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">interfaceExam</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">        Dog dog1 = <span class="keyword">new</span> Dog();</span><br><span class="line">        Cat cat1 = <span class="keyword">new</span> Cat();</span><br><span class="line">        dog1.cry();</span><br><span class="line">        cat1.cry();</span><br><span class="line">        dog1.play();</span><br><span class="line">        cat1.play();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Cat클래스와 Dog 클래스는 각각 animal과 Pet이라는 두 개의 인터페이스를 동시에 구현하고 있습니다.</p>
+<h2 id="클래스를-이용한-다중-상속의-문제점">클래스를 이용한 다중 상속의 문제점</h2>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Animal</span> </span>&#123; </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">cry</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"짖기!"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Cat</span> <span class="keyword">extends</span> <span class="title">Animal</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">cry</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"냐옹냐옹!"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Dog</span> <span class="keyword">extends</span> <span class="title">Animal</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">cry</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"멍멍!"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">① <span class="class"><span class="keyword">class</span> <span class="title">MyPet</span> <span class="keyword">extends</span> <span class="title">Cat</span>, <span class="title">Dog</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Polymorphism</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        MyPet p = <span class="keyword">new</span> MyPet();</span><br><span class="line"></span><br><span class="line">②      p.cry();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>클래스를 이용해서 다중 상속을 하면 위의 코드에서 볼 수 있듯이 메소드 출처의 모호성 등의 문제가 발생할 수 있습니다.<br>
+위의 예제에서 Cat클래스와 Dog클래스는 각각 Animal 클래스를 상속받아 cry() 메소드를 오버라이딩하고 있습니다. 여기까지는 문제가 없지만, 1번 라인에서 MyPet 클래스가 Cat, Dog 클래스를 동시에 상속받게 되면 문제가 발생합니다.<br>
+2번 라인에서 MyPet 클래스의 인스턴스인 p가 cry() 메소드를 호출하면, 이 메소드가 Cat 클래스에서 상속받은 cry() 메소드인지, Dog 클래스에서 상속받은 cry() 메소드인지를 구분할 수 없는 모호성을 지니게 됩니다. 이와 같은 이유로 자바에서는 클래스를 이용한 다중 상속을 지원하지 않는 것입니다.</p>
+<p>하지만, 다음 예제체럼 인터페이스를 이용하여 다중 상속을 하게되면, 위와 같은 메소드 호출의 모호성을 방지할 수 있습니다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Animal</span> </span>&#123; <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">cry</span><span class="params">()</span></span>; &#125;</span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Cat</span> <span class="keyword">extends</span> <span class="title">Animal</span> </span>&#123; <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">cry</span><span class="params">()</span></span>; &#125;</span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Dog</span> <span class="keyword">extends</span> <span class="title">Animal</span> </span>&#123; <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">cry</span><span class="params">()</span></span>; &#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyPet</span> <span class="keyword">implements</span> <span class="title">Cat</span>, <span class="title">Dog</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">cry</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"멍멍! 냐옹냐옹!"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Polymorphism05</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        MyPet p = <span class="keyword">new</span> MyPet();</span><br><span class="line">        p.cry();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>위의 예제에서 Cat 인터페이스와 Dog 인터페이스를 동시에 구현한 MyPet 클래스에서만 cry() 메소드를 정의하므로, 앞선 예제에서 발생한 메소드 호출의 모호성이 없습니다.</p>
+<p>인터페이스를 사용하면 다중 상속이 가능할 뿐만 아니라 다음과 같은 장점을 가질 수 있습니다.</p>
+<ol>
+<li>대규모 프로젝트 개발 시 일관되고 정형화된 개발을 위한 표준화가 가능합니다.</li>
+<li>클래스의 작성과 인터페이스의 구현을 동시에 진행할 수 있으므로, 개발 시간을 단축할 수 있습니다.</li>
+<li>클래스와 클래스 간의 관계를 인터페이스로 연결하면, 클래스마다 독립적인 프로그래밍이 가능합니다.</li>
+</ol>
+<h1 id="내부-클래스inner-class">내부 클래스(inner class)</h1>
+<hr>
+<p>**내부 클래스(inner class)**란 하나의 클래스 내부에 선언된 또 다른 클래스를 의미합니다. 이러한 내부 클래스는 외부 클래스(outer class)에 대해 두 개의 클래스가 긴밀한 관계를 맺고 있을 때 선언할 수 있습니다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Outer</span></span>&#123; <span class="comment">// 외부 클래스</span></span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">Inner</span></span>&#123; <span class="comment">// 내부 클래스</span></span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="내부-클래스의-장점">내부 클래스의 장점</h2>
+<p>내부 클래스를 사용하면 다음과 같은 장점을 가질 수 있습니다.</p>
+<ol>
+<li>내부 클래스에서 외부 클래스의 멤버에 손쉽게 접근할 수 있게 됩니다.</li>
+<li>서로 관련 있는 클래스를 논리적으로 묶어서 표현함으로써, 코드의 캡슐화를 증가시킵니다.</li>
+<li>외부에서는 내부 클래스에 접근할 수 없으므로, 코드의 복잡성을 줄일 수 있습니다.</li>
+</ol>
+<h2 id="내부-클래스의-종류">내부 클래스의 종류</h2>
+<p>내부 클래스는 필드와 마찬가지로 선언된 위치에 따라 다음과 같이 구분됩니다.</p>
+<ol>
+<li>정적 클래스(static class)</li>
+<li>인스턴스 클래스(instance class)</li>
+<li>지역 클래스(local class)</li>
+<li>익명 클래스(anonymous class)</li>
+</ol>
+<p>외부 클래스 영역에 선언된 클래스 중에서 <strong>static</strong> 키워드를 가지는 클래스를 <code>정적 클래스(static class)</code>라고 합니다. 이러한 정적 클래스는 주로 외부 클래스(outer class)의 클래스 메소드에 사용될 목적으로 선언됩니다.</p>
+<p>외부 클래스 영역에 선언된 클래스 중에서 static 키워드를 가지지 않는 클래스를 <code>인스턴스 클래스(instance class)</code>라고 합니다. 이러한 인스턴스 클래스는 주로 외부 클래스의 인스턴스 변수나 메소드에 사용될 목적으로 선언됩니다.</p>
+<p><code>지역 클래스(local class)</code>란 외부 클래스의 메소드나 초기화 블록에 선언된 클래스를 의미합니다. 이러한 지역 클래스는 선언된 블록 내에서만 사용할 수 있습니다.</p>
+<h2 id="익명-클래스anonymous-class">익명 클래스(anonymous class)</h2>
+<p><code>익명 클래스(anonymous class)</code>란 다른 내부 클래스와는 달리 이름을 가지지 않는 클래스를 의미합니다. 익명 클래스는 선언과 동시에 객체를 생성하므로, <strong>단 하나의 객체만을 생성하는 일회용 클래스입니다.</strong> 따라서 생성자를 선언할 수도 없으며, 오로지 단 하나의 클래스나 단 하나의 인터페이스를 상속받거나 구현할 수 있을 뿐입니다.</p>
+<p>이러한 익명 클래스는 매우 제한적인 용도에 사용되며, 구현해야 하는 메소드가 매우 적은 클래스를 구현할 때 사용됩니다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 익명 클래스는 선언과 동시에 생성하여 참조 변수에 대입함.</span></span><br><span class="line">클래스이름 참조변수이름 = <span class="keyword">new</span> 클래스이름()&#123;</span><br><span class="line">    <span class="comment">// 메소드의 선언</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                    
+                        <li class="next">
+                            <a href="/2018/08/18/aws-hackathon/" data-toggle="tooltip" data-placement="top" title="AWS :: amathon">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                    <div class="comment">
+                        <div id="disqus_thread" class="disqus-thread"></div>
+                    </div>
+                
+                <!-- disqus comment end -->
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#다형성"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">다형성</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#참조-변수의-다형성"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">참조 변수의 다형성</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#참조-변수의-타입-변환"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text">참조 변수의 타입 변환</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#instanceof-연산자"><span class="toc-nav-number">1.3.</span> <span class="toc-nav-text">instanceof 연산자</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#추상-클래스"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">추상 클래스</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#추상-메소드"><span class="toc-nav-number">2.1.</span> <span class="toc-nav-text">추상 메소드</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#추상-메소드의-사용-목적"><span class="toc-nav-number">2.2.</span> <span class="toc-nav-text">추상 메소드의 사용 목적</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#인터페이스"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">인터페이스</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#인터페이스-선언"><span class="toc-nav-number">3.1.</span> <span class="toc-nav-text">인터페이스 선언</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#인터페이스의-구현"><span class="toc-nav-number">3.2.</span> <span class="toc-nav-text">인터페이스의 구현</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#클래스를-이용한-다중-상속의-문제점"><span class="toc-nav-number">3.3.</span> <span class="toc-nav-text">클래스를 이용한 다중 상속의 문제점</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#내부-클래스inner-class"><span class="toc-nav-number">4.</span> <span class="toc-nav-text">내부 클래스(inner class)</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#내부-클래스의-장점"><span class="toc-nav-number">4.1.</span> <span class="toc-nav-text">내부 클래스의 장점</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#내부-클래스의-종류"><span class="toc-nav-number">4.2.</span> <span class="toc-nav-text">내부 클래스의 종류</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#익명-클래스anonymous-class"><span class="toc-nav-number">4.3.</span> <span class="toc-nav-text">익명 클래스(anonymous class)</span></a></li></ol></li></ol>
+        
+        </div>
+      </aside>
+    
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#Java" title="Java">Java</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="https://leejongchan.github.io/" target="_blank">JongChan</a></li>
+                    
+                        <li><a href="https://godpp.github.io" target="_blank">godpp</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- disqus embedded js code start (one page only need to embed once) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "your-disqus-ID";
+    var disqus_identifier = "https://woovictory.github.io/2018/08/19/java-basic-10/";
+    var disqus_url = "https://woovictory.github.io/2018/08/19/java-basic-10/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus embedded js code start end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'always',
+          placement: 'right',
+          icon: '#'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://www.facebook.com/WooVictory">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/WooVictory">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; VictoryWoo 2018 
+                    <br>
+                    Theme by <a href="http://huangxuan.me">Hux</a> 
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span> 
+                    re-Ported by <a href="http://beantech.org">BeanTech</a> | 
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=YenYuHsuan&repo=hexo-theme-beantech&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://woovictory.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-XXXXXXXX-X';
+    var _gaDomain = 'yoursite';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+<img src="https://woovictory.github.io/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>
