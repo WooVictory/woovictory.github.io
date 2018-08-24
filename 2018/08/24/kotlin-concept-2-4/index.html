@@ -15,11 +15,11 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <title>
         
-          Android :: 깨알 팁 - VictoryWoo | Blog
+          커니의 코틀린 :: 자료/자료형의 확인 및 변환 - VictoryWoo | Blog
         
     </title>
 
-    <link rel="canonical" href="https://woovictory.github.io/2018/08/22/android-tip/">
+    <link rel="canonical" href="https://woovictory.github.io/2018/08/24/kotlin-concept-2-4/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -91,14 +91,14 @@
                     <div class="post-heading">
                         <div class="tags">
                             
-                              <a class="tag" href="/tags/#Android" title="Android">Android</a>
+                              <a class="tag" href="/tags/#Kotlin" title="Kotlin">Kotlin</a>
                             
                         </div>
-                        <h1>Android :: 깨알 팁</h1>
+                        <h1>커니의 코틀린 :: 자료/자료형의 확인 및 변환</h1>
                         <h2 class="subheading"></h2>
                         <span class="meta">
                             Posted by VictoryWoo on
-                            2018-08-22
+                            2018-08-24
                         </span>
                     </div>
                 
@@ -215,33 +215,33 @@
                 col-md-10 col-md-offset-1
                 post-container">
 
-                <p>오늘은 안드로이드 스튜디오를 사용하면서 자신이 작성한 코드임을 명시할 수 있는 팁을 알려드리고자 합니다. :)</p>
-<p><strong>Github</strong>에서 다른 사람이 작성한 코드를 참고해서 개발을 하는 경우가 많습니다. 저는 그렇게 하는데 다른 분들은 어떻게 하시는지…??ㅎㅎㅎ</p>
-<p>아무튼!!! 다음과 같은 문장을 본 적이 있을 것입니다.</p>
-<img src="/img/created.png" width="400" height="200">
-<p>이 문장은 아무것도 아닌 것 같지만, 이렇게 명시함으로써 누가 코드를 작성했는지 알 수 있게 해줍니다. 다른 사람이랑 협업할 때 누가 작성한 코드인지 명확하게 볼 수 있어서 편리하다고 생각합니다. ㅎㅎㅎ</p>
-<h1 id="설정-방법">설정 방법</h1>
+                <h1 id="자료의-동일성-확인">자료의 동일성 확인</h1>
 <hr>
-<ol>
-<li>안드로이드 스튜디오 File</li>
-<li>Settings</li>
-<li>Editor</li>
-<li>File and Code Templates를 선택합니다.</li>
-<li>그리고 Includes 탭에 들어가면 아래와 같은 모습을 볼 수 있습니다.</li>
-</ol>
-<img src="/img/settings.png" width="400" height="200">
-<ol start="6">
-<li>그러면 + 버튼을 클릭해서 Lee와 같은 파일을 하나 생성합니다.</li>
-<li>그리고 주석을 생성하고 그 안에 자신의 이름이나 자신이 원하는 문구를 작성합니다.</li>
-<li>파일을 작성하고 Files 탭으로 넘어가서 아래 그림과 같이 위에서 만든 파일의 이름을 넣습니다.</li>
-<li>그리고 Apply 버튼을 누르고 새 파일을 생성하면 문구가 자동으로 들어가는 것을 확인할 수 있습니다.</li>
-</ol>
-<img src="/img/settings2.png" width="400" height="200">
-<ol start="10">
-<li>이 방법 말고도 File Header를 수정하는 방법이 있습니다. 이것은 아래와 같은 방식으로 수정하면 됩니다. ^0^</li>
-</ol>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Created by $&#123;USER&#125; on $&#123;DATE&#125;.</span></span><br><span class="line"><span class="comment"> */</span></span><br></pre></td></tr></table></figure>
-<p>별 내용은 아니지만, 혹시나 이런 것이 궁금하신 분들이 계실거 같아서 생각 난 김에 포스팅하고 갑니다~</p>
+<p>자바에서는 자료의 동일성을 확인하기 위해서 <code>==</code> 연산자를 사용할 수 있지만, 원시 타입이나 enum을 제외한 일반 객체는 객체의 값뿐만 아니라 객체 자체가 동일한지 여부도 함께 확인합니다. <strong>따라서 객체의 값만 비교하려면 equals() 메소드를 사용해야 합니다.</strong></p>
+<p>코틀린에서는 비교 대상이 객체냐 객체의 값이냐를 구분할 필요 없이 모두 <code>==</code> 연산자를 사용하면 됩니다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">fun <span class="title">main</span><span class="params">(args: Array&lt;String&gt;)</span> </span>&#123;</span><br><span class="line">    val foo: Int = <span class="number">10</span></span><br><span class="line">    val bar: Int = <span class="number">10</span></span><br><span class="line">    println(foo == bar)</span><br><span class="line">    println(foo === bar)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 결과</span></span><br><span class="line"><span class="keyword">true</span></span><br><span class="line"><span class="keyword">true</span></span><br></pre></td></tr></table></figure>
+<p>코틀린의 <code>==</code> 연산자는 비교하는 값의 널 여부를 함께 확인합니다. 따라서 자바에서 널 포인터 오류를 방지하기 위해 사용하는 “Foo”.equals(foo)와 같은 형태를 더 이상 사용하지 않아도 됩니다.</p>
+<p>객체 자체가 동일한지 여부에 대한 비교가 필요한 경우, 코틀린에서는 <code>===</code> 연산자를 사용하면 됩니다. 이는 자바의 <code>==</code> 연산자와 동일한 역할을 수행합니다. 다음은 코틀린의 <strong>==</strong> 연산자와 <strong>===</strong> 연산자를 사용하여 각 객체 간의 동일성을 확인하는 예제입니다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">fun <span class="title">main</span><span class="params">(args: Array&lt;String&gt;)</span> </span>&#123;</span><br><span class="line">    val a: Pair&lt;Char, Int&gt; = Pair(<span class="string">'A'</span>, <span class="number">65</span>)</span><br><span class="line">    val b = a</span><br><span class="line">    val c: Pair&lt;Char, Int&gt; = Pair(<span class="string">'A'</span>, <span class="number">65</span>)</span><br><span class="line">    </span><br><span class="line">    println(a == b) <span class="comment">// 값이 동일하므로 true</span></span><br><span class="line">    println(a == c) <span class="comment">// 값이 동일하므로 true</span></span><br><span class="line"></span><br><span class="line">    println(a === b) <span class="comment">// 같은 객체이므로 true</span></span><br><span class="line">    println(a === c) <span class="comment">// 다른 객체이므로 false</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 결과</span></span><br><span class="line"><span class="keyword">true</span></span><br><span class="line"><span class="keyword">true</span></span><br><span class="line"><span class="keyword">true</span></span><br><span class="line"><span class="keyword">false</span></span><br></pre></td></tr></table></figure>
+<h1 id="자료형-확인-is-연산자">자료형 확인 : is 연산자</h1>
+<hr>
+<p>코틀린에서는 자료형을 확인하기 위해 <code>is</code> 연산자를 사용하며, 이는 자바의 instanceOf 연산자와 동일한 기능을 합니다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// kotlin</span></span><br><span class="line"><span class="function">fun <span class="title">printTypeName</span><span class="params">(obj : Any)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(obj is Int)&#123;</span><br><span class="line">        println(<span class="string">"Type : Integer"</span>)</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span>(obj is Float)&#123;</span><br><span class="line">        println(<span class="string">"Type : Float"</span>)</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span>(obj is String)&#123;</span><br><span class="line">        println(<span class="string">"Type : String"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>또한, 특정 타입이 아닌 경우를 확인하려면 <code>!is</code>로 표현할 수 있습니다. 자바에서 instanceOf 연산자를 괄호로 묶어서 !를 붙이는 것보다 훨씬 간편합니다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(obj !is Int)&#123;</span><br><span class="line">    ... </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="자료형-변환-as-연산자">자료형 변환 : as 연산자</h1>
+<hr>
+<p>자바에서는 특정 변수를 자신이 원하는 자료형으로 변환하기 위해 앞에 괄호를 사용했습니다. 코틀린에서는 괄호 대신 <code>as</code> 연사자를 사용하여 자료형을 변환할 수 있습니다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// kotlin</span></span><br><span class="line"><span class="function">fun <span class="title">processNumber</span><span class="params">(number: Number)</span></span>&#123;</span><br><span class="line">    val num : Int = number as Int</span><br><span class="line">    <span class="comment">// 인자를 Int 자료형으로 캐스팅</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="스마트-캐스트">스마트 캐스트</h1>
+<hr>
+<p>자바에서 instanceOf 연산자를 사용하여 객체의 자료형을 확인했을지라도, 이를 원하는 자료형으로 사용하려면 앞에서 instanceOf 연산자로 확인했던 자료형으로 다시 캐스팅을 한 후 사용해야 합니다.</p>
+<p>코틀린에서는 이러한 불편함을 줄이기 위해, 자료형 추론이 가능할 경우 캐스팅 캐스팅 없이 해당하는 자료형으로 객체를 사용할 수 있도록 <code>스마트 캐스트(smart cast)</code> 기능을 지원합니다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// java</span></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onBindViewHolder</span><span class="params">(Recyclerview.ViewHolder holder, <span class="keyword">int</span> position)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(holder instanceOf PhotoHolder)&#123;</span><br><span class="line">        ((PhotoHolder) holder).setImageUrl(mImageUrl);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span>(holder instanceOf TextHolder)&#123;</span><br><span class="line">        ((TextHolder) holder).setText(mTitles[position]);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>PhotoHolder인 경우에만 메소드를 실행하지만, PhotoHolder 내의 메소드를 호출하기 위해 다시 캐스팅이 필요합니다…ㅜ</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">override fun <span class="title">onBindViewHolder</span><span class="params">(holder : Recyclerview.ViewHolder, position : Int)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(holder is PhotoHolder)&#123;</span><br><span class="line"></span><br><span class="line">        holder.setImageUrl(mImageUrl)</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span>(holder is TextHolder)&#123;</span><br><span class="line">        holder.setText(mTitles[position])</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>코틀린의 경우에는 위와 같이 <strong>스마트 캐스트</strong>가 지원되어 캐스팅 없이 사용할 수 있습니다. ^^</p>
+<p>스마트 캐스트는 값을 검사하는 시점과 사용하는 시점 사이에 값이 변하지 않았다는 것이 보장되는 겨웅에만 지원됩니다. 따라서 언제드지 값이 변할 수 있는 변수(var)는 스마트 캐스트가 지원되지 않습니다.</p>
 
                 
 
@@ -250,12 +250,12 @@
                 <ul class="pager">
                     
                         <li class="previous">
-                            <a href="/2018/08/24/kotlin-concept-2-4/" data-toggle="tooltip" data-placement="top" title="커니의 코틀린 :: 자료/자료형의 확인 및 변환">&larr; Previous Post</a>
+                            <a href="/2018/08/24/kotlin-concept-2-5/" data-toggle="tooltip" data-placement="top" title="커니의 코틀린 :: 흐름 제어">&larr; Previous Post</a>
                         </li>
                     
                     
                         <li class="next">
-                            <a href="/2018/08/21/java-basic-12/" data-toggle="tooltip" data-placement="top" title="Java :: API 클래스-2">Next Post &rarr;</a>
+                            <a href="/2018/08/22/android-tip/" data-toggle="tooltip" data-placement="top" title="Android :: 깨알 팁">Next Post &rarr;</a>
                         </li>
                     
                 </ul>
@@ -285,7 +285,7 @@
         <div id="toc" class="toc-article">
         <strong class="toc-title">Contents</strong>
         
-          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#설정-방법"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">설정 방법</span></a></li></ol>
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#자료의-동일성-확인"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">자료의 동일성 확인</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#자료형-확인-is-연산자"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">자료형 확인 : is 연산자</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#자료형-변환-as-연산자"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">자료형 변환 : as 연산자</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#스마트-캐스트"><span class="toc-nav-number">4.</span> <span class="toc-nav-text">스마트 캐스트</span></a></li></ol>
         
         </div>
       </aside>
@@ -305,7 +305,7 @@
                     <h5><a href="/tags/">FEATURED TAGS</a></h5>
                     <div class="tags">
                        
-                          <a class="tag" href="/tags/#Android" title="Android">Android</a>
+                          <a class="tag" href="/tags/#Kotlin" title="Kotlin">Kotlin</a>
                         
                     </div>
                 </section>
@@ -336,8 +336,8 @@
 <script type="text/javascript">
     /* * * CONFIGURATION VARIABLES * * */
     var disqus_shortname = "your-disqus-ID";
-    var disqus_identifier = "https://woovictory.github.io/2018/08/22/android-tip/";
-    var disqus_url = "https://woovictory.github.io/2018/08/22/android-tip/";
+    var disqus_identifier = "https://woovictory.github.io/2018/08/24/kotlin-concept-2-4/";
+    var disqus_url = "https://woovictory.github.io/2018/08/24/kotlin-concept-2-4/";
 
     (function() {
         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
