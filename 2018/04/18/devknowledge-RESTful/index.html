@@ -15,11 +15,11 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <title>
         
-          Java :: 개념 다지기 (4) - VictoryWoo | Blog
+          개발 상식 :: RESTful - VictoryWoo | Blog
         
     </title>
 
-    <link rel="canonical" href="https://woovictory.github.io/2018/03/01/Java개념4/">
+    <link rel="canonical" href="https://woovictory.github.io/2018/04/18/devknowledge-RESTful/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -70,7 +70,7 @@
 <style type="text/css">
     header.intro-header{
         
-            background-image: url('/img/header_img/luca-bravo-149740-unsplash.jpg')
+            background-image: url('/img/header_img/blaise-vonlanthen-433128-unsplash.jpg')
             /*post*/
         
     }
@@ -91,14 +91,14 @@
                     <div class="post-heading">
                         <div class="tags">
                             
-                              <a class="tag" href="/tags/#Java" title="Java">Java</a>
+                              <a class="tag" href="/tags/#RESTful" title="RESTful">RESTful</a>
                             
                         </div>
-                        <h1>Java :: 개념 다지기 (4)</h1>
-                        <h2 class="subheading">실행흐름의 컨트롤</h2>
+                        <h1>개발 상식 :: RESTful</h1>
+                        <h2 class="subheading"></h2>
                         <span class="meta">
                             Posted by VictoryWoo on
-                            2018-03-01
+                            2018-04-18
                         </span>
                     </div>
                 
@@ -215,66 +215,165 @@
                 col-md-10 col-md-offset-1
                 post-container">
 
-                <p>이번에는 <code>if~else, switch, for, while문</code>등에 대해서 배워보겠습니다.</p>
-<h1 id="조건문">조건문</h1>
-<h2 id="if문과-if~else문">if문과 if~else문</h2>
+                <h1 id="restful-api">RESTful API</h1>
 <hr>
 <blockquote>
-<p>특정 조건이 만족될 때에만 실행하고픈 문장이 있다면 if를 사용!</p>
+<p>월드 와이드 웹(World Wide Web a.k.a WWW)과 같은 분산 하이퍼미디어 시스템을 위한 소프트웨어 아키텍처의 한 형식으로 자원을 정의하고 자원에 대한 주소를 지정하는 방법 전반에 대한 패턴</p>
 </blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">int num = 10;</span><br><span class="line">if(num&gt;0)</span><br><span class="line">&#123;</span><br><span class="line">	System.out.println(&quot;num은 0보다 크다.&quot;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">if((num%2)==0))</span><br><span class="line">&#123;</span><br><span class="line">	System.out.println(&quot;num은 짝수&quot;);</span><br><span class="line">&#125;</span><br><span class="line">else</span><br><span class="line">&#123;</span><br><span class="line">	System.out.println(&quot;num은 홀수&quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>REST</code>란 REpresentational State Transfer의 약자이다. 여기에 ~ful이라는 형용사형 어미를 붙여 ~한 API라는 표현으로 사용된다. 즉, REST의 기본 원칙을 성실히 지킨 서비스 디자인은 <code>RESTful</code>하다라고 표현할 수 있다.</p>
+<p><code>REST</code>가 디자인 패턴이다. 아키텍처마다 많은 이야기가 존재하는데, 하나의 아키텍처로 볼 수 있다. 좀 더 정확한 표현으로 말하자면, REST는 <code>Resource Oriented Architecture</code>이다. API 설계의 중심에 자원(Resource)이 있고, HTTP Method를 통해 자원을 처리하도록 설계하는 것이다.</p>
+<h2 id="rest-구성">REST 구성</h2>
+<p>REST API는 다음의 구성으로 이루어져 있다.</p>
 <ul>
-<li>한 문장이 있을 때는 중괄호 생략가능</li>
-<li>if~else문은 하나의 문장으로 생각!</li>
+<li>자원(Resource) - URI</li>
+<li>행위(Verb) - HTTP Method</li>
+<li>표현(Representations)</li>
 </ul>
-<h3 id="if~else문과-유사한-성격의-조건-연산자">if~else문과 유사한 성격의 조건 연산자</h3>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">int num1=50, num2=100;</span><br><span class="line">int big = (num1&gt;num2)? num1 : num2;</span><br><span class="line">System.out.println(big);</span><br></pre></td></tr></table></figure>
+<h2 id="rest-6가지-원칙">REST 6가지 원칙</h2>
+<ol>
+<li>Uniform<br>
+URI로 지정한 리소스에 대한 조작을 통일되고 한정적인 인터페이스로 수행하는 아키텍처 스타일을 말한다.</li>
+<li>Stateless<br>
+무상태성 성격을 갖는다. 다시 말해 작업을 위한 상태정보를 따로 저장하고 관리하지 않는다. 세션 정보자 쿠키 정보를 별도로 저장하고 관리하지 않기 때문에 API 서버는 들어오는 요청만 단순히 처리하면 된다. 때문에 서비스의 자유도가 높아지고 서버에서 불필요한 정보를 관리하지 않음으로써 구현이 단순해집니다.</li>
+<li>Caching<br>
+REST의 가장 큰 특징 중 하나는 HTTP라는 기존 웹 표준을 그대로 사용하기 때문에, 웹에서 사용하는 기존 인프라를 그대로 활용 가능합니다. 따라서 HTTP가 가진 캐싱 기능의 적용이 가능.<br>
+HTTP 프로토콜 표준에서 사용하는 Last-Modified 태그나 E-Tag를 이용하면 캐싱 구현이 가능</li>
+<li>Client-Server<br>
+REST 서버는 API 제공, Client는 사용자 인증이나 컨텍스트(세션, 로그인 정보)등을 직접 관리하는 구조로 각각의 역할이 확실히 구분되기 때문에 Client와 Server에게 개발해야 할 내용이 명확해지고 서로간 의존성이 줄어들게 된다.</li>
+<li>Hierarchical system<br>
+REST 서버는 다중 계층으로 구성될 수 있으며 보안, 로드 밸런싱, 암호화 계층을 추가해 구조상의 유연성을 둘 수 있고 Proxy, 게이트웨이 같은 네트워크 기반의 중간매체를 사용할 수 있게 한다.</li>
+<li>Code on demand</li>
+</ol>
+<h2 id="restful-하게-api를-디자인-한다는-것은-무엇을-의마하는가">RESTful 하게 API를 디자인 한다는 것은 무엇을 의마하는가</h2>
+<ol>
+<li>리소스와 행위를 명시적이고 직관적으로 분리한다.</li>
+</ol>
+<p>리소스는 <code>URI</code>로 표현되는데 리소스가 가리키는 것은 <code>명사</code>로 표현되어야 한다.<br>
+행위는 <code>HTTP Method</code>로 표현하고, <code>GET(조회)</code>,POST(생성)<code>,PUT(기존 entity 전체 수정)</code>,PATCH(기존),DELETE(삭제)` 을 분명한 목적으로 사용한다.</p>
+<ol start="2">
+<li>Message는 Header와 Body를 명확하게 분리해서 사용한다.</li>
+</ol>
+<p>Entity에 대한 내용은 body에 담는다.<br>
+애플리케이션 서버가 행동할 판단의 근거가 되는 컨트롤 정보인 API 버전 정보, 응답받고자 하는 MIME 타입 등은 header에 담는다.<br>
+header와 body는 http header와 http body로 나눌 수도 있고, http body에 들어가는 json 구조로 분리할 수도 있다.</p>
+<ol start="3">
+<li>API 버전을 관리한다.</li>
+</ol>
+<p>환경을 항상 변하기 때문에 API의 signature가 변경될 수도 있음에 유의하자.<br>
+특정 API를 변경할 때는 반드시 하위호환성을 보장해야 한다.</p>
+<ol start="4">
+<li>서버와 클라이언트가 같은 방식을 사용해서 요청하도록 한다.</li>
+</ol>
+<p>브라우저는 form-data 형식의 submit으로 보내고 서버에서는 json 형태로 보내는 식의 분리보다는 json으로 보내든, 둘 다 form-data 형식으로 보내든 하나로 통일한다.<br>
+다른 말로 표현하자면 URI가 플랫폼 중립적이어야 한다.</p>
+<h2 id="장점">장점</h2>
 <ul>
-<li>(num1&gt;num2)가 true이면 : 왼쪽에 있는 숫자가 false이면 : 오른쪽에 있는 숫자가 big에 대입됩니다.</li>
+<li>Open API를 제공하기 쉽다.</li>
+<li>멀티플랫폼 지원 및 연동이 용이하다.</li>
+<li>원하는 타입으로 데이터를 주고 받을 수 있다.</li>
+<li>기존 웹 인프라(HTTP)를 그대로 사용할 수 있다.</li>
 </ul>
-<h2 id="switch와-break">switch와 break</h2>
+<h2 id="단점">단점</h2>
+<ul>
+<li>사용할 수 있는 메소드가 4가지 밖에 없다.</li>
+<li>분산환경에는 부적합하다.</li>
+<li>HTTP 통신 모델에 대해서만 지원한다.</li>
+</ul>
+<h2 id="rest-api-디자인-가이드">REST API 디자인 가이드</h2>
+<ol>
+<li>URI는 정보의 자원을 표현해야 한다.</li>
+<li>자원에 대한 행위는 HTTP Method(GET,POST,PUT,DELETE)로 표현한다.</li>
+</ol>
+<h3 id="rest-api-중심-규칙">REST API 중심 규칙</h3>
+<ol>
+<li>URI는 정보의 자원을 표현해야 한다. (리소스명은 동사보다는 명사를 사용)</li>
+</ol>
 <blockquote>
-<p><strong>조건에 따른 실행의 경우 수가 많다면 switch문이 유용!</strong></p>
+<p>GET /members/delete/1</p>
 </blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">int n = 3;</span><br><span class="line"></span><br><span class="line">switch(n)</span><br><span class="line">&#123;</span><br><span class="line">	case 1:</span><br><span class="line">		System.out.println(&quot;1&quot;);</span><br><span class="line">		break;</span><br><span class="line">	case 2:</span><br><span class="line">		System.out.println(&quot;2&quot;);</span><br><span class="line">		break;</span><br><span class="line">	case 3:</span><br><span class="line">		System.out.println(&quot;3&quot;);</span><br><span class="line">		break;</span><br><span class="line">	case 4:</span><br><span class="line">		System.out.println(&quot;4&quot;);</span><br><span class="line">		break;</span><br><span class="line">	case 5:</span><br><span class="line">		System.out.println(&quot;5&quot;);</span><br><span class="line">		break;	</span><br><span class="line">&#125;</span><br><span class="line">System.out.println(&quot;Bye&quot;);</span><br></pre></td></tr></table></figure>
-<ul>
-<li>switch문에 들어오는 n에 따라서 레이블 별로 실행되고 해당 레이블 영역이 실행이 끝나면 <code>break</code>문을 통해서 switch문을 빠져나갑니다.</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">switch(n)</span><br><span class="line">&#123;</span><br><span class="line">	case 1 : case 2 : case 3 :</span><br><span class="line">		System.out.println(&quot;Java&quot;);</span><br><span class="line">		break; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>위의 코드처럼 레이블을 한 줄에 둘 이상 붙일 수 있습니다.</li>
-</ul>
-<h1 id="반복문">반복문</h1>
-<h3 id="while문">while문</h3>
-<p><code>사용법</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">int num = 0;</span><br><span class="line"></span><br><span class="line">while(num&lt;5)&#123;</span><br><span class="line">	System.out.println(&quot;Java&quot;+num);</span><br><span class="line">	num++;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li><code>순서</code> : 반복 조건 검사 -&gt; treu면 반복 영역 실행 - &gt; 반복 조건 검사 -&gt; true면 반복 영역 실행 …</li>
-<li>반복 조건을 먼저 검사하기 때문에 반복 영역이 한 차례도 실행되지 않을 수도 있습니다.</li>
-</ul>
-<h3 id="do~while문">do~while문</h3>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">int num = 0;</span><br><span class="line"></span><br><span class="line">do&#123;</span><br><span class="line">	System.out.println(&quot;Java&quot;+num);</span><br><span class="line">	num++;</span><br><span class="line">&#125;while(num&lt;5);</span><br></pre></td></tr></table></figure>
-<ul>
-<li><code>순서</code> : 반복 영역 실행 -&gt; 반복 조건 검사 -&gt; true면 반복 영역 실행 -&gt; 반복 조건 검사 -&gt; true면 …</li>
-<li>반복 영역을 먼저 실행하기 때문에, 반복 조건을 만족하지 않더라도 한 차례는 실행됩니다.</li>
-</ul>
-<h3 id="for-반복문">for 반복문</h3>
+<p>위와 같은 방식은 REST를 제대로 적용하지 않은 URI입니다. URI는 자원을 표현하는데 중점을 두어야 하므로 delete와 같은 행위에 대한 표현이 들어가서는 안된다.</p>
+<ol start="2">
+<li>자원에 대한 행위는 HTTP Method로 표현<br>
+위의 잘못 된 URI를 HTTP Method를 통해 수정하면</li>
+</ol>
 <blockquote>
-<p><code>정해진 횟수의 반복</code>이 존재하면 for문 사용</p>
+<p>DELETE /members/1</p>
 </blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">for(int i=0;i&lt;3;i++)&#123;</span><br><span class="line">	System.out.println(&quot;Java&quot;+i);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="continue-amp-break">continue &amp; break</h2>
-<p>반복문 내에 삽입되어, <code>반복문의 실행 흐름을 조절</code>하는데 사용되는 키워드</p>
-<h3 id="break">break</h3>
-<p>자신을 감싸고 있는 가장 가까운 <code>반복문</code>을 빠져나가는 용도로 사용됩니다.</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">int num=1;</span><br><span class="line">boolean search = false;</span><br><span class="line"></span><br><span class="line">while(num&lt;50)&#123;</span><br><span class="line">	if(num%5==0 &amp;&amp; num%7==0)</span><br><span class="line">	&#123;</span><br><span class="line">		search = true;</span><br><span class="line">		break;</span><br><span class="line">	&#125;</span><br><span class="line">	num++;</span><br><span class="line">&#125;</span><br><span class="line">if(search)</span><br><span class="line">	System.out.println(&quot;찾는 정수:&quot;+num);</span><br><span class="line">else</span><br><span class="line">	System.out.println(&quot;찾지 못했습니다.&quot;);</span><br></pre></td></tr></table></figure>
+<p>으로 수정할 수 있다. 회원 정보를 가져올 때는 GET, 회원 추가 시의 행위를 표현하고자 할 때는 POST Method를 사용하여 표현하면 된다.</p>
 <ul>
-<li>중첩된 반복문을 벗어나기 위해서는 빠져나갈 위치를 명시해 주면 됩니다.</li>
+<li>HTTP Method의 역할</li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">outerLoop : </span><br><span class="line">for(int i=1;i&lt;10;i++)</span><br><span class="line">&#123;</span><br><span class="line">	for(int j=1;j&lt;10;j++)</span><br><span class="line">	&#123;</span><br><span class="line">		System.out.println(&quot;[&quot;+i+&quot;, &quot;+j+&quot;]&quot;);</span><br><span class="line">		if(i%2==0 &amp;&amp; j%2==0)</span><br><span class="line">			break outerLoop;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="continue">continue</h3>
-<p>실행하던 반복문의 나머지 부분을 생략하고 프로그램의 흐름을 <code>조건검사 부분</code>으로 이동시킵니다.</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">int num=0;</span><br><span class="line">int count=0;</span><br><span class="line"></span><br><span class="line">while(num++&lt;100)&#123;</span><br><span class="line">	if(num%5!=0 || num%7!=0) // 5의 배수가 아니거나 7의 배수가 아니면 조건검사로 이동</span><br><span class="line">		continue;</span><br><span class="line"></span><br><span class="line">	count++;</span><br><span class="line">	System.out.println(num);</span><br><span class="line">	// 5의 배수이면서 7의 배수인 수와 개수를 찾는다. </span><br><span class="line">&#125;</span><br><span class="line">System.out.println(&quot;count : &quot;+ count);</span><br></pre></td></tr></table></figure>
+<ol>
+<li><code>POST</code> : POST를 통해 해당 URI를 요청하면 리소스를 생성</li>
+<li><code>GET</code> : GET을 통해 해당 리소스를 조회. 리소스를 조회하고 해당 도큐먼트에 대한 자세한 정보를 가져온다.</li>
+<li><code>PUT</code> : PUT을 통해 해당 리소스를 수정</li>
+<li><code>DELETE</code> : DELETE를 통해 리소스를 삭제</li>
+</ol>
+<h3 id="uri-설계-시-주의할-점">URI 설계 시 주의할 점</h3>
+<ol>
+<li>슬래시 구분자(/)는 계층 관계를 나타내는 데 사용</li>
+<li>URI 마지막 문자로 슬래시(/)를 포함하지 않는다.<br>
+<code>URI</code>에 포함되는 모든 글자는 리소스의 유일한 식별자로 사용되어야 하며 URI가 다르다는 것은 리소스가 다르다는 것이고 역으로 리소스가 다르면 URI도 달라져야 한다. REST API는 분명한 URI를 만들어 통신을 해야 하기 때문에 혼동을 주지 않도록 URI 경로의 마지막에는 슬래시(/)를 사용하지 않는다.</li>
+<li>하이픈(-)은 URI 가독성을 높이는 데 사용<br>
+URI를 쉽게 읽고 해석하기 위해, 불가피하게 긴 URI 경로를 사용하게 된다면 하이픈을 사용해 가독성을 높일 수 있다.</li>
+<li>언더바는 URI에 사용하지 않는다.<br>
+글꼴에 따라 다르긴 하지만 밑줄은 보기 어렵거나 밑줄 때문에 문자가 가려지기도 한다. 이런 문제를 피하기 위해 언더바 대신 하이픈(-)을 사용하는 것이 좋다.(가독성)</li>
+<li>URI 경로에는 소문자가 적합<br>
+URI 경로에 대문자 사용은 피하도록 한다. 대소문자에 따라 다른 리소스로 인식하게 되기 때문이다. RFC 3986(URI 문법 형식)은 URI 스키마와 호스트를 제외하고는 대소문자를 구별하도록 규정함</li>
+<li>파일 확장자는 URI에 포함시키지 않는다.<br>
+REST API에서는 메시지 바디 내용의 포맷을 나타내기 위한 파일 확장자를 URI 안에 포함시키지 않는다. Accept header를 사용하도록 한다.</li>
+</ol>
+<h3 id="리소스-간의-관계를-표현하는-방법">리소스 간의 관계를 표현하는 방법</h3>
+<p>REST 리소스 간에는 연관 관계가 있을 수 있고, 이런 경우 다음과 같이 표현</p>
+<p>/리소스명/리소스 ID/관계가 있는 다른 리소스명</p>
+<blockquote>
+<p>GET : /users/{userid}/devices (일반적으로 소유 'has’의 관계를 포현할 때)</p>
+</blockquote>
+<p>만약에 관계명이 복잡하다면 이를 서브 리소스에 명시적으로 표현하는 방법이 있다. 예를 들어 사용자가 ‘좋아하는’ 디바이스 목록을 표현해야 할 경우 다음과 같이 표현 가능</p>
+<blockquote>
+<p>GET : /users/{userid}/likes/devices (관계명이 애매하거나 구체적으로 표현이 필요할 때)</p>
+</blockquote>
+<h3 id="자원을-표현하는-collection과-document">자원을 표현하는 Collection과 Document</h3>
+<p>Collection과 Document에 대해 알면 URI 설계가 한 층 더 쉬워진다. Document는 단순히 문서로 이해해도 되고, 한 객체라고 이해하면 편하다. Collection은 문서들의 집합, 객체들의 집합이라고 생각하면 이해가 편하다. Collection과 Document는 모두 리소스라고 표현할 수 있으며 URI에 표현된다.</p>
+<blockquote>
+<p>http:// <a href="http://restapi.example.com/sports/soccer" target="_blank" rel="noopener">restapi.example.com/sports/soccer</a></p>
+</blockquote>
+<p><code>sports</code>라는 컬렉션과 <code>soccer</code>이라는 도큐먼트로 표현된다.</p>
+<blockquote>
+<p>http:// <a href="http://restapi.example.com/sports/soccer/players/13" target="_blank" rel="noopener">restapi.example.com/sports/soccer/players/13</a></p>
+</blockquote>
+<p><code>sports, players</code> 컬렉션과 <code>soccer,13</code>을 의미하는 도큐먼트로 URI가 이루어지게 된다. 여기서 중요한 점은 <strong>컬렉션은 복수</strong>로 사용한다는 점이다. 좀 더 직관적인 REST API를 위해서는 컬렉션과 도큐먼트를 사용할 때 단수, 복수도 지켜준다면 좀 더 이해하기 쉬운 URI를 설계할 수 있다.</p>
+<h3 id="http-응답-상태-코드">HTTP 응답 상태 코드</h3>
+<ul>
+<li>
+<p>200 : client의 요청을 정상적으로 수행함</p>
+</li>
+<li>
+<p>201 : client가 어떠한 리소스 생성을 요청, 해당 리소스가 성공적으로 생성됨(POST를 통한 리소스 생성 작업 시)</p>
+</li>
+<li>
+<p>400 : client의 요청이 부적절 할 경우 사용하는 응답 코드</p>
+</li>
+<li>
+<p>401 : client가 인증되지 않은 상태에서 보호된 리소스를 요청했을 때 사용하는 응답 코드<br>
+(로그인 하지 않은 유저가 로그인 했을 때, 요청 가능한 리소스를 요청했을 때)</p>
+</li>
+<li>
+<p>403 : 유저 인증상태와 관계 없이 응답하고 싶지 않은 리소스를 client가 요청했을 때 사용하는 응답 코드<br>
+(403 보다는 400이나 404를 사용할 것을 권고. 403 자체가 리소스가 존재한다는 뜻이기 때문에)</p>
+</li>
+<li>
+<p>405 : client가 요청한 리소스에서는 사용 불가능한 Method를 이용했을 경우 사용하는 응답 코드</p>
+</li>
+<li>
+<p>301 : client가 요청한 리소스에 대한 URI가 변경 되었을 때 사용하는 응답 코드<br>
+(응답 시 Location header에 변경된 URI를 적어줘야 한다.)</p>
+</li>
+<li>
+<p>500 : 서버에 문제가 있을 경우 사용하는 응답 코드</p>
+</li>
+</ul>
+
                 
 
                 <hr>
@@ -282,12 +381,12 @@
                 <ul class="pager">
                     
                         <li class="previous">
-                            <a href="/2018/03/01/JavaCollection/" data-toggle="tooltip" data-placement="top" title=" 자바 :: Vector? ">&larr; Previous Post</a>
+                            <a href="/2018/05/01/sopt-semniar1/" data-toggle="tooltip" data-placement="top" title="[SOPT] Seminar1">&larr; Previous Post</a>
                         </li>
                     
                     
                         <li class="next">
-                            <a href="/2018/03/01/Java개념3/" data-toggle="tooltip" data-placement="top" title="Java :: 개념 다지기 (3)">Next Post &rarr;</a>
+                            <a href="/2018/04/13/BOJ1759/" data-toggle="tooltip" data-placement="top" title="[1759] 암호 만들기">Next Post &rarr;</a>
                         </li>
                     
                 </ul>
@@ -317,7 +416,7 @@
         <div id="toc" class="toc-article">
         <strong class="toc-title">Contents</strong>
         
-          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#조건문"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">조건문</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#if문과-if~else문"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">if문과 if~else문</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#if~else문과-유사한-성격의-조건-연산자"><span class="toc-nav-number">1.1.1.</span> <span class="toc-nav-text">if~else문과 유사한 성격의 조건 연산자</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#switch와-break"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text">switch와 break</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#반복문"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">반복문</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#while문"><span class="toc-nav-number">2.0.1.</span> <span class="toc-nav-text">while문</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#do~while문"><span class="toc-nav-number">2.0.2.</span> <span class="toc-nav-text">do~while문</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#for-반복문"><span class="toc-nav-number">2.0.3.</span> <span class="toc-nav-text">for 반복문</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#continue-amp-break"><span class="toc-nav-number">2.1.</span> <span class="toc-nav-text">continue &amp; break</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#break"><span class="toc-nav-number">2.1.1.</span> <span class="toc-nav-text">break</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#continue"><span class="toc-nav-number">2.1.2.</span> <span class="toc-nav-text">continue</span></a></li></ol></li></ol></li></ol>
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#restful-api"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">RESTful API</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#rest-구성"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">REST 구성</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#rest-6가지-원칙"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text">REST 6가지 원칙</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#restful-하게-api를-디자인-한다는-것은-무엇을-의마하는가"><span class="toc-nav-number">1.3.</span> <span class="toc-nav-text">RESTful 하게 API를 디자인 한다는 것은 무엇을 의마하는가</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#장점"><span class="toc-nav-number">1.4.</span> <span class="toc-nav-text">장점</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#단점"><span class="toc-nav-number">1.5.</span> <span class="toc-nav-text">단점</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#rest-api-디자인-가이드"><span class="toc-nav-number">1.6.</span> <span class="toc-nav-text">REST API 디자인 가이드</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#rest-api-중심-규칙"><span class="toc-nav-number">1.6.1.</span> <span class="toc-nav-text">REST API 중심 규칙</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#uri-설계-시-주의할-점"><span class="toc-nav-number">1.6.2.</span> <span class="toc-nav-text">URI 설계 시 주의할 점</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#리소스-간의-관계를-표현하는-방법"><span class="toc-nav-number">1.6.3.</span> <span class="toc-nav-text">리소스 간의 관계를 표현하는 방법</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#자원을-표현하는-collection과-document"><span class="toc-nav-number">1.6.4.</span> <span class="toc-nav-text">자원을 표현하는 Collection과 Document</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#http-응답-상태-코드"><span class="toc-nav-number">1.6.5.</span> <span class="toc-nav-text">HTTP 응답 상태 코드</span></a></li></ol></li></ol></li></ol>
         
         </div>
       </aside>
@@ -337,7 +436,7 @@
                     <h5><a href="/tags/">FEATURED TAGS</a></h5>
                     <div class="tags">
                        
-                          <a class="tag" href="/tags/#Java" title="Java">Java</a>
+                          <a class="tag" href="/tags/#RESTful" title="RESTful">RESTful</a>
                         
                     </div>
                 </section>
@@ -368,8 +467,8 @@
 <script type="text/javascript">
     /* * * CONFIGURATION VARIABLES * * */
     var disqus_shortname = "your-disqus-ID";
-    var disqus_identifier = "https://woovictory.github.io/2018/03/01/Java개념4/";
-    var disqus_url = "https://woovictory.github.io/2018/03/01/Java개념4/";
+    var disqus_identifier = "https://woovictory.github.io/2018/04/18/devknowledge-RESTful/";
+    var disqus_url = "https://woovictory.github.io/2018/04/18/devknowledge-RESTful/";
 
     (function() {
         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
