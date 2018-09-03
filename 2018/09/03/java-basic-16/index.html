@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta name="google-site-verification" content="AFirxOxuB2W32dZY1PrMx4c6K3RsM3XVAkRIkCJEEpI" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword"  content="">
+    <link rel="shortcut icon" href="/img/android.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          Java :: 16) 스레드 - VictoryWoo | Blog
+        
+    </title>
+
+    <link rel="canonical" href="https://woovictory.github.io/2018/09/03/java-basic-16/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS --> 
+    <link rel="stylesheet" href="/css/beantech.min.css">
+    
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('/img/header_img/blaise-vonlanthen-433128-unsplash.jpg')
+            /*post*/
+        
+    }
+    
+    #signature{
+        background-image: url('/null');
+    }
+    
+</style>
+
+<header class="intro-header" >
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#Java" title="Java">Java</a>
+                            
+                        </div>
+                        <h1>Java :: 16) 스레드</h1>
+                        <h2 class="subheading"></h2>
+                        <span class="meta">
+                            Posted by VictoryWoo on
+                            2018-09-03
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+	
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">VictoryWoo</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">about</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <h1 id="프로세스process란">프로세스(process)란?</h1>
+<hr>
+<p><strong>프로세스란 단순히 실행 중인 프로그램이라고 할 수 있습니다. 즉, 사용자가 작성한 프로그램이 운영체제에 의해 메모리 공간을 할당받아 실행 중인 것을 말합니다. 이러한 프로세스는 프로그램에 사용되는 데이터와 메모리 등의 자원 그리고 스레드로 구성됩니다.</strong></p>
+<h1 id="스레드thread란">스레드(thread)란?</h1>
+<hr>
+<p>스레드(thread)란 프로세스(process) 내에서 실제로 작업을 수행하는 주체를 의미합니다. 모든 프로세스에는 한 개 이상의 스레드가 존재하여 작업을 수행합니다. 또한, 두 개 이상의 스레드를 가지는 프로세스를 멀티스레드 프로세스(multi-threaded process)라고 합니다.</p>
+<h2 id="스레드의-생성과-실행">스레드의 생성과 실행</h2>
+<p>자바에서 스레드를 생성하는 방법에는 다음과 같은 두 가지 방법이 있습니다.</p>
+<ol>
+<li>Runnable 인터페이스를 구현하는 방법</li>
+<li>Thread 클래스를 상속받는 방법</li>
+</ol>
+<p>두 방법 모두 스레드를 통해 작업하고 싶은 내용을 run()이라는 메소드에 작성하면 됩니다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">threadExam</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        ThreadWithClass thread1 = <span class="keyword">new</span> ThreadWithClass();</span><br><span class="line">        Thread thread2 = <span class="keyword">new</span> Thread(<span class="keyword">new</span> ThreadWithRunnable());</span><br><span class="line">        <span class="comment">// Runnable을 구현한 클래스는 Thread가 없기 때문에 Thread 타입으로 객체를 만들고 구현한 클래스를</span></span><br><span class="line">        <span class="comment">// 생성자에 매개변수로 넣는다.</span></span><br><span class="line">        thread1.start();</span><br><span class="line">        thread2.start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Runnable 인터페이스를 구현해서 Thread를 생성하기 위함</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ThreadWithRunnable</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">5</span>;i++)&#123;</span><br><span class="line">            System.out.println(<span class="string">"Runnable 인터페이스를 구현 : "</span>+Thread.currentThread().getName());</span><br><span class="line">            <span class="comment">// 현재 실행 중인 스레드의 이름을 반환</span></span><br><span class="line"></span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                Thread.sleep(<span class="number">10</span>);</span><br><span class="line">            &#125;<span class="keyword">catch</span> (Exception e)&#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// Thread 클래스를 상속받아 Thread 구현</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ThreadWithClass</span> <span class="keyword">extends</span> <span class="title">Thread</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">5</span>;i++)&#123;</span><br><span class="line">            System.out.println(<span class="string">"Thread를 상속받아 구현 : "</span>+getName());</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">try</span>&#123;</span><br><span class="line">            Thread.sleep(<span class="number">10</span>);</span><br><span class="line">        &#125;<span class="keyword">catch</span> (Exception e)&#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 결과</span></span><br><span class="line">Runnable 인터페이스를 구현 : Thread-<span class="number">1</span></span><br><span class="line">Thread를 상속받아 구현 : Thread-<span class="number">0</span></span><br><span class="line">Thread를 상속받아 구현 : Thread-<span class="number">0</span></span><br><span class="line">Thread를 상속받아 구현 : Thread-<span class="number">0</span></span><br><span class="line">Thread를 상속받아 구현 : Thread-<span class="number">0</span></span><br><span class="line">Thread를 상속받아 구현 : Thread-<span class="number">0</span></span><br><span class="line">Runnable 인터페이스를 구현 : Thread-<span class="number">1</span></span><br><span class="line">Runnable 인터페이스를 구현 : Thread-<span class="number">1</span></span><br><span class="line">Runnable 인터페이스를 구현 : Thread-<span class="number">1</span></span><br><span class="line">Runnable 인터페이스를 구현 : Thread-<span class="number">1</span></span><br></pre></td></tr></table></figure>
+<p>위의 결과를 보면, 생성된 스레드가 서로 번갈아가며 실행되고 있는 것을 확인할 수 있습니다. 스레드의 실행은 어떤 것이 먼저 실행되는 것인지 정해져 있지 않습니다. 그리고 Thread의 실행은 start()라는 메소드를 호출함으로써 실행시킬 수 있습니다.</p>
+<p>Thread 클래스를 상속받으면 다른 클래스를 상속받을 수 없으므로, 일반적으로 Runnable 인터페이스를 구현하는 방법으로 스레드를 생성합니다.</p>
+<blockquote>
+<p>Runnable 인터페이스는 몸체가 없는 메소드인 run() 메소드 단 하나만을 가지는 간단한 인터페이스입니다.</p>
+</blockquote>
+<h2 id="스레드-우선순위">스레드 우선순위</h2>
+<p>자바에서 각 스레드는 <code>우선순위(priority)</code>에 관한 자신만의 필드를 가지고 있습니다. 이러한 우선순위에 따라 특정 스레드가 더 많은 시간 동안 작업을 할 수 있도록 설정할 수 있습니다.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">필드</th>
+<th style="text-align:center">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">static int MAX_PRIORITY</td>
+<td style="text-align:center">스레드가 가질 수 있는 최대 우선순위를 명시함.</td>
+</tr>
+<tr>
+<td style="text-align:center">static int MIN_PRIORITY</td>
+<td style="text-align:center">스레드가 가질 수 있는 최소 우선순위를 명시함.</td>
+</tr>
+<tr>
+<td style="text-align:center">static int NORM_PRIORITY</td>
+<td style="text-align:center">스레드가 생성될 때 가지는 기본 우선순위를 명시함.</td>
+</tr>
+</tbody>
+</table>
+<p>getPriority()와 setPriority() 메소드를 통해 스레드의 우선순위를 반환하거나 변경할 수 있습니다. 스레드의 우선순위가 가질 수 있는 범위는 1부터 10까지이며, <strong>숫자가 높을수록 우선순위 또한 높아집니다.</strong></p>
+<p><strong>하지만 스레드의 우선순위는 비례적인 절댓값이 아닌 어디까지나 상대적인 값일 뿐입니다. 우선순위가 10인 스레드가 우선순위가 1인 스레드보다 10배 더 빨리 수행되는 것이 아닙니다. 단지 우선순위가 10인 스레드는 우선순위가 1인 스레드보다 좀 더 많이 실행 큐에 포함되어, 좀 더 많은 작업 시간을 할당받을 뿐입니다.</strong></p>
+<p>그리고 스레드의 우선순위는 해당 스레드를 생성한 스레드의 우선순위를 상속받게 됩니다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">threadExam</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Thread thread1 = <span class="keyword">new</span> Thread(<span class="keyword">new</span> ThreadWithRunnable());</span><br><span class="line">        Thread thread2 = <span class="keyword">new</span> Thread(<span class="keyword">new</span> ThreadWithRunnable());</span><br><span class="line">      </span><br><span class="line">        thread2.setPriority(<span class="number">10</span>);</span><br><span class="line">        <span class="comment">// 1 : thread-1의 우선순위를 10으로 변경함</span></span><br><span class="line"></span><br><span class="line">        thread1.start(); <span class="comment">// 2 : thread-0 실행</span></span><br><span class="line">        thread2.start(); <span class="comment">// 3 : thread-1 실행</span></span><br><span class="line">        System.out.println(thread1.getPriority());</span><br><span class="line">        System.out.println(thread2.getPriority());</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Runnable 인터페이스를 구현해서 Thread를 생성하기 위함</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ThreadWithRunnable</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">5</span>;i++)&#123;</span><br><span class="line">            System.out.println(<span class="string">"Runnable 인터페이스를 구현 : "</span>+Thread.currentThread().getName());</span><br><span class="line">            <span class="comment">// 현재 실행 중인 스레드의 이름을 반환</span></span><br><span class="line"></span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                Thread.sleep(<span class="number">10</span>);</span><br><span class="line">            &#125;<span class="keyword">catch</span> (Exception e)&#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//결과</span></span><br><span class="line"><span class="number">5</span></span><br><span class="line"><span class="number">10</span></span><br><span class="line">Runnable 인터페이스를 구현 : Thread-<span class="number">1</span></span><br><span class="line">Runnable 인터페이스를 구현 : Thread-<span class="number">0</span></span><br><span class="line">Runnable 인터페이스를 구현 : Thread-<span class="number">1</span></span><br><span class="line">Runnable 인터페이스를 구현 : Thread-<span class="number">0</span></span><br><span class="line">Runnable 인터페이스를 구현 : Thread-<span class="number">1</span></span><br><span class="line">Runnable 인터페이스를 구현 : Thread-<span class="number">0</span></span><br><span class="line">Runnable 인터페이스를 구현 : Thread-<span class="number">0</span></span><br><span class="line">Runnable 인터페이스를 구현 : Thread-<span class="number">1</span></span><br><span class="line">Runnable 인터페이스를 구현 : Thread-<span class="number">1</span></span><br><span class="line">Runnable 인터페이스를 구현 : Thread-<span class="number">0</span></span><br></pre></td></tr></table></figure>
+<p>main() 메소드를 실행하는 스레드의 우선순위는 언제나 5이므로, main() 메소드 내에서 생성된 스레드는 Thread-0의 우선순위는 5로 설정되는 것을 확인할 수 있습니다.</p>
+<p>위의 코드에서 2번 라인에서 Thread-0이 먼저 실행되고, 3번 라인에서 Thread-1이 나중에 실행됩니다. 따라서 만약 1번 라인이 존재하지 않는다면, Thread-0이 먼저 실행되고, Thread-1이 나중에 실행될 것입니다. 하지만 1번 라인에서 Thread-1의 우선순위를 10으로 변경했기 때문에, Thread-1이 나중에 실행되었더라도 우선순위가 Thread-0보다 높아서 먼저 실행되는 것입니다.</p>
+<h1 id="멀티-스레드multi-thread">멀티 스레드(multi thread)</h1>
+<hr>
+<p>스레드와 관련된 내용은 운영체제(OS)와 연관된 내용입니다. 그래서 여기에서는 간단하게 알아보고 추후에 운영체제 공부를 할 때 자세하게 포스팅하겠습니다. :)</p>
+<p>일반적으로 하나의 프로세스는 하나의 스레드를 가지고 작업을 수행하게 됩니다. 하지만 멀티 스레드(multi trhead)란 하나의 프로세스 내에서 둘 이상의 스레드가 동시에 작업을 수행하는 것을 의미합니다.<br>
+또한, 멀티 프로세스(multi process)는 여러 개의 CPU를 사용하여 여러 프로세스를 동시에 수행하는 것을 의미합니다.</p>
+<p>멀티 스레드와 멀티 프로세스 모두 여러 흐름을 동시에 수행한다는 공통점을 가지고 있습니다. 멀티 프로세스는 각 프로세스가 독립적인 메모리를 가지고 별도로 실행되지만, <strong>멀티 스레드는 각 스레드가 자신이 속한 프로세스의 메모리를 공유한다는 점이 다릅니다.</strong></p>
+<p><strong>멀티 스레드는 각 스레드가 자신이 속한 프로세스의 메모리를 공유하므로, 시스템 자원의 낭비가 적습니다. 또한, 하나의 스레드가 작업을 할 때 다른 스레드가 별도의 작업을 할 수 있어 사용자와의 응답성도 좋아집니다.</strong></p>
+<h2 id="문맥-교환context-switching">문맥 교환(context switching)</h2>
+<p>컴퓨터에서 동시에 처리할 수 있는 최대 작업 수는 CPU의 코어(core) 수와 같습니다. 만약 CPU의 코어 수보다 더 많은 스레드가 실행되면, 각 코어가 정해진 시간 동안 여러 작업을 번갈아가며 수행하게 됩니다.</p>
+<p>이 때, 각 스레드가 서로 교체될 때 스레드 간의 <code>문맥 교환(context switching)</code>이라는 것이 발생합니다. <strong>문맥 교환이란 현재까지의 작업 상태나 다음 작업에 필요한 각종 데이터를 저장하고 읽어오는 작업을 가리킵니다.</strong></p>
+<p><strong>이러한 문맥 교환에 걸리는 시간이 커지면 커질수록, 멀티 스레딩의 효율은 저하됩니다. 오히여 많은 양의 단순한 계산은 싱글 스레드로 동작하는 것이 더 효율적일 수 있습니다. 따라서 많은 수의 스레드를 실행하는 것이 언제나 좋은 성능을 보이는 것은 아니라는 점을 유의해야 합니다.</strong></p>
+<h2 id="스레드-그룹thread-group">스레드 그룹(thread group)</h2>
+<p><code>스레드 그룹(thread group)이란 서로 관련이 있는 스레드를 하나의 그룹으로 묶어 다루기 위한 장치입니다.</code> 자바에서는 스레드 그룹을 다루기 위해 ThreadGroup라는 클래스를 제공합니다.</p>
+<p>이러한 스레드 그룹은 다른 스레드 그룹을 포함할 수도 있으며, 이렇게 포함된 스레드 그룹은 트리 형태로 연결됩니다. 이 때, 스레드는 자신이 포함된 스레드나 그 하위 그룹에는 접근할 수 있지만 다른 그룹에는 접근할 수 없습니다.<br>
+<strong>이렇게 스레드 그룹은 스레드가 접근할 수 있는 범위를 제한하는 보안상으로도 중요한 역할을 하고 있습니다.</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">threadGroupExam</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line"></span><br><span class="line">        Thread thread0 = <span class="keyword">new</span> Thread(<span class="keyword">new</span> ThreadWithRunnable());</span><br><span class="line">        thread0.start(); <span class="comment">// thread-0 실행</span></span><br><span class="line">        System.out.println(thread0.getThreadGroup());</span><br><span class="line"></span><br><span class="line">        ThreadGroup threadGroup = <span class="keyword">new</span> ThreadGroup(<span class="string">"MyThread"</span>);</span><br><span class="line">        <span class="comment">// MyThread라는 스레드 그룹 생성</span></span><br><span class="line">        threadGroup.setMaxPriority(<span class="number">7</span>);</span><br><span class="line">        <span class="comment">// 해당 스레드 그룹의 최대 우선순위를 7로 설정함</span></span><br><span class="line"></span><br><span class="line">        Thread thread1 = <span class="keyword">new</span> Thread(threadGroup, <span class="keyword">new</span> ThreadWithRunnable());</span><br><span class="line">        <span class="comment">// 스레드를 생성할 때 포함될 스레드 그룹을 전달할 수 있다.</span></span><br><span class="line">        thread1.start(); <span class="comment">// thread-1 실행</span></span><br><span class="line">        System.out.println(thread1.getThreadGroup());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Runnable 인터페이스를 구현해서 Thread를 생성하기 위함</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ThreadWithRunnable</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                Thread.sleep(<span class="number">10</span>);</span><br><span class="line">            &#125;<span class="keyword">catch</span> (Exception e)&#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//결과</span></span><br><span class="line">java.lang.ThreadGroup[name=main,maxpri=<span class="number">10</span>]</span><br><span class="line">java.lang.ThreadGroup[name=MyThread,maxpri=<span class="number">7</span>]</span><br></pre></td></tr></table></figure>
+<p>위의 코드처럼 main() 메소드에서 생성된 스레드의 기본 스레드 그룹의 이름은 <strong>main</strong>이 되며, 최대 우선순위는 10으로 자동 설정됩니다.</p>
+<h2 id="데몬-스레드deamon-thread">데몬 스레드(deamon thread)</h2>
+<p><strong>데몬 스레드(deamo thread)란 다른 일반 스레드의 작업을 돕는 보조적인 역할을 하는 스레드를 가리킵니다. 따라서 데몬 스레드는 일반 스레드가 모두 종료되면 더는 할 일이 없으므로, 데몬 스레드 역시 자동으로 종료됩니다.</strong></p>
+<p>데몬 스레드의 생성 방법과 실행 방법은 모두 일반 스레드와 같습니다. 단, 실행하기 전에 <code>setDaemon()</code> 메소드를 호출하여 데몬 스레드로 설정하기만 하면 됩니다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">threadGroupExam</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">        Thread thread0 = <span class="keyword">new</span> Thread(<span class="keyword">new</span> ThreadWithRunnable());</span><br><span class="line">        thread0.setDaemon(<span class="keyword">true</span>);</span><br><span class="line">        <span class="comment">// 데몬 스레드로 설정</span></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Runnable 인터페이스를 구현해서 Thread를 생성하기 위함</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ThreadWithRunnable</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                Thread.sleep(<span class="number">10</span>);</span><br><span class="line">            &#125;<span class="keyword">catch</span> (Exception e)&#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>이러한 데몬 스레드는 일정 시간마다 자동으로 수행되는 저장 및 화면 갱신 등에 이용되고 있습니다.</p>
+<h2 id="가비지-컬렉터garbage-collector">가비지 컬렉터(garbage collector)</h2>
+<blockquote>
+<p>가비지 컬렉터는 자바에서 중요한 개념으로 알고 있습니다. 이 부분에 대한 심화된 내용은 별도의 포스트에서 소개할 예정이고, 이번에는 간단하게 알고 넘어가도록 하겠습니다.</p>
+</blockquote>
+<p><strong>데몬 스레드를 이용하는 가장 대표적인 예로 가비지 컬렉터(garbage collector)를 들 수 있습니다. 가비지 컬렉터(garbage collector)란 프로그래머가 동적으로 할당한 메모리 중 더 이상 사용하지 않는 영역을 자동으로 찾아내어 해제해 주는 데몬 스레드입니다.</strong></p>
+<p>자바에서는 프로그래머가 메모리에 직접 접근하지 못하게 하는 대신에 가비지 컬렉터가 자동으로 메모리를 관리해 줍니다. 이러한 가비지 컬렉터를 이용하면 프로그래밍을 하기가 훨씬 쉬워지며, 메모리에 관련된 버그가 발생할 확률도 낮아집니다.</p>
+<p>보통 가비지 컬렉터가 동작하는 동안에는 프로세서가 일시적으로 중지되므로, 필연적으로 성능의 저하가 발생합니다. 하지만 요즘에는 가비지 컬렉터의 성능이 많이 향상되어, 새롭게 만들어지는 대부분의 프로그래밍 언어에서 가비지 컬렉터를 제공하고 있습니다.</p>
+
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                    
+                        <li class="next">
+                            <a href="/2018/09/03/java-basic-15/" data-toggle="tooltip" data-placement="top" title="Java :: 15) 입력과 출력">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                    <div class="comment">
+                        <div id="disqus_thread" class="disqus-thread"></div>
+                    </div>
+                
+                <!-- disqus comment end -->
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#프로세스process란"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">프로세스(process)란?</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#스레드thread란"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">스레드(thread)란?</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#스레드의-생성과-실행"><span class="toc-nav-number">2.1.</span> <span class="toc-nav-text">스레드의 생성과 실행</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#스레드-우선순위"><span class="toc-nav-number">2.2.</span> <span class="toc-nav-text">스레드 우선순위</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#멀티-스레드multi-thread"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">멀티 스레드(multi thread)</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#문맥-교환context-switching"><span class="toc-nav-number">3.1.</span> <span class="toc-nav-text">문맥 교환(context switching)</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#스레드-그룹thread-group"><span class="toc-nav-number">3.2.</span> <span class="toc-nav-text">스레드 그룹(thread group)</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#데몬-스레드deamon-thread"><span class="toc-nav-number">3.3.</span> <span class="toc-nav-text">데몬 스레드(deamon thread)</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#가비지-컬렉터garbage-collector"><span class="toc-nav-number">3.4.</span> <span class="toc-nav-text">가비지 컬렉터(garbage collector)</span></a></li></ol></li></ol>
+        
+        </div>
+      </aside>
+    
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#Java" title="Java">Java</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="https://leejongchan.github.io/" target="_blank">JongChan</a></li>
+                    
+                        <li><a href="https://godpp.github.io" target="_blank">godpp</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- disqus embedded js code start (one page only need to embed once) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "your-disqus-ID";
+    var disqus_identifier = "https://woovictory.github.io/2018/09/03/java-basic-16/";
+    var disqus_url = "https://woovictory.github.io/2018/09/03/java-basic-16/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus embedded js code start end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'always',
+          placement: 'right',
+          icon: '#'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://www.facebook.com/WooVictory">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/WooVictory">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; VictoryWoo 2018 
+                    <br>
+                    Theme by <a href="http://huangxuan.me">Hux</a> 
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span> 
+                    re-Ported by <a href="http://beantech.org">BeanTech</a> | 
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=YenYuHsuan&repo=hexo-theme-beantech&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://woovictory.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-XXXXXXXX-X';
+    var _gaDomain = 'yoursite';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+<img src="https://woovictory.github.io/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>
