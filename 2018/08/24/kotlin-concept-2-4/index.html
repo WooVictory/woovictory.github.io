@@ -152,14 +152,14 @@
 
                         
                         <li>
-                            <a href="/tags/">Tags</a>
+                            <a href="/about/">about</a>
                         </li>
                         
                     
 
                         
                         <li>
-                            <a href="/about/">about</a>
+                            <a href="/tags/">Tags</a>
                         </li>
                         
                     
@@ -231,17 +231,17 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(obj !is Int)&#123;</span><br><span class="line">    ... </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h1 id="자료형-변환-as-연산자">자료형 변환 : as 연산자</h1>
 <hr>
-<p>자바에서는 특정 변수를 자신이 원하는 자료형으로 변환하기 위해 앞에 괄호를 사용했습니다. 코틀린에서는 괄호 대신 <code>as</code> 연사자를 사용하여 자료형을 변환할 수 있습니다.</p>
+<p>자바에서는 특정 변수를 자신이 원하는 자료형으로 변환하기 위해 앞에 괄호를 사용했습니다. 코틀린에서는 괄호 대신 <code>as</code> 연산자를 사용하여 자료형을 변환할 수 있습니다.</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// kotlin</span></span><br><span class="line"><span class="function">fun <span class="title">processNumber</span><span class="params">(number: Number)</span></span>&#123;</span><br><span class="line">    val num : Int = number as Int</span><br><span class="line">    <span class="comment">// 인자를 Int 자료형으로 캐스팅</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h1 id="스마트-캐스트">스마트 캐스트</h1>
 <hr>
 <p>자바에서 instanceOf 연산자를 사용하여 객체의 자료형을 확인했을지라도, 이를 원하는 자료형으로 사용하려면 앞에서 instanceOf 연산자로 확인했던 자료형으로 다시 캐스팅을 한 후 사용해야 합니다.</p>
-<p>코틀린에서는 이러한 불편함을 줄이기 위해, 자료형 추론이 가능할 경우 캐스팅 캐스팅 없이 해당하는 자료형으로 객체를 사용할 수 있도록 <code>스마트 캐스트(smart cast)</code> 기능을 지원합니다.</p>
+<p>코틀린에서는 이러한 불편함을 줄이기 위해, 자료형 추론이 가능할 경우 캐스팅 없이 해당하는 자료형으로 객체를 사용할 수 있도록 <code>스마트 캐스트(smart cast)</code> 기능을 지원합니다.</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// java</span></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onBindViewHolder</span><span class="params">(Recyclerview.ViewHolder holder, <span class="keyword">int</span> position)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(holder instanceOf PhotoHolder)&#123;</span><br><span class="line">        ((PhotoHolder) holder).setImageUrl(mImageUrl);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span>(holder instanceOf TextHolder)&#123;</span><br><span class="line">        ((TextHolder) holder).setText(mTitles[position]);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>PhotoHolder인 경우에만 메소드를 실행하지만, PhotoHolder 내의 메소드를 호출하기 위해 다시 캐스팅이 필요합니다…ㅜ</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">override fun <span class="title">onBindViewHolder</span><span class="params">(holder : Recyclerview.ViewHolder, position : Int)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(holder is PhotoHolder)&#123;</span><br><span class="line"></span><br><span class="line">        holder.setImageUrl(mImageUrl)</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span>(holder is TextHolder)&#123;</span><br><span class="line">        holder.setText(mTitles[position])</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>코틀린의 경우에는 위와 같이 <strong>스마트 캐스트</strong>가 지원되어 캐스팅 없이 사용할 수 있습니다. ^^</p>
-<p>스마트 캐스트는 값을 검사하는 시점과 사용하는 시점 사이에 값이 변하지 않았다는 것이 보장되는 겨웅에만 지원됩니다. 따라서 언제드지 값이 변할 수 있는 변수(var)는 스마트 캐스트가 지원되지 않습니다.</p>
+<p><strong>스마트 캐스트는 값을 검사하는 시점과 사용하는 시점 사이에 값이 변하지 않았다는 것이 보장되는 경우에만 지원됩니다. 따라서 언제든지 값이 변할 수 있는 변수(var)는 스마트 캐스트가 지원되지 않습니다.</strong></p>
 
                 
 
