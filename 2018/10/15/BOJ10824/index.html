@@ -15,11 +15,11 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <title>
         
-          [10823] 더하기2 - VictoryWoo | Blog
+          [10824] 네 수 - VictoryWoo | Blog
         
     </title>
 
-    <link rel="canonical" href="https://woovictory.github.io/2018/10/15/BOJ10823/">
+    <link rel="canonical" href="https://woovictory.github.io/2018/10/15/BOJ10824/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -94,7 +94,7 @@
                               <a class="tag" href="/tags/#BOJ" title="BOJ">BOJ</a>
                             
                         </div>
-                        <h1>[10823] 더하기2</h1>
+                        <h1>[10824] 네 수</h1>
                         <h2 class="subheading"></h2>
                         <span class="meta">
                             Posted by VictoryWoo on
@@ -215,13 +215,12 @@
                 col-md-10 col-md-offset-1
                 post-container">
 
-                <p>문제 : <a href="https://www.acmicpc.net/problem/10823" target="_blank" rel="noopener">https://www.acmicpc.net/problem/10823</a></p>
+                <p>문제 : <a href="https://www.acmicpc.net/problem/10824" target="_blank" rel="noopener">https://www.acmicpc.net/problem/10824</a></p>
 <h1 id="풀이방법">풀이방법</h1>
 <hr>
-<p>이 문제는 BOJ 10822 문제와 비슷하지만 살짝 다릅니다. 다른 부분은 이 문제에서는 EOF까지 입력을 받아야 한다는 점입니다. EOF란 End of File의 약자로서 파일의 끝이라는 의미를 가지고 있습니다. 즉, 파일의 끝까지 입력을 받으라고 해석할 수 있으며, 다시 말하면 입력이 끝날 때까지 계속해서 입력을 받으라는 의미입니다.</p>
-<p>그래서 저는 BufferedReader를 이용해서 EOF까지 입력을 받고 입력받은 문자열의 길이만큼 반복문을 돌리면서 검사를 시작했습니다.</p>
-<p><strong>콤마(,)가 있는 경우와 없는 경우를 나누었으며, 콤마(,)가 없다면 StringBuilder 객체인 sb에 append 시켜주었으며, 콤마(,)를 만나면 지금까지 sb에 붙은 값들을 sum에 더해주고 StringBuilder 객체를 다시 새롭게 할당해줍니다. 다시 새롭게 할당하지 않고, 원래 객체에 이어 붙이게 되면 문자열 형태로 뒤에 붙기 때문에 새롭게 할당해주어야 합니다.</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.*;</span><br><span class="line"><span class="keyword">import</span> java.util.Scanner;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BOJ10823</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line"></span><br><span class="line">        BufferedReader bf = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(System.in));</span><br><span class="line">        BufferedWriter bw = <span class="keyword">new</span> BufferedWriter(<span class="keyword">new</span> OutputStreamWriter(System.out));</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        StringBuilder sb= <span class="keyword">new</span> StringBuilder();</span><br><span class="line">        <span class="keyword">int</span> sum=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span>(<span class="keyword">true</span>)&#123;</span><br><span class="line">            String input = bf.readLine();</span><br><span class="line">            <span class="keyword">if</span>(input == <span class="keyword">null</span>) <span class="keyword">break</span>;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;input.length();i++)&#123;</span><br><span class="line">                <span class="keyword">if</span>(input.charAt(i) == <span class="string">','</span>)&#123;</span><br><span class="line">                    sum+=Integer.parseInt(sb.toString());</span><br><span class="line">                    sb = <span class="keyword">new</span> StringBuilder(); <span class="comment">// 초기화</span></span><br><span class="line">                &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">                    sb.append(input.charAt(i));</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        bw.write(sum+Integer.parseInt(sb.toString())+<span class="string">"\n"</span>);</span><br><span class="line">        bw.flush();</span><br><span class="line">        bw.close();</span><br><span class="line">        bf.close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>이 문제도 앞에서 풀어보았던 10822, 10823과 같은 형식의 문제라고 생각하고 간단하게 접근을 했습니다. 로직을 다 짜고 실행시켜보니 <strong>런타임 에러</strong>…? 그래서 왜 런타임 에러가 날까 생각을 해보았습니다. 그리고 문제를 자세히 다시 읽어보니 입력받을 수 있는 네 수 A,B,C,D 모두 1~1,000,000의 범위를 가지고 있었습니다. 이렇게 큰 범위의 수는 int형으로 처리할 수 없기 때문에 이러한 큰 수를 다룰 수 있는 자료형인 <code>BigInteger</code>를 사용해야 합니다.</p>
+<p>또한 BigInteger는 객체이기 때문에 그냥 더할 수 없습니다. **add()**라는 메소드를 사용하여 BigInteger 객체끼리 더해줘야 합니다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.*;</span><br><span class="line"><span class="keyword">import</span> java.math.BigInteger;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BOJ10824</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        BufferedReader bf = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(System.in));</span><br><span class="line">        BufferedWriter bw = <span class="keyword">new</span> BufferedWriter(<span class="keyword">new</span> OutputStreamWriter(System.out));</span><br><span class="line"></span><br><span class="line">        String input = bf.readLine();</span><br><span class="line">        String[] words = input.split(<span class="string">" "</span>);</span><br><span class="line"></span><br><span class="line">        String ab = words[<span class="number">0</span>]+words[<span class="number">1</span>];</span><br><span class="line">        String cd = words[<span class="number">2</span>]+words[<span class="number">3</span>];</span><br><span class="line"></span><br><span class="line">        BigInteger big1 = <span class="keyword">new</span> BigInteger(ab);</span><br><span class="line">        BigInteger big2= <span class="keyword">new</span> BigInteger(cd);</span><br><span class="line">        bw.write(big1.add(big2)+<span class="string">"\n"</span>);</span><br><span class="line">        bw.flush();</span><br><span class="line">        bw.close();</span><br><span class="line">        bf.close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
                 
 
@@ -229,13 +228,9 @@
                 <!-- Pager -->
                 <ul class="pager">
                     
-                        <li class="previous">
-                            <a href="/2018/10/15/BOJ10824/" data-toggle="tooltip" data-placement="top" title="[10824] 네 수">&larr; Previous Post</a>
-                        </li>
-                    
                     
                         <li class="next">
-                            <a href="/2018/10/15/BOJ10822/" data-toggle="tooltip" data-placement="top" title="[10822] 더하기">Next Post &rarr;</a>
+                            <a href="/2018/10/15/BOJ10823/" data-toggle="tooltip" data-placement="top" title="[10823] 더하기2">Next Post &rarr;</a>
                         </li>
                     
                 </ul>
@@ -316,8 +311,8 @@
 <script type="text/javascript">
     /* * * CONFIGURATION VARIABLES * * */
     var disqus_shortname = "your-disqus-ID";
-    var disqus_identifier = "https://woovictory.github.io/2018/10/15/BOJ10823/";
-    var disqus_url = "https://woovictory.github.io/2018/10/15/BOJ10823/";
+    var disqus_identifier = "https://woovictory.github.io/2018/10/15/BOJ10824/";
+    var disqus_url = "https://woovictory.github.io/2018/10/15/BOJ10824/";
 
     (function() {
         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
