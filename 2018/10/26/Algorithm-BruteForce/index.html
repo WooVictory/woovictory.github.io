@@ -15,11 +15,11 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <title>
         
-          [11651] 좌표 정렬하기2 - VictoryWoo | Blog
+          [algorithm] Brute Force - VictoryWoo | Blog
         
     </title>
 
-    <link rel="canonical" href="https://woovictory.github.io/2018/10/24/BOJ11651/">
+    <link rel="canonical" href="https://woovictory.github.io/2018/10/26/Algorithm-BruteForce/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -94,11 +94,11 @@
                               <a class="tag" href="/tags/#BOJ" title="BOJ">BOJ</a>
                             
                         </div>
-                        <h1>[11651] 좌표 정렬하기2</h1>
+                        <h1>[algorithm] Brute Force</h1>
                         <h2 class="subheading"></h2>
                         <span class="meta">
                             Posted by VictoryWoo on
-                            2018-10-24
+                            2018-10-26
                         </span>
                     </div>
                 
@@ -215,24 +215,18 @@
                 col-md-10 col-md-offset-1
                 post-container">
 
-                <p>문제 : <a href="https://www.acmicpc.net/problem/11651" target="_blank" rel="noopener">https://www.acmicpc.net/problem/11651</a></p>
-<h1 id="풀이방법">풀이방법</h1>
+                <h1 id="브루트-포스란">브루트 포스란?</h1>
 <hr>
-<p>어제 풀었던 좌표 정렬하기 문제에서 x를 기준으로 정렬했다면 이 문제는 y를 기준으로 정렬하고 y좌표의 값이 같으면 x좌표를 오름차순으로 정렬하는 문제입니다. 어제 언급했던 Comparable or Comparator을 활용해서 문제를 풀 수 있는지 확인하는 문제입니다.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.*;</span><br><span class="line"><span class="keyword">import</span> java.util.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BOJ11651</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        BufferedReader bf = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(System.in));</span><br><span class="line">        BufferedWriter bw = <span class="keyword">new</span> BufferedWriter(<span class="keyword">new</span> OutputStreamWriter(System.out));</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> N = Integer.parseInt(bf.readLine());</span><br><span class="line">        List&lt;Point&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; N; i++) &#123;</span><br><span class="line">            StringTokenizer st = <span class="keyword">new</span> StringTokenizer(bf.readLine(), <span class="string">" "</span>);</span><br><span class="line">            <span class="keyword">int</span> x = Integer.parseInt(st.nextToken());</span><br><span class="line">            <span class="keyword">int</span> y = Integer.parseInt(st.nextToken());</span><br><span class="line">            list.add(<span class="keyword">new</span> Point(x, y));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        Collections.sort(list, <span class="keyword">new</span> Comparator&lt;Point&gt;() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">compare</span><span class="params">(Point o1, Point o2)</span> </span>&#123;</span><br><span class="line">                <span class="keyword">if</span>(o1.y == o2.y)&#123;</span><br><span class="line">                    <span class="keyword">if</span>(o1.x&gt;o2.x)&#123;</span><br><span class="line">                        <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">                    &#125;<span class="keyword">else</span> <span class="keyword">if</span>(o1.x&lt;o2.x)&#123;</span><br><span class="line">                        <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">                    &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">                        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;<span class="keyword">else</span> <span class="keyword">if</span>(o1.y&gt;o2.y)&#123;</span><br><span class="line">                    <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">                &#125;<span class="keyword">else</span> <span class="keyword">if</span>(o1.y&lt;o2.y)&#123;</span><br><span class="line">                    <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">                &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">                    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;list.size();i++)</span><br><span class="line">            bw.write(list.get(i).x+<span class="string">" "</span>+list.get(i).y+<span class="string">"\n"</span>);</span><br><span class="line">        bw.flush();</span><br><span class="line">        bw.close();</span><br><span class="line">        bf.close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Point</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> x;</span><br><span class="line">    <span class="keyword">int</span> y;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Point</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.x = x;</span><br><span class="line">        <span class="keyword">this</span>.y = y;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
                 
 
                 <hr>
                 <!-- Pager -->
                 <ul class="pager">
                     
-                        <li class="previous">
-                            <a href="/2018/10/25/BOJ10825/" data-toggle="tooltip" data-placement="top" title="[10825] 국영수">&larr; Previous Post</a>
-                        </li>
-                    
                     
                         <li class="next">
-                            <a href="/2018/10/23/BOJ11650/" data-toggle="tooltip" data-placement="top" title="[11650] 좌표 정렬하기">Next Post &rarr;</a>
+                            <a href="/2018/10/25/BOJ10825/" data-toggle="tooltip" data-placement="top" title="[10825] 국영수">Next Post &rarr;</a>
                         </li>
                     
                 </ul>
@@ -262,7 +256,7 @@
         <div id="toc" class="toc-article">
         <strong class="toc-title">Contents</strong>
         
-          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#풀이방법"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">풀이방법</span></a></li></ol>
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#브루트-포스란"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">브루트 포스란?</span></a></li></ol>
         
         </div>
       </aside>
@@ -313,8 +307,8 @@
 <script type="text/javascript">
     /* * * CONFIGURATION VARIABLES * * */
     var disqus_shortname = "your-disqus-ID";
-    var disqus_identifier = "https://woovictory.github.io/2018/10/24/BOJ11651/";
-    var disqus_url = "https://woovictory.github.io/2018/10/24/BOJ11651/";
+    var disqus_identifier = "https://woovictory.github.io/2018/10/26/Algorithm-BruteForce/";
+    var disqus_url = "https://woovictory.github.io/2018/10/26/Algorithm-BruteForce/";
 
     (function() {
         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
