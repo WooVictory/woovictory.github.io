@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta name="google-site-verification" content="AFirxOxuB2W32dZY1PrMx4c6K3RsM3XVAkRIkCJEEpI" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword"  content="">
+    <link rel="shortcut icon" href="/img/android.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          Java :: 1) 타입 - VictoryWoo | Blog
+        
+    </title>
+
+    <link rel="canonical" href="https://woovictory.github.io/2018/08/01/java-basic-1/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS --> 
+    <link rel="stylesheet" href="/css/beantech.min.css">
+    
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('/img/header_img/blaise-vonlanthen-433128-unsplash.jpg')
+            /*post*/
+        
+    }
+    
+    #signature{
+        background-image: url('/null');
+    }
+    
+</style>
+
+<header class="intro-header" >
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#Java" title="Java">Java</a>
+                            
+                        </div>
+                        <h1>Java :: 1) 타입</h1>
+                        <h2 class="subheading"></h2>
+                        <span class="meta">
+                            Posted by VictoryWoo on
+                            2018-08-01
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+	
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">VictoryWoo</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">about</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <p>8월달부터 본격적으로 알고리즘 공부를 시작하기에 앞서서 Java에 대한 기초적인 문법과 개념들이 취약한 것 같아서 시간을 쪼개서 공부하면서 정리해볼 예정입니다.</p>
+<h1 id="java-program">Java Program</h1>
+<hr>
+<p>자바 프로그램은 한 개 이상의 <code>클래스</code>로 구성됩니다. 이러한 클래스는 한 개 이상의 <strong>필드</strong>나 <strong>메소드</strong>로 구성됩니다.</p>
+<ol>
+<li>main() 메소드<br>
+자바 프로그램이 실행되면 제일 먼저 main() 메소드를 찾아 그 안의 모든 명령문을 차례대로 실행합니다. 따라서 하나의 자바 프로그램에는 main() 메소드를 가지는 클래스가 반드시 하나는 존재해야 합니다.</li>
+</ol>
+<blockquote>
+<p>자바 클래스 파일에 public 클래스가 존재하면 소스 파일의 이름은 반드시 해당 public 클래스의 이름과 같아야 합니다. 이러한 public 클래스는 자바 클래스 파일마다 단 한개만 가질 수 있습니다.</p>
+</blockquote>
+<h1 id="systemoutprintln">System.out.println()</h1>
+<hr>
+<p>사용자가 프로그램과 대화하기 위해서는 사용자와 프로그램 사이의 입출력을 담당하는 수단이 필요합니다. 자바에서는 모든 것이 객체로 표현되므로, 입출력을 담당하는 수단 또한 모두 객체입니다.</p>
+<p>C언어의 printf() 함수나 scanf() 함수처럼 자바에서는 System이라는 표준 입출력 클래스를 정의하여 제공하고 있습니다. 이러한 System 클래스는 java.lang 패키지에 포함되어 제공됩니다. System 클래스에는 표준 입출력을 위해 다음과 같은 <strong>클래스 변수</strong>(static variable)가 정의되어 있습니다.</p>
+<ol>
+<li><a href="http://System.in" target="_blank" rel="noopener">System.in</a> : 표준 입력 작업 수행</li>
+<li>System.out : 표준 출력 작업 수행</li>
+<li>System.err : 표준 출력 작업 수행</li>
+</ol>
+<ul>
+<li><code>System.out.println()</code> 메소드를 사용하면 모니터에 전달된 데이터를 출력한 후에 줄 바꿈까지 해줍니다.</li>
+<li><code>System.out.print()</code> 메소드를 사용하면 모니터에 전달된 데이터를 출력한 후에 줄 바꿈을 하지 않습니다.</li>
+</ul>
+<h1 id="변수variable">변수(variable)</h1>
+<hr>
+<p>변수(variable)란 데이터를 저장하기 위해 프로그램에 의해 이름을 할당받은 <strong>메모리 공간</strong>을 의미합니다. 즉, 변수란 <code>데이터(data)</code>를 저장할 수 있는 <strong>메모리 공간</strong>을 의미하며, 이렇게 저장된 값은 <strong>변경될 수 있습니다.</strong></p>
+<h2 id="변수의-이름-생성-규칙">변수의 이름 생성 규칙</h2>
+<hr>
+<p>자바에서는 변수뿐만 아니라 클래스, 메소드 등의 이름을 짓는데 반드시 지켜야 하는 공통된 규칙이 있습니다.</p>
+<ol>
+<li>변수의 이름은 영문자(대소문자), 숫자, 언더스코어,달러($)로만 구성할 수 있습니다.</li>
+<li>변수의 이름은 숫자로 시작할 수 없습니다.</li>
+<li>변수의 이름 사이에는 공백을 포함할 수 없습니다.</li>
+<li>변수의 이름으로 자바에서 미리 정의된 키워드를 사용할 수는 없습니다.</li>
+</ol>
+<p>변수의 이름은 해당 변수에 저장될 <strong>데이터의 의미</strong>를 잘 나타내도록 짓는 것이 좋습니다.</p>
+<h2 id="변수의-종류">변수의 종류</h2>
+<hr>
+<ol>
+<li>기본형 변수(primitive type)<br>
+기본형 변수는 <strong>실제 연산</strong>에 사용되는 변수입니다.</li>
+</ol>
+<ul>
+<li>정수형 : byte, short, int, long</li>
+<li>실수형 : float, double</li>
+<li>문자형 : char</li>
+<li>논리형 : Boolean</li>
+</ul>
+<ol start="2">
+<li>참조형 변수(reference type)<br>
+참조형 변수는 8개의 기본형 변수를 사용하여 사용자가 직접 만들어 사용하는 변수를 의미합니다.</li>
+</ol>
+<p>덧셈 연산자(+)는 피연산자가 모두 숫자일 때는 두 수를 더하지만, 피연산자 중 어느 한쪽이 String이면 나머지 한 쪽을 먼저 String으로 변환한 다음 두 String을 결합합니다.</p>
+<p><strong>참조변수의 출력이나 덧셈 연산자를 이용한 참조변수와 문자열의 결합에는 toString()이 자동적으로 호출되어 참조변수를 문자열로 대치한 후 처리합니다.</strong></p>
+<h2 id="변수의-선언과-초기화">변수의 선언과 초기화</h2>
+<hr>
+<p>자바에서 변수를 사용하기 전에는 반드시 선언하고 초기화 하는 과정을 거쳐야 합니다. 방법은 두 가지가 존재하며 아래와 같습니다.</p>
+<ol>
+<li>변수의 선언만 하는 방법<br>
+변수를 선언하여 <strong>메모리 공간을 할당</strong>받고, 나중에 변수를 초기화 하는 방법으로 이렇게 선언된 변수는 초기화되지 않았으므로, 해당 메모리 공간에는 알 수 없는 쓰레기 값이 들어가 있습니다. 따라서 선언된 변수는 반드시 초기화한 이후에 사용해야 합니다.<br>
+자바에서는 프로그램의 안정성을 위해 초기화되지 않은 변수를 사용하려고 하면 자바 컴파일러 오류가 발생합니다.</li>
+</ol>
+<ol start="2">
+<li>변수의 선언과 초기화를 동시에 하는 방법<br>
+자바에서는 변수의 선언과 동시에 그 값을 초기화할 수 있습니다. 또한, 선언하고자 하는 변수들의 타입이 같다면 이를 동시에 선언할 수도 있습니다.<br>
+그리고 같은 타입의 변수를 동시에 선언하면서 초기화가 가능합니다. 하지만, 선언하고자 하는 변수의 타입이 다르면 당연히 동시에 선언할 수 없습니다.</li>
+</ol>
+<h1 id="상수constant">상수(constant)</h1>
+<hr>
+<p>상수(constant)란 변수와 마찬가지로 데이터를 저장할 수 있는 메모리 공간을 의미하지만, 상수가 변수와 다른 점은 프로그램이 실행되는 동안 <strong>메모리에 저장된 데이터를 변경할 수 없다는 점</strong>입니다. 상수는 <strong>선언과 동시에 반드시 초기화</strong>해야 합니다. C++에서는 const 키워드를 사용하여 상수를 선언하지만, 자바에서는 <code>final</code> 키워드를 사용하여 상수를 선언합니다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">final</span> <span class="keyword">int</span> AGES = <span class="number">20</span>;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>자바에서 상수의 이름은 일반적으로 모두 <strong>대문자</strong>를 사용하여 선언합니다. 여러 단어로 이루어진 경우에는 언더스코어를 사용하여 구분합니다.</p>
+</blockquote>
+<h2 id="리터럴literal">리터럴(literal)</h2>
+<hr>
+<p>리터럴(literal)이란 그 자체로 <strong>값</strong>을 의미합니다. 즉, 변수와 상수와는 달리 데이터가 저장된 메모리 공간을 가리키는 이름을 가지고 있지 않습니다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> var = <span class="number">30</span>; <span class="comment">// 30이 리터럴</span></span><br><span class="line"><span class="keyword">final</span> <span class="keyword">int</span> AGES = <span class="number">100</span>; <span class="comment">// 100이 리터럴</span></span><br></pre></td></tr></table></figure>
+<h2 id="리터럴-타입-접미사literal-type-suffix">리터럴 타입 접미사(literal type suffix)</h2>
+<hr>
+<p>자바에서 3.14와 같은 실수형 리터럴을 그대로 사용하면, 해당 리터럴은 실수형 타입 중에서도 double로 인식할 것입니다. 하지만, 실수형 리터럴 맨 뒤에 F나 f를 추가하면, 자바는 해당 실수형 리터럴을 float형으로 인식할 것입니다.</p>
+<p>이처럼 리터럴 뒤에 추가되어 해당 리터럴의 타입을 명시해주는 접미사를 <strong>리터럴 타입 접미사</strong>(lister type suffix)라고 합니다.</p>
+<p>아래 그림은 자바에서 사용할 수 있는 리터럴 타입 접미사입니다.</p>
+<img src="/img/literal.png" width="600" height="300">
+<h2 id="기본-타입primitive-type">기본 타입(Primitive type)</h2>
+<hr>
+<p><strong>타입</strong>(data type)은 해당 데이터가 메모리에 어떻게 저장되고, 프로그램에서 어떻게 처리되어야 하는지 명시적으로 알려주는 역할을 합니다. 자바에서는 여러 형태의 타입을 미리 정의하여 제공하고 있는데, 이것을 <code>기본 타입(primitive type)</code>이라고 합니다.</p>
+<p>자바의 기본 타입은 모두 8종류가 제공되며, 크게는 정수형, 실수형, 문자형 그리고 논리형 타입으로 나눌 수 있습니다.</p>
+<h3 id="정수형-타입">정수형 타입</h3>
+<p>자바에서 정수란 부호를 가지고 있으며, 소수 부분이 없는 수를 의미합니다. 정수는 다음과 같습니다.</p>
+<ol>
+<li><strong>byte</strong></li>
+<li><strong>short</strong></li>
+<li><strong>int</strong></li>
+<li><strong>long</strong></li>
+</ol>
+<img src="/img/data_type.png" width="600" height="300">
+<p>정수형 데이터의 타입을 결정할 때에는 반드시 자신이 사용하고자 하는 <strong>데이터의 최대 크기</strong>를 고려해야 합니다. 해당 타입이 표현할 수 있는 범위를 벗어난 데이터를 저장하면 <code>오버플로우(Overflow)</code>가 발생하여 전혀 다른 값이 저장될 수 있기 때문입니다.</p>
+<blockquote>
+<p><code>오버플로우(Overflow)</code></p>
+</blockquote>
+<p>해당 타입이 표현할 수 있는 최대 범위보다 큰 수를 저장할 때 발생하는 현상을 말합니다. 오버플로우가 발생하면 최상위 비트(MSB)를 벗어난 데이터가 인접 비트를 덮어쓰므로, 잘못된 결과를 얻을 수 있습니다.</p>
+<p>또한, <code>언더플로우(Underflow)</code>란 해당 타입이 표현할 수 있는 최소 범위보다 작은 수를 저장할 때 발생하는 현상을 가리킵니다.</p>
+<blockquote>
+<p>자바에서 정수형 타입 중 기본이 되는 데이터 타입은 int형입니다. 따라서 컴퓨터는 내부적으로 정수형 중에서도 <code>int</code>형의 데이터를 가장 빠르게 처리합니다.</p>
+</blockquote>
+<h3 id="실수형-타입">실수형 타입</h3>
+<p>자바에서 실수란 <strong>소수부</strong>와 <strong>지수부</strong>가 있는 수를 가리키며, 정수보다 훨씬 더 넓은 표현 범위를 가집니다. 자바의 기본 타입 중 실수를 나타내는 타입은 아래와 같습니다.</p>
+<ol>
+<li><strong>float</strong></li>
+<li><strong>double</strong></li>
+</ol>
+<p>과거에는 실수를 표현할 때 float형을 많이 사용했다고 합니다. 하지만, 하드웨어의 발달로 인한 메모리 공간의 증가로 현재는 double형을 가장 많이 사용한다고 합니다. 따라서 실수형 타입 중 기본이 되는 타입은 double형 입니다.</p>
+<img src="/img/float_double1.png" width="600" height="300">
+<img src="/img/float_double2.png" width="600" height="300">
+<p>컴퓨터에서 실수를 표현하는 방식은 오차가 발생할 수 밖에 없는 태생적 한계를 지닙니다. 이러한 실수형 데이터의 오차는 자바뿐만 아니라 모든 프로그래밍 언어에서 발생하는 공통된 문제입니다.</p>
+<h3 id="문자형-타입">문자형 타입</h3>
+<p>자바에서 문자형 데이터란 작은 정수나 문자 하나를 표현할 수 있는 타입을 의미합니다.</p>
+<ol>
+<li><strong>char</strong></li>
+</ol>
+<p>컴퓨터는 2진수밖에 인식하지 못하므로 문자도 숫자로 표현해야 인식할 수 있습니다. 따라서 어떤 문자를 어떤 숫자에 대응시킬 것인가에 대한 약속이 필요해집니다.</p>
+<p>C언어와 C++에서는 아스키코드를 사용하여 문자를 표현합니다.하지만, 자바에서는 <strong>유니코드</strong>(unicode)를 사용하여 문자를 표현합니다. 아스키코드는 영문자와 숫자밖에 표현 못하지만, 유니코드는 각 나라의 모든 언어를 표현할 수 있습니다. 유니코드는 문자 하나를 16비트로 표현하므로, 총 65,356개의 문자를 표현할 수 있습니다.</p>
+<img src="/img/char.png" width="600" height="300">
+<h3 id="논리형-타입">논리형 타입</h3>
+<p>논리형은 참(true)이나 거짓(false) 중 한 가지 값만을 가질 수 있는 Boolean 타입을 의미합니다.</p>
+<ol>
+<li><strong>Boolean</strong></li>
+</ol>
+<img src="/img/boolean.png" width="600" height="300">
+<h1 id="실수의-표현">실수의 표현</h1>
+<hr>
+<p>컴퓨터에서 실수를 표현하는 방법은 정수에 비해 훨씬 복잡합니다. 왜냐하면, 컴퓨터에서는 실수를 정수와 마찬가지로 2진수로만 표현해야 하기 때문입니다.<br>
+따라서 실수를 표현하기 위한 다양한 방법들이 연구되었으며, 현재에는 다음과 같은 두 가지의 방법이 사용되고 있습니다.</p>
+<h3 id="고정-소수점-방식fixed-point">고정 소수점 방식(fixed point)</h3>
+<p>실수는 보통 <strong>정수부</strong>와 <strong>소수부</strong>로 나눌 수 있습니다. 따라서 실수를 표현하는 가장 간단한 방식은 소수부의 자릿수를 미리 고정하여 고정된 자릿수의 소수를 표현하는 것입니다.</p>
+<img src="/img/fixed_point.png" width="600" height="300">
+<p>위 그림은 32비트 실수를 고정 소수점 방식으로 표현한 것입니다. 하지만, 이 방식은 정수부와 소수부의 자릿수가 크지 않으므로 표현할 수 있는 범위가 매우 적다는 단점이 있습니다.</p>
+<h2 id="부동-소수점-방식floating-point">부동 소수점 방식(floating point)</h2>
+<p>실수는 보통 정수부와 소수부로 나누지만, <strong>가수부</strong>와 <strong>지수부</strong>로 나누어 표현할 수도 있습니다. 부동 소수점 방식은 이렇게 하나의 실수를 가수부와 지수부로 나누어 표현하는 방식입니다.</p>
+<p>앞서 살펴본 고정 소수점 방식은 제한된 자릿수로 인해 표현할 수 있는 범위가 매우 작았습니다. 하지만, 부동 소수점 방식은 다음의 수식을 이용하여 매우 큰 실수까지도 표현할 수 있게 되었습니다.</p>
+<img src="/img/operation.png" width="600" height="300">
+<p>현재 대부분의 시스템에서는 부동 소수점 방식으로 실수를 표현하고 있습니다.</p>
+<h2 id="ieee-부동-소수점-방식">IEEE 부동 소수점 방식</h2>
+<p>현재 사용되고 있는 부동 소수점 방식은 대부분 <strong>IEEE 754</strong> 표준을 따르고 있습니다.</p>
+<p>32비트(4바이트)의 float형 실수를 IEEE 부동 소수점 방식으로 표현하면 다음과 같습니다.</p>
+<img src="/img/floating.png" width="600" height="300">
+<p>64비트의 double형 실수를 IEEE 부동 소수점 방식으로 표현하면 다음과 같습니다.</p>
+<img src="/img/floating2.png" width="600" height="300">
+<p>지수 필드의 비트 수가 늘어나면 표현 가능한 수의 범위가 확장되고, 가수 필드의 비트 수가 늘어나면 정밀도가 증가합니다.</p>
+<h2 id="부동-소수점-방식의-오차">부동 소수점 방식의 오차</h2>
+<hr>
+<p>부동 소수점 방식을 사용하면 고정 소수점 방식보다 훨씬 더 많은 범위까지 표현할 수 있습니다. 하지만, <code>부동 소수점 방식</code>에 의한 실수의 표현은 <strong>항상 오차가 존재</strong>한다는 단점을 가지고 있습니다.</p>
+<p>부동 소수점 방식에서의 오차는 앞에서 본 공식에 의해 발생합니다. 이 공식을 사용하면 표현할 수 있는 범위는 늘어나지만, 10진수를 정확하게 표현할 수는 없게 됩니다. 따라서 컴퓨터에서 실수를 표현하는 방법은 정확한 표현이 아닌 언제나 근사치를 표현할 뿐임을 항상 명심해야 합니다.</p>
+<h2 id="타입-변환">타입 변환</h2>
+<hr>
+<p>하나의 타입을 다른 타입으로 바꾸는 것을 <code>타입 변환</code>(type conversion)이라고 합니다. 자바에서는 boolean형을 제외한 나머지 기본 타입 간의 타입 변환을 자유롭게 수행할 수 있습니다.</p>
+<p>자바에서는 다른 타입끼리의 연산은 우선 피연산자들을 모두 같은 타입으로 만든 후에 수행됩니다. 메모리에 할당받은 바이트의 크기가 상대적으로 작은 타입 -&gt; 큰 타입으로의 변환은 생략할 수 있습니다.</p>
+<p>하지만, 메모리에 할당받은 바이트의 크기가 큰 타입 -&gt; 작은 타입으로의 타입 변환은 데이터의 손실이 발생합니다. 따라서 상대적으로 바이트의 크기가 작은 타입으로 타입 변환을 할 경우 자바 컴파일러는 오류를 발생시킵니다.</p>
+<h3 id="묵시적-타입-변환자동-타입-변환">묵시적 타입 변환(자동 타입 변환)</h3>
+<p>대입 연산이나 산술 연산에서 컴파일러가 자동으로 수행해주는 타입 변환을 가리킵니다. <strong>자바에서는 데이터의 손실이 발생하지 않거나, 데이터의 손실이 최소화되는 방향으로 묵시적 타입 변환을 진행합니다.</strong><br>
+또한, 자바에서는 데이터의 손실이 발생하는 대입 연산은 허용하지 않습니다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">double</span> num1 = <span class="number">10</span>; <span class="comment">// 1</span></span><br><span class="line"><span class="keyword">int</span> num2 = <span class="number">3.14</span>; <span class="comment">// 2</span></span><br><span class="line"><span class="keyword">double</span> num3 = <span class="number">7.0f</span> + <span class="number">3.14</span>; <span class="comment">//3</span></span><br><span class="line">System.out.println(num1);</span><br><span class="line">System.out.println(num3);</span><br></pre></td></tr></table></figure>
+<p>위의 예제는 대입 연산과 산술 연산에서 일어나는 묵시적 타입 변환을 보여줍니다. 1번에서는 double형 변수에 int형 데이터를 대입하므로, int형 데이터 -&gt; double형 데이터로 자동 타입 변환됩니다.</p>
+<p>하지만, 2번에서는 int형 변수가 표현할 수 있는 범위보다 더 큰 double형 데이터를 대입하므로 데이터의 손실이 발생합니다. 따라서 이 대입 연산에 대해서는 자바 컴파일러가 오류를 발생시킬 것입니다.</p>
+<p>3번에서는 float형 데이터와 double형 데이터의 산술 연산을 수행합니다. 데이터의 손실이 최소화되도록 float형 데이터 -&gt; double형으로 자동 타입 변환됩니다.</p>
+<p><strong>이렇게 자바 컴파일러가 자동으로 수행하는 타입 변환은 언제나 데이터의 손실이 최소화되는 방향으로 이루어집니다.</strong> 따라서 자바에서는 타입의 표현 범위에 따라 다음과 같은 방향으로 자동 타입 변환이 이루어집니다.</p>
+<img src="/img/java_type_conversion.jpg" width="600" height="300">
+<h3 id="명시적-타입-변환강제-타입-변환">명시적 타입 변환(강제 타입 변환)</h3>
+<p>사용자가 타입 캐스트 연산자 (())를 사용하여 강제적으로 수행하는 타입 변환을 말합니다.</p>
+<p>다음과 같은 방법으로 명시적 타입 변환을 수행할 수 있습니다.</p>
+<p><code>(변환할 타입) 변환할 데이터</code></p>
+<p>변환시키고자 하는 데이터의 앞에 괄호 (())를 넣고, 그 괄호 안에 변환할 타입을 적으면 됩니다. 자바에서는 이 괄호를 <code>타입 캐스트(type cast)</code> 연산자라고 합니다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> num1 = <span class="number">1</span>, num2 = <span class="number">4</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">double</span> result1 = num1 / num2;</span><br><span class="line"><span class="keyword">double</span> resutl2 = (<span class="keyword">double</span>) num1 / num2; <span class="comment">// 강제 타입 변환</span></span><br><span class="line"></span><br><span class="line">System.out.println(result1);</span><br><span class="line">System.out.println(resutl2);</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 결과</span></span><br><span class="line"><span class="number">0.0</span></span><br><span class="line"><span class="number">0.25</span></span><br></pre></td></tr></table></figure>
+<p>result1은 나눗셈의 결과로는 0이 반환됩니다. 자바에서 산술 연산을 수행하고 얻는 결과값의 타입은 언제나 피연산자의 타입과 일치해야 합니다. 즉, int형 데이터끼리 산술 연산에 대한 결과값은 언제나 int형 데이터의 결과가 나오게 됩니다. 따라서 <code>1/4</code>의 결과로는 0.25가 반환되지만, int형으로 자동 타입 변환되어 0이 반환되게 됩니다. 그리고서 double형 변수에 그 결과가 대입될 때, double형으로 자동 타입 변환되어 0.0이라는 결과가 출력됩니다.</p>
+<p>따라서 정확한 결과를 얻고자 한다면 result2처럼 피연산자 중 하나의 타입을 double형으로 강제 타입 변환을 해야 합니다. 이렇게 피연산자 중 하나의 타입이 double형이 되면, 나눗셈 연산을 위해 나머지 하나의 피연산자도 double형으로 자동 타입 변환됩니다. 따라서 그 결과 또한 double형인 0.25가 될 것이며, 이 결과가 double형 변수에 제대로 대입될 것입니다.</p>
+
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/2018/08/01/nodejs-chap1/" data-toggle="tooltip" data-placement="top" title="Nodejs :: Nodejs?">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/2018/08/01/kotlin-concept-2/" data-toggle="tooltip" data-placement="top" title="커니의 코틀린 :: 기본 자료형">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                    <div class="comment">
+                        <div id="disqus_thread" class="disqus-thread"></div>
+                    </div>
+                
+                <!-- disqus comment end -->
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#java-program"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">Java Program</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#systemoutprintln"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">System.out.println()</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#변수variable"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">변수(variable)</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#변수의-이름-생성-규칙"><span class="toc-nav-number">3.1.</span> <span class="toc-nav-text">변수의 이름 생성 규칙</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#변수의-종류"><span class="toc-nav-number">3.2.</span> <span class="toc-nav-text">변수의 종류</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#변수의-선언과-초기화"><span class="toc-nav-number">3.3.</span> <span class="toc-nav-text">변수의 선언과 초기화</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#상수constant"><span class="toc-nav-number">4.</span> <span class="toc-nav-text">상수(constant)</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#리터럴literal"><span class="toc-nav-number">4.1.</span> <span class="toc-nav-text">리터럴(literal)</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#리터럴-타입-접미사literal-type-suffix"><span class="toc-nav-number">4.2.</span> <span class="toc-nav-text">리터럴 타입 접미사(literal type suffix)</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#기본-타입primitive-type"><span class="toc-nav-number">4.3.</span> <span class="toc-nav-text">기본 타입(Primitive type)</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#정수형-타입"><span class="toc-nav-number">4.3.1.</span> <span class="toc-nav-text">정수형 타입</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#실수형-타입"><span class="toc-nav-number">4.3.2.</span> <span class="toc-nav-text">실수형 타입</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#문자형-타입"><span class="toc-nav-number">4.3.3.</span> <span class="toc-nav-text">문자형 타입</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#논리형-타입"><span class="toc-nav-number">4.3.4.</span> <span class="toc-nav-text">논리형 타입</span></a></li></ol></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#실수의-표현"><span class="toc-nav-number">5.</span> <span class="toc-nav-text">실수의 표현</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#고정-소수점-방식fixed-point"><span class="toc-nav-number">5.0.1.</span> <span class="toc-nav-text">고정 소수점 방식(fixed point)</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#부동-소수점-방식floating-point"><span class="toc-nav-number">5.1.</span> <span class="toc-nav-text">부동 소수점 방식(floating point)</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#ieee-부동-소수점-방식"><span class="toc-nav-number">5.2.</span> <span class="toc-nav-text">IEEE 부동 소수점 방식</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#부동-소수점-방식의-오차"><span class="toc-nav-number">5.3.</span> <span class="toc-nav-text">부동 소수점 방식의 오차</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#타입-변환"><span class="toc-nav-number">5.4.</span> <span class="toc-nav-text">타입 변환</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#묵시적-타입-변환자동-타입-변환"><span class="toc-nav-number">5.4.1.</span> <span class="toc-nav-text">묵시적 타입 변환(자동 타입 변환)</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#명시적-타입-변환강제-타입-변환"><span class="toc-nav-number">5.4.2.</span> <span class="toc-nav-text">명시적 타입 변환(강제 타입 변환)</span></a></li></ol></li></ol></li></ol>
+        
+        </div>
+      </aside>
+    
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#Java" title="Java">Java</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="https://leejongchan.github.io/" target="_blank">JongChan</a></li>
+                    
+                        <li><a href="https://godpp.github.io" target="_blank">godpp</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- disqus embedded js code start (one page only need to embed once) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "your-disqus-ID";
+    var disqus_identifier = "https://woovictory.github.io/2018/08/01/java-basic-1/";
+    var disqus_url = "https://woovictory.github.io/2018/08/01/java-basic-1/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus embedded js code start end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'always',
+          placement: 'right',
+          icon: '#'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://www.facebook.com/WooVictory">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/WooVictory">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; VictoryWoo 2018 
+                    <br>
+                    Theme by <a href="http://huangxuan.me">Hux</a> 
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span> 
+                    re-Ported by <a href="http://beantech.org">BeanTech</a> | 
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=YenYuHsuan&repo=hexo-theme-beantech&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://woovictory.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-XXXXXXXX-X';
+    var _gaDomain = 'yoursite';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+<img src="https://woovictory.github.io/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

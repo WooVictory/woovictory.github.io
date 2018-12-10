@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta name="google-site-verification" content="AFirxOxuB2W32dZY1PrMx4c6K3RsM3XVAkRIkCJEEpI" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword"  content="">
+    <link rel="shortcut icon" href="/img/android.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          [BoostCourse] 1. Layout - VictoryWoo | Blog
+        
+    </title>
+
+    <link rel="canonical" href="https://woovictory.github.io/2018/05/04/boostcourse1/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS --> 
+    <link rel="stylesheet" href="/css/beantech.min.css">
+    
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('/img/header_img/blaise-vonlanthen-433128-unsplash.jpg')
+            /*post*/
+        
+    }
+    
+    #signature{
+        background-image: url('/null');
+    }
+    
+</style>
+
+<header class="intro-header" >
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                        </div>
+                        <h1>[BoostCourse] 1. Layout</h1>
+                        <h2 class="subheading"></h2>
+                        <span class="meta">
+                            Posted by VictoryWoo on
+                            2018-05-04
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+	
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">VictoryWoo</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">about</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <h1 id="view란">View란?</h1>
+<h2 id="view와-view-그룹의-정의">View와 View 그룹의 정의</h2>
+<ul>
+<li>
+<p><strong>View란?</strong><br>
+화면에 보이는 각각의 것들(버튼, 텍스틍 등등)<br>
+흔히 콘트롤이나 위젯이라 불리는 UI 구성 요소</p>
+</li>
+<li>
+<p><strong>ViewGroup?</strong><br>
+뷰들을 여러개 포함하고 있는 것<br>
+뷰 그룹도 뷰에서 상속하여 뷰가 된다. 즉, 위의 뷰는 버튼, 텍스트 뿐만 아니라 이것들을 포함하는 눈에 보이지 않는 영역을 포함</p>
+</li>
+</ul>
+<p><img src="/img/hierarchical.png" alt=""></p>
+<ul>
+<li>
+<p><strong>위젯이란?</strong><br>
+뷰 중에서 일반적인 컨트롤 역할을 하고 있는 것<br>
+예 : 버튼, 텍스트 등등</p>
+</li>
+<li>
+<p><strong>레이아웃이란?</strong><br>
+뷰 그룹 중에서 내부에 뷰들을 포함하고 있으면서 그것들을 배치하는 역할을 하는 것</p>
+</li>
+</ul>
+<p>레이아웃은 그 안에 다른 뷰들을 담아둘 수 있는데 레이아웃도 뷰를 상속하여 정의되었기 때문에 레이아웃 안에 레이아웃도 담을 수 있다.<br>
+레이아웃 안에 레이아웃 다시 그 레이아웃 안에 레이아웃을 담으면 복잡한 화면을 구성할 수 있다.</p>
+<p><img src="/img/organization.png" alt=""></p>
+<h2 id="view의-크기-속성">View의 크기 속성</h2>
+<ul>
+<li>layout_width : 가로의 크기를 지정</li>
+<li>layout_height : 세로의 크기를 지정</li>
+<li>세로와 가로의 크기를 지정하는 <code>필수</code>적인 요소!!</li>
+</ul>
+<blockquote>
+<p>크기 지정 방법 3가지</p>
+</blockquote>
+<ul>
+<li>match_parent : 상위 뷰의 크기에 맞게 구성 요소를 확장</li>
+<li>wrap_content : 뷰 안에 들어있는 내용물의 크기에 딱 맞게 크기를 결정</li>
+<li>원하는 크기로 사용자가 직접 지정<br>
+이 때 크기를 나타내는 숫자 뒤에는 px나 dp와 같은 단위를 사용한다.</li>
+</ul>
+<h1 id="대표적인-레이아웃">대표적인 레이아웃</h1>
+<h2 id="linearlayout">LinearLayout</h2>
+<p>상자를 쌓듯이 뷰를 하나씩 쌓을 수 있는 레이아웃<br>
+방향 속성인 <code>orientation</code>을 이용해서 <strong>vertical</strong>[가로]방향이나 <strong>horizontal</strong>[세로]방향으로 뷰를 쌓을 수 있습니다.<br>
+간단하고 사용이 쉬운 레이아웃이지만, Linear안에 Linear 레이아웃을 중첩시켜서 각각에 다른 orientation 방향 속성을 주어서 복잡한 화면 구성도 가능합니다.</p>
+<p><img src="/img/linear.png" alt=""></p>
+<ul>
+<li>layout_gravity 속성 : 뷰를 정렬하는데 사용</li>
+<li>gravity 속성 : 뷰 안에 들어있는 내용물을 정렬할 때 사용</li>
+</ul>
+<p>추가적으로 margin을 설정할 수 있습니다.<br>
+margin은 뷰의 테두리선 바깥쪽 공간을 얼마나 띄울 것인지를 지정하는 속성<br>
+padding은 뷰 안에 들어있는 내용물을 테두리 선과 얼마나 띄울 것인지를 지정하는 속성</p>
+<p><img src="/img/margin1.png" alt=""></p>
+<ul>
+<li>layout_weight : 공간 분할에 사용되는 속성<br>
+예를 들어, 두 개의 버튼을 가로 방향으로 똑같은 크기만큼 반반씩 공간을 차지하도록 만들고 싶을 때 사용한다.<br>
+그런데 이 속성은 남아있는 여유 공간만 분할한다.<br>
+이 때문에 두 개의 버튼을 가로 방향으로 추가했다면 layout_widht 속성의 값은 0dp로 주는 것이 필요하다.</li>
+</ul>
+<h2 id="relativelayout">RelativeLayout</h2>
+<p>뷰를 담고 있는 부모 레이아웃이나 그 안에 들어있는 다른 뷰들과의 상대적 위치를 이용해 화면을 배치하는 레이아웃</p>
+<p><img src="/img/relative.jpg" alt=""></p>
+<blockquote>
+<p>사용방식</p>
+</blockquote>
+<p>화면의 아래쪽에 버튼을 붙이고 싶다면 layout_alignParentBottom 속성의 값을 true로 설정하는 것으로 충분하다.</p>
+<blockquote>
+<p>RelativeLayout을 이용한 뷰의 배치</p>
+</blockquote>
+<p><img src="/img/relative2.jpg" alt=""></p>
+<p>상대 레이아웃이 뷰를 담고 있다면 이 뷰의 입장에서는 상대 레이아웃이 부모 레이아웃이 된다.<br>
+그리고 부모 레이아웃의 상대적 위치를 이용할 수 있다.</p>
+<p>A 뷰는 부모 레이아웃의 위쪽에 붙이고, B 뷰는 A 뷰의 아래쪽에 붙일 수 있다.<br>
+같은 상대 레이아웃 안에 들어있는 다른 뷰와의 상대적 위치를 이용</p>
+<p><strong>부모 레이아웃</strong>과의 상대적 위치를 지정할 때 사용하는 속성으로는 layout_alignParet [Top,Bottom,Left,Right] 등이 존재<br>
+부모 레이아웃의 가운데에 배치하기 위한 <code>layout_centerInParent</code> 속성도 존재</p>
+<p><strong>다른 뷰</strong>와의 상대적 위치를 지정할 때 사용하는 속성으로는 layout_toLeftOf,layout_toRightOf,layout_alignTop,layout_alignBottom 등이 존재<br>
+부모 레이아웃과의 상대적 위치를 지정할 때 사용하는 속성들은 모두 <code>Parent</code>라는 단어가 들어가 있지만 다른 뷰와의 상대적 위치를 지정할 때 사용하는 속성들에는 <code>Parent</code>라는 단어가 들어가 있지 않습니다.</p>
+<h2 id="framelayout">FrameLayout</h2>
+<p>프레임 레이아웃은 한 번에 하나의 뷰만 보여주는 레이아웃입니다.<br>
+가장 단순한 레이아웃이고, 이 레이아웃에 뷰를 여러 개 추가했다면 그 중 가장 나중에 추가한 뷰만 화면에 보이게 된다.<br>
+이런 특성 때문에 뷰들을 여러 개 담아놓고 중첩할 때 주로 사용<br>
+아래쪽에 깔린 다른 뷰를 화면에 보여주고 싶다면 위쪽으로 뷰를 올려줄 수도 있고 보고자 하는 뷰 외의 다른 뷰들을 보이지 않게 할 수도 있다.</p>
+<blockquote>
+<p>프레임 레이아웃을 이용한 뷰의 중첩 방식<br>
+<img src="/img/frame.png" alt=""></p>
+</blockquote>
+<p><strong>가시성</strong> 속성을 사용해서 프레임 레이아웃 안에 중첩된 뷰들 중에서 하나만 보여주게 할 수 있다.</p>
+<ul>
+<li><code>가시성(visibility)</code> : <strong>visible, invisible, gone</strong></li>
+</ul>
+
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/2018/05/05/sopt-seminar3/" data-toggle="tooltip" data-placement="top" title="[SOPT] Seminar3">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/2018/05/02/sopt-seminar2/" data-toggle="tooltip" data-placement="top" title="[SOPT] Seminar2">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                    <div class="comment">
+                        <div id="disqus_thread" class="disqus-thread"></div>
+                    </div>
+                
+                <!-- disqus comment end -->
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#view란"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">View란?</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#view와-view-그룹의-정의"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">View와 View 그룹의 정의</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#view의-크기-속성"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text">View의 크기 속성</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#대표적인-레이아웃"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">대표적인 레이아웃</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#linearlayout"><span class="toc-nav-number">2.1.</span> <span class="toc-nav-text">LinearLayout</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#relativelayout"><span class="toc-nav-number">2.2.</span> <span class="toc-nav-text">RelativeLayout</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#framelayout"><span class="toc-nav-number">2.3.</span> <span class="toc-nav-text">FrameLayout</span></a></li></ol></li></ol>
+        
+        </div>
+      </aside>
+    
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="https://leejongchan.github.io/" target="_blank">JongChan</a></li>
+                    
+                        <li><a href="https://godpp.github.io" target="_blank">godpp</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- disqus embedded js code start (one page only need to embed once) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "your-disqus-ID";
+    var disqus_identifier = "https://woovictory.github.io/2018/05/04/boostcourse1/";
+    var disqus_url = "https://woovictory.github.io/2018/05/04/boostcourse1/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus embedded js code start end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'always',
+          placement: 'right',
+          icon: '#'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://www.facebook.com/WooVictory">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/WooVictory">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; VictoryWoo 2018 
+                    <br>
+                    Theme by <a href="http://huangxuan.me">Hux</a> 
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span> 
+                    re-Ported by <a href="http://beantech.org">BeanTech</a> | 
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=YenYuHsuan&repo=hexo-theme-beantech&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://woovictory.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-XXXXXXXX-X';
+    var _gaDomain = 'yoursite';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+<img src="https://woovictory.github.io/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

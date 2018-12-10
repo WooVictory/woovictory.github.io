@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta name="google-site-verification" content="AFirxOxuB2W32dZY1PrMx4c6K3RsM3XVAkRIkCJEEpI" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword"  content="">
+    <link rel="shortcut icon" href="/img/android.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          Java :: 11) API 클래스-1 - VictoryWoo | Blog
+        
+    </title>
+
+    <link rel="canonical" href="https://woovictory.github.io/2018/08/20/java-basic-11/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS --> 
+    <link rel="stylesheet" href="/css/beantech.min.css">
+    
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('/img/header_img/blaise-vonlanthen-433128-unsplash.jpg')
+            /*post*/
+        
+    }
+    
+    #signature{
+        background-image: url('/null');
+    }
+    
+</style>
+
+<header class="intro-header" >
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#Java" title="Java">Java</a>
+                            
+                        </div>
+                        <h1>Java :: 11) API 클래스-1</h1>
+                        <h2 class="subheading"></h2>
+                        <span class="meta">
+                            Posted by VictoryWoo on
+                            2018-08-20
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+	
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">VictoryWoo</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">about</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <h1 id="object-클래스">Object 클래스</h1>
+<hr>
+<p>java.lang 패키지 중에서도 가장 많이 사용되는 클래스는 바로 <strong>Object</strong> 클래스입니다. Object 클래스는 모든 자바 클래스의 최고 조상 클래스가 됩니다. 따라서 자바의 모든 클래스는 <strong>Object</strong> 클래스의 모든 메소드를 바로 사용할 수 있습니다.</p>
+<h2 id="tostring메소드">toString()메소드</h2>
+<p>toString() 메소드는 해당 인스턴스에 대한 정보를 <code>문자열</code>로 반환합니다. 이 때 반환되는 문자열은 클래스 이름과 함께 구분자로 '@'가 사용되며, 그 뒤로 16진수 해시 코드가 추가됩니다.<br>
+16진수 해시 코드 값은 인스턴스의 주소를 가리키는 값으로, 인스턴스마다 모두 다르게 반환됩니다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Car car1 = <span class="keyword">new</span> Car();</span><br><span class="line">Car car2 = <span class="keyword">new</span> Car();</span><br><span class="line"></span><br><span class="line">System.out.println(car1.toString());</span><br><span class="line">System.out.println(car2.toString());</span><br><span class="line"></span><br><span class="line"><span class="comment">//결과</span></span><br><span class="line">com.company.Car@<span class="number">60e53</span>b93</span><br><span class="line">com.company.Car@<span class="number">5e2</span>de80c</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>자바에서 toString() 메소드는 기본적으로 각 API 클래스마다 자체적으로 오버라이딩을 통해 재정의되어 있습니다.</p>
+</blockquote>
+<h2 id="equals-메소드">equals() 메소드</h2>
+<p>equals() 메소드는 해당 인스턴스를 매개변수로 전달받은 참조 변수와 비교하여, 그 결과를 반환합니다. 이 때, 참조 변수가 가리키는 값을 비교하므로, 서로 다른 두 객체는 언제나 false를 반환하게 됩니다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Car car1 = <span class="keyword">new</span> Car();</span><br><span class="line">Car car2 = <span class="keyword">new</span> Car();</span><br><span class="line"></span><br><span class="line">System.out.println(car1.equals(car2));</span><br><span class="line">car1 = car2; <span class="comment">// 두 참조 변수가 같은 주소를 가리킴 </span></span><br><span class="line">System.out.println(car1.equals(car2));</span><br><span class="line"></span><br><span class="line"><span class="comment">// 결과</span></span><br><span class="line"><span class="keyword">false</span></span><br><span class="line"><span class="keyword">true</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>자바에서 equals() 메소드는 기본적으로 각 API 클래스마다 자체적으로 오버라이딩을 통해 재정의되어 있습니다.</p>
+</blockquote>
+<h2 id="clone-메소드">clone() 메소드</h2>
+<p>clone() 메소드는 해당 인스턴스를 복제하여, 새로운 인스턴스를 반환합니다. 하지만 Object 클래스의 clone() 메소드는 단지 필드의 값만을 복사하므로, 필드의 값이 배열이나 인스턴스이면 제대로 복제할 수 없습니다.<br>
+따라서 이러한 경우에는 해당 클래스에서 clone() 메소드를 오버라이딩하여, 복제가 제대로 이루어지도록 재정의해야 합니다.</p>
+<p>이러한 clone() 메소드는 데이터의 보호를 이유로 <strong>Cloneable</strong> 인터페이스를 구현한 클래스의 인스턴스만이 사용할 수 있습니다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.company;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">api</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Car car01 = <span class="keyword">new</span> Car(); <span class="comment">// 5</span></span><br><span class="line"></span><br><span class="line">        car01.setModelName(<span class="string">"아반떼"</span>);</span><br><span class="line">        car01.setOwners(<span class="string">"홍길동"</span>);</span><br><span class="line">        System.out.println(<span class="string">"Car01 : "</span> + car01.getModelName() + <span class="string">", "</span> + car01.getOwners() + <span class="string">"\n"</span>); <span class="comment">// 6</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        Car car02 = (Car) car01.clone(); <span class="comment">// 7</span></span><br><span class="line"></span><br><span class="line">        car02.setOwners(<span class="string">"이순신"</span>); <span class="comment">// 8</span></span><br><span class="line">        System.out.println(<span class="string">"Car01 : "</span> + car01.getModelName() + <span class="string">", "</span> + car01.getOwners()); <span class="comment">// 9</span></span><br><span class="line">        System.out.println(<span class="string">"Car02 : "</span> + car02.getModelName() + <span class="string">", "</span> + car02.getOwners()); <span class="comment">// 10</span></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Car</span> <span class="keyword">implements</span> <span class="title">Cloneable</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String modelName;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> ArrayList&lt;String&gt; owners = <span class="keyword">new</span> ArrayList&lt;String&gt;(); <span class="comment">// 1</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getModelName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.modelName;</span><br><span class="line">    &#125;                    <span class="comment">// modelName의 값을 반환함</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setModelName</span><span class="params">(String modelName)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.modelName = modelName;</span><br><span class="line">    &#125; <span class="comment">// modelName의 값을 설정함</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> ArrayList <span class="title">getOwners</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.owners;</span><br><span class="line">    &#125;                      <span class="comment">// owners의 값을 반환함</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setOwners</span><span class="params">(String ownerName)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.owners.add(ownerName);</span><br><span class="line">    &#125;   <span class="comment">// owners의 값을 추가함</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">clone</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line"></span><br><span class="line">            Car clonedCar = (Car) <span class="keyword">super</span>.clone(); <span class="comment">// 2</span></span><br><span class="line"></span><br><span class="line">            <span class="comment">// clonedCar.owners = (ArrayList)owners.clone(); 3</span></span><br><span class="line"></span><br><span class="line">            <span class="keyword">return</span> clonedCar;</span><br><span class="line"></span><br><span class="line">        &#125; <span class="keyword">catch</span> (CloneNotSupportedException ex) &#123; <span class="comment">// 4</span></span><br><span class="line">            ex.printStackTrace();</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 결과</span></span><br><span class="line">Car01 : 아반떼, [홍길동]</span><br><span class="line"></span><br><span class="line">Car02 : 아반떼, [홍길동, 이순신]</span><br><span class="line">Car02 : 아반떼, [홍길동, 이순신]</span><br></pre></td></tr></table></figure>
+<p>위의 코드에서 2번에서는 부모 클래스의 <strong>clone()</strong> 메소드를 호출하여 clone() 메소드를 오버라이딩하고 있습니다. 5번에서는 Car 클래스의 인스턴스인 <strong>car01</strong>을 생성하고, 7번에서는 오버라이딩한 clone() 메소드를 호출하여 복제를 수행하고 있습니다.</p>
+<p>하지만, 2번처럼 clone() 메소드를 재정의하면, 필드의 값이 1번처럼 인스턴스일 때는 제대로 된 복제를 수행할 수 없습니다.<br>
+8번에서는 복제된 인스턴스인 <strong>car02</strong>의 owners 필드에 새로운 값을 하나 추가합니다. 하지만 9번의 실행 결과를 보면, 7번에서의 결과와는 달리 원본 인스턴스인 <strong>car01</strong>의 owners 필드에도 새로운 값이 추가되었음을 확인할 수 있습니다.<br>
+이처럼 단순히 부모 클래스의 clone() 메소드를 호출하여 clone() 메소드를 재정의하면, 배열이나 인스턴스인 필드는 복제되는 것이 아닌 해당 배열이나 인스턴스를 가리키는 주소값만이 복제되는 것입니다.</p>
+<p>따라서 정확한 복제를 위해서는 3번처럼 배열이나 인스턴스인 필드에 대해서는 별도로 clone() 메소드를 구현하여 호출해야 합니다.<br>
+3번의 주석을 해제하고 결과를 보면 다음과 같습니다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Car01 : 아반떼, [홍길동]</span><br><span class="line"></span><br><span class="line">Car02 : 아반떼, [홍길동]</span><br><span class="line">Car02 : 아반떼, [홍길동, 이순신]</span><br></pre></td></tr></table></figure>
+<h2 id="object-클래스의-메소드">Object 클래스의 메소드</h2>
+<img src="/img/object.png" width="600" height="200">
+<h1 id="string-클래스">String 클래스</h1>
+<hr>
+<p>자바에서는 문자열을 위한 <strong>String</strong>이라는 클래스를 별도로 제공합니다. String 클래스에는 문자열과 관련된 작업을 할 때 유용하게 사용할 수 있는 다양한 메소드가 포함되어 있습니다. 이러한 String 클래스는 java.lang 패키지에 포함되어 제공됩니다.</p>
+<p>String 인스턴스는 한 번 생성되면 그 값을 읽기만 할 수 있고, 변경할 수는 없습니다. 이러한 객체를 자바에서는 <code>불변 객체(immutable object)</code>라고 합니다. 즉, 자바에서 덧셈(+) 연산자를 이용하여 문자열 결합을 수행하면, 기존 문자열의 내용이 변경되는 것이 아니라 내용이 합쳐진 새로운 String 인스턴스가 생성되는 것입니다.</p>
+<h2 id="charat-메소드">charAt() 메소드</h2>
+<p><code>charAt()</code> 메소드는 해당 문자열의 특정 인덱스에 해당하는 문자를 반환합니다. 만약 해당 문자열의 길이보다 큰 인덱스나 음수를 전달하면, <strong>IndexOutOfBoundsException</strong> 오류가 발생합니다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">api</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        String str = <span class="keyword">new</span> String(<span class="string">"Java"</span>);</span><br><span class="line">        System.out.println(<span class="string">"원본 문자열 : "</span>+str);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;str.length();i++)&#123;</span><br><span class="line">            System.out.print(str.charAt(i)+<span class="string">" "</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        System.out.println();</span><br><span class="line">        System.out.println(<span class="string">"charAt() 메소드 호출 후 문자열 : "</span>+str);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 결과</span></span><br><span class="line">원본 문자열 : Java</span><br><span class="line">J a v a </span><br><span class="line">charAt() 메소드 호출 후 문자열 : Java</span><br></pre></td></tr></table></figure>
+<h2 id="comparto-메소드">comparTo() 메소드</h2>
+<p>compareTo() 메소드는 해당 문자열을 인수로 전달된 문자열과 사전 편찬 순으로 비교합니다. <strong>이 메소드는 문자열을 비교할 때 대소문자를 구분하여 비교합니다.</strong> 만약 두 문자열이 같다면 0을 반환하며, 해당 문자열인 인수로 전달된 문자열보다 작으면 음수를, 크면 양수를 반환합니다.</p>
+<p>만약 문자열을 비교할 때 대소문자를 구분하지 않기를 원하면, <strong>compareToIgnoreCase()</strong> 메소드를 사용하면 됩니다.</p>
+<p>쉽게 말해서 다음과 같은 문자열이 있다고 생각해봅시다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">String str = <span class="keyword">new</span> String(<span class="string">"abcd"</span>);</span><br><span class="line">System.out.println(<span class="string">"원본 문자열 : "</span>+str);</span><br><span class="line"></span><br><span class="line">System.out.println(str.compareTo(<span class="string">"abcf"</span>)); <span class="comment">// 1</span></span><br><span class="line">System.out.println(str.compareTo(<span class="string">"abbb"</span>)); <span class="comment">// 2 </span></span><br><span class="line">System.out.println(str.compareTo(<span class="string">"Abcd"</span>)); <span class="comment">// 3</span></span><br><span class="line">System.out.println(str.compareToIgnoreCase(<span class="string">"ABCD"</span>)); <span class="comment">// 4</span></span><br><span class="line">System.out.println(<span class="string">"compareTo() 메소드 호출 후 문자열 : "</span>+str);</span><br><span class="line"></span><br><span class="line"><span class="comment">//결과</span></span><br><span class="line">원본 문자열 : abcd</span><br><span class="line">-<span class="number">1</span></span><br><span class="line"><span class="number">3</span></span><br><span class="line"><span class="number">32</span></span><br><span class="line"><span class="number">0</span></span><br><span class="line">compareTo() 메소드 호출 후 문자열 : abcd</span><br></pre></td></tr></table></figure>
+<p>1 -&gt; 이 경우 문자열 &quot;abcd&quot;가 인수로 전달된 문자열 &quot;abcf&quot;보다 사전순으로 먼저 존재하고, 이를 작다고 표현하며 음수를 반환합니다.<br>
+2 -&gt; 이 경우 문자열 &quot;abcd&quot;가 인수로 전달된 문자열 &quot;abbb&quot;보다 사전순으로 뒤에 존재하고, 이를 크다고 표현하며 양수를 반환합니다.<br>
+3 -&gt; 사전 순으로 대문자가 먼저 존재하고, 소문자가 존재하는 것으로 파악됩니다.<br>
+4 -&gt; compareToIgnoreCase() 메소드를 사용함으로써 대소문자를 구분하지 않고 비교합니다.</p>
+<h2 id="concat-메소드">concat() 메소드</h2>
+<p><code>concat()</code> 메소드는 해당 문자열의 뒤에 인수로 전달된 문자열을 추가한 새로운 문자열을 반환합니다. 만약 인수로 전달된 문자열의 길이가 0이면, 해당 문자열을 그대로 반환합니다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">String str = <span class="keyword">new</span> String(<span class="string">"Java"</span>);</span><br><span class="line"></span><br><span class="line">System.out.println(<span class="string">"원본 문자열 : "</span> + str);</span><br><span class="line">System.out.println(str.concat(<span class="string">"수업"</span>));</span><br><span class="line">System.out.println(<span class="string">"concat() 메소드 호출 후 원본 문자열 : "</span> + str);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 결과</span></span><br><span class="line">원본 문자열 : Java</span><br><span class="line">Java수업</span><br><span class="line">concat() 메소드 호출 후 원본 문자열 : Java</span><br></pre></td></tr></table></figure>
+<h2 id="indexof-메소드">indexOf() 메소드</h2>
+<p><code>indexOf()</code> 메소드는 해당 문자열에서 특정 문자나 문자열이 처음으로 등장하는 위치의 인덱스를 반환합니다. 만약 해당 문자열에 전달된 문자나 문자열이 포함되어 있지 않으면 -1을 반환합니다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">String str = <span class="keyword">new</span> String(<span class="string">"Oracle Java"</span>);</span><br><span class="line">System.out.println(<span class="string">"원본 문자열 : "</span> + str);</span><br><span class="line">System.out.println(str.indexOf(<span class="string">'o'</span>));</span><br><span class="line">System.out.println(str.indexOf(<span class="string">'a'</span>));</span><br><span class="line">System.out.println(str.indexOf(<span class="string">"Java"</span>));</span><br><span class="line"></span><br><span class="line">System.out.println(<span class="string">"indexOf() 메소드 호출 후 원본 문자열 : "</span> + str);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 결과</span></span><br><span class="line">원본 문자열 : Oracle Java</span><br><span class="line">-<span class="number">1</span></span><br><span class="line"><span class="number">2</span></span><br><span class="line"><span class="number">7</span></span><br><span class="line">indexOf() 메소드 호출 후 원본 문자열 : Oracle Java</span><br></pre></td></tr></table></figure>
+<p><strong>위의 예제처럼 indexOf() 메소드는 문자나 문자열을 찾을 때 대소문자를 구분합니다.</strong></p>
+<h2 id="trim-메소드">trim() 메소드</h2>
+<p><code>trim()</code> 메소드는 해당 문자열의 맨 앞과 맨 뒤에 포함된 모든 공백 문자를 제거해줍니다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">String str = <span class="keyword">new</span> String(<span class="string">"  Java   "</span>);</span><br><span class="line"></span><br><span class="line">System.out.println(<span class="string">"원본 문자열 : "</span>+str);</span><br><span class="line">System.out.println(str + <span class="string">'|'</span>);</span><br><span class="line">System.out.println(str.trim() + <span class="string">'|'</span>);</span><br><span class="line">System.out.println(<span class="string">"trim() 메소드 호출 후 원본 문자열 : "</span> + str);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 결과</span></span><br><span class="line">원본 문자열 :   Java   </span><br><span class="line">  Java   |</span><br><span class="line">Java|</span><br><span class="line">trim() 메소드 호출 후 원본 문자열 :   Java</span><br></pre></td></tr></table></figure>
+<h2 id="tolowercase-touppercase-메소드">toLowerCase(), toUpperCase() 메소드</h2>
+<ul>
+<li>toLowerCase() : 해당 문자열의 모든 문자를 소문자로 변환시켜 줍니다.</li>
+<li>toUpperCase() : 해당 문자열의 모든 문자를 대문자로 변환시켜 줍니다.</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">원본 문자열 : Java</span><br><span class="line">java</span><br><span class="line">JAVA</span><br><span class="line">trim() 메소드 호출 후 원본 문자열 : Java</span><br></pre></td></tr></table></figure>
+<h2 id="대표적인-string-메소드">대표적인 String 메소드</h2>
+<img src="/img/string1.png" width="700" height="200">
+<img src="/img/string2.png" width="700" height="200">
+<h1 id="stringbuffer-클래스">StringBuffer 클래스</h1>
+<hr>
+<p>String 클래스의 인스턴스는 한 번 생성되면 그 값을 읽기만 할 수 있고, 변경할 수는 없습니다. 하지만, <code>StringBuffer</code> 클래스의 인스턴스는 그 값을 변경할 수도 있고, 추가할 수도 있습니다.</p>
+<p>이를 위해 <code>StringBuffer</code> 클래스는 내부적으로 버퍼(Buffer)라고 하는 독립적인 공간을 가집니다. 버퍼 크기의 기본값은 16개의 문자를 저장할 수 있는 크기이며, 생성자를 통해 그 크기를 별도로 설정할 수 있습니다. 하지만, 인스턴스 생성 시 사용자가 설정한 크기보다 언제나 16개의 문자를 더 저장할 수 있도록 여유 있는 크기로 생성됩니다.(즉, 두배씩 증가한다는 말입니다. 16-&gt;32-&gt;64 …)</p>
+<p>덧셈(+) 연산자를 이용해 String 인스턴스의 문자열을 결합하면, 내용이 합쳐진 새로운 String 인스턴스를 생성합니다. 따라서 문자열을 많이 결합하면 결합할수록 공간의 낭비뿐만 아니라 속도 또한 매우 느려지게 됩니다.</p>
+<p>하지만, <strong>StringBuffer</strong> 인스턴스를 사용하면 문자열을 바로 추가할 수 있으므로, 공간의 낭비도 없으며 속도도 매우 빨라집니다. 이러한 StringBuffer 클래스는 java.lang 패키지에 포함되어 제공됩니다.</p>
+<blockquote>
+<p>짚고 넘어가기~</p>
+</blockquote>
+<p>String 클래스를 이용해서 객체를 생성하면, 그 인스턴스는 읽을 수만 있고 값을 변경할 수는 없습니다. 이를 코드를 통해서 확인해보겠습니다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">String str1 = <span class="keyword">new</span> String(<span class="string">"이승우"</span>);</span><br><span class="line">System.out.println(str1.hashCode());</span><br><span class="line">str1 = <span class="string">"정지현"</span>;</span><br><span class="line">System.out.println(str1.hashCode());</span><br><span class="line"></span><br><span class="line"><span class="comment">// 결과</span></span><br><span class="line"><span class="number">1</span>번 : <span class="number">50664843</span></span><br><span class="line"><span class="number">2</span>번 : <span class="number">50879257</span></span><br></pre></td></tr></table></figure>
+<p>위의 개념대로라면 str1의 값은 읽기만 가능하고, 변경할 수는 없습니다. 하지만, 위의 코드는 정상적으로 실행됩니다. 그렇다면 값을 읽을 수만 있고 변경할 수는 없다는 것은 무슨 뜻일까요??</p>
+<p>처음에 str1은 문자열이 &quot;이승우&quot;이고, <strong>50664843</strong>라는 주소를 가지고 있는 인스턴스를 참조하고 있습니다. 이 공간에 있는 값은 읽을 수만 있고 변경할 수는 없습니다. <code>str1 = &quot;정지현&quot;;</code>을 통해서 값을 변경하려고 한다면, 새로운 공간을 할당하고 그 공간에 문자열을 집어넣습니다. 그 결과로 str1은 문자열이 &quot;정지현&quot;이고, <strong>50879257</strong>라는 주소를ㄹ 가지고 있는 인스턴스를 참조하게 됩니다. 따라서 원래의 공간에 있는 값은 변경되지 않고, str1이 참조하고 있는 공간이 바뀌는 것입니다.</p>
+<p>정리하면, String 클래스의 값을 변경한다는 것은 str1 인스턴스가 새롭게 생성되고, 이렇게 생성된 인스턴스의 공간은 str1이 참조하게 되는 것입니다. 그리고 그 전의 인스턴스는 공간을 차지하면서, 누구도 참조하지 않게 되고 이로 인해서 공간의 낭비는 발생하게 되고, 속도도 느려지는 것입니다.</p>
+<h2 id="불변클래스와-가변-클래스">불변클래스와 가변 클래스</h2>
+<p>String 클래스와 같이 인스턴스가 한 번 생성되면 그 값을 변경할 수 없는 클래스를 <strong>불변 클래스(immutable class)</strong> 라고 합니다.<br>
+반대로 StringBuffer 클래스와 같이 자유롭게 인스턴스의 값을 변경할 수 있는 클래스를 **가변 클래스(mutable class)**라고 합니다.<br>
+String 클래스와 같은 불변 클래스는 StringBuffer 클래스의 append()나 insert() 메소드와 같이 값을 변경하는 set 메소드를 포함하지 않습니다.</p>
+<p>이렇게 불편하기만 할 것 같은 불변 클래스를 사용하는 이유는 멀티 스레드 환경에서 객체가 변화되는 상황이라면 불변 인스턴스를 사용하는 것이 좀 더 신뢰할 수 있는 코드를 작성할 수 있기 때문입니다.<br>
+즉, 하나의 객체에 접근하면서 각각의 객체가 서로 영향을 주어서는 안되는 경우에 불변 인스턴스를 사용하면 값이 변하지 않는다는 점이 보장됩니다.</p>
+<h2 id="appen-메소드">appen() 메소드</h2>
+<p><code>append()</code>메소드는 인수로 전달된 값을 문자열로 변환한 후, 해당 문자열의 마지막에 추가합니다. 이 메소드는 String 클래스의 concat() 메소드와 같은 결과를 반환하지만, <strong>내부적인 처리 속도가 훨씬 빠릅니다.</strong></p>
+<p>이유는 String 클래스의 concat() 메소드는 인수로 전달된 값을 문자열로 변환한 후, 해당 문자열의 마지막에 추가하지만, 원본 문자열에 추가하는 것이 아니라 문자열을 추가한 새로운 인스턴스를 생성하는 것이고, <strong>append()</strong> 메소드는 원본 문자열에 인수로 전달된 문자열을 추가하는 것이기 때문에 처리 속도가 빠른 것입니다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">string2</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">        StringBuffer str = <span class="keyword">new</span> StringBuffer(<span class="string">"Java"</span>);</span><br><span class="line">        System.out.println(<span class="string">"원본 문자열 : "</span>+str);</span><br><span class="line">        System.out.println(str.append(<span class="string">"수업"</span>));</span><br><span class="line">        System.out.println(<span class="string">"append() 메소드 호출 한 후 문자열 : "</span>+str);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 결과</span></span><br><span class="line">원본 문자열 : Java</span><br><span class="line">Java수업</span><br><span class="line">append() 메소드 호출 한 후 문자열 : Java수업</span><br></pre></td></tr></table></figure>
+<h2 id="capacity-메소드">capacity() 메소드</h2>
+<p><code>capacity()</code> 메소드는 StringBuffer 인스턴스의 현재 버퍼 크기를 반환합니다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">string2</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">        StringBuffer str1 = <span class="keyword">new</span> StringBuffer(<span class="string">"Java"</span>);</span><br><span class="line">        StringBuffer str2 = <span class="keyword">new</span> StringBuffer();</span><br><span class="line">        System.out.println(str1.capacity());</span><br><span class="line">        System.out.println(str2.capacity());</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 결과</span></span><br><span class="line"><span class="number">20</span></span><br><span class="line"><span class="number">16</span></span><br></pre></td></tr></table></figure>
+<p>위의 예제처럼 길이가 4인 문자열로 StringBuffer 인스턴스를 생성하면, 기본적으로 생성되는 여유 버퍼 크기인 16에 문자의 길이인 4를 더한 총 20개의 문자를 저장할 수 있는 버퍼가 생성되는 것을 확인할 수 있습니다.</p>
+<h2 id="delete-메소드">delete() 메소드</h2>
+<p><code>delete()</code> 메소드는 전달된 인덱스에 해당하는 부분 문자열을 해당 문자열에서 제거합니다. 또한, deleteCharAt() 메소드를 사용하면 특정 위치의 문자 한 개만을 제거할 수도 있습니다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">string2</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        StringBuffer str = <span class="keyword">new</span> StringBuffer(<span class="string">"Java Oracle"</span>);</span><br><span class="line"></span><br><span class="line">        System.out.println(<span class="string">"원본 문자열 : "</span> + str);</span><br><span class="line"></span><br><span class="line">        System.out.println(str.delete(<span class="number">4</span>, <span class="number">8</span>)); <span class="comment">// 1</span></span><br><span class="line">        System.out.println(str.deleteCharAt(<span class="number">1</span>)); <span class="comment">// 2</span></span><br><span class="line">        System.out.println(<span class="string">"deleteCharAt() 메소드 호출 후 원본 문자열 : "</span> + str);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 결과</span></span><br><span class="line">원본 문자열 : Java Oracle</span><br><span class="line">Javacle</span><br><span class="line">Jvacle</span><br><span class="line">deleteCharAt() 메소드 호출 후 원본 문자열 : Jvacle</span><br></pre></td></tr></table></figure>
+<p>1번에서는 delete() 메소드를 사용하여 해당 문자열에서 인덱스가 4인 위치의 문자부터 8보다 하나 적은 7인 위치의 문자까지를 삭제하고 있습니다. 이처럼 delete() 메소드는 첫 번째 매개변수로 전달된 인덱스부터 두 번째 매개변수로 전달된 인덱스 바로 앞의 문자까지를 삭제하는 메소드입니다.</p>
+<h2 id="insert-메소드">insert() 메소드</h2>
+<p><code>insert()</code> 메소드는 인수로 전달된 값을 문자열로 변환한 후, 해당 문자열의 지정된 인덱스 위치에 추가합니다. 이 때, 전달된 인덱스가 해당 문자열의 길이와 같으면, append() 메소드와 같은 결과를 반환합니다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">string2</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        StringBuffer str = <span class="keyword">new</span> StringBuffer(<span class="string">"Java 만세!!"</span>);</span><br><span class="line">        System.out.println(<span class="string">"원본 문자열 : "</span>+str);</span><br><span class="line">        System.out.println(str.insert(<span class="number">5</span>, <span class="string">"Script "</span>));</span><br><span class="line">        System.out.println(<span class="string">"insert() 메소드 호출 후 문자열 : "</span>+str);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 결과</span></span><br><span class="line">원본 문자열 : Java 만세!!</span><br><span class="line">Java Script 만세!!</span><br><span class="line">insert() 메소드 호출 후 문자열 : Java Script 만세!!</span><br></pre></td></tr></table></figure>
+<p>insert() 메소드를 사용하여 해당 문자열에서 인덱스가 4인 위치부터 두 번째 매개변수로 전달된 문자열을 추가하고 있습니다. 이처럼 내가 원하는 위치에 문자열을 추가할 때 사용할 수 있는 메소드입니다.</p>
+<h2 id="대표적인-stringbuffer-메소드">대표적인 StringBuffer 메소드</h2>
+<img src="/img/stringbuffer.png" width="800" height="200">
+<h1 id="math-클래스">Math 클래스</h1>
+<hr>
+<p><code>Math</code> 클래스는 수학에서 자주 사용하는 상수들과 함수들을 미리 구현해 놓은 클래스입니다. Math 클래스의 모든 메소드는 <strong>클래스 메소드</strong> <strong>(static method)</strong> 이므로, 객체를 생성하지 않고도 바로 사용할 수 있습니다. 이러한 Math 클래스는 java.lang 패키지에 포함되어 제공됩니다.</p>
+<h2 id="mathe와-mathpi">Math.E와 Math.PI</h2>
+<p>다음은 Math 클래스에 정의되어 있는 클래스 필드입니다.</p>
+<ol>
+<li>Math.E : 오일러의 수라 불리며, 자연로그(natural logarithms)의 밑(base) 값으로 약 2.718을 의미합니다.</li>
+<li>Math.PI : 원의 원주를 지름으로 나눈 비율(원주율) 값으로 약 3.14159를 의미합니다.</li>
+</ol>
+<h2 id="random-메소드">random() 메소드</h2>
+<p><code>random()</code> 메소드는 0.0이상 1.0 미만의 범위에서 임의의 double 형 값을 하나 생성하여 반환합니다. 이 메소드는 내부적으로 java.util 패키지의 Random 클래스를 사용한 의사 난수 발생기(pseudorandom generator)를 사용하여 임의의 수를 생성합니다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.Random;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Exam</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">        System.out.println((<span class="keyword">int</span>) (Math.random()*<span class="number">100</span>));</span><br><span class="line"></span><br><span class="line">        Random random = <span class="keyword">new</span> Random();</span><br><span class="line">        System.out.println(random.nextInt(<span class="number">100</span>));</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>자바에서는 Math 클래스의 random() 메소드 뿐만 아니라 java.util 패키지에 포함된 Random 클래스의 nextInt() 메소드를 사용해도 난수를 생성할 수 있습니다. nextInt() 메소드는 매개변수로 범위를 지정해 줄 수 있습니다.</p>
+<p>만약 특정 범위에 속하는 난수를 생성하려면, 다음과 같이 난수 생성 범위를 조절할 수 있습니다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">System.out.println((<span class="keyword">int</span>) (Math.random()*<span class="number">6</span>)); <span class="comment">//1</span></span><br><span class="line">System.out.println((<span class="keyword">int</span>) (Math.random()*<span class="number">6</span>)+<span class="number">1</span>); <span class="comment">//2</span></span><br><span class="line">System.out.println((<span class="keyword">int</span>) (Math.random()*<span class="number">6</span>)+<span class="number">3</span>); <span class="comment">//3</span></span><br></pre></td></tr></table></figure>
+<p>만약 특정 범위에 속하는 난수를 생성하려면, 위와 같이 난수 생성 범위를 조절할 수 있습니다.<br>
+기본적으로 0부터 곱해지는 수의 바로 앞 수까지가 난수 생성 범위로 지정됩니다.</p>
+<p>1 -&gt; 0~5<br>
+2 -&gt; 1~6<br>
+3 -&gt; 3~8</p>
+<h2 id="abs-메소드">abs() 메소드</h2>
+<p><code>abs()</code> 메소드는 전달된 값이 음수이면 그 값의 절대값을 반환하며, 전달된 값이 양수이면 전달된 값을 그대로 출력합니다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">System.out.println(Math.abs(<span class="number">10</span>));</span><br><span class="line">System.out.println(Math.abs(-<span class="number">10</span>));</span><br><span class="line">System.out.println(Math.abs(-<span class="number">123123</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">/// 결과</span></span><br><span class="line"><span class="number">10</span></span><br><span class="line"><span class="number">10</span></span><br><span class="line"><span class="number">123123</span></span><br></pre></td></tr></table></figure>
+<h2 id="floor-ceil-round-메소드">floor(), ceil(), round() 메소드</h2>
+<ul>
+<li>floor() : <strong>인수로 전달받은 값과 같거나 작은 수 중에서 가장 큰 정수를 반환합니다.</strong></li>
+<li>ceil() : <strong>반대로 인수로 전달받은 값과 같거나 큰 수 중에서 가장 작은 정수를 반환합니다.</strong></li>
+<li>round() : <strong>전달받은 실수를 소수점 첫째 자리애서 반올림한 정수를 반환합니다.</strong></li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">System.out.println(Math.ceil(<span class="number">10.9</span>));</span><br><span class="line">System.out.println(Math.ceil(<span class="number">10.0</span>));</span><br><span class="line">System.out.println(Math.ceil(<span class="number">9.9</span>));</span><br><span class="line">System.out.println();</span><br><span class="line"></span><br><span class="line">System.out.println(Math.floor(<span class="number">9.9</span>));</span><br><span class="line">System.out.println(Math.floor(<span class="number">10.9</span>));</span><br><span class="line">System.out.println(Math.floor(<span class="number">10.1</span>));</span><br><span class="line">System.out.println();</span><br><span class="line"></span><br><span class="line">System.out.println(Math.round(<span class="number">10.34457</span>));</span><br><span class="line">System.out.println(Math.round(<span class="number">10.49</span>));</span><br><span class="line">System.out.println(Math.round(<span class="number">10.61</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">// 결과</span></span><br><span class="line"><span class="number">11.0</span></span><br><span class="line"><span class="number">10.0</span></span><br><span class="line"><span class="number">10.0</span></span><br><span class="line"></span><br><span class="line"><span class="number">9.0</span></span><br><span class="line"><span class="number">10.0</span></span><br><span class="line"><span class="number">10.0</span></span><br><span class="line"></span><br><span class="line"><span class="number">10</span></span><br><span class="line"><span class="number">10</span></span><br><span class="line"><span class="number">11</span></span><br></pre></td></tr></table></figure>
+<h2 id="max-min-메소드">max(), min() 메소드</h2>
+<p>max() 메소드는 전달된 두 값을 비교하여 그 중에서 큰 값을 반환하며, min() 메소드는 그 중에서 작은 값을 반환합니다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">System.out.println(Math.max(<span class="number">3.14</span>, <span class="number">3.141</span>));</span><br><span class="line">System.out.println(Math.max(<span class="number">3.14</span>, <span class="number">3.14159</span>)); </span><br><span class="line">System.out.println(Math.min(<span class="number">3.14</span>, <span class="number">3.14159</span>)); </span><br><span class="line">System.out.println(Math.max(-<span class="number">10</span>, -<span class="number">11</span>));      </span><br><span class="line">System.out.println(Math.min(-<span class="number">10</span>, -<span class="number">11</span>));      </span><br><span class="line"></span><br><span class="line"><span class="comment">// 결과</span></span><br><span class="line"><span class="number">3.141</span></span><br><span class="line"><span class="number">3.14159</span></span><br><span class="line"><span class="number">3.14</span></span><br><span class="line">-<span class="number">10</span></span><br><span class="line">-<span class="number">11</span></span><br></pre></td></tr></table></figure>
+<h2 id="pow-sqrt-메소드">pow(), sqrt() 메소드</h2>
+<p>pow() 메소드는 전달된 두 개의 double형을 가지고 제곱 연산을 수행합니다.<br>
+예를 들어, pow(a,b)는 a의 b승, 즉 a^b를 반환하게 됩니다.</p>
+<p>반대로 sqrt() 메소드는 전달된 double형 값의 제곱근을 반화합니다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">System.out.println((<span class="keyword">int</span>)(Math.pow(<span class="number">5</span>,<span class="number">2</span>)));</span><br><span class="line">System.out.println((<span class="keyword">int</span>)(Math.sqrt(<span class="number">25</span>)));</span><br><span class="line"></span><br><span class="line"><span class="comment">// 결과</span></span><br><span class="line"><span class="number">25</span></span><br><span class="line"><span class="number">5</span></span><br></pre></td></tr></table></figure>
+<h2 id="삼각함수와-관련된-메소드">삼각함수와 관련된 메소드</h2>
+<p>자바에서는 삼각 함수와 관련된 다양한 연산을 간편하게 수행할 수 있도록 많은 삼각 함수를 제공하고 있습니다.</p>
+<ul>
+<li>sin() : 전달된 double형 값의 사인 값을 반환합니다.</li>
+<li>cos() : 전달된 double형 값의 코사인 값을 반환합니다.</li>
+<li>tan() : 전달된 double형 값의 탄젠트 값을 반환합니다.</li>
+</ul>
+<p>이 외에도 Math 클래스에서 제공하는 삼각 함수와 관련된 메소드는 다음과 같습니다.<br>
+-asin(), acos(), atan(), atan2(), sinh(), cosh(), tanh()</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">System.out.println(Math.sin(Math.toRadians(<span class="number">30</span>)));</span><br><span class="line">System.out.println(Math.sin(Math.PI / <span class="number">6</span>));</span><br><span class="line"></span><br><span class="line">System.out.println(Math.tan(Math.toRadians(<span class="number">45</span>)));</span><br><span class="line">System.out.println(Math.tan(Math.PI / <span class="number">4</span>));</span><br><span class="line"></span><br><span class="line">System.out.println(Math.cos(Math.toRadians(<span class="number">60</span>)));</span><br><span class="line">System.out.println(Math.cos(Math.PI / <span class="number">3</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">// 결과</span></span><br><span class="line"><span class="number">0.49999999999999994</span></span><br><span class="line"><span class="number">0.49999999999999994</span></span><br><span class="line"><span class="number">0.9999999999999999</span></span><br><span class="line"><span class="number">0.9999999999999999</span></span><br><span class="line"><span class="number">0.5000000000000001</span></span><br><span class="line"><span class="number">0.5000000000000001</span></span><br></pre></td></tr></table></figure>
+<p>위의 예제처럼 자바의 삼각 함수에 관한 메소드는 정확한 값을 나타내지 못합니다. 그 이유는 컴퓨터가 실수를 나타내는데 사용하는 부동 소수점 방식의 한계로 모든 언어에서 공통으로 발생하는 문제입니다.</p>
+<h2 id="대표적인-math-메소드">대표적인 Math 메소드</h2>
+<img src="/img/math1.png" width="700" height="200">
+<img src="/img/math2.png" width="700" height="200">
+
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/2018/08/20/9012/" data-toggle="tooltip" data-placement="top" title="BOJ :: 9012">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/2018/08/19/java-basic-10/" data-toggle="tooltip" data-placement="top" title="Java :: 10) 다형성">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                    <div class="comment">
+                        <div id="disqus_thread" class="disqus-thread"></div>
+                    </div>
+                
+                <!-- disqus comment end -->
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#object-클래스"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">Object 클래스</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#tostring메소드"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">toString()메소드</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#equals-메소드"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text">equals() 메소드</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#clone-메소드"><span class="toc-nav-number">1.3.</span> <span class="toc-nav-text">clone() 메소드</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#object-클래스의-메소드"><span class="toc-nav-number">1.4.</span> <span class="toc-nav-text">Object 클래스의 메소드</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#string-클래스"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">String 클래스</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#charat-메소드"><span class="toc-nav-number">2.1.</span> <span class="toc-nav-text">charAt() 메소드</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#comparto-메소드"><span class="toc-nav-number">2.2.</span> <span class="toc-nav-text">comparTo() 메소드</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#concat-메소드"><span class="toc-nav-number">2.3.</span> <span class="toc-nav-text">concat() 메소드</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#indexof-메소드"><span class="toc-nav-number">2.4.</span> <span class="toc-nav-text">indexOf() 메소드</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#trim-메소드"><span class="toc-nav-number">2.5.</span> <span class="toc-nav-text">trim() 메소드</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#tolowercase-touppercase-메소드"><span class="toc-nav-number">2.6.</span> <span class="toc-nav-text">toLowerCase(), toUpperCase() 메소드</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#대표적인-string-메소드"><span class="toc-nav-number">2.7.</span> <span class="toc-nav-text">대표적인 String 메소드</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#stringbuffer-클래스"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">StringBuffer 클래스</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#불변클래스와-가변-클래스"><span class="toc-nav-number">3.1.</span> <span class="toc-nav-text">불변클래스와 가변 클래스</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#appen-메소드"><span class="toc-nav-number">3.2.</span> <span class="toc-nav-text">appen() 메소드</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#capacity-메소드"><span class="toc-nav-number">3.3.</span> <span class="toc-nav-text">capacity() 메소드</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#delete-메소드"><span class="toc-nav-number">3.4.</span> <span class="toc-nav-text">delete() 메소드</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#insert-메소드"><span class="toc-nav-number">3.5.</span> <span class="toc-nav-text">insert() 메소드</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#대표적인-stringbuffer-메소드"><span class="toc-nav-number">3.6.</span> <span class="toc-nav-text">대표적인 StringBuffer 메소드</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#math-클래스"><span class="toc-nav-number">4.</span> <span class="toc-nav-text">Math 클래스</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#mathe와-mathpi"><span class="toc-nav-number">4.1.</span> <span class="toc-nav-text">Math.E와 Math.PI</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#random-메소드"><span class="toc-nav-number">4.2.</span> <span class="toc-nav-text">random() 메소드</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#abs-메소드"><span class="toc-nav-number">4.3.</span> <span class="toc-nav-text">abs() 메소드</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#floor-ceil-round-메소드"><span class="toc-nav-number">4.4.</span> <span class="toc-nav-text">floor(), ceil(), round() 메소드</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#max-min-메소드"><span class="toc-nav-number">4.5.</span> <span class="toc-nav-text">max(), min() 메소드</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#pow-sqrt-메소드"><span class="toc-nav-number">4.6.</span> <span class="toc-nav-text">pow(), sqrt() 메소드</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#삼각함수와-관련된-메소드"><span class="toc-nav-number">4.7.</span> <span class="toc-nav-text">삼각함수와 관련된 메소드</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#대표적인-math-메소드"><span class="toc-nav-number">4.8.</span> <span class="toc-nav-text">대표적인 Math 메소드</span></a></li></ol></li></ol>
+        
+        </div>
+      </aside>
+    
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#Java" title="Java">Java</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="https://leejongchan.github.io/" target="_blank">JongChan</a></li>
+                    
+                        <li><a href="https://godpp.github.io" target="_blank">godpp</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- disqus embedded js code start (one page only need to embed once) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "your-disqus-ID";
+    var disqus_identifier = "https://woovictory.github.io/2018/08/20/java-basic-11/";
+    var disqus_url = "https://woovictory.github.io/2018/08/20/java-basic-11/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus embedded js code start end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'always',
+          placement: 'right',
+          icon: '#'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://www.facebook.com/WooVictory">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/WooVictory">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; VictoryWoo 2018 
+                    <br>
+                    Theme by <a href="http://huangxuan.me">Hux</a> 
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span> 
+                    re-Ported by <a href="http://beantech.org">BeanTech</a> | 
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=YenYuHsuan&repo=hexo-theme-beantech&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://woovictory.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-XXXXXXXX-X';
+    var _gaDomain = 'yoursite';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+<img src="https://woovictory.github.io/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

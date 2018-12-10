@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta name="google-site-verification" content="AFirxOxuB2W32dZY1PrMx4c6K3RsM3XVAkRIkCJEEpI" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword"  content="">
+    <link rel="shortcut icon" href="/img/android.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          [SOPT] Seminar2 - VictoryWoo | Blog
+        
+    </title>
+
+    <link rel="canonical" href="https://woovictory.github.io/2018/05/02/sopt-seminar2/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS --> 
+    <link rel="stylesheet" href="/css/beantech.min.css">
+    
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('/img/header_img/blaise-vonlanthen-433128-unsplash.jpg')
+            /*post*/
+        
+    }
+    
+    #signature{
+        background-image: url('/null');
+    }
+    
+</style>
+
+<header class="intro-header" >
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#SOPT" title="SOPT">SOPT</a>
+                            
+                        </div>
+                        <h1>[SOPT] Seminar2</h1>
+                        <h2 class="subheading">Activity와 Fragment</h2>
+                        <span class="meta">
+                            Posted by VictoryWoo on
+                            2018-05-02
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+	
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">VictoryWoo</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">about</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <h1 id="안드로이드의-4대-컴포넌트">안드로이드의 4대 컴포넌트</h1>
+<h2 id="activity액티비티">Activity(액티비티)</h2>
+<p>사용자 인터페이스 화면을 가지며 특정한 작업을 담당하는 컴포넌트<br>
+UI를 구성하는 컴포넌트<br>
+안드로이드의 Manifest 파일에 등록이 되어 있어야 한다.<br>
+안드로이드 Application은 최소 1개 이상의 Activity가 있어야 한다.<br>
+하나 이상의 View를 가질 수 있다.<br>
+쉽게 말하자면 사용자가 보는 화면이다.</p>
+<h2 id="service서비스">Service(서비스)</h2>
+<p>백그라운드에서 실행되는 컴포넌트로 오랫동안 실행되는 작업이나 원격 프로세스를 위한 작업을 할 때 사용된다.<br>
+모든 서비스는 Service 클래스를 상속 받는다.<br>
+한 번 실행되면 다른 어플리케이션으로 이동하더라도 종료되지 않는다.<br>
+네트워크를 통하여 데이터를 꺼내올 수도 있다.<br>
+ex) 뮤직 플레이어, 안드로이드 사용량 모니터링, 주기적으로 특정 웹사이트에서 데이터를 읽어오는 것 등등</p>
+<h2 id="broadcast-receiver">BroadCast Receiver</h2>
+<p>BroadCast는 시스템에서 발생하는 이벤트이며 이것의 Receiver은 특정 BroadCast에 반응하는 컴포넌트<br>
+단말기에서 발생하는 다양한 이벤트 / 정보를 받고 반응한다.<br>
+수신기를 통해 상황을 감지하고 적절한 작업을 수행한다.<br>
+신호만 기다릴 뿐 별도의 UI를 거치지 않는다.<br>
+ex) 배터리 부족, 네트워크 전송, 시스템 부팅, 전화/문자 수신, 네트워크 끊김을 알려주는 것 등등</p>
+<h2 id="content-provider">Content Provider</h2>
+<p>데이터를 관리하고 어플리케이션 간 데이터 공유를 위한 컴포넌트<br>
+데이터는 파일 시스템이나 SQLite 데이터베이스, 웹 상에 저장될 수 있습니다.<br>
+콘텐트 제공자를 통해서 다른 애플리케이션의 데이터를 쿼리하거나 변경 가능합니다.<br>
+유일한 합법적 데이터 공유 장치<br>
+(주소록 Content Provider를 통해 제공)</p>
+<h1 id="activity의-생명주기">Activity의 생명주기</h1>
+<p><img src="/img/fgh.png" alt=""></p>
+<h3 id="oncreate">onCreate()</h3>
+<ul>
+<li>액티비티가 만들어지고 나서 최초에 실행될 때 호출됩니다.</li>
+<li>액티비티에 필요한 리소스들을 초기화하거나 화면에 보이는 뷰들의 일반적인 상태들을 여기서 설정합니다.</li>
+<li>이전 상태가 저장되어 있을 경우, 번들 객체를 참조하여 이전 상태로 복원이 가능합니다.</li>
+<li>이 다음에는 항상 <strong>onStart</strong>()가 호출됩니다.</li>
+</ul>
+<h3 id="onstart">onStart()</h3>
+<ul>
+<li>액티비티가 화면에 보이기 바로 전에 호출됩니다.</li>
+<li>액티비티가 화면상에 보이면 이 메소드 다음에 <strong>onResume</strong>()메소드가 호출된 것입니다.</li>
+<li>매우 빠르게 끝나고, <strong>onResume</strong>() 단계로 넘어갑니다.</li>
+<li>보통 <strong>Broadcast Receiver</strong>는 이 단계에서 등록하는 것이 좋습니다.</li>
+<li>액티비티가 시작되기 전에 호출되는 함수 / 액티비티가 멈춘 후 다시 시작되기 전에 호출되는 함수</li>
+</ul>
+<h3 id="onresume">onResume()</h3>
+<ul>
+<li>액티비티가 사용자와 상호 작용하기 바로 직전에 호출되는 함수입니다. 이 메소드가 호출되고 나서 바로 액티비티가 사용자에게 보이기 시작합니다.</li>
+<li>액티비티가 <strong>화면에 보여집니다.</strong></li>
+<li>사용자에게 <strong>focus</strong>를 잡은 상태입니다.</li>
+</ul>
+<h3 id="onrestart">onRestart()</h3>
+<ul>
+<li>액티비티가 <strong>중지된(Stopped)</strong> 이후에 호출되는 메소드로 다시 시작되기 바로 전에 호출됩니다.</li>
+<li>액티비티가 <strong>멈춰 있다가 다시 다시 호출될 때 불리는 함수입니다.</strong></li>
+</ul>
+<h2 id="다른-액티비티가-호출되는-경우">다른 액티비티가 호출되는 경우</h2>
+<h3 id="onpause">onPause()</h3>
+<ul>
+<li>액티비티 위에 <strong>액티비티가 올라와서 focus를 잃었을 때</strong> 호출되는 함수</li>
+<li>액티비티가 완전히 가려지지 않고 <code>부분만 가려진 상태</code>에서 호출되는 함수, 즉 <strong>일부분이 보이거나 투명상태일 경우</strong>에 호출됩니다.</li>
+<li>다른 액티비티가 호출되기 전에 실행되기 때문에 <code>onPause()</code> 함수에서 <strong>시간이 많이 소요되는 작업이나 많은 일을 처리하면 다른 액티비티가 호출되는 시간이 지연</strong>되기 때문에 많은 일을 처리하지 않도록 주의합니다.</li>
+<li>영구적인 Data는 여기서 저장합니다.</li>
+<li>이 메소드가 리턴하기 전에는 다음 액티비티가 시작될 수 없으므로 이 작업은 빠르게 리턴되어야 합니다.</li>
+<li>액티비티가 이 상테에 들어가면 시스템은 액티비티를 강제 종료할 수 있습니다.</li>
+</ul>
+<h3 id="onstop">onStop()</h3>
+<ul>
+<li>액티비티 위에 다른 <strong>액티비티가 완전히 올라와 100% 가려질 때</strong> 호출되는 함수</li>
+<li>액티비티가 <strong><code>사용자에게 더 이상 보이지 않을 때</code></strong> 호출되는 함수</li>
+<li>만약 이 상태에서 액티비티가 다시 불려지면 <code>onRestart()</code>함수가 호출됩니다.</li>
+<li>시스템이 onStop() 상태에 들어오면, <strong>onSaveInstanceState</strong>()이라는 메소드를 호출하는데, 이 단계에서는 <code>key-value</code> 형태로 값을 저장할 수 있고, 이 값을 <code>onCreate()</code>에서 복원할 수 있습니다.</li>
+<li>ex) 홈 키를 누른 경우, 또는 다른 액티비티 페이지로 이동이 있는 경우에 호출됩니다.</li>
+</ul>
+<h3 id="ondestroy">onDestroy()</h3>
+<ul>
+<li>액티비티가 완전히 스택에서 없어질 때 호출되는 함수</li>
+<li>즉 <strong>제거</strong>되는 경우입니다.</li>
+<li><code>Finish()</code> 메소드가 호출되거나 <code>시스템 메모리 확보</code>를 위해서 시스템이 강제로 종료시키는 경웨 호출될 수 있습니다.</li>
+</ul>
+<h3 id="참고">참고</h3>
+<ul>
+<li>onStop(), onDestroy() 함수는 호출되지 않을 수도 있습니다.</li>
+<li>메모리 부족으로 인해 onStop()이 호출되지 않을 수 있습니다.</li>
+</ul>
+<h2 id="fragment프래그먼트">Fragment(프래그먼트)</h2>
+<p>일종의 하위 Activity이며 자체 생명주기를 갖는다.<br>
+자체 입력 이벤트를 가지고 있으며 값 전달은 Bundle로 한다.<br>
+[Activity가 Intent로 한 것과는 대조적이다.]<br>
+Tag를 달 수 있다.<br>
+FragmentManager를 통해 관리할 수 있다.</p>
+<h3 id="fragmentmanager">FragmentManager</h3>
+<p>Fragment 관리를 목적으로 하는 클래스<br>
+FragmentManager 클래스를 통해 FragmentTransaction 객체를 FragmentTransaction을 통해 동적 관리<br>
+Kotlin에서는 supportFragmentManager를 통해 생성</p>
+<h3 id="fragmenttransaction">FragmentTransaction</h3>
+<p>Fragment 추가, 삭제, 전환을 도와주는 클래스<br>
+addToBackStack() 함수를 호출해서 교체되서 Fragment를 back stack에 저장<br>
+항상 마지막에 변경사항 적용을 위해 commit()을 해야 한다.</p>
+<p><img src="/img/fragment.png" alt=""></p>
+<h3 id="onattach">onAttach() :</h3>
+<ul>
+<li>프래그먼트가 액티비티에 붙을 때 호출된다.</li>
+<li>하지만, 아직 완벽하게 생성된 것은 아니다.</li>
+<li>프래그먼트는 액티비티 없이는 단독적으로 존재할 수 없기 때문이다.</li>
+</ul>
+<h3 id="oncreate">onCreate() :</h3>
+<ul>
+<li>본격적으로 프래그먼트가 액티비티의 호출을 받아 생성되는 시점이다.</li>
+<li>액티비티의 onCreate()에서는 view나 UI 작업을 할 수 있으나, 프래그먼트의 onCreate()에서는 할 수 없다.</li>
+</ul>
+<h3 id="oncreateview">onCreateView() :</h3>
+<ul>
+<li>프래그먼트에 속한 각종 view나 viewGroup에 대한 UI 바인딩 작업을 할 수 있다.</li>
+<li>(Layout을 inflate하여 view 작업을 수행한다.)</li>
+</ul>
+<h3 id="onactivitycreated">onActivityCreated() :</h3>
+<ul>
+<li>액티비티에서 프래그먼트를 모두 생성하고 난 다음에 호출된다.</li>
+<li>즉 액티비티에서 onCreate() 다음에 호출되는 메소드이다.</li>
+<li>액티비티와 프래그먼트가 드디어 연결되는 시점이다.</li>
+</ul>
+<h3 id="onstart">onStart() :</h3>
+<ul>
+<li>프래그먼트가 사용자에게 보여지기 전에 호출되는 함수</li>
+<li>(액티비티와 같음)</li>
+</ul>
+<h3 id="onresume">onResume() :</h3>
+<ul>
+<li>프래그먼트가 비로소 화면에 보이는 단계이다.</li>
+<li>사용자에게 focus를 잡은 상태</li>
+<li>사용자와의 상호작용이 가능</li>
+</ul>
+<h3 id="다른-프래그먼트가-치고-들어오는-경우add되는-경우">다른 프래그먼트가 치고 들어오는 경우(add되는 경우)</h3>
+<h3 id="onpause">onPause() :</h3>
+<ul>
+<li>프래그먼트는 사용자와의 상호작용을 중지한다.</li>
+<li>다시 돌아온다는 보장이 없으므로, 중요한 정보는 저장해둔다.</li>
+</ul>
+<h3 id="onstop">onStop() :</h3>
+<ul>
+<li>프래그먼트는 더 이상 보여지지 않게 되며, 프래그먼트 기능은 중지한다.</li>
+</ul>
+<h3 id="ondestroyview">onDestroyView() :</h3>
+<ul>
+<li>프래그먼트를 view에서 제거한다.</li>
+<li>Backstack을 사용했다면, 다시 해당 프래그먼트로 돌아올 때 onCreateView()가 호출된다.</li>
+</ul>
+<h3 id="ondestroy">onDestroy() :</h3>
+<ul>
+<li>프래그먼트를 제거하기 직전이다.</li>
+</ul>
+<h3 id="ondetach">onDetach() :</h3>
+<ul>
+<li>프래그먼트를 비로소 제거하고 액티비티와의 연결도 해제한다.</li>
+</ul>
+<h1 id="과제">과제</h1>
+<ol>
+<li>복습 : 세미나 시간동안 구현한 것 완성</li>
+<li>응용 : Fragment안에 Fragment 구현</li>
+<li>심화 : 첫 Fragment에서 이미지가 여러장일 경우에는 swipe를 통해 구현</li>
+</ol>
+<p><code>Github</code> : <a href="https://github.com/WooVictory/SOPT_22th_Seminar2_HomeWork" target="_blank" rel="noopener">https://github.com/WooVictory/SOPT_22th_Seminar2_HomeWork</a></p>
+
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/2018/05/04/boostcourse1/" data-toggle="tooltip" data-placement="top" title="[BoostCourse] 1. Layout">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/2018/05/01/sopt-semniar1/" data-toggle="tooltip" data-placement="top" title="[SOPT] Seminar1">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                    <div class="comment">
+                        <div id="disqus_thread" class="disqus-thread"></div>
+                    </div>
+                
+                <!-- disqus comment end -->
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#안드로이드의-4대-컴포넌트"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">안드로이드의 4대 컴포넌트</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#activity액티비티"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">Activity(액티비티)</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#service서비스"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text">Service(서비스)</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#broadcast-receiver"><span class="toc-nav-number">1.3.</span> <span class="toc-nav-text">BroadCast Receiver</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#content-provider"><span class="toc-nav-number">1.4.</span> <span class="toc-nav-text">Content Provider</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#activity의-생명주기"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">Activity의 생명주기</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#oncreate"><span class="toc-nav-number">2.0.1.</span> <span class="toc-nav-text">onCreate()</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#onstart"><span class="toc-nav-number">2.0.2.</span> <span class="toc-nav-text">onStart()</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#onresume"><span class="toc-nav-number">2.0.3.</span> <span class="toc-nav-text">onResume()</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#onrestart"><span class="toc-nav-number">2.0.4.</span> <span class="toc-nav-text">onRestart()</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#다른-액티비티가-호출되는-경우"><span class="toc-nav-number">2.1.</span> <span class="toc-nav-text">다른 액티비티가 호출되는 경우</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#onpause"><span class="toc-nav-number">2.1.1.</span> <span class="toc-nav-text">onPause()</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#onstop"><span class="toc-nav-number">2.1.2.</span> <span class="toc-nav-text">onStop()</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#ondestroy"><span class="toc-nav-number">2.1.3.</span> <span class="toc-nav-text">onDestroy()</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#참고"><span class="toc-nav-number">2.1.4.</span> <span class="toc-nav-text">참고</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#fragment프래그먼트"><span class="toc-nav-number">2.2.</span> <span class="toc-nav-text">Fragment(프래그먼트)</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#fragmentmanager"><span class="toc-nav-number">2.2.1.</span> <span class="toc-nav-text">FragmentManager</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#fragmenttransaction"><span class="toc-nav-number">2.2.2.</span> <span class="toc-nav-text">FragmentTransaction</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#onattach"><span class="toc-nav-number">2.2.3.</span> <span class="toc-nav-text">onAttach() :</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#oncreate"><span class="toc-nav-number">2.2.4.</span> <span class="toc-nav-text">onCreate() :</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#oncreateview"><span class="toc-nav-number">2.2.5.</span> <span class="toc-nav-text">onCreateView() :</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#onactivitycreated"><span class="toc-nav-number">2.2.6.</span> <span class="toc-nav-text">onActivityCreated() :</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#onstart"><span class="toc-nav-number">2.2.7.</span> <span class="toc-nav-text">onStart() :</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#onresume"><span class="toc-nav-number">2.2.8.</span> <span class="toc-nav-text">onResume() :</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#다른-프래그먼트가-치고-들어오는-경우add되는-경우"><span class="toc-nav-number">2.2.9.</span> <span class="toc-nav-text">다른 프래그먼트가 치고 들어오는 경우(add되는 경우)</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#onpause"><span class="toc-nav-number">2.2.10.</span> <span class="toc-nav-text">onPause() :</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#onstop"><span class="toc-nav-number">2.2.11.</span> <span class="toc-nav-text">onStop() :</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#ondestroyview"><span class="toc-nav-number">2.2.12.</span> <span class="toc-nav-text">onDestroyView() :</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#ondestroy"><span class="toc-nav-number">2.2.13.</span> <span class="toc-nav-text">onDestroy() :</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#ondetach"><span class="toc-nav-number">2.2.14.</span> <span class="toc-nav-text">onDetach() :</span></a></li></ol></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#과제"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">과제</span></a></li></ol>
+        
+        </div>
+      </aside>
+    
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#SOPT" title="SOPT">SOPT</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="https://leejongchan.github.io/" target="_blank">JongChan</a></li>
+                    
+                        <li><a href="https://godpp.github.io" target="_blank">godpp</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- disqus embedded js code start (one page only need to embed once) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "your-disqus-ID";
+    var disqus_identifier = "https://woovictory.github.io/2018/05/02/sopt-seminar2/";
+    var disqus_url = "https://woovictory.github.io/2018/05/02/sopt-seminar2/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus embedded js code start end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'always',
+          placement: 'right',
+          icon: '#'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://www.facebook.com/WooVictory">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/WooVictory">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; VictoryWoo 2018 
+                    <br>
+                    Theme by <a href="http://huangxuan.me">Hux</a> 
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span> 
+                    re-Ported by <a href="http://beantech.org">BeanTech</a> | 
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=YenYuHsuan&repo=hexo-theme-beantech&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://woovictory.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-XXXXXXXX-X';
+    var _gaDomain = 'yoursite';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+<img src="https://woovictory.github.io/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

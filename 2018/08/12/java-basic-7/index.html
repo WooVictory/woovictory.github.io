@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta name="google-site-verification" content="AFirxOxuB2W32dZY1PrMx4c6K3RsM3XVAkRIkCJEEpI" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword"  content="">
+    <link rel="shortcut icon" href="/img/android.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          Java :: 7) 제어자 - VictoryWoo | Blog
+        
+    </title>
+
+    <link rel="canonical" href="https://woovictory.github.io/2018/08/12/java-basic-7/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS --> 
+    <link rel="stylesheet" href="/css/beantech.min.css">
+    
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('/img/header_img/blaise-vonlanthen-433128-unsplash.jpg')
+            /*post*/
+        
+    }
+    
+    #signature{
+        background-image: url('/null');
+    }
+    
+</style>
+
+<header class="intro-header" >
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#Java" title="Java">Java</a>
+                            
+                        </div>
+                        <h1>Java :: 7) 제어자</h1>
+                        <h2 class="subheading"></h2>
+                        <span class="meta">
+                            Posted by VictoryWoo on
+                            2018-08-12
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+	
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">VictoryWoo</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">about</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <p><strong>제어자</strong>란 클래스와 클래스 멤버의 선언 시 사용하여 부가적인 의미를 부여하는 키워드를 의미합니다. 자바에서 제어자는 <code>접근 제어자</code>와 <code>기타 제어자</code>로 구분할 수 있습니다.</p>
+<p>기타 제어자는 경우에 따라 여러 개를 함께 사용할 수도 있지만, 접근 제어자를 두 개 이상 같이 사용할 수는 없습니다. 이러한 접근 제어자와 기타 제어자는 조합에 따라 함께 사용할 수 있습니다.</p>
+<h1 id="접근-제어자">접근 제어자</h1>
+<hr>
+<p>객체 지향에서 <code>정보 은닉</code>이란 사용자가 굳이 알 필요가 없는 정보는 사용자로부터 숨겨야 한다는 개념입니다. 그렇게 함으로써 사용자는 언제나 최소한의 정보만으로 프로그램을 손쉽게 사용할 수 있게 됩니다.</p>
+<p>자바에서는 이러한 정보 은닉을 위해 <strong>접근 제어자</strong>(access modifier)라는 기능을 제공하고 있습니다. 접근 제어자를 사용하면 클래스 외부에서의 직접적인 접근을 허용하지 않는 멤버를 설정하여 정보 은닉을 구체화할 수 있습니다.</p>
+<p>자바에서는 다음과 같은 네 가지의 접근 제어자를 제공합니다.</p>
+<ol>
+<li>private</li>
+<li>public</li>
+<li>default</li>
+<li>protected</li>
+</ol>
+<h2 id="private">private</h2>
+<p><strong>private 접근 제어자</strong>를 사용하여 선언된 클래스 멤버는 외부에 공개되지 않으며, 외부에서는 직접 접근할 수 없습니다. 즉, 자바 프로그램은 private 멤버에 직접 접근할 수 없으며, 해당 객체의 <strong>public 메소드</strong>를 통해서만 접근할 수 있습니다. 따라서 private 멤버는 public 인터페이스를 직접 구성하지 않고, 클래스 내부의 세부적인 동작을 구현하는데 사용됩니다.</p>
+<img src="/img/private.png" width="400" height="200">
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Person</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String name =<span class="string">"이승우"</span>;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> String <span class="title">getName</span><span class="params">()</span></span>&#123; <span class="comment">// 1</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.name;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getInfo</span><span class="params">()</span></span>&#123; <span class="comment">// 2</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.name;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>private 멤버는 해당 멤버를 선언한 클래스에서만 접근할 수 있습니다. 하지만, 다른 클래스에서 Person 클래스의 name에 접근하고자 할 때는 2와 같이 Person 클래스에 public으로 메소드를 선언하여 private로 선언된 name에 접근할 수 있습니다. 하지만, 1과 같이 메소드를 private로 선언하게 된다면, 다른 클래스에서 Person 클래스의 name에 접근할 수 없습니다.</p>
+<h2 id="public">public</h2>
+<p><strong>public 접근 제어자</strong>를 사용하여 선언된 클래스 멤버는 외부로 공개되며, 해당 객체를 사용하는 프로그램 어디에서나 직접 접근할 수 있습니다.</p>
+<p><strong>자바 프로그램은 public 메소드를 통해서만 해당 객체의 private 멤버에 접근할 수 있습니다.</strong> 따라서 public 메소드는 private 멤버와 프로그램 사이의 인터페이스 역할을 수행한다고 할 수 있습니다.</p>
+<img src="/img/public.png" width="400" height="200">
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">EveryWhere</span></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> String var = <span class="string">"누구든지 허용"</span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getInfo</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.var;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>자바에서 pubic 멤버는 프로그램 어디에서 누구나 접근할 수 있습니다.</p>
+<h2 id="default">default</h2>
+<p>자바에서는 클래스 및 클래스 멤버의 접근 제어의 기본값으로 <strong>default 접근 제어자</strong>를 별도로 명시하고 있습니다. 이러한 default를 위한 접근 제어자는 따로 존재하지 않으며, 접근 제어자가 지정되지 않으면 자동적으로 default 접근 제어자를 가지게 됩니다.</p>
+<p>default 접근 제어를 가지는 멤버는 같은 클래스의 멤버와 같은 패키지에 속하는 멤버에서만 접근할 수 있습니다.</p>
+<img src="/img/default.png" width="400" height="200">
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">같은 패키지만 접근 허용</span><br><span class="line"><span class="keyword">package</span> test;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SamePackage</span></span>&#123;</span><br><span class="line">    String sameVar = <span class="string">"같은 패키지는 허용"</span>; <span class="comment">// default 필드</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">같은 클래스도 접근 허용</span><br><span class="line"><span class="keyword">package</span> test;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SameClass</span></span>&#123;</span><br><span class="line">    String var = <span class="string">"다른 패키지는 접근 불가"</span>; <span class="comment">// 1 : default 필드</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">        SamePackage sp = <span class="keyword">new</span> SamePackage();</span><br><span class="line">        System.out.println(sp.sameVar);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>1과 같이 var 변수는 다른 패키지에서는 접근할 수 없습니다.</p>
+<h2 id="protected">protected</h2>
+<p>자바 클래스는 private 멤버로 정보를 은닉하고, public 멤버로 사용자나 프로그램과의 인터페이스를 구축합니다. 여기에 부모 클래스(parent class)와 관련된 접근 제어자가 하나 더 존재합니다.</p>
+<p><strong>protected 멤버는 부모 클래스에 대해서는 public 멤버처럼 취급되며, 외부에서는 private 멤버처럼 취급됩니다.</strong></p>
+<p>클래스의 protected 멤버에 접근할 수 있는 영역은 다음과 같습니다.</p>
+<ol>
+<li>이 멤버를 선언한 클래스의 멤버</li>
+<li>이 멤버를 선언한 클래스가 속한 패키지의 멤버</li>
+<li>이 멤버를 선언한 클래스를 상속받은 자식 클래스(child class)의 멤버</li>
+</ol>
+<img src="/img/protected.png" width="400" height="200">
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">같은 패키지는 접근 허용</span><br><span class="line"><span class="keyword">package</span> test;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SameClass</span></span>&#123;</span><br><span class="line">    <span class="keyword">protected</span> String sameVar = <span class="string">"다른 패키지에 속하는 자식 클래스까지 허용"</span>;</span><br><span class="line">    <span class="comment">// protected 필드</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">다른 패키지에 속하는 자식 클래스도 접근 허용</span><br><span class="line"><span class="keyword">package</span> test.other;</span><br><span class="line"><span class="keyword">import</span> test.SameClass;</span><br><span class="line"><span class="comment">// test 패키지의 SameClass 클래스를 불러들여 포함시킴</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ChildClass</span> <span class="keyword">extends</span> <span class="title">SameClass</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">        SameClass sameClass = <span class="keyword">new</span> SameClass();</span><br><span class="line">        System.out.println(sameClass.sameVar);</span><br><span class="line">        <span class="comment">// 다른 패키지에 속하는 자식 클래스까지 허용</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="접근-제어자의-접근-범위">접근 제어자의 접근 범위</h2>
+<p>자바에서 접근 제어자의 접근 범위가 보다 많은 제어자부터 적은 제어자 순으로 나열하면 다음과 같습니다.</p>
+<p>public &gt; protected &gt; default &gt; private</p>
+<img src="/img/range.png" width="600" height="200">
+<p>자바에서는 클래스나 멤버를 선언할 때, 접근을 허용할 범위에 맞는 접근 제어자를 선택하는 것이 매우 중요합니다.</p>
+<h1 id="기타-제어자">기타 제어자</h1>
+<hr>
+<p>기타 제어자의 종류로는 다음과 같습니다.</p>
+<ol>
+<li>final 제어자</li>
+<li>static 제어자</li>
+<li>abstract 제어자</li>
+</ol>
+<h2 id="final">final</h2>
+<p><strong>final 제어자</strong>는 '변경할 수 없다’는 의미로 사용됩니다. 즉, 필드나 지역 변수에 사용하면 값을 변경할 수 없는 <code>상수(constant)</code>가 됩니다.<br>
+또한, 클래스에 사용하면 해당 클래스는 다른 클래스가 상속받을 수 없게 됩니다.<br>
+메소드에 사용하면 해당 메소드는 오버라이딩을 통한 재정의를 할 수 없게 됩니다.</p>
+<p>자바에서는 상속이라는 것을 통해 다른 클래스의 private 멤버를 제외한 모든 메소드를 상속받을 수 있습니다. 이렇게 상속받은 메소드는 그대로 사용해도 되고, 필요한 동작을 위해 <strong>재정의</strong>하여 사용할 수도 있습니다.</p>
+<p><code>메소드 오버라이딩</code>이란 상속받은 부모 클래스의 메소드를 재정의하여 사용하는 것을 의미합니다.</p>
+<p>자바에서 final 제어자를 사용할 수 있는 대상은 다음과 같습니다.</p>
+<ul>
+<li>클래스, 메소드, 필드, 지역 변수</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">Car</span></span>&#123; <span class="comment">// 1</span></span><br><span class="line">    <span class="keyword">final</span> <span class="keyword">int</span> VAR; <span class="comment">// 2</span></span><br><span class="line">    <span class="function"><span class="keyword">final</span> <span class="keyword">void</span> <span class="title">break</span><span class="params">()</span></span>&#123; <span class="comment">// 3</span></span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">double</span> MAX_NUM = <span class="number">10.2</span>; <span class="comment">// 4</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>1 : Car 클래스는 상속을 통해 서브 클래스를 생성할 수 없습니다.<br>
+2 : VAR 필드는 상수화되어 값을 변경할 수 없습니다.<br>
+3 : 이 메소드는 오버라이딩을 통해 재정의할 수 없습니다.<br>
+4 : 이 지역 변수는 상수화되어 값을 변경할 수 없습니다.</p>
+<h2 id="static">static</h2>
+<p>자바에서 <code>static</code> 제어자는 '공통적인’이라는 의미로 사용됩니다. 즉, static 제어자를 변수에 사용하면 해당 변수를 클래스 변수로 만들어줍니다. 또한, 메소드에 사용하면 해당 메소드를 클래스 메소드로 만들어줍니다. 이러한 static 제어자는 초기화 블록에도 사용할 수 있습니다.</p>
+<p>static 제어자를 가지는 멤버는 다음과 같은 특징을 가지게 됩니다.</p>
+<ol>
+<li>프로그램 시작시 최초에 단 한번만 생성되고 초기화됩니다.</li>
+<li><strong>인스턴스를 생성하지 않고도 바로 사용할 수 있게 됩니다.</strong></li>
+<li><strong>해당 클래스의 모든 인스턴스가 공유합니다.</strong></li>
+</ol>
+<p>자바에서 static 제어자를 사용할 수 있는 대상은 다음과 같습니다.</p>
+<ul>
+<li>메소드, 필드, 초기화 블록</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Car</span></span>&#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">int</span> var; <span class="comment">// 1</span></span><br><span class="line">    <span class="keyword">static</span>&#123; <span class="comment">// 2</span></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">break</span><span class="params">()</span></span>&#123; <span class="comment">// 3</span></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>1 : 클래스 필드(static 변수)<br>
+2 : static 초기화 블록으로 보통 클래스 필드의 초기화를 진행<br>
+3 : 클래스 메소드(static 메소드)</p>
+<h2 id="abstract">abstract</h2>
+<p>자바에서 abstract 제어자는 '추상적인’이라는 의미로 사용됩니다. 선언부만 있고 구현부가 없는 메소드를 <strong>추상 메소드</strong>라 하며, 반드시 <code>abstract</code> 제어자를 붙여야 합니다.<br>
+또한, 하나 이상의 추상 메소드를 포함하고 있는 추상 클래스도 반드시 <code>abstract</code> 제어자를 붙여야 합니다.</p>
+<p>자바에서 abstract 제어자를 사용할 수 있는 대상은 다음과 같습니다</p>
+<ul>
+<li>클래스, 메소드</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Car</span></span>&#123; <span class="comment">// 1</span></span><br><span class="line">    <span class="function"><span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">break</span><span class="params">()</span></span>; <span class="comment">// 2</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>1 : 추상 클래스<br>
+2 : 추상 메소드</p>
+<h2 id="제어자의-조합">제어자의 조합</h2>
+<p>자바에서는 접근 제어자와 기타 제어자를 한 대상에 사용할 수 있습니다. 하지만 모든 경우가 가능한 것은 아니며, 대상에 따라 사용할 수 있는 조합은 다음과 같습니다.</p>
+<img src="/img/combination_2.png" width="500" height="200">
+<ol>
+<li>
+<p>클래스에서 final과 abstract는 함께 사용할 수 없습니다.<br>
+: <strong>final</strong> 제어자를 가지는 클래스는 다른 클래스가 상속받을 수 없게 되며, <strong>abstract</strong> 제어자를 가지는 클래스는 다른 클래스가 상속해서 오버라이딩해야만 사용할 수 있으므로, 이 두 제어자는 클래스에 함께 사용할 수 없습니다.</p>
+</li>
+<li>
+<p>메소드에 static과 abstract는 함께 사용할 수 없습니다.<br>
+: <strong>abstract</strong> 제어자를 가지는 메소드는 선언부만 있고 구현부가 없는 메소드인데, <strong>static</strong> 제어자를 가지는 메소드는 인스턴스를 생성하지 않고도 바로 사용할 수 있어야 하므로, 이 두 제어자는 메소드에 함께 사용할 수 없습니다.</p>
+</li>
+<li>
+<p>메소드에 private과 abstract는 함께 사용할 수 없습니다.<br>
+: <strong>abstract</strong> 제어자를 가지는 메소드는 다른 클래스가 상속하여 오버라이딩해야만 사용할 수 있는데, <strong>private</strong> 제어자를 가지는 메소드는 자식 클래스에서 접근할 수 없게 되므로, 이 두 제어자는 메소드에 함께 사용할 수 없습니다.</p>
+</li>
+<li>
+<p>메소드에 private와 final은 함께 사용할 필요가 없습니다.<br>
+: 메소드에 사용된 <strong>final</strong> 제어자와 <strong>private</strong> 제어자는 모두 해당 메소드가 오버라이딩을 통한 재정의를 할 수 없게 된다는 의미를 가지므로, 둘 중에 하나만 사용해도 의미가 충분히 전달될 수 있습니다.</p>
+</li>
+</ol>
+<blockquote>
+<p>private 제어자를 사용한 메소드에는 자식 클래스가 접근할 수 없으므로 메소드 오버라이딩을 통한 재정의를 할 수 없습니다.</p>
+</blockquote>
+
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/2018/08/13/java-basic-8/" data-toggle="tooltip" data-placement="top" title="Java :: 8) 클래스 멤버">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/2018/08/10/java-basic-6/" data-toggle="tooltip" data-placement="top" title="Java :: 6) 메소드와 생성자">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                    <div class="comment">
+                        <div id="disqus_thread" class="disqus-thread"></div>
+                    </div>
+                
+                <!-- disqus comment end -->
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#접근-제어자"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">접근 제어자</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#private"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">private</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#public"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text">public</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#default"><span class="toc-nav-number">1.3.</span> <span class="toc-nav-text">default</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#protected"><span class="toc-nav-number">1.4.</span> <span class="toc-nav-text">protected</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#접근-제어자의-접근-범위"><span class="toc-nav-number">1.5.</span> <span class="toc-nav-text">접근 제어자의 접근 범위</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#기타-제어자"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">기타 제어자</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#final"><span class="toc-nav-number">2.1.</span> <span class="toc-nav-text">final</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#static"><span class="toc-nav-number">2.2.</span> <span class="toc-nav-text">static</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#abstract"><span class="toc-nav-number">2.3.</span> <span class="toc-nav-text">abstract</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#제어자의-조합"><span class="toc-nav-number">2.4.</span> <span class="toc-nav-text">제어자의 조합</span></a></li></ol></li></ol>
+        
+        </div>
+      </aside>
+    
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#Java" title="Java">Java</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="https://leejongchan.github.io/" target="_blank">JongChan</a></li>
+                    
+                        <li><a href="https://godpp.github.io" target="_blank">godpp</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- disqus embedded js code start (one page only need to embed once) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "your-disqus-ID";
+    var disqus_identifier = "https://woovictory.github.io/2018/08/12/java-basic-7/";
+    var disqus_url = "https://woovictory.github.io/2018/08/12/java-basic-7/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus embedded js code start end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'always',
+          placement: 'right',
+          icon: '#'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://www.facebook.com/WooVictory">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/WooVictory">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; VictoryWoo 2018 
+                    <br>
+                    Theme by <a href="http://huangxuan.me">Hux</a> 
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span> 
+                    re-Ported by <a href="http://beantech.org">BeanTech</a> | 
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=YenYuHsuan&repo=hexo-theme-beantech&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://woovictory.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-XXXXXXXX-X';
+    var _gaDomain = 'yoursite';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+<img src="https://woovictory.github.io/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

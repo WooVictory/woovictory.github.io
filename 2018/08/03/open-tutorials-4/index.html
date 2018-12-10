@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta name="google-site-verification" content="AFirxOxuB2W32dZY1PrMx4c6K3RsM3XVAkRIkCJEEpI" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword"  content="">
+    <link rel="shortcut icon" href="/img/android.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          생활코딩 :: express - VictoryWoo | Blog
+        
+    </title>
+
+    <link rel="canonical" href="https://woovictory.github.io/2018/08/03/open-tutorials-4/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS --> 
+    <link rel="stylesheet" href="/css/beantech.min.css">
+    
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('/img/header_img/blaise-vonlanthen-433128-unsplash.jpg')
+            /*post*/
+        
+    }
+    
+    #signature{
+        background-image: url('/null');
+    }
+    
+</style>
+
+<header class="intro-header" >
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#Node.js" title="Node.js">Node.js</a>
+                            
+                        </div>
+                        <h1>생활코딩 :: express</h1>
+                        <h2 class="subheading">express</h2>
+                        <span class="meta">
+                            Posted by VictoryWoo on
+                            2018-08-03
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+	
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">VictoryWoo</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">about</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <h1 id="express">Express</h1>
+<hr>
+<ul>
+<li><strong>IP</strong> : 어떠한 컴퓨터를 식별하는 식별자</li>
+<li><strong>Port</strong> : 그 컴퓨터 안에 설치되어 있는 서버들 중에서 어떤 서버를 사용할 것인가에 대한 식별자</li>
+</ul>
+<p>우리가 웹 서버를 만든 다음에 그 웹서버를 어떤 포트가 실행시킬 것이지를, 바라보게 할 것인지를 결정해야 합니다. 컴퓨터에는 0~65535개의 포트가 있고, 우리는 이 포트 중에서 어떤 특정한 웹서버를 만든 다음에 그 웹 서버가 특정한 포트를 바라보게 하면 사용자의 요청은 그 포트를 향해서 들어오게 됩니다.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> http = <span class="built_in">require</span>(<span class="string">'http'</span>);</span><br><span class="line"><span class="keyword">const</span> hostname = <span class="string">'127.0.0.1'</span>;</span><br><span class="line"><span class="keyword">const</span> port = <span class="number">1339</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> server = http.createServer(<span class="function"><span class="keyword">function</span>(<span class="params">req, res</span>)</span>&#123;</span><br><span class="line">	res.writeHead(<span class="number">200</span>, &#123; <span class="string">'Content-Type'</span>: <span class="string">'text/plain'</span> &#125;);</span><br><span class="line">  	res.end(<span class="string">'Hello World\n'</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">server.listen(port, hostname, <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">`Server running at http://<span class="subst">$&#123;hostname&#125;</span>:<span class="subst">$&#123;port&#125;</span>/`</span>);</span><br><span class="line">	<span class="comment">// 만들어진 서버를 가지고 실제로 그 포트로 사용자가 들어왔을 때, 어떤 내용을 출력할 것인가는 위에서 작성할 수 있습니다.</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<ul>
+<li>http라는 변수에 http라는 객체가 담겨있는데, 그 객체가 가지고 있는 createServer라는 함수를 호출해서 서버를 만듭니다.</li>
+<li>createServer에 의해서 서버가 만들어지고 만들어진 서버를 우리가 제어할 수 있도록 객체를 리턴합니다.</li>
+<li>실제로 그 포트로 사용자가 들어왔을 때 어떤 내용을 출력할 것인가는 이 함수에서 정의할 수 있습니다.</li>
+<li>역시나 이 함수도 익명함수를 통해 작성합니다.</li>
+<li>이 함수는 두 개의 인자를 받는데, req(요청과 관련된 것), res(응답과 관련된 것)</li>
+</ul>
+<ul>
+<li>서버가 특정 포트를 바라보게 하기 위해서 <strong>Port</strong>를 매개변수로 넘겨줍니다.</li>
+<li>사용자가 우리 서버로 접속할 때 여러가지 방법으로 접속할 수 있습니다. 그래서 어떤 IP를 타고 들어온 사용자를 수용할 것인가를 확인하기 위해서 <strong>hostname</strong>을 적습니다.</li>
+<li>시간이 좀 걸릴 수 있는 작업이기 때문에 listen이라는 메소드는 <strong>Callback</strong>으로 비동기적으로 작동합니다. 그래서 listen이 완료되었을 때 이 callback이 실행되도록 약속이 되어있는 것입니다.</li>
+</ul>
+<p>이것도 편한지만, 이런 것들을 우리가 훨씬 더 적은 코드로 이런 역할을 하면서도 더 많은 일을 할 수 있도록 해주는 도구들 (프레임워크)이 존재합니다. Node를 직접 사용해서 웹 애플리케이션을 구현하는 것도 좋겠지만, 손이 많이 가기 때문에 Node를 이용해서 만들어진 프레임워크를 통해서 웹 개발을 해볼 것입니다. 그것이 바로 <code>Express</code>라는 것입니다.</p>
+<h1 id="express-설치">Express 설치</h1>
+<hr>
+<ol>
+<li>먼저 설치를 하기 전에 해당 디렉토리를 Npm이 사용할 수 있는 프로젝트로 만들기 위해서 ‘npm init()’ 명령어를 수행합니다.</li>
+<li>그 다음 ‘npm install --save express’ 명령어를 통해 express를 설치합니다.</li>
+</ol>
+<img src="/img/express.png" width="400" height="200">
+<p>이제 해당 프로젝트 폴더에 설치해서 Express라는 프레임워크를 사용할 수 있는 기본적인 준비는 끝났습니다.</p>
+<h1 id="express-간단한-웹애플리케이션-만들기">Express - 간단한 웹애플리케이션 만들기</h1>
+<hr>
+<ul>
+<li>지금 app.js 라는 파일을 만들 것입니다. 이 파일을 메인 파일이라고 합니다. 또는 메인 애플리케이션(엔트리 애플리케이션)이라고 부릅니다. 최초의 진입점이 되는 파일입니다.</li>
+<li>app.js라는 이름은 express에서 권장하는 메인 애플리케이션의 이름입니다.</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> express = <span class="built_in">require</span>(<span class="string">'express'</span>);</span><br><span class="line"><span class="comment">// require를 통해 express 모듈을 리턴받고 express라는 변수를 통해서 모듈을 제어할 수 있습니다.</span></span><br><span class="line"><span class="comment">// 다음은 express라는 모듈을 통해서 application 객체를 만듭니다.</span></span><br><span class="line"><span class="keyword">var</span> app = express();</span><br><span class="line"><span class="comment">// express라는 모듈은 함수입니다. 그래서 실행하게 되면 함수는 application라는 객체를 리턴합니다.</span></span><br><span class="line"></span><br><span class="line">app.get(<span class="string">'/'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">req, res</span>)</span>&#123;</span><br><span class="line">	res.send(<span class="string">"Hello Homepage"</span>);</span><br><span class="line"></span><br><span class="line">	&#125;)</span><br><span class="line">app.get(<span class="string">'/login'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">req, res</span>)</span>&#123;</span><br><span class="line">	res.send(<span class="string">"Login please"</span>);</span><br><span class="line">	&#125;)</span><br><span class="line"></span><br><span class="line">app.listen(<span class="number">3000</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">"Connected 3000 Port!"</span>);</span><br><span class="line">	&#125;)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>Home 화면에 접속했을 때 우리가 실행시킨 <strong>get</strong>이라는 메소드를 통해서</li>
+<li>사용자가 홈으로 접속하면 두 번째 인자로 전달한 callback 함수가 실행되도록 약속되어 있습니다.</li>
+<li>함수의 인자로 첫 번째 매개변수는 req, 두 번째 매개변수는 res가 들어온다고 약속되어 있습니다.</li>
+<li>함수를 이렇게 정의하면, get이라는 함수는 사용자가 Home으로 들어오고 이것이 완료되었을 때, 인자로 전달된 함수를 실행시키면서 첫 번째 매개변수의 값으로 사용자가 요청한 것과 관련된 request 객체를 전달하는 것이고 두 번째로 사용자가 요청한 정보에 대해서 응답을 할 수 있는 여러가지 방법을 담고 있는 응답에 대한 객체를 전달하도록 약속이 되어 있습니다.</li>
+</ul>
+<p>정리하자면, <strong>get</strong>이라는 메소드는 사용자가 어떠한 경로로 들어왔을 때, 어떠한 것이 실행이 될 것인가를 결정하는 역할을 합니다. 이러한 역할을 하는 것을 <code>router</code>라고 부르며 router가 하는 일을 <strong>routing</strong>이라고 합니다. 우리가 배우는 메소드 중 <code>get, post, put, delete</code>가 <strong>router</strong>의 역할을 하는 메소드입니다.</p>
+<h1 id="routing">Routing</h1>
+<hr>
+<img src="/img/routing.png" width="600" height="200">
+<ul>
+<li>사용자 : 웹 브라우저를 사용해서 우리의 애플리케이션으로 접속하는 사람</li>
+<li>우리의 애플리케이션은 <strong>Router</strong>와 <strong>Controller</strong>라는 것으로 이루어져 있습니다.</li>
+</ul>
+<p>사용자가 '/'로 들어오게 되면 <code>get('/')</code>가 받고 이것을 두 번째 인자로 전달되었던 익명 함수를 실행시키고 &quot;Welcome to Home Page&quot;라는 정보를 사용자에게 응답해주고 있습니다.</p>
+<p>사용자가 '/login’으로 접속하면 저 <code>get('/login')</code>가 받고 두 번째 인자인 익명 함수 안에 있는 코드를 실행시켜서 사용자에게 &quot;login please&quot;라고 하는 정보를 사용자에게 응답해주고 있습니다.</p>
+<p>그래서 get이라고 하는 함수의 역할은 사용자의 요청과 그 요청에 대한 처리인 Controller를 중개해주는 역할을 하는 것이 라우터의 역할입니다. 이 라우터라고 하는 것은 웹 애플리케이션을 만든다라고 했을 때 가장 중요한 것 중 하나입니다.</p>
+<h1 id="연결성">연결성</h1>
+<hr>
+<blockquote>
+<p>Javascript와 Nodejs의 관계</p>
+</blockquote>
+<p>연결이라는 측면에서 보면 기본적으로 Node.js는 다음과 같은 기능을 제공합니다.</p>
+<img src="/img/nodejs1.png" width="200" height="200"> 
+<ul>
+<li>FS : File을 읽고 쓰는 시스템</li>
+<li>HTTP : 네트워크를 통해 어떠한 일을 할 수 있는 기능</li>
+<li>OS : 운영체제를 제어할 수 있는 여러가지 기능</li>
+</ul>
+<p><strong>Nodejs</strong>가 제공하는 기본적인 기능들을 <strong>Javascript</strong>라고 하는 프로그래밍 언어의 문법에 맞게 결합해서 우리가 의도하는 바에 해당되는 프로그램을 만들어 낼 수 있습니다. 일단 한 번 프로그램을 만들면 그 프로그램은 언제든지 똑같이 실행되는, 재사용할 수 있는 애플리케이션이 됩니다.</p>
+<p>이것이 가능한 이유는 <strong>Nodejs</strong>가 기초적인 명령들을 제공하고 <strong>Javascript</strong>이라는 프로그래밍 언어가 노드가 제공하는 명령들을 조합해서 새로운 명령을 만들어 낼 수 있습니다. 그렇게 해서 만들어 낼 수 있는 명령어의 개수는 정말 많고 다양한 가능성을 제공합니다.</p>
+<p>이것과 비슷한 관계에 있는 또 다른 하나는 <strong>Module</strong>과 <strong>NPM</strong>의 관계입니다.</p>
+<ul>
+<li>
+<p>Module : 우리의 프로그램 안에서 부품으로 사용될 작은 프로그램들을 말합니다. 이 세상에는 여러가지 모듈들이 만들어져 있고 그 중에는 우리가 만든 것, 우리가 만들지 않은 것이 있습니다.</p>
+</li>
+<li>
+<p>NPM : 다양한 모듈들을 NPM을 통해서 우리의 애플리케이션에 담아서 다양한 형태의 애플리케이션을 만들어 낼 수 있습니다. (ex. Express, Underscore, Jade)</p>
+</li>
+<li>
+<p>Router : 사용자의 접속을, 사용자의 요청을 어떤 Controller에 전달해줄 것인가라고 하는 중개자의 역할을 합니다.</p>
+</li>
+<li>
+<p>Controller : 예를 들면, 회원을 가입할 때 사용하는 Controller, 홈페이지의 표현을 위한 Controller, 에러 화면을 만들어주는 Controller가 있습니다.</p>
+</li>
+</ul>
+<p><code>JavaScript, NPM, Router</code> 이러한 연결하는 녀석들에게 연결할 대상을 제공해주는 것이<br>
+<strong>Node.js, Module, Controller</strong> 입니다.</p>
+<h1 id="정적파일을-서비스하는-법">정적파일을 서비스하는 법</h1>
+<hr>
+<ul>
+<li>정적인 정보 : 사람이 한 번 작성한 것이 즉, 만들어진 것이 언제나 똑같이 보이면 이것을 정적인 정보라고 합니다.</li>
+<li>동적인 정보 : 프로그래밍적으로 만들어진 정보를 동적인 정보라고 합니다.</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> express = <span class="built_in">require</span>(<span class="string">'express'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> app = express();</span><br><span class="line"></span><br><span class="line">app.use(express.static(<span class="string">'public'</span>));</span><br><span class="line">app.get(<span class="string">'/'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">req, res</span>)</span>&#123;</span><br><span class="line">	res.send(<span class="string">"Hello Homepage"</span>);</span><br><span class="line"></span><br><span class="line">	&#125;)</span><br><span class="line">app.get(<span class="string">'/login'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">req, res</span>)</span>&#123;</span><br><span class="line">	res.send(<span class="string">"Login please"</span>);</span><br><span class="line">	&#125;)</span><br><span class="line"></span><br><span class="line">app.listen(<span class="number">3000</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">"Connected 3000 Port!"</span>);</span><br><span class="line">	&#125;)</span><br></pre></td></tr></table></figure>
+<p>정적인 파일을 서비스하고 싶다면<br>
+<code>app.use(express.static('public'));</code> 이 한줄을 추가합니다.</p>
+<p><strong>public</strong>이라는 디렉토리에 우리가 정적인 파일을 갖다 놓으면 그 정적인 파일을 사용자에게 서비스 할 수 있습니다.</p>
+<h1 id="웹-페이지를-표현하는-방법">웹 페이지를 표현하는 방법</h1>
+<hr>
+<p>웹 페이지를 사용자에게 서비스 하는 방법은 두 가지가 있다.</p>
+<ol>
+<li><strong>정적인 파일 전달하는 법</strong>
+<ul>
+<li>한 번 만들어지면 언제나 똑같은 모습인 Html</li>
+<li>public이라는 디렉토리에 static.html 파일을 놓습니다.</li>
+<li>서버를 동작시키고, localhost:3000/static.html로 접근하면 작성된 웹 페이지를 확인할 수 있습니다.</li>
+<li>내용을 수정하면 서버를 껐다 킬 필요 없이 내용을 바로 반영시킬 수 있습니다.</li>
+<li>하지만, 웹 페이지 상에서 반복적인 일들이나 추가적인 사항이 많이 생긴다면 반영하기 어렵습니다.</li>
+<li>그 하나의 예로는 현재 시간을 보여주는 것이라고 할 수 있습니다.</li>
+</ul>
+</li>
+</ol>
+<p>자바스크립트에서는 여러 줄의 코드를 삽입하고 싶다면 <code>\</code>를 붙이면 가능하지만, 코드의 가독성이 많이 떨어집니다. 자바스크립트의 새로운 표준에는 <code>formatted text</code>라는 기능이 추가되었습니다.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">app.get(<span class="string">'/dynamic'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">req, res</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> time = <span class="built_in">Date</span>();</span><br><span class="line">    <span class="keyword">var</span> lis = <span class="string">' '</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>;i&lt;<span class="number">5</span>;i++)&#123;</span><br><span class="line">        lis = lis + <span class="string">'&lt;li&gt;Coding&lt;/li&gt;'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">var</span> output = <span class="string">`</span></span><br><span class="line"><span class="string">    &lt;html&gt;</span></span><br><span class="line"><span class="string">    &lt;head&gt;</span></span><br><span class="line"><span class="string">        &lt;meta charset="utf-8"&gt;</span></span><br><span class="line"><span class="string">    &lt;/head&gt;</span></span><br><span class="line"><span class="string">    &lt;body&gt;</span></span><br><span class="line"><span class="string">	Hello, Dynamic~~~~~</span></span><br><span class="line"><span class="string">	&lt;ul&gt;</span></span><br><span class="line"><span class="string">	    <span class="subst">$&#123;lis&#125;</span></span></span><br><span class="line"><span class="string">	&lt;/ul&gt;</span></span><br><span class="line"><span class="string">    <span class="subst">$&#123;time&#125;</span></span></span><br><span class="line"><span class="string">    &lt;/body&gt;</span></span><br><span class="line"><span class="string">    &lt;/html&gt;`</span>;</span><br><span class="line">	</span><br><span class="line">    res.send(output);</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li><strong>동적인 파일 전달하는 법</strong>
+<ul>
+<li>우리가 작성한 코드가 다시 실행되어야 하기 때문에 서버를 껐다가 다시 <code>node app.js</code>를 실행해주어야 합니다.</li>
+<li>내부적으로 <strong>dynamic</strong>하게 웹 코드를 작성하면 코드의 짧은 수정을 통해서 반복적인 작업의 횟수가 프로그래밍적으로 달라지기 때문에, 자바스크립트 코드에서 일부분만 수정하면 되므로 정확하게 원하는만큼 반복시킬 수 있습니다.</li>
+</ul>
+</li>
+</ol>
+<p>하지만, 정적인 파일의 경우에는 요청이 들어올 때마다 node가 그것을 잡아서 던져주기 때문에, 우리가 굳이 껐다 킬 필요가 없습니다. 이로 인해서 정적인 파일을 서비스하는 것이 좀 더 코드를 짜는데는 편리합니다. 물론 동적인 파일도 자동화 시키는 방법이 있지만, 아직은 배우지 않고 다음에 배울 것 입니다.</p>
+<p>또는 현재 시간을 웹 페이지에 표시하고 싶다면 <code>Date()</code>라는 API를 사용하여 동적인 파일을 서비스하는 방법을 통해서 웹 페이지에 보여줄 수 있습니다.</p>
+<p>변수의 값을 Html 코드에 삽입하면 <strong>문자열</strong>로 인식하기 때문에 <code>${time}</code>과 같은 방법을 써서 <strong>변수</strong>를 포함시킬 수 있도록 합니다.</p>
+
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/2018/08/03/java-basic-2/" data-toggle="tooltip" data-placement="top" title="Java :: 2) 연산자">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/2018/08/02/open-tutorials-3/" data-toggle="tooltip" data-placement="top" title="생활코딩 :: 동기와 비동기 프로그래밍">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                    <div class="comment">
+                        <div id="disqus_thread" class="disqus-thread"></div>
+                    </div>
+                
+                <!-- disqus comment end -->
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#express"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">Express</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#express-설치"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">Express 설치</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#express-간단한-웹애플리케이션-만들기"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">Express - 간단한 웹애플리케이션 만들기</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#routing"><span class="toc-nav-number">4.</span> <span class="toc-nav-text">Routing</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#연결성"><span class="toc-nav-number">5.</span> <span class="toc-nav-text">연결성</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#정적파일을-서비스하는-법"><span class="toc-nav-number">6.</span> <span class="toc-nav-text">정적파일을 서비스하는 법</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#웹-페이지를-표현하는-방법"><span class="toc-nav-number">7.</span> <span class="toc-nav-text">웹 페이지를 표현하는 방법</span></a></li></ol>
+        
+        </div>
+      </aside>
+    
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#Node.js" title="Node.js">Node.js</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="https://leejongchan.github.io/" target="_blank">JongChan</a></li>
+                    
+                        <li><a href="https://godpp.github.io" target="_blank">godpp</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- disqus embedded js code start (one page only need to embed once) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "your-disqus-ID";
+    var disqus_identifier = "https://woovictory.github.io/2018/08/03/open-tutorials-4/";
+    var disqus_url = "https://woovictory.github.io/2018/08/03/open-tutorials-4/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus embedded js code start end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'always',
+          placement: 'right',
+          icon: '#'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://www.facebook.com/WooVictory">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/WooVictory">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; VictoryWoo 2018 
+                    <br>
+                    Theme by <a href="http://huangxuan.me">Hux</a> 
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span> 
+                    re-Ported by <a href="http://beantech.org">BeanTech</a> | 
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=YenYuHsuan&repo=hexo-theme-beantech&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://woovictory.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-XXXXXXXX-X';
+    var _gaDomain = 'yoursite';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+<img src="https://woovictory.github.io/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

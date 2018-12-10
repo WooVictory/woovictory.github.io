@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta name="google-site-verification" content="AFirxOxuB2W32dZY1PrMx4c6K3RsM3XVAkRIkCJEEpI" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword"  content="">
+    <link rel="shortcut icon" href="/img/android.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          [Kotlin] Chap 3 - VictoryWoo | Blog
+        
+    </title>
+
+    <link rel="canonical" href="https://woovictory.github.io/2018/06/04/kotlin3/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS --> 
+    <link rel="stylesheet" href="/css/beantech.min.css">
+    
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('/img/header_img/blaise-vonlanthen-433128-unsplash.jpg')
+            /*post*/
+        
+    }
+    
+    #signature{
+        background-image: url('/null');
+    }
+    
+</style>
+
+<header class="intro-header" >
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#Kotlin" title="Kotlin">Kotlin</a>
+                            
+                        </div>
+                        <h1>[Kotlin] Chap 3</h1>
+                        <h2 class="subheading">코틀린을 이용해 안드로이드를 개발해보자</h2>
+                        <span class="meta">
+                            Posted by VictoryWoo on
+                            2018-06-04
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+	
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">VictoryWoo</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">about</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <h1 id="linearlayout">LinearLayout</h1>
+<hr>
+<ol>
+<li>특징</li>
+</ol>
+<ul>
+<li>레이아웃이 일렬로 들어감</li>
+<li>구현하기 쉽고 많이 쓰임</li>
+<li><code>비율</code>로 화면을 구성할 수 있음</li>
+</ul>
+<ol start="2">
+<li>속성</li>
+</ol>
+<ul>
+<li><code>Weight</code> : 화면을 비율로 나눌 때  즉, 화면 상에서 얼마만큼의 비율을 차지할 것인가를 결정할 수 있음</li>
+<li><code>Gravity</code> : LinearLayout 안에 있는 뷰를 정렬시킬 때 사용함 즉, 안에 있는 뷰를 오른쪽,왼쪽, 가운데 정렬 등등을 할 때 사용함</li>
+<li><code>Orientation</code> : LinearLayout에만 있는 속성으로 방향성을 설정해줌</li>
+</ul>
+<h1 id="relativelayout">RelativeLayout</h1>
+<hr>
+<ol>
+<li>특징</li>
+</ol>
+<ul>
+<li>상대적인 레이아웃으로 다른 상대의 위치에 따라 나의 위치가 정해진다고 생각하면 된다.</li>
+<li>구현하기 어렵고 복잡</li>
+<li>디자인 구성이 다양한 장점</li>
+</ul>
+<ol start="2">
+<li>속성</li>
+</ol>
+<ul>
+<li><code>Alignparent</code> : 부모 뷰와 나란히 하겠다는 의미</li>
+<li><code>Align</code> : 타겟된 뷰와 나란히 하겠다는 의미</li>
+<li><code>To(방향)of, below/above</code> : 타겟된 뷰의 왼쪽, 오른쪽, 위, 아래로 뷰를 위치시킬 수 있다. 중요한 속성</li>
+</ul>
+<h1 id="constraintlayout">ConstraintLayout</h1>
+<hr>
+<ol>
+<li>특징</li>
+</ol>
+<ul>
+<li><strong>LinearLayout</strong>, <strong>RelativeLayout</strong>의 특성을 가짐</li>
+<li>UI 툴로 인한 사용법이 편리</li>
+<li>다양한 화면에서 구현이 가능 즉, 하나의 레이아웃으로 스마트폰이나 태블릿 PC의 레이아웃을 구성할 수 있다.</li>
+<li>아직까지는 베타버전 느낌이 강해서 레이아웃을 만들 때 종종 멈추는 버그가 있지만, 추후에 패치되면서 안정화가 된다면 많이 사용할 수 있을 것 같다.</li>
+</ul>
+<ol start="2">
+<li>속성</li>
+</ol>
+<ul>
+<li>
+<p>autoConnect : 레이아웃 생성시 마다 자동적으로 Constraint 생성 설정</p>
+</li>
+<li>
+<p>Clear All Constraints : 화면 전체 Constraint 지우기</p>
+</li>
+<li>
+<p>Infer Constraint : Constraint 자동 지정하기 autoConnect가 꺼졌을 때 내가 지정한 뷰만 Constraint를 지정하고 싶을 때 사용한다. 하지만, 추론적으로 적용되기 때문에 내가 원하지 않은 방향으로 Constraint가 잡힐수도 있다.</p>
+</li>
+<li>
+<p>Pack : 두 개 이상의 레이아웃을 이동하거나 채우고 연결할 때 사용</p>
+</li>
+<li>
+<p>Align : 레이아웃 Align 시키기 (기준점은 큰 레이아웃이 된다.)</p>
+</li>
+<li>
+<p>Guideline : 가이드라인 생성</p>
+</li>
+<li>
+<p>Attribute : 레이아웃 특성 설정</p>
+</li>
+<li>
+<p>View All Attribute : Attribute 상세</p>
+</li>
+<li>
+<p>Edit BaseLine : 레이아웃 안에 있는 글자 라인 맞추기(자주 사용하는 기능)</p>
+</li>
+<li>
+<p>Chain : 레이아웃을 그룹으로 만들어 주는 기능(자주 사용하는 기능) 그룹으로 묶고 싶은 뷰를 모두 선택한 후에<br>
+– Create Horizontal Chain : 가로로 있는 뷰들을 그룹으로 묶어줌<br>
+– Create Vertical Chain : 세로로 있는 뷰들을 그룹으로 묶어줌</p>
+</li>
+<li>
+<p>화면이 바뀌거나 디바이스가 바뀌어도 그에 대해 유동적으로 대응하기 위해서 Constraint와 Chain을 사용한다.</p>
+</li>
+</ul>
+<blockquote>
+<p>ConstraintLayout은 SOPT에서도 그렇고 많이 알려주지 않고 사용하지도 않아서 모르고 있었다. 하지만, 내가 생각했던 것보다 기능이 많았고, 앞으로 안정화된다면 더 공부해서 많이 사용해봐야겠다. 충분한 장점이 있을 것 같다고 생각한다. ^^</p>
+</blockquote>
+<h1 id="imageview">ImageView</h1>
+<hr>
+<ol>
+<li>속성</li>
+</ol>
+<blockquote>
+<p>scaleType : 이미지 뷰의 크기에 따라서 원본 이미지를 조정하는 기능</p>
+</blockquote>
+<ul>
+<li>Metric : 현재 사이즈 그대로 왼쪽 상단부터 채우면서 이미지를 표현. 나머지는 짤림</li>
+<li>fitXY : 이미지를 이미지뷰에 맞게 높이와 넓이를 맞춤. 이미지의 크기가 작거나 큰 경우에도 이미지뷰에 크기에 맞게 높이와 폭이 맞춰진다.</li>
+<li>fitStart : 이미지를 이미지뷰의 폭을 맞춘 후 상단에 배치시킨다.</li>
+<li>fitCenter : 이미지를 이미지뷰의 폭을 맞춘 후 중앙에 배치시킨다.</li>
+<li>fitEnd : 이미지를 이미지뷰의 폭을 맞춘 후 하단에 배치시킨다.</li>
+<li>center : 이미지 사이즈를 그대로 유지한채 이미지를 가운데로 배치시키는 것. 만약 이미지가 이미지뷰보다 사이즈가 클 경우 나머지 부분은 삭제된다. 반대로 이미지가 이미지뷰보다 사이즈가 작은 경우에는 이미지가 가운데 배치되고 나머지 부분은 ImageView 바탕색이 채워진다.</li>
+<li>CenterCrop : 이미지 높이를 이미지 뷰에 맞춘 후 중앙으로 옮긴다. 단, 이미지의 폭은 늘리지 않는다.</li>
+<li>CenterInside : 이미지가 이미지 뷰보다 클 경우 fitCenter 작을 경우 Center 적용하는 것이 효과적(작을 경우에 이미지는 커지지 않고 그대로 중앙에 배치된다.)</li>
+</ul>
+<blockquote>
+<p>안드로이드에서 이미지를 사용할 때는 300KB를 넘지 않는 것을 사용해야 한다. 왜냐하면 컴퓨터의 성능이 낮아지면 애뮬레이터의 성능도 낮아지기 때문에 메모리 부족으로 인해 App이 Crash 될 수 있기 때문이다. 300KB 이상의 이미지는 어떻게 가져오는지에 대해서는 추후에 <code>안드로이드에 대해 파헤쳐보기</code>라는 catergory에서 공부하면서 포스팅할 계획이기 때문에 나중에 확인할 수 있다.</p>
+</blockquote>
+<h1 id="기능">기능</h1>
+<p>아래에 나오는 개념은 말로 표현하기에는 제약이 있어서 강의를 듣고 코드 실습 위주로 공부를 하였습니다. 영상을 보고 작성한 코드는 하단에 <code>Github</code> 링크를 통해서 확인할 수 있습니다.</p>
+<ol>
+<li><code>ProgressBar</code></li>
+</ol>
+<ul>
+<li>확정성 : 진행중인 작업 상태를 수치적으로 정확히 표현하거나 양, 갯수, 퍼센트를 보여주기 위해 사용</li>
+<li>불확정성 : 작업의 진행상태의 완료 시점이 확정되지 않은 경우 사용</li>
+</ul>
+<ol start="2">
+<li><code>SeekBar</code></li>
+</ol>
+<ul>
+<li>ProgressBar에 드래그할 수 있는 타겟을 추가하여 만든 객체</li>
+<li>휴대폰 밝기나 음량 크기를 조절할 때 많이 사용한다.</li>
+</ul>
+<ol start="3">
+<li><code>SurfaceView</code></li>
+</ol>
+<ul>
+<li>
+<p>코드를 작성하는 사람이 커스터마이징 할 수 있는 애니메이션 뷰라고 할 수 있다.<br>
+움직이는 화면이나 카메라, 비디오 게임 등이 있으면 SurfaceView를 통해서 표현할 수 있다.</p>
+</li>
+<li>
+<p>즉 영상을 재생하고자 하는데, 뒤로가기, 재생, 정지 등의 버튼을 커스텀해서 사용하고 싶다면 SurfaceView에 영상 재생을 하고 버튼을 커스텀해서 이벤트 처리를 하면 된다.</p>
+</li>
+</ul>
+<ol start="4">
+<li><code>Dialog</code></li>
+</ol>
+<ul>
+<li>앱을 사용하다보면 간단한 메시지를 표현하기 위해 사용하는 것이다.</li>
+</ul>
+<ol start="5">
+<li><code>Date &amp; TimePicker</code></li>
+</ol>
+<ul>
+<li>날짜나 시간을 선택하기 위해서 기본적으로 제공하는 DatePicker, TimePicker를 사용할 수 있다.</li>
+</ul>
+<ol start="6">
+<li><code>WebView</code></li>
+</ol>
+<ul>
+<li>안드로이드에 내장되 Web browser component로 안드로이드 앱 안에 HTML 코드를 실행시켜주는 View라고 볼 수 있다.</li>
+</ul>
+
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/2018/06/07/Android-AsyncTask/" data-toggle="tooltip" data-placement="top" title=" 안드로이드 :: Study 2">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/2018/06/04/boostcourse2/" data-toggle="tooltip" data-placement="top" title="[BoostCourse] 2. Event와 ListView">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                    <div class="comment">
+                        <div id="disqus_thread" class="disqus-thread"></div>
+                    </div>
+                
+                <!-- disqus comment end -->
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#linearlayout"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">LinearLayout</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#relativelayout"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">RelativeLayout</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#constraintlayout"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">ConstraintLayout</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#imageview"><span class="toc-nav-number">4.</span> <span class="toc-nav-text">ImageView</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#기능"><span class="toc-nav-number">5.</span> <span class="toc-nav-text">기능</span></a></li></ol>
+        
+        </div>
+      </aside>
+    
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#Kotlin" title="Kotlin">Kotlin</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="https://leejongchan.github.io/" target="_blank">JongChan</a></li>
+                    
+                        <li><a href="https://godpp.github.io" target="_blank">godpp</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- disqus embedded js code start (one page only need to embed once) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "your-disqus-ID";
+    var disqus_identifier = "https://woovictory.github.io/2018/06/04/kotlin3/";
+    var disqus_url = "https://woovictory.github.io/2018/06/04/kotlin3/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus embedded js code start end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'always',
+          placement: 'right',
+          icon: '#'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://www.facebook.com/WooVictory">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/WooVictory">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; VictoryWoo 2018 
+                    <br>
+                    Theme by <a href="http://huangxuan.me">Hux</a> 
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span> 
+                    re-Ported by <a href="http://beantech.org">BeanTech</a> | 
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=YenYuHsuan&repo=hexo-theme-beantech&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://woovictory.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-XXXXXXXX-X';
+    var _gaDomain = 'yoursite';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+<img src="https://woovictory.github.io/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>
