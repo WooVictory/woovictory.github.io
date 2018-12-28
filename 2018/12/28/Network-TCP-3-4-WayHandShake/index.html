@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+
+    
+
+    
+    <title>[네트워크] 3&amp;4 Way Handshake | VictoryWoo</title>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+        <meta name="keywords" content="Data Structure,자료구조,TCP,3 &amp; 4 Way Handshake" />
+    
+    <meta name="description" content="3-Way-Handshake와 4-Way-Handshake 네트워크를 사용한 통신에서 TCP 통신을 하는 경우, 3-way-handshake라는 과정을 거친다. TPC/IP 프로토콜을 이용해서 통신하는 두 종단간에 데이터 전송 전 정확한 데이터 전송을 보장하기 위해 사전에 연결하는 과정이다. 연결 성립(Connection Extablishment)   클라">
+<meta name="keywords" content="Data Structure,자료구조,TCP,3 &amp; 4 Way Handshake">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[네트워크] 3&amp;4 Way Handshake">
+<meta property="og:url" content="https://woovictory.github.io/2018/12/28/Network-TCP-3-4-WayHandShake/index.html">
+<meta property="og:site_name" content="VictoryWoo">
+<meta property="og:description" content="3-Way-Handshake와 4-Way-Handshake 네트워크를 사용한 통신에서 TCP 통신을 하는 경우, 3-way-handshake라는 과정을 거친다. TPC/IP 프로토콜을 이용해서 통신하는 두 종단간에 데이터 전송 전 정확한 데이터 전송을 보장하기 위해 사전에 연결하는 과정이다. 연결 성립(Connection Extablishment)   클라">
+<meta property="og:image" content="https://woovictory.github.io/img/tcp_ip_3_way_handshake.png">
+<meta property="og:updated_time" content="2018-12-28T06:11:01.412Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="[네트워크] 3&amp;4 Way Handshake">
+<meta name="twitter:description" content="3-Way-Handshake와 4-Way-Handshake 네트워크를 사용한 통신에서 TCP 통신을 하는 경우, 3-way-handshake라는 과정을 거친다. TPC/IP 프로토콜을 이용해서 통신하는 두 종단간에 데이터 전송 전 정확한 데이터 전송을 보장하기 위해 사전에 연결하는 과정이다. 연결 성립(Connection Extablishment)   클라">
+<meta name="twitter:image" content="https://woovictory.github.io/img/tcp_ip_3_way_handshake.png">
+    
+
+    
+
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/titillium-web/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" type="text/css" href="">
+    <link rel="stylesheet" href="https://cdn.rawgit.com/innks/NanumSquareRound/master/nanumsquareround.css">	
+    <link rel="stylesheet" href="https://fonts.googleapis.com/earlyaccess/nanumgothiccoding.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/3.3.1/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+
+
+</head>
+
+<body>
+    <div id="wrap">
+        <header id="header">
+    <div id="header-outer" class="outer">
+        <div class="container">
+            <div class="container-inner">
+                <div id="header-title">
+                    <h1 class="logo-wrap">
+                        <a href="/" class="logo"></a>
+                    </h1>
+                    
+                </div>
+                <div id="header-inner" class="nav-container">
+                    <a id="main-nav-toggle" class="nav-icon fa fa-bars"></a>
+                    <div class="nav-container-inner">
+                        <ul id="main-nav">
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/">Home</a>
+                                </li>
+                            
+                                        <ul class="main-nav-list"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/">CS</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/Network/">Network</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/OS/">OS</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/개발-상식/">개발 상식</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/네트워크/">네트워크</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/자료구조/">자료구조</a></li></ul></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programmers/">Programmers</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/">Programming</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/Android/">Android</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/Inno-SOPT/">Inno_SOPT</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/Java/">Java</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/Kotlin/">Kotlin</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/Node-js/">Node.js</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/etc/">etc</a></li></ul></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Project/">Project</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Project/Lang/">Lang</a></li></ul></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/algorithm/">algorithm</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/algorithm/BOJ/">BOJ</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/algorithm/개념/">개념</a></li></ul></li></ul>
+                                    
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/about/index.html">About</a>
+                                </li>
+                            
+                        </ul>
+                        <nav id="sub-nav">
+                            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="Type something..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+        <div class="container">
+            <div class="main-body container-inner">
+                <div class="main-body-inner">
+                    <section id="main">
+                        <div class="main-body-header">
+    <h1 class="header">
+    
+    <a class="page-title-link" href="/categories/CS/">CS</a><i class="icon fa fa-angle-right"></i><a class="page-title-link" href="/categories/CS/네트워크/">네트워크</a>
+    </h1>
+</div>
+
+                        <div class="main-body-content">
+                            <article id="post-Network-TCP-3-4-WayHandShake" class="article article-single article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+        [네트워크] 3&amp;4 Way Handshake
+        </h1>
+    
+
+            </header>
+        
+        
+            <div class="article-meta">
+                
+    <div class="article-date">
+        <a href="/2018/12/28/Network-TCP-3-4-WayHandShake/" class="article-date">
+            <time datetime="2018-12-28T04:45:32.000Z" itemprop="datePublished">2018-12-28</time>
+        </a>
+    </div>
+
+		
+
+                
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/3-4-Way-Handshake/">3 & 4 Way Handshake</a>, <a class="tag-link" href="/tags/Data-Structure/">Data Structure</a>, <a class="tag-link" href="/tags/TCP/">TCP</a>, <a class="tag-link" href="/tags/자료구조/">자료구조</a>
+    </div>
+
+            </div>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+            <h2 id="3-way-handshake와-4-way-handshake">3-Way-Handshake와 4-Way-Handshake</h2>
+<p>네트워크를 사용한 통신에서 TCP 통신을 하는 경우, 3-way-handshake라는 과정을 거친다.</p>
+<p>TPC/IP 프로토콜을 이용해서 통신하는 두 종단간에 데이터 전송 전 정확한 데이터 전송을 보장하기 위해 사전에 연결하는 과정이다.</p>
+<p><strong>연결 성립(Connection Extablishment)</strong></p>
+<img src="/img/tcp_ip_3_way_handshake.png" width="600" height="300">
+<ol>
+<li>클라이언트는 서버에 접속을 요청하는 SYN(a) 패킷을 보낸다.</li>
+<li>서버는 클라이언트의 요청인 SYN(a)을 받고 클라이언트에게 요청을 수락한다는 ACK(a+1)과 SYN(b)가 설정된 패킷을 클라이언트에게 발송한다.</li>
+<li>클라이언트는 서버의 수락 응답인 ACK(a+1)과 SYN(b) 패킷을 받고 ACK(b+1)을 서버로 보내면 연결이 성립(establish)된다.</li>
+</ol>
+<p><strong>연결 종료(Connection Termination)</strong></p>
+<p>TCP 통신에서 3-way-handshake를 통한 연결을 해제하는 과정이다.</p>
+<img src="/img/tcp_ip_4_way_handshake.png" width="600" height="300">
+<ol>
+<li>클라이언트가 연결을 종료하겠다는 FIN 플래그를 전송한다.</li>
+<li>서버는 클라이언트의 요청(FIN)을 받고 알겠다는 확인 메시지로 ACK를 보낸다.<br>
+2-1) 그리고 나서는 데이터를 모두 보낼 때까지 잠깐 TIME_OUT이 된다.(서버측 :: 자신의 통신이 끝날 때까지 기다리며 서버는 해당 포트에 연결되어 있는 Application에게 close() 을 요청한다.)</li>
+<li>데이터를 모두 보내고 통신이 끝났으면 연결이 종료되었다고 클라이언트에게 FIN 플래그를 전송한다.(close() 요청을 받은 Application은 종료 프로세스를 진행하고 FIN 패킷을 Client에게 전송!)</li>
+<li>클라이언트는 FIN 메시지를 확인했다는 메시지(ACK)를 서버에게 보낸다.<br>
+4-1) 클라이언트는 아직 서버로부터 받지 못한 데이터가 있을 것을 대비해 일정 시간 동안 세션을 남겨놓고 잉여 패킷을 기다리는 과정을 거친다.(TIME_WAIT)[TIME_WAIT에서 일정 시간이 지나면 close 된다.]</li>
+<li>클라이언트의 ACK 메시지를 받은 서버는 소켓 연결을 close 한다.</li>
+</ol>
+<p>연결 설정과 종료 단계에서 차이가 나는 이유는 클라이언트가 데이터 전송을 마쳤다고 하더라도 서버는 아직 보낼 데이터가 남아있을 수 있기 때문이다.<br>
+따라서 일단, 클라이언트는 FIN에 대한 확인 응답인 ACK를 먼저 보내고, 데이터를 모두 전송한 후 서버 자신도 FIN을 보내기 때문이다.</p>
+<p>클라이언트의 FIN 전송 후 ACK를 기다리는 FIN_WAIT1과 서버의 ACK를 받은 후 서버의 FIN을 기다리는 FIN_WAIT2는 일정 시간 후 TIME_OUT이 되면 스스로 연결을 종료한다.<br>
+그러나 CLOSE_WAIT은 Application에서 close()를 적절하게 처리해주지 못하면 CLOSE_WAIT 상태로 계속 기다리게 된다. CLOSE_WAIT 상태인 연결이 많아지면 <strong>Hang</strong>이 걸려 더 이상 연결을 하지 못하는 경우가 생긴다.</p>
+<p>[Hang이 뭘까…?]</p>
+<blockquote>
+<p>SYN Packet과 ACK Packet란?</p>
+</blockquote>
+<p>SYN :: synchronize sequence number<br>
+ACK :: acknowledgement</p>
+<p><code>TCP Header</code>에는 Control Bit(플래그 비트, 6bit)라는 부분이 존재한다. 각각의 비트들은 의미를 가지고 있으며, <strong>Urg-Ack-Psh-Rst-Syn-Fin</strong> 이다. 해당 위치의 비트가 1이면 해당 패킷이 어떠한 내용을 담고 있는 패킷인지를 나타낸다.<br>
+ex)<br>
+SYN 패킷일 경우에는 000010이 되고<br>
+ACK 패킷일 경우에는 010000이 된다.</p>
+<blockquote>
+<p>왜 패킷의 종류가 두개인가?</p>
+</blockquote>
+<p>일단 연결을 성립하려면 서로 통신이 가능한지를 먼저 파악하기 우해 패킷은 먼저 주고받아야 한다는 것까지는 이해가 쉽다. 그런데 두 종류의 패킷을 주고 받는다. 이는 <strong>요청</strong>과 <strong>응답</strong>에 대한 패킷을 주고 받아야 하기 때문에 두 종류인 것이다.</p>
+<blockquote>
+<p>2-way가 아니고 3-way인 이유는??</p>
+</blockquote>
+<p>비유를 들어보자.<br>
+클라이언트가 자신의 목소리가 들리는지 물어본다.(SYN)<br>
+서버는 클라이언트의 목소리가 들린다고 말한다.(SYN+1) 그리고 자신의 목소리가 들리는지 물어본다.(ACK)<br>
+클라이언트는 서버의 목소리가 들린다고 말한다.(ACK+1)</p>
+<p>이런 과정인 셈이다. TCP Connection은 양방향성 Connection이다. 클라이언트에서 서버에게 존재를 알리고 패킷을 보낼 수 있다는 것을 알리듯, 서버에서도 클라이언트에게 존재를 알리고 패킷을 보낼 수 있다는 신호를 보내야 한다. <strong>그렇기 때문에 2-way-handshake로는 부족하므로 3-way-handshake를 사용한다.</strong></p>
+<blockquote>
+<p>sequence number가 난수인 이유는?</p>
+</blockquote>
+<p>처음 클라이언트에서 SYN 패킷을 보낼 때 <strong>Sequence Number에는 랜덤한 숫자가 담겨진다.</strong><br>
+초기 sequence number를 ISN이라고 한다. ISN이 0부터 시작하지 않고 난수를 생성해서 number를 설정하는 이유는 무엇일까?<br>
+Connection을 맺을 때 사용하는 포트(port)는 유한 범위 내에서 사용하고 시간이 지남에 따라 재사용된다. 따라서 두 통신 호스트가 과거에 사용된 포트 번호 쌍을 사용하는 가능성이 존재한다. 서버측에서는 패킷의 SYN을 보고 패킷을 구분하게 되는데 난수가 아닌 순차적인 number가 전송된다면 이전의 connection으로부터 오는 패킷으로 인식할 수 있다.<br>
+<strong>이러한 문제가 발생할 가능성을 줄이기 위해 난수로 ISN을 설정하는 것이다.</strong></p>
+<h2 id="참고">참고</h2>
+<ul>
+<li><a href="http://asfirstalways.tistory.com/356" target="_blank" rel="noopener">TCP 3-way-handshake &amp; 4-way-handshake</a></li>
+</ul>
+
+        </div>
+        <footer class="article-footer">
+            
+
+
+
+    <a data-url="https://woovictory.github.io/2018/12/28/Network-TCP-3-4-WayHandShake/" data-id="cjq7x529f005nebngk9hd2xla" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+<script>
+    (function ($) {
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+        </footer>
+    </div>
+</article>
+
+    <section id="comments">
+    
+        
+    <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+
+    
+    </section>
+
+
+
+                        </div>
+                    </section>
+                    <aside id="sidebar">
+    <a class="sidebar-toggle" title="Expand Sidebar"><i class="toggle icon"></i></a>
+    <div class="sidebar-top">
+        <p>follow:</p>
+        <ul class="social-links">
+            
+                
+                <li>
+                    <a class="social-tooltip" title="facebook" href="https://www.facebook.com/WooVictory" target="_blank" rel="noopener">
+                        <i class="icon fa fa-facebook"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="github" href="https://github.com/ppoffice/hexo-theme-hueman" target="_blank" rel="noopener">
+                        <i class="icon fa fa-github"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="linkedin" href="https://www.linkedin.com/in/seungwoo-lee-590844177" target="_blank" rel="noopener">
+                        <i class="icon fa fa-linkedin"></i>
+                    </a>
+                </li>
+                
+            
+        </ul>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2018/12/28/Network-UDP-TCP-Concept/" id="article-nav-newer" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">newer</strong>
+        <p class="article-nav-title">
+        
+            [네트워크] UDP와 TCP
+        
+        </p>
+        <i class="icon fa fa-chevron-right" id="icon-chevron-right"></i>
+    </a>
+    
+    
+        <a href="/2018/12/28/Network-HTTP-Method-Diff-Of-GET-POST/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">older</strong>
+        <p class="article-nav-title">[네트워크] HTTP</p>
+        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
+        </a>
+    
+</nav>
+
+    
+    <div class="widgets-container">
+        
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">categories</h3>
+        <div class="widget">
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/CS/">CS</a><span class="category-list-count">22</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/CS/Network/">Network</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/CS/OS/">OS</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/CS/개발-상식/">개발 상식</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/CS/네트워크/">네트워크</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/CS/자료구조/">자료구조</a><span class="category-list-count">9</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Programmers/">Programmers</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Programming/">Programming</a><span class="category-list-count">63</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Programming/Android/">Android</a><span class="category-list-count">5</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Programming/Android/Basic/">Basic</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Programming/Android/Tip/">Tip</a><span class="category-list-count">2</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Programming/Inno-SOPT/">Inno_SOPT</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Programming/Java/">Java</a><span class="category-list-count">29</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Programming/Kotlin/">Kotlin</a><span class="category-list-count">11</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Programming/Node-js/">Node.js</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Programming/etc/">etc</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Project/">Project</a><span class="category-list-count">1</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Project/Lang/">Lang</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/">algorithm</a><span class="category-list-count">48</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/BOJ/">BOJ</a><span class="category-list-count">47</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/개념/">개념</a><span class="category-list-count">1</span></li></ul></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap">
+        <h3 class="widget-title">recents</h3>
+        <div class="widget">
+            <ul id="recent-post" class="no-thumbnail">
+                
+                    <li>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/CS/">CS</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/CS/네트워크/">네트워크</a></p>
+                            <p class="item-title"><a href="/2018/12/28/Network-Erro-Flow-Control/" class="title">[네트워크] 흐름/혼잡/오류 제어 기법</a></p>
+                            <p class="item-date"><time datetime="2018-12-28T10:19:04.000Z" itemprop="datePublished">2018-12-28</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/CS/">CS</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/CS/네트워크/">네트워크</a></p>
+                            <p class="item-title"><a href="/2018/12/28/Network-Packet-Switching-Method/" class="title">[네트워크] 가상회선 패킷 교환 vs 데이터그램 패킷 교환</a></p>
+                            <p class="item-date"><time datetime="2018-12-28T08:20:32.000Z" itemprop="datePublished">2018-12-28</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/CS/">CS</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/CS/네트워크/">네트워크</a></p>
+                            <p class="item-title"><a href="/2018/12/28/Network-UDP-TCP-Concept/" class="title">[네트워크] UDP와 TCP</a></p>
+                            <p class="item-date"><time datetime="2018-12-28T06:14:42.000Z" itemprop="datePublished">2018-12-28</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/CS/">CS</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/CS/네트워크/">네트워크</a></p>
+                            <p class="item-title"><a href="/2018/12/28/Network-TCP-3-4-WayHandShake/" class="title">[네트워크] 3&amp;4 Way Handshake</a></p>
+                            <p class="item-date"><time datetime="2018-12-28T04:45:32.000Z" itemprop="datePublished">2018-12-28</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/CS/">CS</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/CS/네트워크/">네트워크</a></p>
+                            <p class="item-title"><a href="/2018/12/28/Network-HTTP-Method-Diff-Of-GET-POST/" class="title">[네트워크] HTTP</a></p>
+                            <p class="item-date"><time datetime="2018-12-28T03:02:38.000Z" itemprop="datePublished">2018-12-28</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">archives</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a><span class="archive-list-count">23</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a><span class="archive-list-count">24</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a><span class="archive-list-count">34</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">February 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a><span class="archive-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-float">
+        <h3 class="widget-title">tag cloud</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/3-4-Way-Handshake/" style="font-size: 10px;">3 & 4 Way Handshake</a> <a href="/tags/Android/" style="font-size: 12.22px;">Android</a> <a href="/tags/BOJ/" style="font-size: 20px;">BOJ</a> <a href="/tags/Blog/" style="font-size: 10px;">Blog</a> <a href="/tags/Data-Structure/" style="font-size: 17.78px;">Data Structure</a> <a href="/tags/Error/" style="font-size: 10px;">Error</a> <a href="/tags/Graph/" style="font-size: 10px;">Graph</a> <a href="/tags/HTTP/" style="font-size: 10px;">HTTP</a> <a href="/tags/Hash/" style="font-size: 10px;">Hash</a> <a href="/tags/Heap/" style="font-size: 11.11px;">Heap</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/Java/" style="font-size: 18.89px;">Java</a> <a href="/tags/Kotlin/" style="font-size: 16.67px;">Kotlin</a> <a href="/tags/Network/" style="font-size: 10px;">Network</a> <a href="/tags/Node-js/" style="font-size: 15.56px;">Node.js</a> <a href="/tags/OS/" style="font-size: 13.33px;">OS</a> <a href="/tags/Programmers/" style="font-size: 10px;">Programmers</a> <a href="/tags/Project/" style="font-size: 10px;">Project</a> <a href="/tags/RESTful/" style="font-size: 10px;">RESTful</a> <a href="/tags/SOPT/" style="font-size: 14.44px;">SOPT</a> <a href="/tags/TCP/" style="font-size: 11.11px;">TCP</a> <a href="/tags/UDP/" style="font-size: 10px;">UDP</a> <a href="/tags/computer-science/" style="font-size: 10px;">computer science</a> <a href="/tags/etc/" style="font-size: 10px;">etc</a> <a href="/tags/network/" style="font-size: 10px;">network</a> <a href="/tags/네트워크/" style="font-size: 10px;">네트워크</a> <a href="/tags/오류-제어/" style="font-size: 10px;">오류 제어</a> <a href="/tags/운영체제/" style="font-size: 13.33px;">운영체제</a> <a href="/tags/자료구조/" style="font-size: 17.78px;">자료구조</a> <a href="/tags/패킷-교환/" style="font-size: 10px;">패킷 교환</a> <a href="/tags/혼잡-제어/" style="font-size: 10px;">혼잡 제어</a> <a href="/tags/흐름-제어/" style="font-size: 10px;">흐름 제어</a>
+        </div>
+    </div>
+
+
+            
+        
+    </div>
+</aside>
+
+                </div>
+            </div>
+        </div>
+        <footer id="footer">
+    <div class="container">
+        <div class="container-inner">
+            <a id="back-to-top" href="javascript:;"><i class="icon fa fa-angle-up"></i></a>
+            <div class="credit">
+                <h1 class="logo-wrap">
+                    <a href="/" class="logo"></a>
+                </h1>
+                <p>&copy; 2018 VictoryWoo</p>
+                <p>Powered by <a href="//hexo.io/" target="_blank">Hexo</a>. Theme by <a href="//github.com/ppoffice" target="_blank">PPOffice</a></p>
+            </div>
+            <div class="footer-plugins">
+              
+    
+
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+        
+    
+    <script>
+    var disqus_shortname = 'hexo-theme-hueman';
+    
+    
+    var disqus_url = 'https://woovictory.github.io/2018/12/28/Network-TCP-3-4-WayHandShake/';
+    
+    (function() {
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+</html>
