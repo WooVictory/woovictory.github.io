@@ -12,18 +12,18 @@
     
         <meta name="keywords" content="Android,안드로이드 기초" />
     
-    <meta name="description" content="안드로이드 백그라운드 액티비티 생명주기  안드로이드 백그라운드 안드로이드 UI는 기본적으로 싱글 스레드 모델로 작동하므로, 이 영향을 고려해서 개발하지 않으면 애플리케이션의 성능이 저하될 수 있다. 따라서 메인 스레드에서 긴 작업을 하는 것을 피하기 위해 여분의 스레드를 사용해야 한다. 다른 스레드에서 UI 스레드로 접근할 수 있도록 안드로이드에서 제공하">
+    <meta name="description" content="안드로이드 백그라운드 액티비티 생명주기 프래그먼트 생명주기 Content Provider VS Content Resolver  안드로이드 백그라운드 안드로이드 UI는 기본적으로 싱글 스레드 모델로 작동하므로, 이 영향을 고려해서 개발하지 않으면 애플리케이션의 성능이 저하될 수 있다. 따라서 메인 스레드에서 긴 작업을 하는 것을 피하기 위해 여분의 스레드를">
 <meta name="keywords" content="Android,안드로이드 기초">
 <meta property="og:type" content="article">
 <meta property="og:title" content="[안드로이드] 안드로이드 면접 4">
 <meta property="og:url" content="https://woovictory.github.io/2019/01/07/Android-For-Interview-4/index.html">
 <meta property="og:site_name" content="VictoryWoo">
-<meta property="og:description" content="안드로이드 백그라운드 액티비티 생명주기  안드로이드 백그라운드 안드로이드 UI는 기본적으로 싱글 스레드 모델로 작동하므로, 이 영향을 고려해서 개발하지 않으면 애플리케이션의 성능이 저하될 수 있다. 따라서 메인 스레드에서 긴 작업을 하는 것을 피하기 위해 여분의 스레드를 사용해야 한다. 다른 스레드에서 UI 스레드로 접근할 수 있도록 안드로이드에서 제공하">
+<meta property="og:description" content="안드로이드 백그라운드 액티비티 생명주기 프래그먼트 생명주기 Content Provider VS Content Resolver  안드로이드 백그라운드 안드로이드 UI는 기본적으로 싱글 스레드 모델로 작동하므로, 이 영향을 고려해서 개발하지 않으면 애플리케이션의 성능이 저하될 수 있다. 따라서 메인 스레드에서 긴 작업을 하는 것을 피하기 위해 여분의 스레드를">
 <meta property="og:image" content="https://woovictory.github.io/img/android_thread_reason.png">
-<meta property="og:updated_time" content="2019-01-07T07:02:38.595Z">
+<meta property="og:updated_time" content="2019-01-07T07:23:35.784Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="[안드로이드] 안드로이드 면접 4">
-<meta name="twitter:description" content="안드로이드 백그라운드 액티비티 생명주기  안드로이드 백그라운드 안드로이드 UI는 기본적으로 싱글 스레드 모델로 작동하므로, 이 영향을 고려해서 개발하지 않으면 애플리케이션의 성능이 저하될 수 있다. 따라서 메인 스레드에서 긴 작업을 하는 것을 피하기 위해 여분의 스레드를 사용해야 한다. 다른 스레드에서 UI 스레드로 접근할 수 있도록 안드로이드에서 제공하">
+<meta name="twitter:description" content="안드로이드 백그라운드 액티비티 생명주기 프래그먼트 생명주기 Content Provider VS Content Resolver  안드로이드 백그라운드 안드로이드 UI는 기본적으로 싱글 스레드 모델로 작동하므로, 이 영향을 고려해서 개발하지 않으면 애플리케이션의 성능이 저하될 수 있다. 따라서 메인 스레드에서 긴 작업을 하는 것을 피하기 위해 여분의 스레드를">
 <meta name="twitter:image" content="https://woovictory.github.io/img/android_thread_reason.png">
     
 
@@ -177,6 +177,8 @@
             <ol>
 <li><a href="#%EC%95%88%EB%93%9C%EB%A1%9C%EC%9D%B4%EB%93%9C-%EB%B0%B1%EA%B7%B8%EB%9D%BC%EC%9A%B4%EB%93%9C">안드로이드 백그라운드</a></li>
 <li><a href="https://woovictory.github.io/2018/03/02/Android-ActivityLifeCycle/">액티비티 생명주기</a></li>
+<li><a href="https://woovictory.github.io/2019/01/02/Android-What-Is-Fragment/">프래그먼트 생명주기</a></li>
+<li><a href="#Content-Provider-VS-Content-Resolver">Content Provider VS Content Resolver</a></li>
 </ol>
 <h2 id="안드로이드-백그라운드">안드로이드 백그라운드</h2>
 <p>안드로이드 UI는 기본적으로 싱글 스레드 모델로 작동하므로, 이 영향을 고려해서 개발하지 않으면 애플리케이션의 성능이 저하될 수 있다. 따라서 메인 스레드에서 긴 작업을 하는 것을 피하기 위해 여분의 스레드를 사용해야 한다. 다른 스레드에서 UI 스레드로 접근할 수 있도록 안드로이드에서 제공하는 스레드 간 통신 방법을 알아보자.</p>
@@ -224,6 +226,30 @@ Message란 스레드 간 통신할 내용을 담는 객체이자 Queue에 들어
 <p>하지만, <code>AsyncTask</code>는 하나의 클래스 안에 스레드로 동작하는 부분과 화면을 갱신하는 부분을 함께 구현해놓을 수 있다. 이 때문에 스레드를 사용하는 하나의 작업단위가 하나의 클래스로 만들어질 수 있게 되므로 가독성이 훨씬 좋아게 된다.</p>
 <p>간단한 예제는 아래 블록를 참고하자^0^<br>
 <a href="https://one-delay.tistory.com/29?category=766130" target="_blank" rel="noopener">AsyncTask 예제</a></p>
+<h2 id="content-provider-vs-content-resolver">Content Provider VS Content Resolver</h2>
+<ul>
+<li>
+<p>Content Provider : 어플리케이션 내에서 사용할 수 있는 데이터를 <strong>공유</strong>하기 위한 컴포넌트<br>
+ex) 연락처, 이미지 등(카카오톡)</p>
+</li>
+<li>
+<p>Content Resolver : 앱이 Content Provider를 접근할 때에는 Content Resolver를 통해서 접근하게 됨. 기본적으로 <strong>CRUD</strong> 함수들 제공 -&gt; 다른 앱의 데이터베이스를 조작할 수 있음<br>
+ex) contentResolver.query()</p>
+</li>
+</ul>
+<h2 id="xml-기반-레이아웃이-중요한-이유">XML 기반 레이아웃이 중요한 이유</h2>
+<p>동작을 제어하는 코드로부터 분리시킬 수 있고, UI의 구조를 시각화하기 더 쉽기 때문이다. 소스로 레이아웃을 작성했다면, 레이아웃을 변경할 때마다 재컴파일 해야 하는 번거로움이 있다.</p>
+<h2 id="manifest">Manifest</h2>
+<p>애플리케이션에 대한 필수적인 정보를 안드로이드 플랫폼에 알려준다. 모든 안드로이드 앱은 반드시 AndroidManifest.xml 파일을 자신의 루트 디렉토리에 가지고 있어야 한다.</p>
+<h2 id="vector-vs-bitmap">Vector Vs Bitmap</h2>
+<ul>
+<li>
+<p>Vector : 리사이징이 되어도 전혀 깨지지 않는다. 모든 해상도에서 자유자재로 활용할 수 있기 때문에 특정 해상도에 제한되어 있지 않다는 것이 핵심 ex)SVG</p>
+</li>
+<li>
+<p>Bitmap : 픽셀로 구성되어 있다. 자유자재로 바꿀 수가 없고 움직일 수도 없다. ex)PNG, JPEG</p>
+</li>
+</ul>
 <h2 id="참고">참고</h2>
 <ul>
 <li><a href="https://academy.realm.io/kr/posts/android-thread-looper-handler/?w=1" target="_blank" rel="noopener">안드로이드 백그라운드 잘 다루기 Thread, Looper, Handler</a></li>

@@ -20,7 +20,7 @@
 <meta property="og:site_name" content="VictoryWoo">
 <meta property="og:description" content="이번에는 안드로이드의 4대 컴포넌트에 대해서 배워보았습니다. 안드로이드의 4대 컴포넌트  안드로이드의 앱은 컴포넌트(Component)로 구성되어 있으며 Activity, Service, Broadcast Receiver, Content Provider가 있다. 각 컴포넌트들은 하나의 독립된 형태로 존재하며, 정해진 역할을 수행한다. 그러면 이 컴포넌트들">
 <meta property="og:image" content="https://woovictory.github.io/img/android_4_components.png">
-<meta property="og:updated_time" content="2019-01-07T07:02:46.215Z">
+<meta property="og:updated_time" content="2019-01-07T07:10:49.494Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content=" [안드로이드] 4대 컴포넌트">
 <meta name="twitter:description" content="이번에는 안드로이드의 4대 컴포넌트에 대해서 배워보았습니다. 안드로이드의 4대 컴포넌트  안드로이드의 앱은 컴포넌트(Component)로 구성되어 있으며 Activity, Service, Broadcast Receiver, Content Provider가 있다. 각 컴포넌트들은 하나의 독립된 형태로 존재하며, 정해진 역할을 수행한다. 그러면 이 컴포넌트들">
@@ -279,11 +279,23 @@
 <li>즉 <strong>제거</strong>되는 경우입니다.</li>
 <li><code>Finish()</code> 메소드가 호출되거나 <code>시스템 메모리 확보</code>를 위해서 시스템이 강제로 종료시키는 경우에 호출될 수 있습니다.</li>
 </ul>
-<h3 id="참고">참고</h3>
+<h3 id="참고-사항">참고 사항</h3>
 <ul>
 <li>onStop(), onDestroy() 함수는 호출되지 않을 수도 있습니다.</li>
 <li>메모리 부족으로 인해 onStop()이 호출되지 않을 수 있습니다.</li>
 </ul>
+<h2 id="q-amp-a">Q &amp; A</h2>
+<p><strong>Q. 앱을 사용하는 도중에 카카오톡 메시지가 온다면 사용하던 앱의 TopActivity의 생명주기는 어떤 상태가 되나?</strong></p>
+<p>A. onPause()</p>
+<p><strong>Q. 데이터를 불러오는 작업은 어디서 해야 하나?</strong></p>
+<p>A. onCreate()</p>
+<p><strong>Q. 다른 액티비티가 상단에 올라오면 어떤 상태인가?</strong></p>
+<p>A. 실행 중이던 액티비티는 onPause() -&gt; onStop()</p>
+<p><strong>Q. onRestart()는 언제 호출되는가?</strong></p>
+<p>A. 다른 액티비티 밑에 깔려 있어서 onStop() 상태에 있다가 다시 돌아오면 호출된다.</p>
+<p><strong>Q. 화면이 회전하면 액티비티 생명주기는?</strong></p>
+<p>A. onPause() -&gt; onStop() -&gt; onCreate() -&gt; onStart() -&gt; onResume()<br>
+현재 액티비티를 destroy하고 새로 생성하기 때문에 기존 데이터를 유지하기 위해서는 <code>onSaveInstanceState()</code>에서 Bundle에 데이터를 저장하도록 오버라이드 해야 한다.</p>
 
         </div>
         <footer class="article-footer">
