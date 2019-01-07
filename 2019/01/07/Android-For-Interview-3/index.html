@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+
+    
+
+    
+    <title>[안드로이드] 안드로이드 면접 3 | VictoryWoo</title>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+        <meta name="keywords" content="Android,안드로이드 기초" />
+    
+    <meta name="description" content="화면이 회전하면 액티비티의 생명주기는? 펜딩인텐트란? 안드로이드에서 Task와 Process의 차이점 A 앱에서 B 앱의 액티비티를 부를 경우 화면 렌더링 속도를 개선하는 방법  화면이 회전하면 액티비티의 생명주기는? 안드로이드 애플리케이션을 사용하다 보면 화면이 가로 모드를 지원하는 애플리케이션들이 많다. 이런 경우 우리가 사용하는 액티비티의 생명주기는">
+<meta name="keywords" content="Android,안드로이드 기초">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[안드로이드] 안드로이드 면접 3">
+<meta property="og:url" content="https://woovictory.github.io/2019/01/07/Android-For-Interview-3/index.html">
+<meta property="og:site_name" content="VictoryWoo">
+<meta property="og:description" content="화면이 회전하면 액티비티의 생명주기는? 펜딩인텐트란? 안드로이드에서 Task와 Process의 차이점 A 앱에서 B 앱의 액티비티를 부를 경우 화면 렌더링 속도를 개선하는 방법  화면이 회전하면 액티비티의 생명주기는? 안드로이드 애플리케이션을 사용하다 보면 화면이 가로 모드를 지원하는 애플리케이션들이 많다. 이런 경우 우리가 사용하는 액티비티의 생명주기는">
+<meta property="og:updated_time" content="2019-01-07T03:23:14.299Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="[안드로이드] 안드로이드 면접 3">
+<meta name="twitter:description" content="화면이 회전하면 액티비티의 생명주기는? 펜딩인텐트란? 안드로이드에서 Task와 Process의 차이점 A 앱에서 B 앱의 액티비티를 부를 경우 화면 렌더링 속도를 개선하는 방법  화면이 회전하면 액티비티의 생명주기는? 안드로이드 애플리케이션을 사용하다 보면 화면이 가로 모드를 지원하는 애플리케이션들이 많다. 이런 경우 우리가 사용하는 액티비티의 생명주기는">
+    
+
+    
+
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/titillium-web/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" type="text/css" href="">
+    <link rel="stylesheet" href="https://cdn.rawgit.com/innks/NanumSquareRound/master/nanumsquareround.css">	
+    <link rel="stylesheet" href="https://fonts.googleapis.com/earlyaccess/nanumgothiccoding.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/3.3.1/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+
+
+</head>
+
+<body>
+    <div id="wrap">
+        <header id="header">
+    <div id="header-outer" class="outer">
+        <div class="container">
+            <div class="container-inner">
+                <div id="header-title">
+                    <h1 class="logo-wrap">
+                        <a href="/" class="logo"></a>
+                    </h1>
+                    
+                </div>
+                <div id="header-inner" class="nav-container">
+                    <a id="main-nav-toggle" class="nav-icon fa fa-bars"></a>
+                    <div class="nav-container-inner">
+                        <ul id="main-nav">
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/">Home</a>
+                                </li>
+                            
+                                        <ul class="main-nav-list"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/">CS</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/Network/">Network</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/OS/">OS</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/개발-상식/">개발 상식</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/네트워크/">네트워크</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/자료구조/">자료구조</a></li></ul></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programmers/">Programmers</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/">Programming</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/Android/">Android</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/Design-Pattern/">Design Pattern</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/Inno-SOPT/">Inno_SOPT</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/Java/">Java</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/Kotlin/">Kotlin</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/Node-js/">Node.js</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/etc/">etc</a></li></ul></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Project/">Project</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Project/Lang/">Lang</a></li></ul></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/algorithm/">algorithm</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/algorithm/BOJ/">BOJ</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/algorithm/개념/">개념</a></li></ul></li></ul>
+                                    
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/about/index.html">About</a>
+                                </li>
+                            
+                        </ul>
+                        <nav id="sub-nav">
+                            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="Type something..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+        <div class="container">
+            <div class="main-body container-inner">
+                <div class="main-body-inner">
+                    <section id="main">
+                        <div class="main-body-header">
+    <h1 class="header">
+    
+    <a class="page-title-link" href="/categories/Programming/">Programming</a><i class="icon fa fa-angle-right"></i><a class="page-title-link" href="/categories/Programming/Android/">Android</a><i class="icon fa fa-angle-right"></i><a class="page-title-link" href="/categories/Programming/Android/Basic/">Basic</a>
+    </h1>
+</div>
+
+                        <div class="main-body-content">
+                            <article id="post-Android-For-Interview-3" class="article article-single article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+        [안드로이드] 안드로이드 면접 3
+        </h1>
+    
+
+            </header>
+        
+        
+            <div class="article-meta">
+                
+    <div class="article-date">
+        <a href="/2019/01/07/Android-For-Interview-3/" class="article-date">
+            <time datetime="2019-01-07T01:56:36.000Z" itemprop="datePublished">2019-01-07</time>
+        </a>
+    </div>
+
+		
+
+                
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/Android/">Android</a>, <a class="tag-link" href="/tags/안드로이드-기초/">안드로이드 기초</a>
+    </div>
+
+            </div>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+            <ol>
+<li><a href="#%ED%99%94%EB%A9%B4%EC%9D%B4-%ED%9A%8C%EC%A0%84%ED%95%98%EB%A9%B4-%EC%95%A1%ED%8B%B0%EB%B9%84%ED%8B%B0%EC%9D%98-%EC%83%9D%EB%AA%85%EC%A3%BC%EA%B8%B0%EB%8A%94?">화면이 회전하면 액티비티의 생명주기는?</a></li>
+<li><a href="#%ED%8E%9C%EB%8E%85%EC%9D%B8%ED%85%90%ED%8A%B8%EB%9E%80?">펜딩인텐트란?</a></li>
+<li><a href="#%EC%95%88%EB%93%9C%EB%A1%9C%EC%9D%B4%EB%93%9C%EC%97%90%EC%84%9C-Task%EC%99%80-Process%EC%9D%98-%EC%B0%A8%EC%9D%B4%EC%A0%90">안드로이드에서 Task와 Process의 차이점</a></li>
+<li><a href="#A-%EC%95%B1%EC%97%90%EC%84%9C-B-%EC%95%B1%EC%9D%98-%EC%95%A1%ED%8B%B0%EB%B9%84%ED%8B%B0%EB%A5%BC-%EB%B6%80%EB%A5%BC-%EA%B2%BD%EC%9A%B0">A 앱에서 B 앱의 액티비티를 부를 경우</a></li>
+<li><a href="#%ED%99%94%EB%A9%B4-%EB%A0%8C%EB%8D%94%EB%A7%81-%EC%86%8D%EB%8F%84%EB%A5%BC-%EA%B0%9C%EC%84%A0%ED%95%98%EB%8A%94-%EB%B0%A9%EB%B2%95">화면 렌더링 속도를 개선하는 방법</a></li>
+</ol>
+<h2 id="화면이-회전하면-액티비티의-생명주기는">화면이 회전하면 액티비티의 생명주기는?</h2>
+<p>안드로이드 애플리케이션을 사용하다 보면 화면이 가로 모드를 지원하는 애플리케이션들이 많다. 이런 경우 우리가 사용하는 액티비티의 생명주기는 어떻게 되는 것일까???</p>
+<p>일단, 화면이 회전하면 뷰의 크기를 재측정하고 다시 달라진 크기대로 새롭게 그려야 된다. 먼저, <code>onPause</code>가 호출되고 <code>onStop</code>, <code>onDestroy</code>가 진행된 후 다시 <code>onCreate</code>, <code>onStart</code>, <code>onResume</code> 순서로 진행된다. 따라서 현재 액티비티를 destroy 시키고 새로 만들기 때문에 기존의 데이터는 사라지게 된다.</p>
+<blockquote>
+<p>그런데 우리가 사용하는 애플리케이션에서는 지워지지 않는데?</p>
+</blockquote>
+<p><code>onDestroy</code>가 호출되기 전에 액티비티는 <code>onSaveInstanceState</code>를 호출하게 되는데 이때 저장되어야 할 데이터를 <strong>Bundle</strong> 객체에 저장해두었다가 다시 <code>onCreate</code>가 호출되면 파라미터로 날아온 Bundle에서 이전 데이터를 받아 복구할 수 있다. 이 과정을 통해 화면이 회전되어도 데이터를 유지할 수 있는 것이다.</p>
+<h2 id="펜딩인텐트란">펜딩인텐트란?</h2>
+<p>펜딩 인텐트(Pending Intent)는 인텐트의 일종이다.</p>
+<p>컴포넌트에서 다른 컴포넌트에게 작업을 요청하는 인텐트를 사전에 생성시키고 만든다는 점과 <strong>특정 시점</strong>에 자신이 아닌 다른 컴포넌트들이 펜딩 인텐트를 사용하여 다른 컴포넌트에게 작업을 요청시키는데 사용된다는 점이 일반적인 인텐트와의 차이점이다.</p>
+<p>수행시킬 작업 및 인텐트와 그것을 수행하는 주체를 지정하기 위한 정보를 명시할 수 있는 기능의 클래스라고 보면 된다.</p>
+<p>쉬운 예제는 아래와 같다.</p>
+<blockquote>
+<p><code>A한테 이 B인텐트를 C 시점에 실행하라고 해. 지금은 실행하지 말고.</code></p>
+</blockquote>
+<p>이 클래스의 인스턴스는 getActivity (Context, int, Intent, int), getActivities (Context, int, Intent [], int), getBroadcast (Context, int, Intent, int) 및  getService(Context, int, Intent, int) 가 반환 하는 객체를 다른 응용 프로그램으로 전달 할 수 있으므로 앱 개발자가 명시하는 작업을 수행 할 수 있다.</p>
+<p><code>Pending Intent</code>를 다른 응용 프로그램에 제공하면 다른 응용 프로그램이 자신과 동일한 권한과 ID로 지정된 것처럼 작업을 수행할 수 있는 권한이 부여된다. 따라서 Pending Intent를 작성하는 방법에 주의해야 한다. 예를 들어, 제공하는 기본적인 인텐트는 컴포넌트 이름이 자신이 가진 컴포넌트들 중 하나를 명시적으로 지정해야 하며, 궁극적으로 그곳으로 보내지는 것을 보장해야 한다.</p>
+<h3 id="사용되는-몇가지-사례">사용되는 몇가지 사례</h3>
+<ul>
+<li>사용자가 Notification을 통해 특정한 동작을 할 때, 실행되는 인텐트를 생성함(NotificationManager가 인텐트를 실행)</li>
+<li>사용자가 AppWidget을 통해 특정한 동작을 할 때, 실행되는 인텐트를 생성함(홈 스크린이 인텐트를 실행)</li>
+<li>미래의 특정 시점에 실행되는 인텐트를 선언함(안드로이드의 AlarmManager가 인텐트를 실행)</li>
+</ul>
+<p>안드로이드 앱을 구현할 때, 인터넷으로부터 파일을 다운로드 하는 로직은 대부분 서비스에서 이루어지도록 구성한다.  그런데 서비스는 액티비티와 달리 화면에 나타나지 않는다. 따라서 서비스는 다운로드의 진행중이라는 사실 및 진행 정도를 화면 상단에 위치한 <strong>노티피케이션의 상태바</strong>(Status bar)를 통해서 표현한다. 다운로드가 현재 진행 중이라는 상황을 표시하는 아이콘 등으로 말이다. 그리고 다운로드가 완료된 후에는 아이콘으로 다운로드 완료의 상태를 보여주게 된다.</p>
+<p>사용자가 상태바의 아이콘을 확인하고 안드로이드 화면의 상태바를 누르면서 나타나는 바를 잡아 아래로 끌어당기면 나타나는 화면을 <strong>노티피케이션 리스트</strong> 또는 확장 메시지라 한다. 그리고 만약 서비스가 이 Notification List에 다운로드 완료를 표시를 추가해놓았고, 사용자가 이것을 클릭하면 노티피케이션은 사전에 서비스에서 작성한 <code>펜딩 인텐트</code>를 사용하여 다운로드된 파일을 읽을 수 있는 앱을 호출하고 다운로드 완료된 파일을 호출된 앱에서 재생 혹은 보여주게 된다.</p>
+<p>펜딩 인텐트는 안드로이드 App의 각각의 컴포넌트들이 펜딩 인텐트를 생성할 수 있도록 다음과 같은 메소드를 제공한다. 아래의 메소드를 통해 펜딩 인텐트를 사용하고자 하는 컴포넌트 유형을 지정해야 한다는 뜻이다.</p>
+<ul>
+<li>getActivity(Context, int, Intent, int)</li>
+<li>getBroadcast(Context, int, Intent, int)</li>
+<li>getService(Context, int, Intent, int)</li>
+</ul>
+<p>여기서 Context는 <code>현재 App의 Context</code>이다.</p>
+<p><strong># Example</strong><br>
+노래를 재생하는 중이고 이것이 상태바에 Notification으로 보여질 때 사용자가 이 Noti를 클릭하면 Notification은 이전에 전달받은 Pending Intent를 실행한다. Pending Intent가 <code>getActivity()</code>에 의해 생성된 것이며 감싸고 있는 intent 또한 특정 화면을 실행시키는 intent라면 이것이 그대로 실행되어 노래 화면이 뜨게 된다.</p>
+<p>이때 주의할 점은 Activity는 새로운 테스크를 생성하여 그곳에 쌓이게 된다. 마치 Intent의 flag가 <code>NEW_TASK</code>로 설정된 것처럼 실행되기 때문에 유의해야 한다. 하나의 Activity만 생성되도록 보장하기 위해선 AndroidManifest 파일에  lanunchMode = “singleTop” 으로 설정해주어야 한다.</p>
+<h2 id="안드로이드에서-task와-process의-차이점">안드로이드에서 Task와 Process의 차이점</h2>
+<p>애플리케이션 컴포넌트가 처음 시작될 때 실행 중인 다른 컴포넌트가 없으면 안드로이드 시스템은 프로세스를 새로 생성시킨다. 기본적으로 애플리케이셔느이 컴포넌트들은 같은 프로세스의 기본 스레드에서 실행된다. 이후의 컴포넌트들이 시작할 때는 이미 생성된 프로세스 내에서 시작되며 컴포넌트별로 별도의 프로세스에서 실행되도록 할 수도 있고 어느 프로세스에서든 추가적인 스레드를 생성하여 작업할 수 있다.</p>
+<p>Manifest 파일에서 <code>android:process</code> 특성을 설정함으로써 다른 프로세스에 해당 컴포넌트를 실행시킬 수 있다. 안드로이드 시스템에서 메모리가 부족할 경우 우선순위가 낮은 프로세스부터 종료시킨다. 우선순위는 <code>Foregorund, Visible, Service, Background, Cached</code> 프로세스 순이다.</p>
+<p>눈에 보이는 프로세스는 <strong>Foreground와 Service</strong> 프로세스이며 Visible은 다이얼로그가 뜨는 경우 뒤에 액티비티가 가려지지만 사용자에게 보이는 경우에 해당한다.</p>
+<p><strong>Service</strong>는 사용자가 볼 수는 없지만 프로세스에 필요한 작업은 진행하기에 그 다음 우선순위를 가지며 <strong>Background</strong>는 뒤로 밀려난 프로세스이기에 종료될 수 있다. 마지막 <strong>Cached</strong> 프로세스는 컴포넌트가 없는 빈 프로세스이지만 다음에 실행할 때 로드 시간을 절약하기 위해 캐시된 상태이다.</p>
+<p><strong>Task</strong>는 각 애플리케이션마다 사용하는 Activity들을 Stack 구조로 저장 및 관리하는 컬렉션이다. 따라서 사용자가 화면의 전환 흐름을 자연스럽게 경험하도록 보장한다. 또한 Task는 다른 애플리케이션이나 프로세스에 속하는 Activity를 같은 Task에 저장시킴으로써 사용자로 하여금 하나의 애플리케이션에서 작동하는 듯한 경험을 하도록 한다. 단말기에서 사용중인 애플리케이션 리스트를 보는 것이 Task 단위로 보여지는 것이다 하지만 실질적으로 Activity는 다른 프로세스 상에서 돌아가는 컴포넌트이며 프로세스간 통신을 통해 정보를 주고 받는 것이다.</p>
+<h2 id="a-앱에서-b-앱의-액티비티를-부를-경우">A 앱에서 B 앱의 액티비티를 부를 경우</h2>
+<p>Task에는 해당 애플리케이션에 속한 컴포넌트뿐만 아니라 다른 애플리케이션 컴포넌트도 쌓일 수 있다. 다른 애플리케이션의 컴포넌트를 실행하는 방법으로 <code>PackageManager</code>의 **getLaunchIntentForPackage()**가 있고 Intent에 <code>setComponent()</code>를 사용하는 방법이 있는데 전자의 경우 항상 새로운 Task를 생성하여 그곳에서 컴포넌트를 실행시키며 후자의 경우 현재의 Task에서 컴포넌트를 실행시키게 된다.</p>
+<p>이 부분은 추후 공부를 더 해볼 예정.</p>
+<h2 id="화면-렌더링-속도를-개선하는-방법">화면 렌더링 속도를 개선하는 방법</h2>
+<p>기본적으로 View의 움직임이 어색하거나 스크롤이 버벅거리거나 렌더릳이 느린 경우는 <strong>뷰를 그리는 속도가 16ms 보다 오래걸리는 현상</strong>이다. 초당 60 프레임의 속도로 화면을 그려주어야 사람의 시각에 어색함이 없이 보이는데 그리는 시간이 이보다 오래 걸릴 경우 버벅이는 문제가 발생할 수 있다. 따라서 렌더링이 느리다면 2가지를 의심해 봐야 한다.</p>
+<ol>
+<li>View Hierarchy가 너무 많은지 의심해 볼 것.</li>
+</ol>
+<p>View는 그려지기 전에 Measure, Layout, Draw의 3단계를 계층적으로 실행한다. 만약 계층이 매우 길고 복잡하다면 당연히 View가 그려지는 시간 또한 오래 걸릴 것이기 때문이다. 계층을 줄이려 <code>ConstraintLayout</code>과 <code>FlexboxLayout</code>를 적극 사용한다면 줄일 수 있을 것이다.</p>
+<ol start="2">
+<li>onDraw()에서 오버드로우 현상이 일어나는지 확인할 것.</li>
+</ol>
+<p><code>onDraw()</code> 함수 안에서 객체 생성을 하였는지, 오래 걸리는 작업을 실행하지 않는지 확인하여 문제가 되는 로직을 수정하거나 제거할 것이다.</p>
+<p><strong># ConstrainLayout?</strong><br>
+ConstrainLayout은 뷰의 상하좌우를 주변 또는 부모 뷰와 연관을 지어 위치시킬 수 있다. bias를 통해 비율적으로 배치시킬 수도 있고, chain을 사용하여 마치 그룹화한 것처럼 사용도 가능하다. 또한 ratio를 사용하여 너비와 높이를 비율대로 설정할 수도 있는 등 매우 유연한 배치가 가능하다. <code>ConstrainLayout</code>의 가장 큰 장점은 <strong>View Hierarchy</strong>를 <strong>수ㅈ평적으로 평평하게</strong> 만든다. 최대 8 계층으로 구성되어 있는 RelativeLayout 구조를 하나의 계층으로 줄일 수 있는 효과를 볼 수 있다.</p>
+<p><strong># FlexBoxLayout?</strong><br>
+태그와 같은 항목이 하나의 뷰 안에 일렬로 즐비할 경우 한 줄이 가득 차면 다음 줄로 View를 정렬시키는 기능이 필요할 때 사용할 수 있는 Layout이다. <code>FlexBoxLayout</code>은 부모 레이아웃의 너비에 따라 자식 뷰를 여러 행에 걸쳐 <strong>동적</strong>으로 맞추는 기능을 제공한다. 기존에는 LinearLayout을 통해 구현 가능하긴 하지만 ScrollView와 같이 사용하면서 View의 너비를 일일이 계산하여 다음 행으로 배치시키는 코드를 직접 구현하는 방식으로 커스텀을 해야했다. <code>FlexBoxLayout</code>을 사용하면 이러한 작업을 자동으로 처리해주기에 잘못된 구현으로 인해 오버헤드가 발생하는 문제를 방지할 수 있다.</p>
+<h2 id="참고">참고</h2>
+<ul>
+<li><a href="https://hyeonu1258.github.io/2018/04/17/%EC%95%88%EB%93%9C%EB%A1%9C%EC%9D%B4%EB%93%9C%20%EB%A9%B4%EC%A0%913/" target="_blank" rel="noopener">안드로이드 면접 3</a></li>
+</ul>
+
+        </div>
+        <footer class="article-footer">
+            
+
+
+
+    <a data-url="https://woovictory.github.io/2019/01/07/Android-For-Interview-3/" data-id="cjqlq24cl000f0qpqma6s8ho8" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+<script>
+    (function ($) {
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+        </footer>
+    </div>
+</article>
+
+    <section id="comments">
+    
+        
+    <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+
+    
+    </section>
+
+
+
+                        </div>
+                    </section>
+                    <aside id="sidebar">
+    <a class="sidebar-toggle" title="Expand Sidebar"><i class="toggle icon"></i></a>
+    <div class="sidebar-top">
+        <p>follow:</p>
+        <ul class="social-links">
+            
+                
+                <li>
+                    <a class="social-tooltip" title="facebook" href="https://www.facebook.com/WooVictory" target="_blank" rel="noopener">
+                        <i class="icon fa fa-facebook"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="github" href="https://github.com/WooVictory" target="_blank" rel="noopener">
+                        <i class="icon fa fa-github"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="linkedin" href="https://www.linkedin.com/in/seungwoo-lee-590844177" target="_blank" rel="noopener">
+                        <i class="icon fa fa-linkedin"></i>
+                    </a>
+                </li>
+                
+            
+        </ul>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+    
+        <a href="/2019/01/06/Android-For-Interview-2/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">older</strong>
+        <p class="article-nav-title">[안드로이드] 안드로이드 면접 질문 2</p>
+        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
+        </a>
+    
+</nav>
+
+    
+    <div class="widgets-container">
+        
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">categories</h3>
+        <div class="widget">
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/CS/">CS</a><span class="category-list-count">23</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/CS/Network/">Network</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/CS/OS/">OS</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/CS/개발-상식/">개발 상식</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/CS/네트워크/">네트워크</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/CS/자료구조/">자료구조</a><span class="category-list-count">9</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Programmers/">Programmers</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Programming/">Programming</a><span class="category-list-count">82</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Programming/Android/">Android</a><span class="category-list-count">19</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Programming/Android/Basic/">Basic</a><span class="category-list-count">17</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Programming/Android/Tip/">Tip</a><span class="category-list-count">2</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Programming/Design-Pattern/">Design Pattern</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Programming/Inno-SOPT/">Inno_SOPT</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Programming/Java/">Java</a><span class="category-list-count">33</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Programming/Kotlin/">Kotlin</a><span class="category-list-count">11</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Programming/Node-js/">Node.js</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Programming/etc/">etc</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Project/">Project</a><span class="category-list-count">1</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Project/Lang/">Lang</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/">algorithm</a><span class="category-list-count">48</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/BOJ/">BOJ</a><span class="category-list-count">47</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/개념/">개념</a><span class="category-list-count">1</span></li></ul></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap">
+        <h3 class="widget-title">recents</h3>
+        <div class="widget">
+            <ul id="recent-post" class="no-thumbnail">
+                
+                    <li>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Programming/">Programming</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/Programming/Android/">Android</a></p>
+                            <p class="item-title"><a href="/2019/01/07/Android-For-Interview-3/" class="title">[안드로이드] 안드로이드 면접 3</a></p>
+                            <p class="item-date"><time datetime="2019-01-07T01:56:36.000Z" itemprop="datePublished">2019-01-07</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Programming/">Programming</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/Programming/Android/">Android</a></p>
+                            <p class="item-title"><a href="/2019/01/06/Android-For-Interview-2/" class="title">[안드로이드] 안드로이드 면접 질문 2</a></p>
+                            <p class="item-date"><time datetime="2019-01-06T12:41:13.000Z" itemprop="datePublished">2019-01-06</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Programming/">Programming</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/Programming/Android/">Android</a></p>
+                            <p class="item-title"><a href="/2019/01/06/Android-For-Interview-1/" class="title">[안드로이드] 안드로이드 면접 질문 1</a></p>
+                            <p class="item-date"><time datetime="2019-01-06T10:43:12.000Z" itemprop="datePublished">2019-01-06</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Programming/">Programming</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/Programming/Android/">Android</a></p>
+                            <p class="item-title"><a href="/2019/01/06/Android-What-is-DeepLink/" class="title">[안드로이드] 딥링크</a></p>
+                            <p class="item-date"><time datetime="2019-01-06T09:40:16.000Z" itemprop="datePublished">2019-01-06</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Programming/">Programming</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/Programming/Android/">Android</a></p>
+                            <p class="item-title"><a href="/2019/01/06/Android-View-Functions/" class="title">[안드로이드] View 함수</a></p>
+                            <p class="item-date"><time datetime="2019-01-06T07:13:04.000Z" itemprop="datePublished">2019-01-06</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">archives</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a><span class="archive-list-count">18</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a><span class="archive-list-count">25</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a><span class="archive-list-count">24</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a><span class="archive-list-count">34</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">February 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a><span class="archive-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-float">
+        <h3 class="widget-title">tag cloud</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/3-4-Way-Handshake/" style="font-size: 10px;">3 & 4 Way Handshake</a> <a href="/tags/Android/" style="font-size: 18px;">Android</a> <a href="/tags/BOJ/" style="font-size: 20px;">BOJ</a> <a href="/tags/Blog/" style="font-size: 10px;">Blog</a> <a href="/tags/Compile-Error/" style="font-size: 10px;">Compile Error</a> <a href="/tags/DP/" style="font-size: 10px;">DP</a> <a href="/tags/Data-Structure/" style="font-size: 17px;">Data Structure</a> <a href="/tags/Deep-Link/" style="font-size: 10px;">Deep Link</a> <a href="/tags/Error/" style="font-size: 10px;">Error</a> <a href="/tags/Fragment/" style="font-size: 10px;">Fragment</a> <a href="/tags/Glide/" style="font-size: 10px;">Glide</a> <a href="/tags/Graph/" style="font-size: 10px;">Graph</a> <a href="/tags/HTTP/" style="font-size: 11px;">HTTP</a> <a href="/tags/HTTPS/" style="font-size: 10px;">HTTPS</a> <a href="/tags/Hash/" style="font-size: 10px;">Hash</a> <a href="/tags/Heap/" style="font-size: 11px;">Heap</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/Intent/" style="font-size: 10px;">Intent</a> <a href="/tags/Java/" style="font-size: 19px;">Java</a> <a href="/tags/Kotlin/" style="font-size: 16px;">Kotlin</a> <a href="/tags/ListView/" style="font-size: 10px;">ListView</a> <a href="/tags/MarshMellow/" style="font-size: 10px;">MarshMellow</a> <a href="/tags/Network/" style="font-size: 11px;">Network</a> <a href="/tags/Node-js/" style="font-size: 15px;">Node.js</a> <a href="/tags/OS/" style="font-size: 13px;">OS</a> <a href="/tags/Parcelable/" style="font-size: 10px;">Parcelable</a> <a href="/tags/Permission/" style="font-size: 10px;">Permission</a> <a href="/tags/Picasso/" style="font-size: 10px;">Picasso</a> <a href="/tags/Programmers/" style="font-size: 10px;">Programmers</a> <a href="/tags/Project/" style="font-size: 10px;">Project</a> <a href="/tags/RESTful/" style="font-size: 10px;">RESTful</a> <a href="/tags/RecyclerView/" style="font-size: 10px;">RecyclerView</a> <a href="/tags/Reflection/" style="font-size: 10px;">Reflection</a> <a href="/tags/Retrofit/" style="font-size: 10px;">Retrofit</a> <a href="/tags/Runtime-Error/" style="font-size: 10px;">Runtime Error</a> <a href="/tags/SOPT/" style="font-size: 14px;">SOPT</a> <a href="/tags/SP/" style="font-size: 10px;">SP</a> <a href="/tags/Serializable/" style="font-size: 10px;">Serializable</a> <a href="/tags/SharedPreference/" style="font-size: 10px;">SharedPreference</a> <a href="/tags/Singleton/" style="font-size: 10px;">Singleton</a> <a href="/tags/Static/" style="font-size: 10px;">Static</a> <a href="/tags/TCP/" style="font-size: 11px;">TCP</a> <a href="/tags/UDP/" style="font-size: 10px;">UDP</a> <a href="/tags/View/" style="font-size: 10px;">View</a> <a href="/tags/computer-science/" style="font-size: 10px;">computer science</a> <a href="/tags/etc/" style="font-size: 10px;">etc</a> <a href="/tags/network/" style="font-size: 10px;">network</a> <a href="/tags/네트워크/" style="font-size: 10px;">네트워크</a> <a href="/tags/안드로이드-기초/" style="font-size: 12px;">안드로이드 기초</a> <a href="/tags/오류-제어/" style="font-size: 10px;">오류 제어</a> <a href="/tags/운영체제/" style="font-size: 13px;">운영체제</a> <a href="/tags/인텐트/" style="font-size: 10px;">인텐트</a> <a href="/tags/자료구조/" style="font-size: 17px;">자료구조</a> <a href="/tags/직렬화/" style="font-size: 10px;">직렬화</a> <a href="/tags/패킷-교환/" style="font-size: 10px;">패킷 교환</a> <a href="/tags/혼잡-제어/" style="font-size: 10px;">혼잡 제어</a> <a href="/tags/흐름-제어/" style="font-size: 10px;">흐름 제어</a>
+        </div>
+    </div>
+
+
+            
+        
+    </div>
+</aside>
+
+                </div>
+            </div>
+        </div>
+        <footer id="footer">
+    <div class="container">
+        <div class="container-inner">
+            <a id="back-to-top" href="javascript:;"><i class="icon fa fa-angle-up"></i></a>
+            <div class="credit">
+                <h1 class="logo-wrap">
+                    <a href="/" class="logo"></a>
+                </h1>
+                <p>&copy; 2019 VictoryWoo</p>
+                <p>Powered by <a href="//hexo.io/" target="_blank">Hexo</a>. Theme by <a href="//github.com/ppoffice" target="_blank">PPOffice</a></p>
+            </div>
+            <div class="footer-plugins">
+              
+    
+
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+        
+    
+    <script>
+    var disqus_shortname = 'hexo-theme-hueman';
+    
+    
+    var disqus_url = 'https://woovictory.github.io/2019/01/07/Android-For-Interview-3/';
+    
+    (function() {
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+</html>
