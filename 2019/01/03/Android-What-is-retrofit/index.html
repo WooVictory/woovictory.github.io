@@ -19,7 +19,7 @@
 <meta property="og:url" content="https://woovictory.github.io/2019/01/03/Android-What-is-retrofit/index.html">
 <meta property="og:site_name" content="VictoryWoo">
 <meta property="og:description" content="안드로이드 통신 라이브러리 요약 저는 안드로이드 앱을 개발하면 서버와 통신을 하기 위해서 편리한 방법인 Retrofit은 사용했다. 하지만 이러한 편리함을 알기 전에 왜 이렇게 편리하게 사용하는지 살펴보아야 할 것 같다. 초기에 안드로이드에서의 통신이라면 HttpClient를 사용하는 것이었다. HttpClient라고 해도 DefaultHttpClient라">
-<meta property="og:updated_time" content="2019-01-03T15:36:33.658Z">
+<meta property="og:updated_time" content="2019-01-07T16:17:08.036Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="[안드로이드] Retrofit">
 <meta name="twitter:description" content="안드로이드 통신 라이브러리 요약 저는 안드로이드 앱을 개발하면 서버와 통신을 하기 위해서 편리한 방법인 Retrofit은 사용했다. 하지만 이러한 편리함을 알기 전에 왜 이렇게 편리하게 사용하는지 살펴보아야 할 것 같다. 초기에 안드로이드에서의 통신이라면 HttpClient를 사용하는 것이었다. HttpClient라고 해도 DefaultHttpClient라">
@@ -181,11 +181,17 @@
 <p>Retrofit은 OkHttp의 상위 구현체로 enqueue와 excute를 사용하여 동기, 비동기 처리를 지원한다. 이러한 비동기 처리를 쉽게 지원하는 volley, retrofit 중에 무엇을 사용할지 고민했으나 인터페이스 내에 어노테이션으로 HTTP 메소드를 정의하여 그 행위를 알아보기 쉽게 표현하여 가독성이 높은 Retrofit은 사용했다. 추가적으로 Retrofit은 플로그인 형태로 클라이언트와 직렬화를 위한 convert를 선택할 수 있어 유지보수에 편하다.</p>
 <p>반면에 volley는 이미지 캐시, 요청에 우선순위를 부여하는 등 추가적인 기능이 잇지만 직렬화를 직접 세팅해줘야하고 멀티파트 업로드 시에도 리퀘스트의 재정의가 필요하다.</p>
 <p>이렇듯 추가적인 기능이 더 많은건 volley이지만 간편하고 유지보수에 능하며 좀 더 REST api에 적합한 라이브러리라 생각되어 Retrofit을 사용했다.</p>
+<h2 id="retrofit을-사용한-이유">Retrofit을 사용한 이유?</h2>
+<p>서버와 통신을 하려면 Http 통신을 해야한다. 기본적으로 <code>HttpUrlConnection</code>을 이용한 네트워크 통신이 있지만 매번 connection 설정, input / output stream 생성 및 할당 등 반복적인 작업이 발생한다. 이것을 도와주는 라이브러리가 <code>Okhttp</code>이다. 나는 Okhttp의 존재를 알기만 했고 사용해보지는 않았다.</p>
+<p>Retrofit의 장점은 속도, 편의성, 가독성이 있다. 가장 비교하기 좋은 <code>Okhttp</code>는 사용시 대개 <code>Asynctask</code>를 통해 비동기로 실행하게 되는데 <strong>Asynctask</strong>가 성능상 느리다는 이슈가 있었다. <code>Retrofit</code>에서는 <strong>Asynctask</strong>를 사용하지 않고 자체적인 비동기 실행과 스레드 관리를 통해 속도를 훨씬 빠르게 끌어올렸다. 약 3~10배 차이가 난다고 한다.</p>
+<p>또한 Okhttp에서도 쿼리스트링, <em>request</em>, <em>response</em> 설정 등 반복적인 작업이 필요한데, Retrofit에서는 이런 과정을 모두 라이브러리에 넘겨서 처리하도록 하였다. 따라서 사용자는 함수 호출시에 파라미터만 넘기면 되기에 훨씬 작업량이 줄어들고 사용하기 편리하다.</p>
+<p>마지막으로 <strong>가독성</strong>이 매우 좋다. interface 내에 <strong>annotation</strong>을 사용하여 호출할 함수를 파라미터와 함께 정의해놓고, 네트워크 통신이 필요한 순간에 구현없이 해당 함수를 호출하기만 하면 통신이 이루어지기에 <strong>코드를 읽기가 매우 편하다.</strong> <code>Asynctask</code>를 쓰지 않기에 불필요하게 코드가 길어질 필요도 없으며, 콜백 함수를 통해 결과가 넘어오도록 되어있어 매우 직관적인 설계가 장점이다.</p>
+<p>네트워크 통신에 <code>Volley</code>라는 라이브러리도 있지만 몇가지 문제점이 있었다. StringRequest 생성시 파라미터 값을 <strong>encoding</strong>해주어야 하는 불편함과 통신 실패시 <strong>ErrorResponse</strong> 안에 <strong>ResponseBody</strong>가 담기지 않는 문제가 있다.</p>
 <h3 id="구현-방법">구현 방법</h3>
 <p>application 클래스를 상속받은 <strong>ApplicationController</strong>라는 클래스를 만들고 싱글톤으로 구현하여 onCreate() 내부에 레트로핏 빌더를 이용해 클라이언트와 컨버터를 설정하고 인터페이스를 선택한다.</p>
-<p><strong>application 클래스를 상속받은 이유는?</strong></p>
-<p>메인 액티비티의 통신 부 이전에 retrofit에 대한 세팅을 하기 위해 상속받았다. application 클래스는 애플리케이션 컴포넌트들이 공통으로 사용하는 공유 클래스이다. 해당 클래스를 상속받아 구현한 클래스의 onCreate 메소드는 시스템의 진입점이 되어 가장 먼저 실행된다.</p>
-<h2 id="동기와-비동기란">동기와 비동기란?</h2>
+<p><strong>application 클래스를 상속받은 이유는?</strong><br>
+메인 액티비티의 통신 부 이전에 retrofit에 대한 세팅을 하기 위해 상속받았다. application 클래스는 애플리케이션 컴포넌트들이 공통으로 사용하는 공유 클래스이다. 해당 클래스를 상속받아 구현한 클래스의 onCreate 메소드는 시스템의 진입점이 되어 가장 먼저 실행된다.</p>
+<h3 id="동기와-비동기란">동기와 비동기란?</h3>
 <p>데이터를 받는 방식인 동기와 비동기. 이 둘의 개념에 대해서 알고 넘어가자.</p>
 <ol>
 <li>동기(synchronous : 동시에 일어나는)</li>
