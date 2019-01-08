@@ -19,7 +19,7 @@
 <meta property="og:url" content="https://woovictory.github.io/2019/01/07/Android-For-Interview-3/index.html">
 <meta property="og:site_name" content="VictoryWoo">
 <meta property="og:description" content="화면이 회전하면 액티비티의 생명주기는? 펜딩인텐트란? 안드로이드에서 Task와 Process의 차이점 A 앱에서 B 앱의 액티비티를 부를 경우 화면 렌더링 속도를 개선하는 방법 Thred간 통신 방법 ANR  화면이 회전하면 액티비티의 생명주기는? 안드로이드 애플리케이션을 사용하다 보면 화면이 가로 모드를 지원하는 애플리케이션들이 많다. 이런 경우 우리가">
-<meta property="og:updated_time" content="2019-01-07T05:54:40.832Z">
+<meta property="og:updated_time" content="2019-01-08T02:39:05.425Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="[안드로이드] 안드로이드 면접 3">
 <meta name="twitter:description" content="화면이 회전하면 액티비티의 생명주기는? 펜딩인텐트란? 안드로이드에서 Task와 Process의 차이점 A 앱에서 B 앱의 액티비티를 부를 경우 화면 렌더링 속도를 개선하는 방법 Thred간 통신 방법 ANR  화면이 회전하면 액티비티의 생명주기는? 안드로이드 애플리케이션을 사용하다 보면 화면이 가로 모드를 지원하는 애플리케이션들이 많다. 이런 경우 우리가">
@@ -217,16 +217,16 @@
 노래를 재생하는 중이고 이것이 상태바에 Notification으로 보여질 때 사용자가 이 Noti를 클릭하면 Notification은 이전에 전달받은 Pending Intent를 실행한다. Pending Intent가 <code>getActivity()</code>에 의해 생성된 것이며 감싸고 있는 intent 또한 특정 화면을 실행시키는 intent라면 이것이 그대로 실행되어 노래 화면이 뜨게 된다.</p>
 <p>이때 주의할 점은 Activity는 새로운 테스크를 생성하여 그곳에 쌓이게 된다. 마치 Intent의 flag가 <code>NEW_TASK</code>로 설정된 것처럼 실행되기 때문에 유의해야 한다. 하나의 Activity만 생성되도록 보장하기 위해선 AndroidManifest 파일에  lanunchMode = “singleTop” 으로 설정해주어야 한다.</p>
 <h2 id="안드로이드에서-task와-process의-차이점">안드로이드에서 Task와 Process의 차이점</h2>
-<p>애플리케이션 컴포넌트가 처음 시작될 때 실행 중인 다른 컴포넌트가 없으면 안드로이드 시스템은 프로세스를 새로 생성시킨다. 기본적으로 애플리케이셔느이 컴포넌트들은 같은 프로세스의 기본 스레드에서 실행된다. 이후의 컴포넌트들이 시작할 때는 이미 생성된 프로세스 내에서 시작되며 컴포넌트별로 별도의 프로세스에서 실행되도록 할 수도 있고 어느 프로세스에서든 추가적인 스레드를 생성하여 작업할 수 있다.</p>
+<p>애플리케이션 컴포넌트가 처음 시작될 때 실행 중인 다른 컴포넌트가 없으면 안드로이드 시스템은 프로세스를 새로 생성시킨다. 기본적으로 애플리케이션의 컴포넌트들은 같은 프로세스의 기본 스레드에서 실행된다. 이후의 컴포넌트들이 시작할 때는 이미 생성된 프로세스 내에서 시작되며 컴포넌트별로 별도의 프로세스에서 실행되도록 할 수도 있고 어느 프로세스에서든 추가적인 스레드를 생성하여 작업할 수 있다.</p>
 <p>Manifest 파일에서 <code>android:process</code> 특성을 설정함으로써 다른 프로세스에 해당 컴포넌트를 실행시킬 수 있다. 안드로이드 시스템에서 메모리가 부족할 경우 우선순위가 낮은 프로세스부터 종료시킨다. 우선순위는 <code>Foregorund, Visible, Service, Background, Cached</code> 프로세스 순이다.</p>
 <p>눈에 보이는 프로세스는 <strong>Foreground와 Service</strong> 프로세스이며 Visible은 다이얼로그가 뜨는 경우 뒤에 액티비티가 가려지지만 사용자에게 보이는 경우에 해당한다.</p>
 <p><strong>Service</strong>는 사용자가 볼 수는 없지만 프로세스에 필요한 작업은 진행하기에 그 다음 우선순위를 가지며 <strong>Background</strong>는 뒤로 밀려난 프로세스이기에 종료될 수 있다. 마지막 <strong>Cached</strong> 프로세스는 컴포넌트가 없는 빈 프로세스이지만 다음에 실행할 때 로드 시간을 절약하기 위해 캐시된 상태이다.</p>
-<p><strong>Task</strong>는 각 애플리케이션마다 사용하는 Activity들을 Stack 구조로 저장 및 관리하는 컬렉션이다. 따라서 사용자가 화면의 전환 흐름을 자연스럽게 경험하도록 보장한다. 또한 Task는 다른 애플리케이션이나 프로세스에 속하는 Activity를 같은 Task에 저장시킴으로써 사용자로 하여금 하나의 애플리케이션에서 작동하는 듯한 경험을 하도록 한다. 단말기에서 사용중인 애플리케이션 리스트를 보는 것이 Task 단위로 보여지는 것이다 하지만 실질적으로 Activity는 다른 프로세스 상에서 돌아가는 컴포넌트이며 프로세스간 통신을 통해 정보를 주고 받는 것이다.</p>
+<p><strong>Task</strong>는 각 애플리케이션마다 사용하는 Activity들을 Stack 구조로 저장 및 관리하는 컬렉션이다. 따라서 사용자가 화면의 전환 흐름을 자연스럽게 경험하도록 보장한다. 또한 Task는 다른 애플리케이션이나 프로세스에 속하는 Activity를 같은 Task에 저장시킴으로써 사용자로 하여금 하나의 애플리케이션에서 작동하는 듯한 경험을 하도록 한다. 단말기에서 사용중인 애플리케이션 리스트를 보는 것이 Task 단위로 보여지는 것이다. 하지만 실질적으로 Activity는 다른 프로세스 상에서 돌아가는 컴포넌트이며 프로세스간 통신을 통해 정보를 주고 받는 것이다.</p>
 <h2 id="a-앱에서-b-앱의-액티비티를-부를-경우">A 앱에서 B 앱의 액티비티를 부를 경우</h2>
-<p>Task에는 해당 애플리케이션에 속한 컴포넌트뿐만 아니라 다른 애플리케이션 컴포넌트도 쌓일 수 있다. 다른 애플리케이션의 컴포넌트를 실행하는 방법으로 <code>PackageManager</code>의 **getLaunchIntentForPackage()**가 있고 Intent에 <code>setComponent()</code>를 사용하는 방법이 있는데 전자의 경우 항상 새로운 Task를 생성하여 그곳에서 컴포넌트를 실행시키며 후자의 경우 현재의 Task에서 컴포넌트를 실행시키게 된다.</p>
+<p>Task에는 해당 애플리케이션에 속한 컴포넌트뿐만 아니라 다른 애플리케이션 컴포넌트도 쌓일 수 있다. 다른 애플리케이션의 컴포넌트를 실행하는 방법으로 <code>PackageManager</code>의 getLaunchIntentForPackage()가 있고 Intent에 <code>setComponent()</code>를 사용하는 방법이 있는데 전자의 경우 항상 새로운 Task를 생성하여 그곳에서 컴포넌트를 실행시키며 후자의 경우 현재의 Task에서 컴포넌트를 실행시키게 된다.</p>
 <p>이 부분은 추후 공부를 더 해볼 예정.</p>
 <h2 id="화면-렌더링-속도를-개선하는-방법">화면 렌더링 속도를 개선하는 방법</h2>
-<p>기본적으로 View의 움직임이 어색하거나 스크롤이 버벅거리거나 렌더릳이 느린 경우는 <strong>뷰를 그리는 속도가 16ms 보다 오래걸리는 현상</strong>이다. 초당 60 프레임의 속도로 화면을 그려주어야 사람의 시각에 어색함이 없이 보이는데 그리는 시간이 이보다 오래 걸릴 경우 버벅이는 문제가 발생할 수 있다. 따라서 렌더링이 느리다면 2가지를 의심해 봐야 한다.</p>
+<p>기본적으로 View의 움직임이 어색하거나 스크롤이 버벅거리거나 렌더링이 느린 경우는 <strong>뷰를 그리는 속도가 16ms 보다 오래걸리는 현상</strong>이다. 초당 60 프레임의 속도로 화면을 그려주어야 사람의 시각에 어색함이 없이 보이는데 그리는 시간이 이보다 오래 걸릴 경우 버벅이는 문제가 발생할 수 있다. 따라서 렌더링이 느리다면 2가지를 의심해 봐야 한다.</p>
 <ol>
 <li>View Hierarchy가 너무 많은지 의심해 볼 것.</li>
 </ol>
@@ -240,11 +240,11 @@ ConstrainLayout은 뷰의 상하좌우를 주변 또는 부모 뷰와 연관을 
 <p><strong># FlexBoxLayout?</strong><br>
 태그와 같은 항목이 하나의 뷰 안에 일렬로 즐비할 경우 한 줄이 가득 차면 다음 줄로 View를 정렬시키는 기능이 필요할 때 사용할 수 있는 Layout이다. <code>FlexBoxLayout</code>은 부모 레이아웃의 너비에 따라 자식 뷰를 여러 행에 걸쳐 <strong>동적</strong>으로 맞추는 기능을 제공한다. 기존에는 LinearLayout을 통해 구현 가능하긴 하지만 ScrollView와 같이 사용하면서 View의 너비를 일일이 계산하여 다음 행으로 배치시키는 코드를 직접 구현하는 방식으로 커스텀을 해야했다. <code>FlexBoxLayout</code>을 사용하면 이러한 작업을 자동으로 처리해주기에 잘못된 구현으로 인해 오버헤드가 발생하는 문제를 방지할 수 있다.</p>
 <h2 id="thred간-통신-방법">Thred간 통신 방법</h2>
-<p>Android의 UI를 담당하는 쓰레드는 메인 쓰레드(UI 쓰레드)인데, 오랜 시간이 걸리는 작업을 메인 쓰레드에서 수행할 경우 앱의 성능이 저하된다. 따라서 여분의 쓰레드를 사용하여 작업을 수행해야 하고, 이 결과를 반영하기 위헤 메인 쓰레드와의 통신이 필요하게 된다. 그래서 메인 쓰레드에 접근하는 방법은 <strong>Looper</strong>와 <strong>Handler</strong>를 이용하면 된다. 그리고 UI 작업을 메인 쓰레드에서만 담당하는 이유는 두 개 이상의 쓰레드를 사용할 때의 동기화 이슈를 차단하기 위함이다.</p>
+<p>Android의 UI를 담당하는 쓰레드는 메인 쓰레드(UI 쓰레드)인데, 오랜 시간이 걸리는 작업을 메인 쓰레드에서 수행할 경우 앱의 성능이 저하된다. 따라서 여분의 쓰레드를 사용하여 작업을 수행해야 하고, 이 결과를 반영하기 위해 메인 쓰레드와의 통신이 필요하게 된다. 그래서 메인 쓰레드에 접근하는 방법은 <strong>Looper</strong>와 <strong>Handler</strong>를 이용하면 된다. <strong>그리고 UI 작업을 메인 쓰레드에서만 담당하는 이유는 두 개 이상의 쓰레드를 사용할 때의 동기화 이슈를 차단하기 위함이다.</strong></p>
 <p><strong>Android는 Java의 쓰레드를 좀 더 쉽게 사용할 수 있도록 래핑한 HandlerThread, AsyncTask를 제공한다.</strong></p>
 <p><strong>1. Looper</strong><br>
 메인 쓰레드는 내부적으로 <strong>Looper</strong>를 가지며 그 안에는 Message Queue가 포함된다. <code>Message Queue</code>는 쓰레드가 다른 쓰레드나 혹은 자기 자신으로부터 전달받은 Message를 보관하는 Queue(FIFO)이다. Looper는 무한 루프를 돌며 자신이 속한 쓰레드의 Message Queue에서 Message 객체를 차례로 꺼내서 Handler가 처리하도록 전달한다.</p>
-<p>메인 쓰레드는 기본적으로 Looper가 생성되어 있으나, 새로 생성한 쓰레드는 새로운 Looper를 생성해주어야 한다. Android는 Looper가 기본적ㅇ로 생성되어 있는 HandlerThred를 제공한다.</p>
+<p>메인 쓰레드는 기본적으로 Looper가 생성되어 있으나, 새로 생성한 쓰레드는 새로운 Looper를 생성해주어야 한다. Android는 Looper가 기본적으로 생성되어 있는 HandlerThred를 제공한다.</p>
 <ul>
 <li><strong>Message Queue에 저장되는 객체</strong>
 <ul>
@@ -256,17 +256,13 @@ ConstrainLayout은 뷰의 상하좌우를 주변 또는 부모 뷰와 연관을 
 <p><strong>2. Handler</strong><br>
 Looper로부터 받은 Message를 실행, 처리하거나 다른 쓰레드로부터 메시지를 받아서 Message Queue에 넣는 역할을 하는 쓰레드 간의 통신 장치이다. <strong>일반적으로 UI 갱신을 위해 사용된다.</strong> (뷰나 뷰 그룹에서 제공하는 메소드는 단일 스레드 모델(Thread-Unsafe)</p>
 <h2 id="anr">ANR</h2>
-<p>ANR은 Android Not Responding의 약자로 오랜 시간이 걸리는 작업을 메인 쓰레드에서 담당하면 앱의 반응성이 낮아질 수 있고, 사용자의 불편함을 방지하고자 시스템이 <strong>ANR</strong> 상태로 전환시킬 수 있다. 따라서 시간이 걸리는 작업은 여분의 쓰레드를 사용해야 하고, 이 작업 결과를 반영하기 위해 메인 쓰레드와 통신하는 방법이 필요하다.</p>
-<p><strong># ANR상태 예시</strong></p>
-<ul>
-<li>input 이벤트에 5초 안에 반응하지 않을 경우(Activity)</li>
-<li>BroadcastRecevier가 10초 이내로 실행하지 않을 경우(UI가 없는 브로드캐스트 리시버와 서비스도 실행 주체가 메인 쓰레드이기 때문에)</li>
-</ul>
-<p><strong># ANR대처 방법</strong></p>
-<ul>
-<li>시간이 걸리는 긴 작업은 쓰레드로 처리</li>
-<li>Progress bar로 진행 상황을 보여주어 사용자를 기다리게 한다.</li>
-</ul>
+<p><code>ANR</code>은 Android Not Responding의 약자로 오랜 시간이 걸리는 작업을 메인 쓰레드에서 담당하면 앱의 반응성이 낮아질 수 있고, 사용자의 불편함을 방지하고자 시스템이 <strong>ANR</strong> 상태로 전환시킬 수 있다. 따라서 시간이 걸리는 작업은 여분의 쓰레드를 사용해야 하고, 이 작업 결과를 반영하기 위해 메인 쓰레드와 통신하는 방법이 필요하다.</p>
+<p><strong># ANR상태 예시</strong><br>
+-&gt; input 이벤트에 5초 안에 반응하지 않을 경우(Activity)<br>
+-&gt; BroadcastRecevier가 10초 이내로 실행하지 않을 경우(UI가 없는 브로드캐스트 리시버와 서비스도 실행 주체가 메인 쓰레드이기 때문에)</p>
+<p><strong># ANR대처 방법</strong><br>
+-&gt; 시간이 걸리는 긴 작업은 쓰레드로 처리<br>
+-&gt; Progress bar로 진행 상황을 보여주어 사용자를 기다리게 한다.</p>
 <h2 id="참고">참고</h2>
 <ul>
 <li><a href="https://hyeonu1258.github.io/2018/04/17/%EC%95%88%EB%93%9C%EB%A1%9C%EC%9D%B4%EB%93%9C%20%EB%A9%B4%EC%A0%913/" target="_blank" rel="noopener">안드로이드 면접 3</a></li>

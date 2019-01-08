@@ -20,7 +20,7 @@
 <meta property="og:site_name" content="VictoryWoo">
 <meta property="og:description" content="안드로이드 백그라운드 액티비티 생명주기 프래그먼트 생명주기 Content Provider VS Content Resolver  안드로이드 백그라운드 안드로이드 UI는 기본적으로 싱글 스레드 모델로 작동하므로, 이 영향을 고려해서 개발하지 않으면 애플리케이션의 성능이 저하될 수 있다. 따라서 메인 스레드에서 긴 작업을 하는 것을 피하기 위해 여분의 스레드를">
 <meta property="og:image" content="https://woovictory.github.io/img/android_thread_reason.png">
-<meta property="og:updated_time" content="2019-01-07T07:23:35.784Z">
+<meta property="og:updated_time" content="2019-01-08T05:29:19.344Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="[안드로이드] 안드로이드 면접 4">
 <meta name="twitter:description" content="안드로이드 백그라운드 액티비티 생명주기 프래그먼트 생명주기 Content Provider VS Content Resolver  안드로이드 백그라운드 안드로이드 UI는 기본적으로 싱글 스레드 모델로 작동하므로, 이 영향을 고려해서 개발하지 않으면 애플리케이션의 성능이 저하될 수 있다. 따라서 메인 스레드에서 긴 작업을 하는 것을 피하기 위해 여분의 스레드를">
@@ -198,7 +198,7 @@
 <p>위의 그림처럼 둘 중 어느 스레드의 setText()가 적용될지 예측할 수 없고, 사용자는 둘 중 하나의 값만을 볼 수 있어 다른 한 스레드의 결과는 버려진다. 이같이 두 개 이상의 스레드를 사용할 때의 동기화 이슈를 차단하기 위해서 Looper와 Handler를 사용하게 된다.</p>
 <h2 id="looper와-handler의-작동-원리">Looper와 Handler의 작동 원리</h2>
 <p><code>안드로이드 면접 3</code>에서도 살펴보았지만, 더 보도록 하겠다. 먼저 스레드와 Looper, Handler가 어떻게 작동하는지 보자. 메인 스레드는 내부적으로 <code>Looper</code>를 가지며 그 안에는 <strong>Message Queue</strong>가 포함된다. Message Queue는 스레드가 다른 스레드나 혹은 자기 자신으로부터 전달받은 Message를 기본적으로 FIFO(선입선출) 형식으로 보관하는 Queue이다.</p>
-<p><strong>Looper</strong>는 Message Queues에서 Message나 Runnable 객체를 차례로 꺼내 Handler가 처리하도록 전달한다. <strong>Handler</strong>는 Looper로부터 받은 Message를 실행, 처리하거나 다른 스레드로부터 메시지를 받아서 Message Queue에 넣는 역할을 하는 스레드 간의 통신 장치이다.</p>
+<p><strong>Looper</strong>는 Message Queue에서 Message나 Runnable 객체를 차례로 꺼내 Handler가 처리하도록 전달한다. <strong>Handler</strong>는 Looper로부터 받은 Message를 실행, 처리하거나 다른 스레드로부터 메시지를 받아서 Message Queue에 넣는 역할을 하는 스레드 간의 통신 장치이다.</p>
 <img src="/img/android_looper_handler.png" width="400" height="300">
 <h2 id="handler">Handler</h2>
 <p>Handler는 스레드의 Message Queue와 연계하여 Message나 Runnable 객체를 받거나 처리하여 스레드 간의 통신을 할 수 있도록 한다. Handler 객체는 하나의 스레드와 해당 스레드의 Message Queue에 종속된다. 새로 Handler 객체를 만든 경우 이를 만든 스레드와 해당 스레드의 Message Queue에 바인드 된다.</p>
@@ -223,7 +223,7 @@ Message란 스레드 간 통신할 내용을 담는 객체이자 Queue에 들어
 <p>그러나 AsyncTask를 사용해서 스케줄링할 수 있는 작업 수의 제한이 있고, 몇 초 정도의 짧은 작업에서만 이상적으로 동작한다는 한계가 있다. 또한, 안드로이드의 버전 별로 병렬 처리 동작이 다르므로 허니콤 이후 버전에서 멀티 스레드로 병렬적인 동작을 원한다면 AsyncTask를 실행할 때 <code>AsyncTask.THREAD_POOL_EXECUTOR</code> 스케줄러를 지정해야 한다.</p>
 <p>한편, 앞서 살펴본 Handler와 Looper를 사용한다면 동작 원리를 고려해야 하며 구현을 직접해야 하고 코드가 복잡해져서 가독성을 저해한다는 단점이 있지만 그만큼 개발 범위가 자유롭다. 또한 UI 스레드에서만 작업하지 않아도 되므로 보다 많은 자율성을 가지고 코드를 제어하기를 원한다면 Handler나 HandlerThread 사용을 고려해보는 것도 좋다.</p>
 <p>무엇을 사용할지는 개발자가 어떤 기준을 가지고 개발하는지에 따라 다르다. 그럼에도 나는 AsyncTask를 사용할 것 같다. 왜냐하면 핸들러는 스레드 안에서 실행되어야 할 코드와 UI 접근을 위한 코드가 각각 다른 위치에서 구현을 한다. 그러므로 가독성이 떨어진다.</p>
-<p>하지만, <code>AsyncTask</code>는 하나의 클래스 안에 스레드로 동작하는 부분과 화면을 갱신하는 부분을 함께 구현해놓을 수 있다. 이 때문에 스레드를 사용하는 하나의 작업단위가 하나의 클래스로 만들어질 수 있게 되므로 가독성이 훨씬 좋아게 된다.</p>
+<p>하지만, <code>AsyncTask</code>는 하나의 클래스 안에 스레드로 동작하는 부분과 화면을 갱신하는 부분을 함께 구현해놓을 수 있다. 이 때문에 스레드를 사용하는 하나의 작업단위가 하나의 클래스로 만들어질 수 있게 되므로 가독성이 훨씬 좋아지게 된다.</p>
 <p>간단한 예제는 아래 블록를 참고하자^0^<br>
 <a href="https://one-delay.tistory.com/29?category=766130" target="_blank" rel="noopener">AsyncTask 예제</a></p>
 <h2 id="content-provider-vs-content-resolver">Content Provider VS Content Resolver</h2>
