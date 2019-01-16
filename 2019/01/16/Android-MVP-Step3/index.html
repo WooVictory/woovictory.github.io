@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+
+    
+
+    
+    <title>[안드로이드] MVP 따라하기 3 | VictoryWoo</title>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+        <meta name="keywords" content="Android,MVP" />
+    
+    <meta name="description" content="이번에는 Presenter와 View를 나누는 방법에 대해서 정리해보겠다. Presenter의 정의는?  View : Presenter에서 전달받은 View의 이벤트이다. Presenter : View에서 전달된 이벤트에 대한 처리를 한다.(View와 무관한 처리만 한다.)   Presenter를 구분하는 방법들  View에 대한 interface만 정의하">
+<meta name="keywords" content="Android,MVP">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[안드로이드] MVP 따라하기 3">
+<meta property="og:url" content="https://woovictory.github.io/2019/01/16/Android-MVP-Step3/index.html">
+<meta property="og:site_name" content="VictoryWoo">
+<meta property="og:description" content="이번에는 Presenter와 View를 나누는 방법에 대해서 정리해보겠다. Presenter의 정의는?  View : Presenter에서 전달받은 View의 이벤트이다. Presenter : View에서 전달된 이벤트에 대한 처리를 한다.(View와 무관한 처리만 한다.)   Presenter를 구분하는 방법들  View에 대한 interface만 정의하">
+<meta property="og:image" content="https://woovictory.github.io/img/mvp_default.png">
+<meta property="og:updated_time" content="2019-01-16T13:26:40.765Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="[안드로이드] MVP 따라하기 3">
+<meta name="twitter:description" content="이번에는 Presenter와 View를 나누는 방법에 대해서 정리해보겠다. Presenter의 정의는?  View : Presenter에서 전달받은 View의 이벤트이다. Presenter : View에서 전달된 이벤트에 대한 처리를 한다.(View와 무관한 처리만 한다.)   Presenter를 구분하는 방법들  View에 대한 interface만 정의하">
+<meta name="twitter:image" content="https://woovictory.github.io/img/mvp_default.png">
+    
+
+    
+
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/titillium-web/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" type="text/css" href="">
+    <link rel="stylesheet" href="https://cdn.rawgit.com/innks/NanumSquareRound/master/nanumsquareround.css">	
+    <link rel="stylesheet" href="https://fonts.googleapis.com/earlyaccess/nanumgothiccoding.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/3.3.1/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+
+
+</head>
+
+<body>
+    <div id="wrap">
+        <header id="header">
+    <div id="header-outer" class="outer">
+        <div class="container">
+            <div class="container-inner">
+                <div id="header-title">
+                    <h1 class="logo-wrap">
+                        <a href="/" class="logo"></a>
+                    </h1>
+                    
+                </div>
+                <div id="header-inner" class="nav-container">
+                    <a id="main-nav-toggle" class="nav-icon fa fa-bars"></a>
+                    <div class="nav-container-inner">
+                        <ul id="main-nav">
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/">Home</a>
+                                </li>
+                            
+                                        <ul class="main-nav-list"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/">CS</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/Network/">Network</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/OS/">OS</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/개발-상식/">개발 상식</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/네트워크/">네트워크</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/자료구조/">자료구조</a></li></ul></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programmers/">Programmers</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/">Programming</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/Android/">Android</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/Design-Pattern/">Design Pattern</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/Inno-SOPT/">Inno_SOPT</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/Java/">Java</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/Kotlin/">Kotlin</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/Node-js/">Node.js</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/etc/">etc</a></li></ul></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Project/">Project</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Project/Lang/">Lang</a></li></ul></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/algorithm/">algorithm</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/algorithm/BOJ/">BOJ</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/algorithm/개념/">개념</a></li></ul></li></ul>
+                                    
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/about/index.html">About</a>
+                                </li>
+                            
+                        </ul>
+                        <nav id="sub-nav">
+                            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Cercar" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="Type something..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'categories',
+            TAGS: 'etiquetes',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+        <div class="container">
+            <div class="main-body container-inner">
+                <div class="main-body-inner">
+                    <section id="main">
+                        <div class="main-body-header">
+    <h1 class="header">
+    
+    <a class="page-title-link" href="/categories/Programming/">Programming</a><i class="icon fa fa-angle-right"></i><a class="page-title-link" href="/categories/Programming/Android/">Android</a><i class="icon fa fa-angle-right"></i><a class="page-title-link" href="/categories/Programming/Android/Tip/">Tip</a>
+    </h1>
+</div>
+
+                        <div class="main-body-content">
+                            <article id="post-Android-MVP-Step3" class="article article-single article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+        [안드로이드] MVP 따라하기 3
+        </h1>
+    
+
+            </header>
+        
+        
+            <div class="article-meta">
+                
+    <div class="article-date">
+        <a href="/2019/01/16/Android-MVP-Step3/" class="article-date">
+            <time datetime="2019-01-16T11:34:22.000Z" itemprop="datePublished">2019-01-16</time>
+        </a>
+    </div>
+
+		
+
+                
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/Android/">Android</a>, <a class="tag-link" href="/tags/MVP/">MVP</a>
+    </div>
+
+            </div>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+            <p>이번에는 Presenter와 View를 나누는 방법에 대해서 정리해보겠다.</p>
+<h2 id="presenter의-정의는">Presenter의 정의는?</h2>
+<ul>
+<li>View : Presenter에서 전달받은 View의 이벤트이다.</li>
+<li>Presenter : View에서 전달된 이벤트에 대한 처리를 한다.(View와 무관한 처리만 한다.)</li>
+</ul>
+<img src="/img/mvp_default.png" width="500" height="300">
+<h2 id="presenter를-구분하는-방법들">Presenter를 구분하는 방법들</h2>
+<ol>
+<li>View에 대한 interface만 정의하는 방법</li>
+</ol>
+<ul>
+<li>interface View : View에 대한 interface만 정의</li>
+<li>Presenter : interface 정의 없이 함수를 생성하여 사용</li>
+<li>View : interface View를 상속받아서 정의</li>
+</ul>
+<ol start="2">
+<li>Google architecture를 따른다.</li>
+</ol>
+<ul>
+<li>Contract : View와 Presenter에 대한 interface을 작성</li>
+<li>Presenter : Contract.Presenter을 상속받아서 구현</li>
+<li>View : Contract.View을 상속받아서 구현</li>
+</ul>
+<ol start="3">
+<li>PresenterImpl을 구현</li>
+</ol>
+<ul>
+<li>Presenter : Presenter와 View에 대한 interface을 구현</li>
+<li>PresenterImpl : Presenter을 상속받아서 구현</li>
+<li>View : Presenter.View을 상속받아서 구현</li>
+</ul>
+<p>위와 같이 구현하는 방법은 크게 3가지 정도로 나뉠 수 있다. 정답은 없고 편한 방법과 다른 사람과 공유했을 때의 장/단점을 따져서 작성하면 좋겠다.</p>
+<p>interface 정의시의 장점은 처음 보는 사람이 파익이 쉽다이고, 단점은 여기나 interface 정의가 너무 많다는 것이 될 수 있습니다. 결국, View와 Presenter 간의 통신을 위한 리스너 역할의 interface view에 대한 정의는 처리가 되어야 한다.</p>
+<h2 id="googl-architecture을-따르면">Googl Architecture을 따르면</h2>
+<p>구글에서 정의하는 Presenter의 생성 방법은 다음과 같다.</p>
+<img src="/img/Google_Architecture.png" width="600" height="300">
+<ul>
+<li>Presenter의 생성은 View가 아닌 실제 View가 만들어지는 시점의 Activity/Fragment/View 등에서 생성을 하고 해당 Presenter에 setView를 실행한다.</li>
+<li>setView가 호출되는 시점에 자기 자신(this)을 setPresenter 함수를 통해서 실제 Presenter가 사용되어야 할 View에 전달한다.</li>
+<li>View에서는 setPresenter을 통해서 전달받은 Presenter을 가지고 이후 loadItem, OnClickLstener 등의 처리를 한다.</li>
+</ul>
+<h2 id="여기서-의문점">여기서 의문점</h2>
+<blockquote>
+<p>Activity만 있는 경우는??</p>
+</blockquote>
+<ul>
+<li>Activity만 있는 경우인데 별도의 View를 생성해야 하는가?</li>
+<li>그냥 자기 자신이 받아도 되는가?</li>
+</ul>
+<p><strong>의문에 대한 대답</strong></p>
+<ul>
+<li>구글이 제안하는 방법대로라면 - 별도의 View가 있다고 생각하는게 좋겠죠? 코드의 통일성을 위해서 - 자기 자신이 받는 것은 없다고 보면 된다.</li>
+</ul>
+<p><strong>정리하자면</strong></p>
+<ul>
+<li>결국 자기 자신이 new Presenter을 처리할 수 있어야 한다.
+<ul>
+<li>그럼 setPresenter라는 메소드가 필요하지 않게 된다.</li>
+</ul>
+</li>
+<li>Activitiy/Fragment/View 등에서 필요한 경우 Presenter을 생성하고, 자기 자신이 사용할 수 있어야 한다.</li>
+</ul>
+<h2 id="그럼-어떻게">그럼 어떻게?</h2>
+<p>위와 같은 문제점에 대한 제안된 방법은 아래와 같다.</p>
+<img src="/img/My_Architecture.png" width="600" height="300">
+<ul>
+<li>Activity/Fragment/View에서 필요한 Presenter을 직접 생성</li>
+<li>setView를 전달한다.</li>
+<li>loadItem을 직접 호출</li>
+<li>View을 통해서 처리 결과에 다른 View을 갱신한다.</li>
+</ul>
+<h2 id="contract-구현하기">Contract 구현하기</h2>
+<p>이번에는 구글의 <strong>Contract 정의</strong>를 따를 예정이므로 Contract를 구현한다. Contract를 사용하는 이유는 간단하다. <strong>View와 Presenter을 각각 정의하기 위함이며, 이해를 돕기 위한 이유도 있다.</strong></p>
+<p>하나의 interface에 View/Presenter을 정의하고, 이를 각각의 View와 Presenter에서 정의하는 방식이다.</p>
+<p>먼저 View와 Presenter을 각각 다음과 같이 구현할 수 있다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">SampleContract</span></span>&#123;</span><br><span class="line">    <span class="class"><span class="keyword">interface</span> <span class="title">View</span></span>&#123;</span><br><span class="line">        <span class="comment">// View method</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">interface</span> <span class="title">Presenter</span></span>&#123;</span><br><span class="line">        <span class="comment">// Presenter method</span></span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">setView</span><span class="params">(View view)</span></span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="presenter-상속-정의">Presenter 상속 정의</h2>
+<p>Presenter는 다음과 같은 방식으로 구현한다.</p>
+<p>SampleContract.Presenter을 상속받아서 구현하며, SampleContract.View을 가지게 된다.</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SamplePresenter</span> : <span class="type">SampleContract.Presenter&#123;</span></span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">var</span> view : SampleContract.View? = <span class="literal">null</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">setView</span><span class="params">(view : <span class="type">SampleContract</span>.<span class="type">View</span>)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.view = view</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="view-상속-정의">View 상속 정의</h2>
+<p>SampleContract.View를 상속받으면 다음과 같이 정의해주면 된다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SampleActivity</span> <span class="keyword">extends</span> <span class="title">AppCompatActivity</span> <span class="keyword">implements</span> <span class="title">SampleContract</span>.<span class="title">View</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> SampleContract.Presenter presenter;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">  <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">    setContentView(R.layout.activity_main);</span><br><span class="line"></span><br><span class="line">		presenter = <span class="keyword">new</span> SamplePresenter();</span><br><span class="line">		presenter.setView(<span class="keyword">this</span>);</span><br><span class="line"></span><br><span class="line">		presenter.loadItem();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">updateView</span><span class="params">(List&lt;Items&gt; items)</span> </span>&#123;</span><br><span class="line">		<span class="comment">// UI 갱신</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="참고">참고</h2>
+<ul>
+<li><a href="https://thdev.tech/androiddev/2016/11/28/Android-MVP-One/" target="_blank" rel="noopener">Android MVP 무작정 따라하기 - Presenter/View 생성하기</a></li>
+</ul>
+
+        </div>
+        <footer class="article-footer">
+            
+
+
+
+    <a data-url="https://woovictory.github.io/2019/01/16/Android-MVP-Step3/" data-id="cjqz59wv3000ft6pq72wk5t15" class="article-share-link"><i class="fa fa-share"></i>Compartir</a>
+<script>
+    (function ($) {
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+        </footer>
+    </div>
+</article>
+
+    <section id="comments">
+    
+        
+    <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+
+    
+    </section>
+
+
+
+                        </div>
+                    </section>
+                    <aside id="sidebar">
+    <a class="sidebar-toggle" title="Expand Sidebar"><i class="toggle icon"></i></a>
+    <div class="sidebar-top">
+        <p>Social:</p>
+        <ul class="social-links">
+            
+                
+                <li>
+                    <a class="social-tooltip" title="facebook" href="https://www.facebook.com/WooVictory" target="_blank" rel="noopener">
+                        <i class="icon fa fa-facebook"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="github" href="https://github.com/WooVictory" target="_blank" rel="noopener">
+                        <i class="icon fa fa-github"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="linkedin" href="https://www.linkedin.com/in/seungwoo-lee-590844177" target="_blank" rel="noopener">
+                        <i class="icon fa fa-linkedin"></i>
+                    </a>
+                </li>
+                
+            
+        </ul>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+    
+        <a href="/2019/01/16/Android-MVP-Step2/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">antic</strong>
+        <p class="article-nav-title">[안드로이드] MVP 따라하기 2</p>
+        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
+        </a>
+    
+</nav>
+
+    
+    <div class="widgets-container">
+        
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">categories</h3>
+        <div class="widget">
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/CS/">CS</a><span class="category-list-count">23</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/CS/Network/">Network</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/CS/OS/">OS</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/CS/개발-상식/">개발 상식</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/CS/네트워크/">네트워크</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/CS/자료구조/">자료구조</a><span class="category-list-count">9</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Programmers/">Programmers</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Programming/">Programming</a><span class="category-list-count">89</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Programming/Android/">Android</a><span class="category-list-count">26</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Programming/Android/Basic/">Basic</a><span class="category-list-count">18</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Programming/Android/Tip/">Tip</a><span class="category-list-count">8</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Programming/Design-Pattern/">Design Pattern</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Programming/Inno-SOPT/">Inno_SOPT</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Programming/Java/">Java</a><span class="category-list-count">33</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Programming/Kotlin/">Kotlin</a><span class="category-list-count">11</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Programming/Node-js/">Node.js</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Programming/etc/">etc</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Project/">Project</a><span class="category-list-count">1</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Project/Lang/">Lang</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/">algorithm</a><span class="category-list-count">48</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/BOJ/">BOJ</a><span class="category-list-count">47</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/개념/">개념</a><span class="category-list-count">1</span></li></ul></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap">
+        <h3 class="widget-title">recents</h3>
+        <div class="widget">
+            <ul id="recent-post" class="no-thumbnail">
+                
+                    <li>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Programming/">Programming</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/Programming/Android/">Android</a></p>
+                            <p class="item-title"><a href="/2019/01/16/Android-MVP-Step3/" class="title">[안드로이드] MVP 따라하기 3</a></p>
+                            <p class="item-date"><time datetime="2019-01-16T11:34:22.000Z" itemprop="datePublished">2019-01-16</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Programming/">Programming</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/Programming/Android/">Android</a></p>
+                            <p class="item-title"><a href="/2019/01/16/Android-MVP-Step2/" class="title">[안드로이드] MVP 따라하기 2</a></p>
+                            <p class="item-date"><time datetime="2019-01-16T10:43:15.000Z" itemprop="datePublished">2019-01-16</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Programming/">Programming</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/Programming/Android/">Android</a></p>
+                            <p class="item-title"><a href="/2019/01/16/Android-MVP-Step1/" class="title">[안드로이드] MVP 따라하기 1</a></p>
+                            <p class="item-date"><time datetime="2019-01-16T09:02:32.000Z" itemprop="datePublished">2019-01-16</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Programming/">Programming</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/Programming/Android/">Android</a></p>
+                            <p class="item-title"><a href="/2019/01/14/Android-View-Lifecycle-Test/" class="title">[안드로이드] View 함수 Testing</a></p>
+                            <p class="item-date"><time datetime="2019-01-14T13:19:50.000Z" itemprop="datePublished">2019-01-14</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2019/01/13/DesignPattern-Bridge/" class="title">[디자인 패턴] 브릿지 패턴</a></p>
+                            <p class="item-date"><time datetime="2019-01-13T14:40:31.000Z" itemprop="datePublished">2019-01-13</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">Archive</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a><span class="archive-list-count">26</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a><span class="archive-list-count">25</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a><span class="archive-list-count">24</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a><span class="archive-list-count">34</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">February 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a><span class="archive-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-float">
+        <h3 class="widget-title">etiqueta cloud</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/3-4-Way-Handshake/" style="font-size: 10px;">3 & 4 Way Handshake</a> <a href="/tags/Android/" style="font-size: 18.18px;">Android</a> <a href="/tags/BOJ/" style="font-size: 20px;">BOJ</a> <a href="/tags/Blog/" style="font-size: 10px;">Blog</a> <a href="/tags/Compile-Error/" style="font-size: 10px;">Compile Error</a> <a href="/tags/DP/" style="font-size: 10px;">DP</a> <a href="/tags/Data-Structure/" style="font-size: 17.27px;">Data Structure</a> <a href="/tags/Deep-Link/" style="font-size: 10px;">Deep Link</a> <a href="/tags/Error/" style="font-size: 10px;">Error</a> <a href="/tags/Fragment/" style="font-size: 10px;">Fragment</a> <a href="/tags/Glide/" style="font-size: 10px;">Glide</a> <a href="/tags/Graph/" style="font-size: 10px;">Graph</a> <a href="/tags/HTTP/" style="font-size: 10.91px;">HTTP</a> <a href="/tags/HTTPS/" style="font-size: 10px;">HTTPS</a> <a href="/tags/Hash/" style="font-size: 10px;">Hash</a> <a href="/tags/Heap/" style="font-size: 10.91px;">Heap</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/Intent/" style="font-size: 10px;">Intent</a> <a href="/tags/Java/" style="font-size: 19.09px;">Java</a> <a href="/tags/Kotlin/" style="font-size: 16.36px;">Kotlin</a> <a href="/tags/ListView/" style="font-size: 10px;">ListView</a> <a href="/tags/MVP/" style="font-size: 11.82px;">MVP</a> <a href="/tags/MarshMellow/" style="font-size: 10px;">MarshMellow</a> <a href="/tags/Network/" style="font-size: 10.91px;">Network</a> <a href="/tags/Node-js/" style="font-size: 15.45px;">Node.js</a> <a href="/tags/OS/" style="font-size: 13.64px;">OS</a> <a href="/tags/Parcelable/" style="font-size: 10px;">Parcelable</a> <a href="/tags/Permission/" style="font-size: 10px;">Permission</a> <a href="/tags/Picasso/" style="font-size: 10px;">Picasso</a> <a href="/tags/Programmers/" style="font-size: 10px;">Programmers</a> <a href="/tags/Project/" style="font-size: 10px;">Project</a> <a href="/tags/RESTful/" style="font-size: 10px;">RESTful</a> <a href="/tags/RecyclerView/" style="font-size: 10px;">RecyclerView</a> <a href="/tags/Reflection/" style="font-size: 10px;">Reflection</a> <a href="/tags/Retrofit/" style="font-size: 10px;">Retrofit</a> <a href="/tags/Runtime-Error/" style="font-size: 10px;">Runtime Error</a> <a href="/tags/SOPT/" style="font-size: 14.55px;">SOPT</a> <a href="/tags/SP/" style="font-size: 10px;">SP</a> <a href="/tags/Serializable/" style="font-size: 10px;">Serializable</a> <a href="/tags/SharedPreference/" style="font-size: 10px;">SharedPreference</a> <a href="/tags/Singleton/" style="font-size: 10px;">Singleton</a> <a href="/tags/Static/" style="font-size: 10px;">Static</a> <a href="/tags/TCP/" style="font-size: 10.91px;">TCP</a> <a href="/tags/UDP/" style="font-size: 10px;">UDP</a> <a href="/tags/View/" style="font-size: 10px;">View</a> <a href="/tags/computer-science/" style="font-size: 10px;">computer science</a> <a href="/tags/etc/" style="font-size: 10px;">etc</a> <a href="/tags/network/" style="font-size: 10px;">network</a> <a href="/tags/네트워크/" style="font-size: 10px;">네트워크</a> <a href="/tags/라이브러리/" style="font-size: 11.82px;">라이브러리</a> <a href="/tags/안드로이드-기초/" style="font-size: 12.73px;">안드로이드 기초</a> <a href="/tags/오류-제어/" style="font-size: 10px;">오류 제어</a> <a href="/tags/운영체제/" style="font-size: 13.64px;">운영체제</a> <a href="/tags/인텐트/" style="font-size: 10px;">인텐트</a> <a href="/tags/자료구조/" style="font-size: 17.27px;">자료구조</a> <a href="/tags/직렬화/" style="font-size: 10px;">직렬화</a> <a href="/tags/패킷-교환/" style="font-size: 10px;">패킷 교환</a> <a href="/tags/혼잡-제어/" style="font-size: 10px;">혼잡 제어</a> <a href="/tags/흐름-제어/" style="font-size: 10px;">흐름 제어</a>
+        </div>
+    </div>
+
+
+            
+        
+    </div>
+</aside>
+
+                </div>
+            </div>
+        </div>
+        <footer id="footer">
+    <div class="container">
+        <div class="container-inner">
+            <a id="back-to-top" href="javascript:;"><i class="icon fa fa-angle-up"></i></a>
+            <div class="credit">
+                <h1 class="logo-wrap">
+                    <a href="/" class="logo"></a>
+                </h1>
+                <p>&copy; 2019 VictoryWoo</p>
+                <p>Powered by <a href="//hexo.io/" target="_blank">Hexo</a>. Theme by <a href="//github.com/ppoffice" target="_blank">PPOffice</a></p>
+            </div>
+            <div class="footer-plugins">
+              
+    
+
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+        
+    
+    <script>
+    var disqus_shortname = 'hexo-theme-hueman';
+    
+    
+    var disqus_url = 'https://woovictory.github.io/2019/01/16/Android-MVP-Step3/';
+    
+    (function() {
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+</html>
