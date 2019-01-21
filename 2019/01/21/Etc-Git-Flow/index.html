@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+
+    
+
+    
+    <title>[Git] Git-Flow | VictoryWoo</title>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+        <meta name="keywords" content="etc" />
+    
+    <meta name="description" content="Git-Flow 전략에 대해서 알아볼 예정이다. 기존에 사용하던 방법은 이름을 몰랐고 그냥 프로젝트 팀원한테 배웠던 방식을 사용했다. 이름은 나중에 찾아보니 Github-Flow였다. Git-Flow를 알아보기 전에 Github-Flow가 무엇인지 알고 넘어가보자. Github-Flow 기본적으로 Git Repository를 살펴보면 Repository는">
+<meta name="keywords" content="etc">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[Git] Git-Flow">
+<meta property="og:url" content="https://woovictory.github.io/2019/01/21/Etc-Git-Flow/index.html">
+<meta property="og:site_name" content="VictoryWoo">
+<meta property="og:description" content="Git-Flow 전략에 대해서 알아볼 예정이다. 기존에 사용하던 방법은 이름을 몰랐고 그냥 프로젝트 팀원한테 배웠던 방식을 사용했다. 이름은 나중에 찾아보니 Github-Flow였다. Git-Flow를 알아보기 전에 Github-Flow가 무엇인지 알고 넘어가보자. Github-Flow 기본적으로 Git Repository를 살펴보면 Repository는">
+<meta property="og:image" content="https://woovictory.github.io/img/github_flow_repository_structure.png">
+<meta property="og:updated_time" content="2019-01-21T16:05:12.979Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="[Git] Git-Flow">
+<meta name="twitter:description" content="Git-Flow 전략에 대해서 알아볼 예정이다. 기존에 사용하던 방법은 이름을 몰랐고 그냥 프로젝트 팀원한테 배웠던 방식을 사용했다. 이름은 나중에 찾아보니 Github-Flow였다. Git-Flow를 알아보기 전에 Github-Flow가 무엇인지 알고 넘어가보자. Github-Flow 기본적으로 Git Repository를 살펴보면 Repository는">
+<meta name="twitter:image" content="https://woovictory.github.io/img/github_flow_repository_structure.png">
+    
+
+    
+
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/titillium-web/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" type="text/css" href="">
+    <link rel="stylesheet" href="https://cdn.rawgit.com/innks/NanumSquareRound/master/nanumsquareround.css">	
+    <link rel="stylesheet" href="https://fonts.googleapis.com/earlyaccess/nanumgothiccoding.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/3.3.1/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+
+
+</head>
+
+<body>
+    <div id="wrap">
+        <header id="header">
+    <div id="header-outer" class="outer">
+        <div class="container">
+            <div class="container-inner">
+                <div id="header-title">
+                    <h1 class="logo-wrap">
+                        <a href="/" class="logo"></a>
+                    </h1>
+                    
+                </div>
+                <div id="header-inner" class="nav-container">
+                    <a id="main-nav-toggle" class="nav-icon fa fa-bars"></a>
+                    <div class="nav-container-inner">
+                        <ul id="main-nav">
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/">Home</a>
+                                </li>
+                            
+                                        <ul class="main-nav-list"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/">CS</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/Network/">Network</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/OS/">OS</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/개발-상식/">개발 상식</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/네트워크/">네트워크</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/자료구조/">자료구조</a></li></ul></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programmers/">Programmers</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/">Programming</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/Android/">Android</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/Design-Pattern/">Design Pattern</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/Inno-SOPT/">Inno_SOPT</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/Java/">Java</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/Kotlin/">Kotlin</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/Node-js/">Node.js</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/etc/">etc</a></li></ul></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Project/">Project</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Project/Lang/">Lang</a></li></ul></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/algorithm/">algorithm</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/algorithm/BOJ/">BOJ</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/algorithm/개념/">개념</a></li></ul></li></ul>
+                                    
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/about/index.html">About</a>
+                                </li>
+                            
+                        </ul>
+                        <nav id="sub-nav">
+                            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="Type something..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+        <div class="container">
+            <div class="main-body container-inner">
+                <div class="main-body-inner">
+                    <section id="main">
+                        <div class="main-body-header">
+    <h1 class="header">
+    
+    <a class="page-title-link" href="/categories/Programming/">Programming</a><i class="icon fa fa-angle-right"></i><a class="page-title-link" href="/categories/Programming/etc/">etc</a>
+    </h1>
+</div>
+
+                        <div class="main-body-content">
+                            <article id="post-Etc-Git-Flow" class="article article-single article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+        [Git] Git-Flow
+        </h1>
+    
+
+            </header>
+        
+        
+            <div class="article-meta">
+                
+    <div class="article-date">
+        <a href="/2019/01/21/Etc-Git-Flow/" class="article-date">
+            <time datetime="2019-01-21T12:35:23.000Z" itemprop="datePublished">2019-01-21</time>
+        </a>
+    </div>
+
+		
+
+                
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/etc/">etc</a>
+    </div>
+
+            </div>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+            <p><code>Git-Flow</code> 전략에 대해서 알아볼 예정이다. 기존에 사용하던 방법은 이름을 몰랐고 그냥 프로젝트 팀원한테 배웠던 방식을 사용했다. 이름은 나중에 찾아보니 <strong>Github-Flow</strong>였다. Git-Flow를 알아보기 전에 Github-Flow가 무엇인지 알고 넘어가보자.</p>
+<h2 id="github-flow">Github-Flow</h2>
+<p>기본적으로 Git Repository를 살펴보면 Repository는 Upstream Repository(이하 Upstream Repository), Origin Remote Repository(이하 Origin Repository), Local Repository 이렇게 3가지 부분으로 구성된다.</p>
+<ul>
+<li><strong>Upstream Repository</strong> : 개발자들이 공유하는 저장소로 최신 소스코드가 저장되어 있는 원격 저장소.</li>
+<li><strong>Origin Repository</strong> : Upstream Repository를 Fork한 원격 개인 저장소.</li>
+<li><strong>Local Repository</strong> : 내 컴퓨터에 저장되어 있는 개인 저장소.</li>
+</ul>
+<img src="/img/github_flow_repository_structure.png" width="700" height="500">
+<p>위 그림은 Git Repository 구성과 워크플로우를 설명하고 있다. Local Repository에서 작업을 완료한 후 작업 브랜치를 Origin Repository에 push한다. 그리고 Github에서 Origin Repository에 push한 브랜치를 Upstream Repository로 merge하는 <strong>Pull Request</strong>를 생성하는 코드리뷰를 거친 후 merge 한다. 다시 새로운 작업을 할 때 Local Repository에서 Upstream Repository를 pull 한다.</p>
+<p>이런 워크 플로우를 두는 데에는 한 가지 이유가 있다고 한다. 그 이유는 개발자들의 실험정신(?)을 펼치기 위해서이다. 모두가 공유하고 있는 Repository에서 실험하기에는 위험이 있다고 생각하고, Forked한 Repository를 두면 부담 없이 실험들을 해볼 수 있다고 한다. 무엇보다 이런 구조로 가져갔을 때 개발자가 해야 할 작업들이 <strong>중앙집중식 워크플로우</strong>보다 일이 늘거나 크게 복잡해지지도 않는다고 한다.</p>
+<h2 id="git-flow">Git-Flow</h2>
+<p>Git-Flow를 사용했을 때 작업을 어떻게 하는지 살펴보기 전에 먼저 Git-Flow에 대해서 간단히 살펴보도록 하겠다.<br>
+Git-Flow에는 5가지 종류의 브랜치가 존재한다. 항상 유지되는 메인 브랜치들(masger, develop)과 일정 기간 동안반 유지되는 보조 브랜치들(feature, release, hotfix)이 있다.</p>
+<ul>
+<li>master : 제품으로 출시될 수 있는 브랜치(배포하기 위함)</li>
+<li>develop : 다음 출시 버전을 개발하는 브랜치(이쪽으로 merge함)</li>
+<li>feature : 기능을 개발하는 브랜치(기능별로 feature를 나눔)</li>
+<li>release : 이번 출시 버전을 준비하는 브랜치</li>
+<li>hotfix : 출시 버전에서 발생한 버그를 수정하는 브랜치</li>
+</ul>
+<img src="/img/gitflow_1.png" width="700" height="500">
+<center>Git-flow</center>
+<p>위 그림을 일반적인 개발 흐름으로 살펴보자.</p>
+<p>처음에는 master와 develop 브랜치가 존재한다. 물론 develop 브랜치는 master에서부터 시작된 브랜치이다. develop 브랜치에서는 상시로 버그를 수정한 커밋들이 추가된다. 새로운 기능 추가 작업이 있는 경우 develop 브랜치에서 feature 브랜치를 생성한다.</p>
+<p>feature 브랜치는 언제나 develop 브랜치에서부터 시작하게 된다. 기능 추가 작업이 완료되었다면 feature 브랜치는 develop 브랜치로 merge 된다. develop에 이번 버전에 포함되는 모든 기능이 merge 되었다면 <code>QA</code>를 하기 위해 develop 브랜치에 수정된다. QA를 무사히 통과했다면 release 브랜치를 master와 develop 브랜치로 merge 한다. 마지막으로 출시된 master 브랜치에서 버전 태그를 추가한다.</p>
+<p>그렇다면 우아한 형제들의 안드로이드 개발팀에서는 어떻게 <code>Git-Flow</code>를 지키는지 살펴보도록 하자.</p>
+<p>##작업을 할 때 지켜야할 서로 간의 약속**</p>
+<ol>
+<li>작업을 시작하기 전에 JIRA 티켓을 생성한다.</li>
+<li>하나의 티켓은 되도록 하나의 커밋으로 한다.</li>
+<li>커밋 그래프는 최대한 단순하게 가져간다.</li>
+<li>서로 공유하는 브랜치의 커밋 그래프는 함부로 변경하지 않는다.</li>
+<li>리뷰어에게 꼭 리뷰를 받는다.</li>
+<li>자신의 Pull Request는 스스로 merge 한다.</li>
+</ol>
+<h2 id="우아한-형제들-git-flow">우아한 형제들 Git-Flow</h2>
+<p>아래에는 우아한 형제들에서 실제로 어떻게 작업하는지 알아보겠다. 아래의 Repository와 Branch는 앞으로 설명을 할 때 나오기 때문에 알아두고 가면 한결 수월하게 볼 수 있을 것이다.</p>
+<ul>
+<li>Repositories
+<ul>
+<li>upstream(Upstream Repository)</li>
+<li>origin(Origin Repository)</li>
+</ul>
+</li>
+<li>Branches
+<ul>
+<li>feature-user(사용자 관련 기능을 구현하는 feature branch)</li>
+<li>bfm-100_login_layout(사용자 관련 기능 중 레이아웃 작업 branch)</li>
+</ul>
+</li>
+</ul>
+<p><strong>1.티켓 처리하기</strong></p>
+<p>앞서 '작업을 할 때 지켜야 할 서로 간의 약속’에서 **하나의 티켓은 되도록 하나의 커밋으로 한다.**라고 했다. 그래서 기능을 구혀하기 전에 여러 개의 티켓으로 작업을 먼저 나누게 된다. 나눠진 티켓 중 <strong>로그인 레이아웃 생성</strong>이라는 티켓이 있고 이 티켓을 처리한다고 가정하고 살펴보겠다.</p>
+<ol>
+<li>
+<p>upstream/feature-user 브랜치에서 작업 브랜치(bfm-100_login_layout)를 생성한다.<br>
+<code>git checkout -b bfm-100_login_layout --track upstream/feature-user</code></p>
+</li>
+<li>
+<p>작업 브랜치에서 소스코드를 수정한다.</p>
+</li>
+<li>
+<p>작업 브랜치에서 변경 사항을 커밋한다.<br>
+<code>git commit -m &quot;BFM-100 로그인 화면 레이아웃 생성&quot;</code></p>
+</li>
+<li>
+<p>만약 커밋이 불필요하게 여러 개로 나뉘어져 있다면 squash?를 한다.(커밋 2개를 합쳐야 한다면)<br>
+<code>git rebase -i HEAD~2</code></p>
+</li>
+<li>
+<p>작업 브랜치를 upstrea/feature-user에 rebase 한다.</p>
+</li>
+<li>
+<p>작업 브랜치를 origin에 push한다.</p>
+</li>
+<li>
+<p>Github에서 bfm-100_login_layout 브랜치를 feature-user 브랜치에 merge하는 Pull Request를 생성한다.</p>
+</li>
+<li>
+<p>같은 feature를 개발하는 동료에게 리뷰 승인을 받은 후 자신의 Pull Request를 merge 한다. 만약 혼자 featur를 개발한다면 1~2명의 동료에게 리뷰 승인을 받은 후 Pull Request를 merge 한다.</p>
+</li>
+</ol>
+
+        </div>
+        <footer class="article-footer">
+            
+
+
+
+    <a data-url="https://woovictory.github.io/2019/01/21/Etc-Git-Flow/" data-id="cjr6iv8gs007io5pq62roiecm" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+<script>
+    (function ($) {
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+        </footer>
+    </div>
+</article>
+
+    <section id="comments">
+    
+        
+    <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+
+    
+    </section>
+
+
+
+                        </div>
+                    </section>
+                    <aside id="sidebar">
+    <a class="sidebar-toggle" title="Expand Sidebar"><i class="toggle icon"></i></a>
+    <div class="sidebar-top">
+        <p>follow:</p>
+        <ul class="social-links">
+            
+                
+                <li>
+                    <a class="social-tooltip" title="facebook" href="https://www.facebook.com/WooVictory" target="_blank" rel="noopener">
+                        <i class="icon fa fa-facebook"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="github" href="https://github.com/WooVictory" target="_blank" rel="noopener">
+                        <i class="icon fa fa-github"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="linkedin" href="https://www.linkedin.com/in/seungwoo-lee-590844177" target="_blank" rel="noopener">
+                        <i class="icon fa fa-linkedin"></i>
+                    </a>
+                </li>
+                
+            
+        </ul>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+    
+        <a href="/2019/01/19/Android-MVP-Step11/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">older</strong>
+        <p class="article-nav-title">[안드로이드] MVP 따라하기 11</p>
+        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
+        </a>
+    
+</nav>
+
+    
+    <div class="widgets-container">
+        
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">categories</h3>
+        <div class="widget">
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/CS/">CS</a><span class="category-list-count">23</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/CS/Network/">Network</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/CS/OS/">OS</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/CS/개발-상식/">개발 상식</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/CS/네트워크/">네트워크</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/CS/자료구조/">자료구조</a><span class="category-list-count">9</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Programmers/">Programmers</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Programming/">Programming</a><span class="category-list-count">98</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Programming/Android/">Android</a><span class="category-list-count">34</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Programming/Android/Basic/">Basic</a><span class="category-list-count">18</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Programming/Android/Tip/">Tip</a><span class="category-list-count">16</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Programming/Design-Pattern/">Design Pattern</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Programming/Inno-SOPT/">Inno_SOPT</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Programming/Java/">Java</a><span class="category-list-count">33</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Programming/Kotlin/">Kotlin</a><span class="category-list-count">11</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Programming/Node-js/">Node.js</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Programming/etc/">etc</a><span class="category-list-count">2</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Project/">Project</a><span class="category-list-count">1</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Project/Lang/">Lang</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/">algorithm</a><span class="category-list-count">48</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/BOJ/">BOJ</a><span class="category-list-count">47</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/개념/">개념</a><span class="category-list-count">1</span></li></ul></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap">
+        <h3 class="widget-title">recents</h3>
+        <div class="widget">
+            <ul id="recent-post" class="no-thumbnail">
+                
+                    <li>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Programming/">Programming</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/Programming/etc/">etc</a></p>
+                            <p class="item-title"><a href="/2019/01/21/Etc-Git-Flow/" class="title">[Git] Git-Flow</a></p>
+                            <p class="item-date"><time datetime="2019-01-21T12:35:23.000Z" itemprop="datePublished">2019-01-21</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Programming/">Programming</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/Programming/Android/">Android</a></p>
+                            <p class="item-title"><a href="/2019/01/19/Android-MVP-Step11/" class="title">[안드로이드] MVP 따라하기 11</a></p>
+                            <p class="item-date"><time datetime="2019-01-19T08:30:01.000Z" itemprop="datePublished">2019-01-19</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Programming/">Programming</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/Programming/Android/">Android</a></p>
+                            <p class="item-title"><a href="/2019/01/19/Android-MVP-Step10/" class="title">[안드로이드] MVP 따라하기 10</a></p>
+                            <p class="item-date"><time datetime="2019-01-19T05:11:31.000Z" itemprop="datePublished">2019-01-19</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Programming/">Programming</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/Programming/Android/">Android</a></p>
+                            <p class="item-title"><a href="/2019/01/19/Android-MVP-Step9/" class="title">[안드로이드] MVP 따라하기 9</a></p>
+                            <p class="item-date"><time datetime="2019-01-19T04:40:29.000Z" itemprop="datePublished">2019-01-19</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Programming/">Programming</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/Programming/Android/">Android</a></p>
+                            <p class="item-title"><a href="/2019/01/18/Android-MVP-Step8/" class="title">[안드로이드] MVP 따라하기 8</a></p>
+                            <p class="item-date"><time datetime="2019-01-18T11:58:46.000Z" itemprop="datePublished">2019-01-18</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">archives</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a><span class="archive-list-count">35</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a><span class="archive-list-count">25</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a><span class="archive-list-count">24</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a><span class="archive-list-count">34</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">February 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a><span class="archive-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-float">
+        <h3 class="widget-title">tag cloud</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/3-4-Way-Handshake/" style="font-size: 10px;">3 & 4 Way Handshake</a> <a href="/tags/Android/" style="font-size: 19px;">Android</a> <a href="/tags/BOJ/" style="font-size: 20px;">BOJ</a> <a href="/tags/Blog/" style="font-size: 10px;">Blog</a> <a href="/tags/Compile-Error/" style="font-size: 10px;">Compile Error</a> <a href="/tags/DP/" style="font-size: 10px;">DP</a> <a href="/tags/Data-Structure/" style="font-size: 18px;">Data Structure</a> <a href="/tags/Deep-Link/" style="font-size: 10px;">Deep Link</a> <a href="/tags/Error/" style="font-size: 10px;">Error</a> <a href="/tags/Fragment/" style="font-size: 10px;">Fragment</a> <a href="/tags/Glide/" style="font-size: 10px;">Glide</a> <a href="/tags/Graph/" style="font-size: 10px;">Graph</a> <a href="/tags/HTTP/" style="font-size: 11px;">HTTP</a> <a href="/tags/HTTPS/" style="font-size: 10px;">HTTPS</a> <a href="/tags/Hash/" style="font-size: 10px;">Hash</a> <a href="/tags/Heap/" style="font-size: 11px;">Heap</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/Intent/" style="font-size: 10px;">Intent</a> <a href="/tags/Java/" style="font-size: 19px;">Java</a> <a href="/tags/Kotlin/" style="font-size: 17px;">Kotlin</a> <a href="/tags/ListView/" style="font-size: 10px;">ListView</a> <a href="/tags/MVP/" style="font-size: 17px;">MVP</a> <a href="/tags/MarshMellow/" style="font-size: 10px;">MarshMellow</a> <a href="/tags/Network/" style="font-size: 11px;">Network</a> <a href="/tags/Node-js/" style="font-size: 16px;">Node.js</a> <a href="/tags/OS/" style="font-size: 14px;">OS</a> <a href="/tags/Parcelable/" style="font-size: 10px;">Parcelable</a> <a href="/tags/Permission/" style="font-size: 10px;">Permission</a> <a href="/tags/Picasso/" style="font-size: 10px;">Picasso</a> <a href="/tags/Programmers/" style="font-size: 10px;">Programmers</a> <a href="/tags/Project/" style="font-size: 10px;">Project</a> <a href="/tags/RESTful/" style="font-size: 10px;">RESTful</a> <a href="/tags/RecyclerView/" style="font-size: 10px;">RecyclerView</a> <a href="/tags/Reflection/" style="font-size: 10px;">Reflection</a> <a href="/tags/Retrofit/" style="font-size: 10px;">Retrofit</a> <a href="/tags/Runtime-Error/" style="font-size: 10px;">Runtime Error</a> <a href="/tags/SOPT/" style="font-size: 15px;">SOPT</a> <a href="/tags/SP/" style="font-size: 10px;">SP</a> <a href="/tags/Serializable/" style="font-size: 10px;">Serializable</a> <a href="/tags/SharedPreference/" style="font-size: 10px;">SharedPreference</a> <a href="/tags/Singleton/" style="font-size: 10px;">Singleton</a> <a href="/tags/Static/" style="font-size: 10px;">Static</a> <a href="/tags/TCP/" style="font-size: 11px;">TCP</a> <a href="/tags/UDP/" style="font-size: 10px;">UDP</a> <a href="/tags/View/" style="font-size: 10px;">View</a> <a href="/tags/computer-science/" style="font-size: 10px;">computer science</a> <a href="/tags/etc/" style="font-size: 11px;">etc</a> <a href="/tags/network/" style="font-size: 10px;">network</a> <a href="/tags/네트워크/" style="font-size: 10px;">네트워크</a> <a href="/tags/라이브러리/" style="font-size: 12px;">라이브러리</a> <a href="/tags/안드로이드-기초/" style="font-size: 13px;">안드로이드 기초</a> <a href="/tags/오류-제어/" style="font-size: 10px;">오류 제어</a> <a href="/tags/운영체제/" style="font-size: 14px;">운영체제</a> <a href="/tags/인텐트/" style="font-size: 10px;">인텐트</a> <a href="/tags/자료구조/" style="font-size: 18px;">자료구조</a> <a href="/tags/직렬화/" style="font-size: 10px;">직렬화</a> <a href="/tags/패킷-교환/" style="font-size: 10px;">패킷 교환</a> <a href="/tags/혼잡-제어/" style="font-size: 10px;">혼잡 제어</a> <a href="/tags/흐름-제어/" style="font-size: 10px;">흐름 제어</a>
+        </div>
+    </div>
+
+
+            
+        
+    </div>
+</aside>
+
+                </div>
+            </div>
+        </div>
+        <footer id="footer">
+    <div class="container">
+        <div class="container-inner">
+            <a id="back-to-top" href="javascript:;"><i class="icon fa fa-angle-up"></i></a>
+            <div class="credit">
+                <h1 class="logo-wrap">
+                    <a href="/" class="logo"></a>
+                </h1>
+                <p>&copy; 2019 VictoryWoo</p>
+                <p>Powered by <a href="//hexo.io/" target="_blank">Hexo</a>. Theme by <a href="//github.com/ppoffice" target="_blank">PPOffice</a></p>
+            </div>
+            <div class="footer-plugins">
+              
+    
+
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+        
+    
+    <script>
+    var disqus_shortname = 'hexo-theme-hueman';
+    
+    
+    var disqus_url = 'https://woovictory.github.io/2019/01/21/Etc-Git-Flow/';
+    
+    (function() {
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+</html>
