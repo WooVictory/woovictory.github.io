@@ -6,7 +6,7 @@
     
 
     
-    <title>[Git] Git-Flow | VictoryWoo</title>
+    <title>1일차 [Git] Git-Flow | VictoryWoo</title>
     
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
@@ -15,14 +15,14 @@
     <meta name="description" content="Git-Flow 전략에 대해서 알아볼 예정이다. 기존에 사용하던 방법은 이름을 몰랐고 그냥 프로젝트 팀원한테 배웠던 방식을 사용했다. 이름은 나중에 찾아보니 Github-Flow였다. Git-Flow를 알아보기 전에 Github-Flow가 무엇인지 알고 넘어가보자. Github-Flow 기본적으로 Git Repository를 살펴보면 Repository는">
 <meta name="keywords" content="etc">
 <meta property="og:type" content="article">
-<meta property="og:title" content="[Git] Git-Flow">
+<meta property="og:title" content="1일차 [Git] Git-Flow">
 <meta property="og:url" content="https://woovictory.github.io/2019/01/21/Etc-Git-Flow/index.html">
 <meta property="og:site_name" content="VictoryWoo">
 <meta property="og:description" content="Git-Flow 전략에 대해서 알아볼 예정이다. 기존에 사용하던 방법은 이름을 몰랐고 그냥 프로젝트 팀원한테 배웠던 방식을 사용했다. 이름은 나중에 찾아보니 Github-Flow였다. Git-Flow를 알아보기 전에 Github-Flow가 무엇인지 알고 넘어가보자. Github-Flow 기본적으로 Git Repository를 살펴보면 Repository는">
 <meta property="og:image" content="https://woovictory.github.io/img/github_flow_repository_structure.png">
-<meta property="og:updated_time" content="2019-01-21T16:05:12.979Z">
+<meta property="og:updated_time" content="2019-01-23T07:58:15.903Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="[Git] Git-Flow">
+<meta name="twitter:title" content="1일차 [Git] Git-Flow">
 <meta name="twitter:description" content="Git-Flow 전략에 대해서 알아볼 예정이다. 기존에 사용하던 방법은 이름을 몰랐고 그냥 프로젝트 팀원한테 배웠던 방식을 사용했다. 이름은 나중에 찾아보니 Github-Flow였다. Git-Flow를 알아보기 전에 Github-Flow가 무엇인지 알고 넘어가보자. Github-Flow 기본적으로 Git Repository를 살펴보면 Repository는">
 <meta name="twitter:image" content="https://woovictory.github.io/img/github_flow_repository_structure.png">
     
@@ -147,7 +147,7 @@
                 
     
         <h1 class="article-title" itemprop="name">
-        [Git] Git-Flow
+        1일차 [Git] Git-Flow
         </h1>
     
 
@@ -215,8 +215,8 @@ Git-Flow에는 5가지 종류의 브랜치가 존재한다. 항상 유지되는 
 <ul>
 <li>Repositories
 <ul>
-<li>upstream(Upstream Repository)</li>
-<li>origin(Origin Repository)</li>
+<li>upstream(Upstream Repository) : 중앙 원격 저장소</li>
+<li>origin(Origin Repository) : 내 원격 저장소</li>
 </ul>
 </li>
 <li>Branches
@@ -257,6 +257,59 @@ Git-Flow에는 5가지 종류의 브랜치가 존재한다. 항상 유지되는 
 <p>같은 feature를 개발하는 동료에게 리뷰 승인을 받은 후 자신의 Pull Request를 merge 한다. 만약 혼자 featur를 개발한다면 1~2명의 동료에게 리뷰 승인을 받은 후 Pull Request를 merge 한다.</p>
 </li>
 </ol>
+<p>위의 절차에서 4,5번 작업을 수행하는 이유는 커밋 그래프를 단순하게 가져가고 의미있는 커밋들로 관리하기 위함이다.</p>
+<p>4번 작업을 예로 들면, ‘BFM-100 로그인 화면 레이아웃 생성’ 작업을 할 때 로그인 화면의 레이아웃을 생성한 커밋 하나와 view의 약간의 간격을 조정한 커밋 하나, 그리고 view의 id를 변경한 커밋하나, 이렇게 3개의 커밋으로 분리된 상태이다. 이 3개의 커밋이 그 의미를 나눌 필요가 없거나 코드 리뷰를 도와주지도 못한다면 커밋을 분리하는 것은 불필요하다고 판단하고 하나의 커밋으로 합치게 된다.</p>
+<p>물론 항상 하나의 커밋으로 합쳐야만하는 것은 아니다. 하나의 티켓에 대한 작업이라도 커밋이 분리되어 있는게 낫다고 생각이 든다면 2개 이상의 커밋으로 나눌 수도 있다. 그러나 대부분은 티켓을 더 작게 나누지 못한 경우일 가능성이 높다.</p>
+<p><strong>2. develop 변경사항을 feature로 가져오기</strong>(Optional)</p>
+<p>작업을 할 때 브랜치의 수명은 되도록 짧게 가져가는게 좋지만, feature 브랜치에서 기능을 완료하는데 해야 할 작업들이 많아서 오래 걸리는 경우들이 있다. 그러다 보면 develop에 추가된 기능들이 필요한 경우가 종종 생기게 된다. 그럴 때는 feature 브랜치에 develop의 변경사항들을 가져와야 한다.</p>
+<ol>
+<li>feature-user 브랜치에 upstream/develop 브랜치를 merge 한다.</li>
+<li>upstream/develop의 변경사항이 merge된 feature-user를 upstream에 push 한다.</li>
+</ol>
+<p><strong>3. 완료된 기능을 이번 출시 버전에 포함시키기</strong></p>
+<p>드디어 feature-user 브랜치에서 작업하던 기능이 완료되었다. 이젠 feature 브랜치를 이번 출시 버전에 포함시키기 위해서 develop에 merge해야 한다.</p>
+<ol>
+<li>develop 브랜치에 upstream/feature-user 브랜치를 merge 한다.</li>
+<li>upstream/feature-user 기능이 merge된 develop를 upstream에 push 한다.</li>
+</ol>
+<p><strong>4. QA 시작하기</strong></p>
+<p>이번 버전에 포함되어야 할 기능들이 모두 완료되었다. 이제부터 출시 담당자가 해야 할 일이 많다. 출시 담당자는 QA를 시작하기 위해 먼저 release 브랜치를 develop 브랜치로부터 따서 생성하고 upstream에 push하여 release 브랜치를 공유한다.</p>
+<ol>
+<li>release-1.0.0 브랜치를 생성한다.</li>
+<li>release-1.0.0 브랜치를 upstream에 push 한다.</li>
+</ol>
+<p><strong>5. QA 중 버그 수정하기</strong></p>
+<p>개발을 완료한 후 QA 중 버그가 발생하지 않으면 좋겠지만 항상 생각치 못한 예외 상황들이 발생하게 된다. 예외 상황이 발생할 때마다 버그 티켓이 하나씩 생성되는데 이 티켓들을 모두 해결해야만 앱을 출시할 수 있다. 버그 티켓들도 티켓이기 때문에 '1. 티켓 처리하기’와 같은 방법으로 처리한다.</p>
+<ol>
+<li>release 브랜치에서 버그 티켓에 대한 브랜치를 생성한다.</li>
+<li>버그를 수정한다.</li>
+<li>버그 티켓에 대해 생성한 브랜치를 작업 브랜치라 하고 작업 브랜치에서 버그 수정 사항을 커밋한다.</li>
+<li>작업 브랜치를 origin[ develop? ]에 push 한다.</li>
+<li>Github에서 bfm-101_bug_login_id_max_length 브랜치를 release-1.0.0에 merge 하는 Pull Request를 생성한다.</li>
+<li>동료에게 리뷰 승인을 받은 후 자신의 Pull Request를 merge 한다.</li>
+</ol>
+<p><strong>6. 앱출시</strong></p>
+<p>발생하는 버그들을 모두 수정했다면 이젠 출시를 준비할 때이다. release 브랜치를 master 브랜치와 develop 브랜치에 merge하고 마지막으로 master 브랜치에서 버전 태그를 달아준다.</p>
+<ol>
+<li>release 브랜치를 최신 상태로 갱신한다.</li>
+<li>release 브랜치를 develop 브랜치에 merge 한다.</li>
+<li>develop 브랜치를 upstream에 push 한다.</li>
+<li>release 브랜치를 master 브랜치에 merge 한다.</li>
+<li>1.0.0 태그를 추가한다.</li>
+<li>master 브랜치와 1.0.0 태그를 upstream에 push 한다.</li>
+</ol>
+<h3 id="중앙집중식-워크플로우">중앙집중식 워크플로우</h3>
+<img src="/img/centralized_workflow.png" width="700" height="500">
+<p>중앙집중식에서 개발자 두 명이 중앙저장소를 clone하고 각자 수정하는 상황을 생각해보자. 한 개발자가 자신이 한 일을 커밋하고 나서 아무 문제 없이 서버에 push한다. 그러면 다른 개발자는 자신의 일을 커밋하고 push 하기 전에 첫 번째 개발자가 한 일을 먼저 Merge 해야 한다. Merge를 해야 첫 번째 개발자가 작업한 내용을 덮어쓰지 않는다. 이런 개념은 Subversion과 같은 중앙집중식 버전 관리 시스템에서 사용하는 방식이고 Git에서도 당연히 이런 워크플로우를 사용할 수 있다.</p>
+<p>팀이 작거나 이미 중앙집중식에 적응한 상황이라면 이 워크플로우에 따라 git을 도입하여 사용할 수 있다. 중앙 저장소를 하나 만들고 개발자 모두에게 Push 권한을 부여한다. 모두에게 Push 권한을 부여해도 Git은 한 개발자가 다른 개발자의 작업 내용을 덮어쓰도록 허용하지 않는다.</p>
+<p>A와 B가 동시에 같은 부분을 수정하는 상황을 생각해보자. A가 먼저 작업을 끝내고 수정한 내용을 서버로 push한다. B도 마찬가지로 작업을 끝내고 수정한 내용을 서버로 push 하려 하지만 서버가 바로 받아주지 않는다. 서버에는 A가 수정한 내용이 추가되었기 때문에 push 하기 전에 Fetch로 받아서 Merge 한 후 Push 할 수 있다 이런 개념을 개발자에게 익숙해서 거부감 없이 도입할 수 있다.</p>
+<h2 id="참고">참고</h2>
+<ul>
+<li><a href="http://woowabros.github.io/experience/2017/10/30/baemin-mobile-git-branch-strategy.html" target="_blank" rel="noopener">우린 Git-flow를 사용하고 있어요</a></li>
+</ul>
+<p><strong>회고</strong></p>
+<p>Github-flow가 편하다는 생각이 아직 사라지지 않는다. 왜냐하면 git-flow는 브랜치가 많고 git의 명령어들이 많이 나와서 헷갈리는 부분이 너무 많다. 하지만 여러 사람이 협업할 때 브랜치를 기능별로 나눠서 하게 되기 때문에 효율이 좋은 것 같다.</p>
+<p>아직 헷갈리는 부분이 많아서 자료를 조금 더 참고해서 공부해야겠다.</p>
 
         </div>
         <footer class="article-footer">
@@ -411,7 +464,7 @@ Git-Flow에는 5가지 종류의 브랜치가 존재한다. 항상 유지되는 
                         
                         <div class="item-inner">
                             <p class="item-category"><a class="article-category-link" href="/categories/Programming/">Programming</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/Programming/etc/">etc</a></p>
-                            <p class="item-title"><a href="/2019/01/21/Etc-Git-Flow/" class="title">[Git] Git-Flow</a></p>
+                            <p class="item-title"><a href="/2019/01/21/Etc-Git-Flow/" class="title">1일차 [Git] Git-Flow</a></p>
                             <p class="item-date"><time datetime="2019-01-21T12:35:23.000Z" itemprop="datePublished">2019-01-21</time></p>
                         </div>
                     </li>
