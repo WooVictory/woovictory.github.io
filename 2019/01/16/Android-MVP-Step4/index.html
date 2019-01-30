@@ -20,7 +20,7 @@
 <meta property="og:site_name" content="VictoryWoo">
 <meta property="og:description" content="이번에는 MVP 따라하기 4번째 시간이다. 저번 글에서 Android MVP 적용하는 방법 중 구글에서 추천하는 Presenter / View 인터페이스를 Contract 인터페이스에 선언해서 사용하는 방법을 다루었다. 이번에는 Presenter/PresenterImpl을 구현하는 방법을 살펴보려고 한다. Presenter interface 구현하기 전에">
 <meta property="og:image" content="https://woovictory.github.io/img/My_Architecture.png">
-<meta property="og:updated_time" content="2019-01-16T14:31:46.653Z">
+<meta property="og:updated_time" content="2019-01-30T10:52:34.817Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="[안드로이드] MVP 따라하기 4">
 <meta name="twitter:description" content="이번에는 MVP 따라하기 4번째 시간이다. 저번 글에서 Android MVP 적용하는 방법 중 구글에서 추천하는 Presenter / View 인터페이스를 Contract 인터페이스에 선언해서 사용하는 방법을 다루었다. 이번에는 Presenter/PresenterImpl을 구현하는 방법을 살펴보려고 한다. Presenter interface 구현하기 전에">
@@ -87,7 +87,7 @@
                             <div id="search-form-wrap">
 
     <form class="search-form">
-        <input type="text" class="ins-search-input search-form-input" placeholder="Cercar" />
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
         <button type="submit" class="search-form-submit"></button>
     </form>
     <div class="ins-search">
@@ -108,8 +108,8 @@
         TRANSLATION: {
             POSTS: 'Posts',
             PAGES: 'Pages',
-            CATEGORIES: 'categories',
-            TAGS: 'etiquetes',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
             UNTITLED: '(Untitled)',
         },
         ROOT_URL: '/',
@@ -142,10 +142,10 @@
                         <div class="main-body-content">
                             <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <script>
-     (adsbygoogle = window.adsbygoogle || []).push({
-          google_ad_client: "ca-pub-9725307592233286",
-          enable_page_level_ads: true
-     });
+(adsbygoogle = window.adsbygoogle || []).push({
+     google_ad_client: "ca-pub-9725307592233286",
+     enable_page_level_ads: true
+});
 </script>
                             <article id="post-Android-MVP-Step4" class="article article-single article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
@@ -207,22 +207,7 @@
 <p>그리고 다음과 같이 Presenter를 구현한다.</p>
 <figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SamplePresenter</span></span>(<span class="keyword">val</span> view : SampleView)&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">loadItem</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">        <span class="keyword">val</span> list = ArrayList&lt;String&gt;()</span><br><span class="line">        view.updateView(list)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>그리고 다음과 같이 View의 사용이 가능하게 된다.</p>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>class SampleActivity : AppCompatActivity, SampleView{<br>
-private var presenter : SamplePresenter</p>
-<pre><code>override fun onCreate(var savedInstanceState : Bundle){
-    super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_main)
-
-    presenter = SamplePresenter(this)
-    presenter.loadItem()
-}
-
-override fun updateView(var items : List&lt;Items&gt;){
-    // UI 갱신
-}
-</code></pre>
-<p>}</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SampleActivity</span> : <span class="type">AppCompatActivity</span>, <span class="type">SampleView&#123;</span></span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">var</span> presenter : SamplePresenter</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreate</span><span class="params">(<span class="keyword">var</span> savedInstanceState : <span class="type">Bundle</span>)</span></span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState)</span><br><span class="line">        setContentView(R.layout.activity_main)</span><br><span class="line"></span><br><span class="line">        presenter = SamplePresenter(<span class="keyword">this</span>)</span><br><span class="line">        presenter.loadItem()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">updateView</span><span class="params">(<span class="keyword">var</span> items : <span class="type">List</span>&lt;<span class="type">Items</span>&gt;)</span></span>&#123;</span><br><span class="line">        <span class="comment">// UI 갱신</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h2 id="참고">참고</h2>
 <ul>
 <li><a href="https://thdev.tech/androiddev/2016/11/30/Android-MVP-Two/" target="_blank" rel="noopener">Android MVP 무작정 따라하기 - Presenter/View 생성하기 Other</a></li>
@@ -231,17 +216,17 @@ override fun updateView(var items : List&lt;Items&gt;){
         </div>
         <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <script>
-     (adsbygoogle = window.adsbygoogle || []).push({
-          google_ad_client: "ca-pub-9725307592233286",
-          enable_page_level_ads: true
-     });
+(adsbygoogle = window.adsbygoogle || []).push({
+     google_ad_client: "ca-pub-9725307592233286",
+     enable_page_level_ads: true
+});
 </script>
         <footer class="article-footer">
             
 
 
 
-    <a data-url="https://woovictory.github.io/2019/01/16/Android-MVP-Step4/" data-id="cjrik8a6i000st7pqk3g87mci" class="article-share-link"><i class="fa fa-share"></i>Compartir</a>
+    <a data-url="https://woovictory.github.io/2019/01/16/Android-MVP-Step4/" data-id="cjrik8a6i000st7pqk3g87mci" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -322,7 +307,7 @@ override fun updateView(var items : List&lt;Items&gt;){
                     <aside id="sidebar">
     <a class="sidebar-toggle" title="Expand Sidebar"><i class="toggle icon"></i></a>
     <div class="sidebar-top">
-        <p>Social:</p>
+        <p>follow:</p>
         <ul class="social-links">
             
                 
@@ -356,7 +341,7 @@ override fun updateView(var items : List&lt;Items&gt;){
 <nav id="article-nav">
     
         <a href="/2019/01/17/Android-MVP-Step5/" id="article-nav-newer" class="article-nav-link-wrap">
-        <strong class="article-nav-caption">més nou</strong>
+        <strong class="article-nav-caption">newer</strong>
         <p class="article-nav-title">
         
             [안드로이드] MVP 따라하기 5
@@ -367,7 +352,7 @@ override fun updateView(var items : List&lt;Items&gt;){
     
     
         <a href="/2019/01/16/Android-MVP-Step3/" id="article-nav-older" class="article-nav-link-wrap">
-        <strong class="article-nav-caption">antic</strong>
+        <strong class="article-nav-caption">older</strong>
         <p class="article-nav-title">[안드로이드] MVP 따라하기 3</p>
         <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
         </a>
@@ -446,7 +431,7 @@ override fun updateView(var items : List&lt;Items&gt;){
             
                 
     <div class="widget-wrap widget-list">
-        <h3 class="widget-title">Archive</h3>
+        <h3 class="widget-title">archives</h3>
         <div class="widget">
             <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a><span class="archive-list-count">44</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a><span class="archive-list-count">25</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a><span class="archive-list-count">24</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a><span class="archive-list-count">34</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">February 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a><span class="archive-list-count">1</span></li></ul>
         </div>
@@ -456,7 +441,7 @@ override fun updateView(var items : List&lt;Items&gt;){
             
                 
     <div class="widget-wrap widget-float">
-        <h3 class="widget-title">etiqueta cloud</h3>
+        <h3 class="widget-title">tag cloud</h3>
         <div class="widget tagcloud">
             <a href="/tags/3-4-Way-Handshake/" style="font-size: 10px;">3 & 4 Way Handshake</a> <a href="/tags/AAC/" style="font-size: 10px;">AAC</a> <a href="/tags/Android/" style="font-size: 19.17px;">Android</a> <a href="/tags/BOJ/" style="font-size: 20px;">BOJ</a> <a href="/tags/Blog/" style="font-size: 10px;">Blog</a> <a href="/tags/Compile-Error/" style="font-size: 10px;">Compile Error</a> <a href="/tags/DP/" style="font-size: 10px;">DP</a> <a href="/tags/Data-Structure/" style="font-size: 17.5px;">Data Structure</a> <a href="/tags/Deep-Link/" style="font-size: 10px;">Deep Link</a> <a href="/tags/Error/" style="font-size: 10px;">Error</a> <a href="/tags/Fragment/" style="font-size: 10px;">Fragment</a> <a href="/tags/Glide/" style="font-size: 10px;">Glide</a> <a href="/tags/Graph/" style="font-size: 10px;">Graph</a> <a href="/tags/Graph-Library/" style="font-size: 10px;">Graph Library</a> <a href="/tags/HTTP/" style="font-size: 10.83px;">HTTP</a> <a href="/tags/HTTPS/" style="font-size: 10px;">HTTPS</a> <a href="/tags/Hash/" style="font-size: 10px;">Hash</a> <a href="/tags/Heap/" style="font-size: 10.83px;">Heap</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/Intent/" style="font-size: 10px;">Intent</a> <a href="/tags/Java/" style="font-size: 18.33px;">Java</a> <a href="/tags/Kotlin/" style="font-size: 16.67px;">Kotlin</a> <a href="/tags/ListView/" style="font-size: 10px;">ListView</a> <a href="/tags/MVP/" style="font-size: 16.67px;">MVP</a> <a href="/tags/MarshMellow/" style="font-size: 10px;">MarshMellow</a> <a href="/tags/Network/" style="font-size: 10.83px;">Network</a> <a href="/tags/Node-js/" style="font-size: 15.83px;">Node.js</a> <a href="/tags/OS/" style="font-size: 14.17px;">OS</a> <a href="/tags/Parcelable/" style="font-size: 10px;">Parcelable</a> <a href="/tags/Permission/" style="font-size: 10px;">Permission</a> <a href="/tags/Picasso/" style="font-size: 10px;">Picasso</a> <a href="/tags/Programmers/" style="font-size: 10px;">Programmers</a> <a href="/tags/Project/" style="font-size: 10px;">Project</a> <a href="/tags/RESTful/" style="font-size: 10px;">RESTful</a> <a href="/tags/RecyclerView/" style="font-size: 10px;">RecyclerView</a> <a href="/tags/Reflection/" style="font-size: 10px;">Reflection</a> <a href="/tags/Retrofit/" style="font-size: 10px;">Retrofit</a> <a href="/tags/Room/" style="font-size: 10px;">Room</a> <a href="/tags/Runtime-Error/" style="font-size: 10px;">Runtime Error</a> <a href="/tags/SOPT/" style="font-size: 15px;">SOPT</a> <a href="/tags/SP/" style="font-size: 10px;">SP</a> <a href="/tags/Serializable/" style="font-size: 10px;">Serializable</a> <a href="/tags/SharedPreference/" style="font-size: 10px;">SharedPreference</a> <a href="/tags/Singleton/" style="font-size: 10px;">Singleton</a> <a href="/tags/Static/" style="font-size: 10px;">Static</a> <a href="/tags/TCP/" style="font-size: 10.83px;">TCP</a> <a href="/tags/UDP/" style="font-size: 10px;">UDP</a> <a href="/tags/View/" style="font-size: 10px;">View</a> <a href="/tags/computer-science/" style="font-size: 10px;">computer science</a> <a href="/tags/etc/" style="font-size: 13.33px;">etc</a> <a href="/tags/network/" style="font-size: 10px;">network</a> <a href="/tags/네트워크/" style="font-size: 10px;">네트워크</a> <a href="/tags/라이브러리/" style="font-size: 11.67px;">라이브러리</a> <a href="/tags/안드로이드-기초/" style="font-size: 12.5px;">안드로이드 기초</a> <a href="/tags/오류-제어/" style="font-size: 10px;">오류 제어</a> <a href="/tags/운영체제/" style="font-size: 14.17px;">운영체제</a> <a href="/tags/인텐트/" style="font-size: 10px;">인텐트</a> <a href="/tags/자료구조/" style="font-size: 17.5px;">자료구조</a> <a href="/tags/직렬화/" style="font-size: 10px;">직렬화</a> <a href="/tags/패킷-교환/" style="font-size: 10px;">패킷 교환</a> <a href="/tags/혼잡-제어/" style="font-size: 10px;">혼잡 제어</a> <a href="/tags/흐름-제어/" style="font-size: 10px;">흐름 제어</a>
         </div>
@@ -468,10 +453,10 @@ override fun updateView(var items : List&lt;Items&gt;){
     </div>
     <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <script>
-     (adsbygoogle = window.adsbygoogle || []).push({
-          google_ad_client: "ca-pub-9725307592233286",
-          enable_page_level_ads: true
-     });
+(adsbygoogle = window.adsbygoogle || []).push({
+     google_ad_client: "ca-pub-9725307592233286",
+     enable_page_level_ads: true
+});
 </script>
 </aside>
 
