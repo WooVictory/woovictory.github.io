@@ -12,17 +12,17 @@
     
         <meta name="keywords" content="Android,Room,AAC" />
     
-    <meta name="description" content="Room은 SQLite의 추상화 layer로 SQLite의 모든 기능을 활용하여 유연한 database 접근을 가능하게 한다. core Framework가 raw SQL을 사용할 수 있도록 지원하지만 low level로 접근 가능하고 다음과 같은 항목으로 인해 많은 공수가 들어간다. raw SQL은 compile time에 확인할 수 없기 때문에 데이터의">
+    <meta name="description" content="Room은 SQLite의 기능을 최대한 활용하는 동시에 데이터베이스를 원활하게 접근할 수 있도록 SQLite 위에 추상화 계층을 제공한다.  적은 양의 정형화된 데이터를 처리하는 애플리케이션은 로컬에서 해당 데이터를 유지함으로써 큰 이점을 얻을 수 있다.  ex) 관련 데이터를 캐시하는 것   이렇게 하면 장치게 네트워크에 액세스할 수 없는 경우에도 사용자">
 <meta name="keywords" content="Android,Room,AAC">
 <meta property="og:type" content="article">
 <meta property="og:title" content="5일차 [안드로이드] Room">
 <meta property="og:url" content="https://woovictory.github.io/2019/01/25/Android-Room-Basic/index.html">
 <meta property="og:site_name" content="VictoryWoo">
-<meta property="og:description" content="Room은 SQLite의 추상화 layer로 SQLite의 모든 기능을 활용하여 유연한 database 접근을 가능하게 한다. core Framework가 raw SQL을 사용할 수 있도록 지원하지만 low level로 접근 가능하고 다음과 같은 항목으로 인해 많은 공수가 들어간다. raw SQL은 compile time에 확인할 수 없기 때문에 데이터의">
-<meta property="og:updated_time" content="2019-01-29T06:56:46.039Z">
+<meta property="og:description" content="Room은 SQLite의 기능을 최대한 활용하는 동시에 데이터베이스를 원활하게 접근할 수 있도록 SQLite 위에 추상화 계층을 제공한다.  적은 양의 정형화된 데이터를 처리하는 애플리케이션은 로컬에서 해당 데이터를 유지함으로써 큰 이점을 얻을 수 있다.  ex) 관련 데이터를 캐시하는 것   이렇게 하면 장치게 네트워크에 액세스할 수 없는 경우에도 사용자">
+<meta property="og:updated_time" content="2019-01-31T06:28:00.028Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="5일차 [안드로이드] Room">
-<meta name="twitter:description" content="Room은 SQLite의 추상화 layer로 SQLite의 모든 기능을 활용하여 유연한 database 접근을 가능하게 한다. core Framework가 raw SQL을 사용할 수 있도록 지원하지만 low level로 접근 가능하고 다음과 같은 항목으로 인해 많은 공수가 들어간다. raw SQL은 compile time에 확인할 수 없기 때문에 데이터의">
+<meta name="twitter:description" content="Room은 SQLite의 기능을 최대한 활용하는 동시에 데이터베이스를 원활하게 접근할 수 있도록 SQLite 위에 추상화 계층을 제공한다.  적은 양의 정형화된 데이터를 처리하는 애플리케이션은 로컬에서 해당 데이터를 유지함으로써 큰 이점을 얻을 수 있다.  ex) 관련 데이터를 캐시하는 것   이렇게 하면 장치게 네트워크에 액세스할 수 없는 경우에도 사용자">
     
 
     
@@ -85,7 +85,7 @@
                             <div id="search-form-wrap">
 
     <form class="search-form">
-        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
+        <input type="text" class="ins-search-input search-form-input" placeholder="Cercar" />
         <button type="submit" class="search-form-submit"></button>
     </form>
     <div class="ins-search">
@@ -106,8 +106,8 @@
         TRANSLATION: {
             POSTS: 'Posts',
             PAGES: 'Pages',
-            CATEGORIES: 'Categories',
-            TAGS: 'Tags',
+            CATEGORIES: 'categories',
+            TAGS: 'etiquetes',
             UNTITLED: '(Untitled)',
         },
         ROOT_URL: '/',
@@ -179,22 +179,204 @@
         
         
         <div class="article-entry" itemprop="articleBody">
-            <p>Room은 SQLite의 추상화 layer로 SQLite의 모든 기능을 활용하여 유연한 database 접근을 가능하게 한다. core Framework가 raw SQL을 사용할 수 있도록 지원하지만 low level로 접근 가능하고 다음과 같은 항목으로 인해 많은 공수가 들어간다.</p>
+            <p>Room은 SQLite의 기능을 최대한 활용하는 동시에 데이터베이스를 원활하게 접근할 수 있도록 SQLite 위에 추상화 계층을 제공한다.</p>
+<ul>
+<li>적은 양의 정형화된 데이터를 처리하는 애플리케이션은 로컬에서 해당 데이터를 유지함으로써 큰 이점을 얻을 수 있다.
+<ul>
+<li>ex) 관련 데이터를 캐시하는 것</li>
+</ul>
+</li>
+<li>이렇게 하면 장치게 네트워크에 액세스할 수 없는 경우에도 사용자가 오프라인 상태일 때 해당 콘텐츠를 계속 탐색할 수 있다. 그러면 장치가 다시 온라인 상태가 되면 사용자가 시작한 모든 콘텐츠 변경 내용이 서버에 동기화된다.</li>
+</ul>
+<p>이렇듯 Room은 위와 같은 문제를 해결하므로 SQLite 대신 룸을 사용하는 것이 좋다고 한다. 하지만, SQLite API를 직접 사용하려면 SQLite를 사용하여 데이터 저장을 읽어야 한다.</p>
+<p><strong>먼저, build.gradle 파일의 dependencies에 추가해준다.그래야지 Room을 사용할 수 있다.^_^</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//room</span></span><br><span class="line">implementation <span class="string">"android.arch.persistence.room:runtime:$roomVersion"</span></span><br><span class="line">kapt <span class="string">"android.arch.persistence.room:compiler:$roomVersion"</span></span><br></pre></td></tr></table></figure>
+<h2 id="3가지-주요-컴포넌트">3가지 주요 컴포넌트</h2>
+<ol>
+<li>Database</li>
+</ol>
+<ul>
+<li>데이터베이스 홀더를 포함하고 앱의 지속적이고 관계가 있는 데이터에 대한 기본 연결을 위한 기본 액세스 지점 역할을 한다.</li>
+<li><code>@Database</code>로 어노테이션된 클래스는 다음의 조건을 만족해야 한다.
+<ul>
+<li><strong>RoomDatabase</strong>를 상속받는 클래스는 추상 클래스이어야 한다.</li>
+<li>어노테이션 내에 데이터베이스와 연관된 (즉, 데이터베이스에 들어갈 테이블) 엔티티의 목록을 포함한다.</li>
+<li>파라미터가 0개인 추상 메소드를 포함하고 @Dao로 어노테이션된 클래스를 반환한다.</li>
+</ul>
+</li>
+<li>런타임에 Room.databaseBuilder() 또는 Room.inMemoryDatabaseBuilder()를 호출하여 데이터베이서 인스턴스를 얻을 수 있다.</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// User and Book are classes annotated with @Entity.</span></span><br><span class="line"><span class="meta">@Database</span>(version = <span class="number">1</span>, entities = &#123;User.class, Book.class&#125;)</span><br><span class="line"><span class="function"><span class="keyword">abstract</span> class AppDatabase extends <span class="title">RoomDatabase</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="comment">// BookDao is a class annotated with @Dao. </span></span><br><span class="line">    <span class="function"><span class="keyword">abstract</span> <span class="keyword">public</span> BookDao <span class="title">bookDao</span><span class="params">()</span></span>; </span><br><span class="line">    <span class="comment">// UserDao is a class annotated with @Dao. </span></span><br><span class="line">    <span class="function"><span class="keyword">abstract</span> <span class="keyword">public</span> UserDao <span class="title">userDao</span><span class="params">()</span></span>; </span><br><span class="line">    <span class="comment">// UserBookDao is a class annotated with @Dao. </span></span><br><span class="line">    <span class="function"><span class="keyword">abstract</span> <span class="keyword">public</span> UserBookDao <span class="title">userBookDao</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>위 예제는 User, Book 두 개의 table을 갖고 3개의 dao class를 갖는다. entitiy와 Dao의 개수는 제한이 없으나, 이름은 달라야 한다.</li>
+<li>데이터베이스에서 쿼리르르 직접 실행하는 대신 Dao 클래스를 만드는 것이 좋다. Dao 클래스를 사용하면 보다 논리적인 계층에서 데이터베이스 통신을 추상화할 수 있다. 이 계층은 직접 sql 쿼리를 실행하는 것에 비해 테스트를 더 쉽게 할 수 있다.</li>
+<li>또한, 커서에서 애플리케이션 클래스로 자동 변환되므로 대부분의 데이터 액세스에 대해 하위 수준의 데이터베이스 API를 처리할 필요가 없다.(???)</li>
+<li>Room은 애플리케이션이 컴파일 되는 동안 Dao 클래스의 모든 쿼리를 확인하여 쿼리 중 하나에 문제가 있는 경우 즉시 사용자에게 알려준다.</li>
+</ul>
+<ol start="2">
+<li>Entity</li>
+</ol>
+<ul>
+<li>데이터베이스 내에서 테이블을 나타낸다.</li>
+<li>룸 지속성 라이브러리를 사용할 때 관련 필드 집합을 엔티티들로 정의한다.</li>
+<li>각 엔티티에 대해 항목(아이템)을 보관하기 위해 연결된 데이터베이스 개체 내에 테이블이 생성된다.</li>
+<li>데이터베이스 클래스의 엔티티 array를 통해 엔티티 클래스를 참조해야 한다.</li>
+<li>Entity의 정의는 아래와 같다.</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Entity</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span></span>&#123;</span><br><span class="line">    <span class="meta">@PrimaryKey</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span> id;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String firstName;</span><br><span class="line">    <span class="keyword">public</span> String lastName;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>id를 <strong>PrimaryKey</strong>로 지정한다.</li>
+<li>필드를 유지하려면, 룸은 필드에 접근할 수 있어야 한다.</li>
+<li>필드를 public으로 만들거나, getter / setter를 제공할 수 있다.</li>
+<li>getter / setter method를 사용한다면 룸에서 JavaBeans 규칙을 기반으로 한다.[멤버 변수는 private형을 지정하여 선언한다.]</li>
+</ul>
+<blockquote>
+<p>주의</p>
+</blockquote>
+<p>엔티티에는 빈 생성자 (해당 DAO 클래스가 각 지속 필드를 액세스할 수 있는 경우) 또는 매개 변수에 엔티티 필드와 일치하는 유형과 이름이 포함된 생성자가 있을 수 있다. 룸은 일부 필드만 수신하는 생성자와 같이 전체 또는 부분 생성자를 사용할 수도 있다.</p>
+<p><strong>User a Primary Key</strong></p>
+<ul>
+<li>각 Entity는 최소 하나 이상의 필드를 기본키로 지정해야 한다.</li>
+<li>필드가 하나만 있는 경우에도 <code>@PrimaryKey</code> 어노테이션을 사용하여 필드에 주석을 달 필요가 있다.</li>
+<li>또한, 룸에서 엔티티에 자동으로 ID를 할당하도록 하려면 @PrimaryKey의 <strong>autoGenerate</strong> 속성을 설정할 수 있다.(기본은 false. ex: index가 자동으로 증가하는 경우와 같은)</li>
+<li>엔티티가 복합 PrimaryKey가 있는 경우 @Entity 어노테이션의 <strong>primaryKeys</strong> 속성을 사용할 수 있다.</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Entity</span>(primaryKeys = &#123;<span class="string">"firstName"</span>, <span class="string">"lastName"</span>&#125;)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> String firstName;</span><br><span class="line">    <span class="keyword">public</span> String lastName;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>기본적으로 룸은 클래스 이름을 데이터베이스 테이블 이름으로 사용한다.</li>
+<li>만약 테이블이 다른 이름을 가지게 하고 싶다면, @Entity 어노테이션의 <strong>tableName</strong> 속성을 설정하면 된다.</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Entity</span>(tableName = <span class="string">"users"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span></span>&#123;</span><br><span class="line">    <span class="comment">///</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>주의 : SQLite의 테이블 이름은 대소문자를 구분하지 않는다.</p>
+</blockquote>
+<ul>
+<li>tableName 속성과 비슷하게 룸은 필드 이름을 데이터베이스의 column 이름으로 사용한다.</li>
+<li>만약 column 이름을 다르게 하고 싶다면 <code>@ColumnInfo</code> 어노테이션을 추가하면 된다.</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Entity</span>(tableName = <span class="string">"users"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span></span>&#123;</span><br><span class="line">    <span class="meta">@PrimaryKey</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span> id;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ColumnInfo</span>(name = <span class="string">"first_name"</span>)</span><br><span class="line">    <span class="keyword">public</span> String firstName;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ColumnInfo</span>(name = <span class="string">"last_name"</span>)</span><br><span class="line">    <span class="keyword">public</span> String lastName;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>Ignore fields</strong></p>
+<ul>
+<li>기본적으로 룸은 엔티티에 정의된 각 필드에 대한 Column을 생성한다.</li>
+<li>엔티티에 지속하고 싶지 않은 필드가 있는 경우 <code>@Ignore</code>를 사용하여 필드에 어노테이션을 추가할 수 있다.</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Entity</span>(tableName = <span class="string">"users"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span></span>&#123;</span><br><span class="line">    <span class="meta">@PrimaryKey</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span> id;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String firstName;</span><br><span class="line">    <span class="keyword">public</span> String lastName;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Ignore</span></span><br><span class="line">    Bitmap picture;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>상위 엔티티에서 필드를 상속하는 경우, 일반적으로 @Entity 특성의 <strong>ignoredColumns</strong> 속성을 더 쉽게 추가해서 사용할 수 있다.</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Entity</span>(ignoredColumns = <span class="string">"picture"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RemoteUser</span> <span class="keyword">extends</span> <span class="title">User</span> </span>&#123;</span><br><span class="line">    <span class="meta">@PrimaryKey</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span> id;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">boolean</span> hasVpn;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>Provide table search support</strong></p>
+<p>추가 예정~~</p>
+<ol start="3">
+<li>DAO</li>
+</ol>
+<ul>
+<li>데이터베이스에 접근할 수 있는 메소드들을 포함한다.</li>
+<li>인터페이스로서 쿼리를 사용하는 메소드를 정의한다.</li>
+<li>룸 지속성 라이브러리를 사용하여 앱의 데이터에 접근하려면 DAO를 사용한다.</li>
+<li>각 DAO에는 앱의 데이터베이스에 대한 추상적 액세스를 제공하는 방법이 포함되어 있으므로(interface내에 쿼리와 함께 함수만 정의) 이 Dao 개체들은 룸의 주요 구성요소를 형성한다.</li>
+<li>쿼리 builder나 직접적인 쿼리 대신 DAO 클래스를 사용하여 데이터베이스에 접근하여 데이터베이스 구조의 다양한 구성 요소를 분리할 수 있다.</li>
+<li>또한, DAO를 사용하면 애플리케이션을 테스트할 때 데이터베이스 액세스를 쉽게 할 수 있다.</li>
+<li>DAO는 인터페이스 또는 추상 클래스일 수 있다.
+<ul>
+<li>추상 클래스인 경우 선택적으로 RoomDatabase를 유일한 매개 변수로 사용하는 생성자를 가질 수 있다.</li>
+<li>Room은 컴파일 시간에 각 DAO 구현을 생성한다.</li>
+</ul>
+</li>
+</ul>
+<p><strong>Define methods for convenience</strong></p>
+<ul>
+<li>DAO 클래스를 사용하여 나타낼 수 있는 여러가지 편리한 쿼리가 있다. 아래에 몇가지 일반적인 예제가 나타나있다.</li>
+</ul>
+<p><strong>Insert</strong></p>
+<ul>
+<li>DAO 메소드를 작성하고 @Insert로 어노테이션을 지정할 때, Room은 단일 트랜잭션의 데이터베이스에 모든 매개변수를 삽입하는 구현을 생성한다.</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Dao</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">MyDao</span></span>&#123;</span><br><span class="line">    <span class="meta">@Insert</span>(onConflict = OnConflictStrategy.REPLACE)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">insertUsers</span><span class="params">(User... users)</span></span>;</span><br><span class="line"></span><br><span class="line">     <span class="meta">@Insert</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">insertBothUsers</span><span class="params">(User user1, User user2)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Insert</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">insertUsersAndFriends</span><span class="params">(User user, List&lt;User&gt; friends)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>@Insert 메소드는 매개 변수가 1개만 받으면 삽입된 항목의 새 rowId인 long 타입의 값을 반환할 수 있다. 매개변수가 배열 또는 집합인 경우 Long[] 또는 List<long>을 대신 반환해야 한다.</long></li>
+<li>@Insert에 onConflict 속성을 지정할 수 있으며 속성을 선택할 수 있다. 이는 테이블에 Entity를 삽입할 때 같은 값이 들어가 있을 경우 충돌이 발생하는데 이 충돌을 어떻게 해결할 지에 대해서 정의할 수 있다. 위에서는 old data를 새로 삽입된 데이터로 변경하는 방법을 선택하고 있다.</li>
+</ul>
+<p><strong>update</strong></p>
+<ul>
+<li>update 방법은 테이터베이스에서 매개 변수로 지정된 엔티티 집합을 수정한다. 각 엔티티의 기본 키와 일치하는 조회를 사용한다.</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Dao</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">MyDao</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Update</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">updateUsers</span><span class="params">(User... users)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>일반적으로 필요하진 않지만, update를 사용하면 데이터베이스에서 업데이트된 행 수를 나타내는 int 값을 반환할 받을 수 있다.</li>
+</ul>
+<p><strong>Delete</strong></p>
+<ul>
+<li>Delete 방법은 매개 변수로 지정된 엔티티 집합을 데이터베이스에서 제거한다. 기본키를 사용하여 삭제할 엔티티를 찾는다.</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Dao</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">MyDao</span></span>&#123;</span><br><span class="line">    <span class="meta">@Delete</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">deleteusers</span><span class="params">(User... users)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>update와 비슷하게 삭제를 하면 데이터베이스에서 제거된 행 수를 나타내는 int 값을 반환할 수 있다.</li>
+</ul>
+<p><strong>Query</strong></p>
+<ul>
+<li><code>@Query</code>는 DAO 클래스에서 사용되는 주석이다.</li>
+<li>데이터베이스에서 읽기 / 쓰기 작업을 수행할 수 있다.</li>
+<li>각 @Query 메소드는 컴파일 시간에 확인되므로 쿼리에 문제가 있으면 런타임 오류 대신 컴파일 오류가 발생한다.</li>
+<li>또한, 룸은 반환된 객체의 필드 이름이 쿼리 응답의 해당 열 이름과 일치하지 않는 경우 룸은 다음 두 가지 방법 중 하나로 경고를 표시한다.
+<ul>
+<li>일부 필드 이름만 일치하는 경우 경고를 표시한다.</li>
+<li>필드 이름이 일치하지 않으면 오류가 발생한다.</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Dao</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">MyDao</span></span>&#123;</span><br><span class="line">    <span class="meta">@Query</span>(<span class="string">"SELECT * FROM user"</span>)</span><br><span class="line">    <span class="keyword">public</span> User[] loadAllUsers();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>모든 사용자를 load하는 간단한 쿼리이다.</li>
+<li>컴파일 시간에 룸은 사용자 테이블의 모든 Column을 쿼리한다는 것을 알고 있다.</li>
+<li>쿼리에 구문 오류가 있거나 사용자 테이블이 데이터베이스에 없는 경우, Room은 앱 컴파일 시 적절한 메시지가 포함된 오류를 표시한다.</li>
+</ul>
+<p><strong>Passing parameters into the query</strong></p>
+<ul>
+<li>대부분의 경우 특정 연령보다 나이가 많은 사용자만 표시하는 등의 필터링 작업을 수행하려면 매개 변수를 쿼리에 전달해야 한다.</li>
+<li>다음에서 확인할 수 있다.</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Dao</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">MyDao</span></span>&#123;</span><br><span class="line">    <span class="meta">@Query</span>(<span class="string">"SELECT * FROM user WHERE age &gt; :minAge"</span>)</span><br><span class="line">    <span class="keyword">public</span> User[] loadAllUsersOlderThan(<span class="keyword">int</span> minAge);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>이 쿼리를 컴파일할 때, Room은 :minAge bind 매개 변수와 minAge 메소드 매개변수를 일치시킨다. Room은 매개 변수 이름을 사용하여 매치를 수행한다. 일치하지 않는 경우 앱 컴파일 시 오류가 발생한다.</li>
+<li>다음과 같이 여러 매개변수를 전달하거나 조회에서 여러 번 참조할 수도 있다.</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Dao</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">MyDao</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Query</span>(<span class="string">"SELECT * FROM user WHERE age BETWEEN :minAge AND :maxAge"</span>)</span><br><span class="line">    <span class="keyword">public</span> User[] loadAllUsersBetweenAges(<span class="keyword">int</span> minAge, <span class="keyword">int</span> maxAge);</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Query</span>(<span class="string">"SELECT * FROM user WHERE first_name LIKE :search "</span> +</span><br><span class="line">           <span class="string">"OR last_name LIKE :search"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> List&lt;User&gt; <span class="title">findUserWithName</span><span class="params">(String search)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>Returning subsets of columns</strong></p>
+<ul>
+<li>대부분의 경우 엔티티의 몇 가지 필드만 있으면 된다.</li>
+<li>예를 들어 UI는 사용자에 대한 모든 세부 정보가 아니라 사용자의 성과 이름만 표시할 수 있다. 앱의 UI에 표시되는 열만 가져오면 리소스가 절약되고 쿼리가 더 빨리 완료된다.</li>
+<li>Room을 사용하면 결과 Column 집합을 반환될 개체로 매핑할 수 있는 쿼리에서 Java 기반 개체를 반환할 수 있다.</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Java Object</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">NameTuple</span> </span>&#123;</span><br><span class="line">    <span class="meta">@ColumnInfo</span>(name = <span class="string">"first_name"</span>)</span><br><span class="line">    <span class="keyword">public</span> String firstName;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ColumnInfo</span>(name = <span class="string">"last_name"</span>)</span><br><span class="line">    <span class="keyword">public</span> String lastName;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>Query 메소드에서 이 자바 객체를 사용할 수 있다.</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Dao</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">MyDao</span></span>&#123;</span><br><span class="line">    <span class="meta">@Query</span>(<span class="string">"SELECT first_name, last_name FROM user"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> List&lt;NameTuple&gt; <span class="title">loadFullName</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>Room은 쿼리가 first_name, last_name 열에 대한 값을 반환하고 이러한 값을 NameTuple 클래스의 필드에 매핑할 수 있음을 이해한다.</li>
+<li>따라서 룸에서 적절한 코드를 생성할 수 있다.</li>
+<li>쿼리가 너무 많은 열을 반환하거나 NameTuple 클래스에 없는 열을 반환하면 룸에 경고가 표시된다.</li>
+</ul>
+<p><strong>Passing a collection of arguments</strong></p>
+<ul>
+<li>일부 쿼리는 런타임까지 알 수 없는 정확한 수의 매개 변수를 사용하여 많은 매개 변수를 전달해야 할 수 있다.</li>
+<li>예를 들어, regions의 하위 집합에서 모든 사용자에 대한 정보를 검색할 수 있다.</li>
+<li>Room은 매개변수가 집합을 나타내는 시점을 파악하고 제공된 매개변수 수에 따라 런타임에 매개변수를 자동으로 확장한다.</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Dao</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">MyDao</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Query</span>(<span class="string">"SELECT first_name, last_name FROM user WHERE region IN (:regions)"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> List&lt;NameTuple&gt; <span class="title">loadUsersFromRegions</span><span class="params">(List&lt;String&gt; regions)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>Observable queries</strong></p>
+<ul>
+<li>쿼리를 수행할 때 데이터가 변경될 때 앱의 UI가 자동으로 업데이트 되는 경우가 많다.</li>
+<li>이를 수행하기 위해서는 쿼리 메소드 description에 <strong>LiveData</strong> 유형의 반환 값을 사용한다.</li>
+<li>Room은 데이터베이스가 업데이트될 때 LiveData를 업데이트하는데 필요한 모든 코드를 생성한다.</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Dao</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">MyDao</span></span>&#123;</span><br><span class="line">    <span class="meta">@Query</span>(<span class="string">"SELECT first_name, last_name FROM user WHEHE region IN (:regions)"</span>)</span><br><span class="line">    <span class="keyword">public</span> LiveData&lt;List&lt;User&gt;&gt; loadUserFromRegionsSync(List&lt;String&gt; regions);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>Reactive queries with RxJava</strong></p>
+<p>추가 예정~~</p>
+<p>Room은 SQLite의 추상화 layer로 SQLite의 모든 기능을 활용하여 유연한 database 접근을 가능하게 한다. core Framework가 raw SQL을 사용할 수 있도록 지원하지만 low level로 접근 가능하고 다음과 같은 항목으로 인해 많은 공수가 들어간다.</p>
 <p>raw SQL은 compile time에 확인할 수 없기 때문에 데이터의 구조가 변경되는 경우 영향을 받은 SQL을 수동으로 수정해야 하며, 이는 공수가 많이 든다.</p>
 <p>SQL 결과를 java object로 만들기 위해 많은 상용구(상투적인) 코드들이 들어간다.</p>
-<p><code>Room</code>은 3가지의 Component를 갖는다. 다음과 같다.</p>
-<h2 id="room의-3가지-component">Room의 3가지 Component</h2>
-<ol>
-<li>먼저, build.gradle 파일의 dependencies에 추가해준다.</li>
-</ol>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//room</span></span><br><span class="line">implementation <span class="string">"android.arch.persistence.room:runtime:$roomVersion"</span></span><br><span class="line">kapt <span class="string">"android.arch.persistence.room:compiler:$roomVersion"</span></span><br></pre></td></tr></table></figure>
-<p>최신 버전은 구글의 공식 문서를 통해서 확인하면 된다.</p>
-<p>먼저, 각 용어와 구조에 대해서 알아보고 아래에 상세한 설명을 정리하겠다.</p>
-<ul>
-<li>Database : database의 holder를 만든다. annotation으로 entities(Table의 구조와 mapping되는 class)를 정의하고, 클래스 내부에 dao를 정의한다.</li>
-</ul>
-<p>이 클래스는 RoomDatbase를 상속받은 abstract class가 되며 Room.databaseBuilder() or Room.inMemoryDatabaseBuilder()를 이용하여 얻을 수 있다.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// User and Book are classes annotated with @Entity.</span></span><br><span class="line"><span class="meta">@Database</span>(version = <span class="number">1</span>, entities = &#123;User.class, Book.class&#125;)</span><br><span class="line"><span class="function"><span class="keyword">abstract</span> class AppDatabase extends <span class="title">RoomDatabase</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="comment">// BookDao is a class annotated with @Dao. </span></span><br><span class="line">    <span class="function"><span class="keyword">abstract</span> <span class="keyword">public</span> BookDao <span class="title">bookDao</span><span class="params">()</span></span>; </span><br><span class="line">    <span class="comment">// UserDao is a class annotated with @Dao. </span></span><br><span class="line">    <span class="function"><span class="keyword">abstract</span> <span class="keyword">public</span> UserDao <span class="title">userDao</span><span class="params">()</span></span>; </span><br><span class="line">    <span class="comment">// UserBookDao is a class annotated with @Dao. </span></span><br><span class="line">    <span class="function"><span class="keyword">abstract</span> <span class="keyword">public</span> UserBookDao <span class="title">userBookDao</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>위 예제는 User, Book 두 개의 table을 갖고 3개의 dao class를 갖는다. entitiy와 Dao의 개수는 제한이 없으나, 이름은 달라야 한다.</p>
 <p>Dao는 cursor를 자동으로 class로 converting 해준다. Room은 DAO에 정의된 query 확인을 compile time에 즉각 해준다.</p>
 <ul>
@@ -299,6 +481,8 @@ LiveData는 return하는 비동기 query의 경우에는 가능하다.(어차피
 <h2 id="참고">참고</h2>
 <ul>
 <li><a href="https://tourspace.tistory.com/28" target="_blank" rel="noopener">Android Architecture Components #6 - Room</a></li>
+<li><a href="https://developer.android.com/training/data-storage/room/defining-data#java" target="_blank" rel="noopener">Defining data using Room entities</a></li>
+<li><a href="https://developer.android.com/training/data-storage/room/#java" target="_blank" rel="noopener">Save data in a local database using Room</a></li>
 </ul>
 
         </div>
@@ -314,7 +498,7 @@ LiveData는 return하는 비동기 query의 경우에는 가능하다.(어차피
 
 
 
-    <a data-url="https://woovictory.github.io/2019/01/25/Android-Room-Basic/" data-id="cjrik8agt00l0t7pquukdk3cb" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="https://woovictory.github.io/2019/01/25/Android-Room-Basic/" data-id="cjrik8agt00l0t7pquukdk3cb" class="article-share-link"><i class="fa fa-share"></i>Compartir</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -395,7 +579,7 @@ LiveData는 return하는 비동기 query의 경우에는 가능하다.(어차피
                     <aside id="sidebar">
     <a class="sidebar-toggle" title="Expand Sidebar"><i class="toggle icon"></i></a>
     <div class="sidebar-top">
-        <p>follow:</p>
+        <p>Social:</p>
         <ul class="social-links">
             
                 
@@ -429,7 +613,7 @@ LiveData는 return하는 비동기 query의 경우에는 가능하다.(어차피
 <nav id="article-nav">
     
         <a href="/2019/01/26/Java-Singleton-Pattern/" id="article-nav-newer" class="article-nav-link-wrap">
-        <strong class="article-nav-caption">newer</strong>
+        <strong class="article-nav-caption">més nou</strong>
         <p class="article-nav-title">
         
             6일차 [Java] Singleton
@@ -440,7 +624,7 @@ LiveData는 return하는 비동기 query의 경우에는 가능하다.(어차피
     
     
         <a href="/2019/01/24/Etc-Git-Issue-Use/" id="article-nav-older" class="article-nav-link-wrap">
-        <strong class="article-nav-caption">older</strong>
+        <strong class="article-nav-caption">antic</strong>
         <p class="article-nav-title">4일차 [Git] Issue 탭 이용하기</p>
         <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
         </a>
@@ -466,6 +650,15 @@ LiveData는 return하는 비동기 query의 경우에는 가능하다.(어차피
         <h3 class="widget-title">recents</h3>
         <div class="widget">
             <ul id="recent-post" class="no-thumbnail">
+                
+                    <li>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Programming/">Programming</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/Programming/Android/">Android</a></p>
+                            <p class="item-title"><a href="/2019/01/31/Android-AAC-Room/" class="title">11일차 [안드로이드] AAC - Room 실습</a></p>
+                            <p class="item-date"><time datetime="2019-01-31T13:32:55.000Z" itemprop="datePublished">2019-01-31</time></p>
+                        </div>
+                    </li>
                 
                     <li>
                         
@@ -497,15 +690,6 @@ LiveData는 return하는 비동기 query의 경우에는 가능하다.(어차피
                     <li>
                         
                         <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/Programming/">Programming</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/Programming/Android/">Android</a></p>
-                            <p class="item-title"><a href="/2019/01/27/Android-AAC-Room/" class="title">[안드로이드] AAC - Room</a></p>
-                            <p class="item-date"><time datetime="2019-01-27T13:32:55.000Z" itemprop="datePublished">2019-01-27</time></p>
-                        </div>
-                    </li>
-                
-                    <li>
-                        
-                        <div class="item-inner">
                             <p class="item-category"><a class="article-category-link" href="/categories/Programming/">Programming</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/Programming/Java/">Java</a></p>
                             <p class="item-title"><a href="/2019/01/26/Java-Singleton-Pattern/" class="title">6일차 [Java] Singleton</a></p>
                             <p class="item-date"><time datetime="2019-01-26T03:52:38.000Z" itemprop="datePublished">2019-01-26</time></p>
@@ -519,7 +703,7 @@ LiveData는 return하는 비동기 query의 경우에는 가능하다.(어차피
             
                 
     <div class="widget-wrap widget-list">
-        <h3 class="widget-title">archives</h3>
+        <h3 class="widget-title">Archive</h3>
         <div class="widget">
             <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a><span class="archive-list-count">44</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a><span class="archive-list-count">25</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a><span class="archive-list-count">24</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a><span class="archive-list-count">34</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">February 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a><span class="archive-list-count">1</span></li></ul>
         </div>
@@ -529,7 +713,7 @@ LiveData는 return하는 비동기 query의 경우에는 가능하다.(어차피
             
                 
     <div class="widget-wrap widget-float">
-        <h3 class="widget-title">tag cloud</h3>
+        <h3 class="widget-title">etiqueta cloud</h3>
         <div class="widget tagcloud">
             <a href="/tags/3-4-Way-Handshake/" style="font-size: 10px;">3 & 4 Way Handshake</a> <a href="/tags/AAC/" style="font-size: 10px;">AAC</a> <a href="/tags/Android/" style="font-size: 19.17px;">Android</a> <a href="/tags/BOJ/" style="font-size: 20px;">BOJ</a> <a href="/tags/Blog/" style="font-size: 10px;">Blog</a> <a href="/tags/Compile-Error/" style="font-size: 10px;">Compile Error</a> <a href="/tags/DP/" style="font-size: 10px;">DP</a> <a href="/tags/Data-Structure/" style="font-size: 17.5px;">Data Structure</a> <a href="/tags/Deep-Link/" style="font-size: 10px;">Deep Link</a> <a href="/tags/Error/" style="font-size: 10px;">Error</a> <a href="/tags/Fragment/" style="font-size: 10px;">Fragment</a> <a href="/tags/Glide/" style="font-size: 10px;">Glide</a> <a href="/tags/Graph/" style="font-size: 10px;">Graph</a> <a href="/tags/Graph-Library/" style="font-size: 10px;">Graph Library</a> <a href="/tags/HTTP/" style="font-size: 10.83px;">HTTP</a> <a href="/tags/HTTPS/" style="font-size: 10px;">HTTPS</a> <a href="/tags/Hash/" style="font-size: 10px;">Hash</a> <a href="/tags/Heap/" style="font-size: 10.83px;">Heap</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/Intent/" style="font-size: 10px;">Intent</a> <a href="/tags/Java/" style="font-size: 18.33px;">Java</a> <a href="/tags/Kotlin/" style="font-size: 16.67px;">Kotlin</a> <a href="/tags/ListView/" style="font-size: 10px;">ListView</a> <a href="/tags/MVP/" style="font-size: 16.67px;">MVP</a> <a href="/tags/MarshMellow/" style="font-size: 10px;">MarshMellow</a> <a href="/tags/Network/" style="font-size: 10.83px;">Network</a> <a href="/tags/Node-js/" style="font-size: 15.83px;">Node.js</a> <a href="/tags/OS/" style="font-size: 14.17px;">OS</a> <a href="/tags/Parcelable/" style="font-size: 10px;">Parcelable</a> <a href="/tags/Permission/" style="font-size: 10px;">Permission</a> <a href="/tags/Picasso/" style="font-size: 10px;">Picasso</a> <a href="/tags/Programmers/" style="font-size: 10px;">Programmers</a> <a href="/tags/Project/" style="font-size: 10px;">Project</a> <a href="/tags/RESTful/" style="font-size: 10px;">RESTful</a> <a href="/tags/RecyclerView/" style="font-size: 10px;">RecyclerView</a> <a href="/tags/Reflection/" style="font-size: 10px;">Reflection</a> <a href="/tags/Retrofit/" style="font-size: 10px;">Retrofit</a> <a href="/tags/Room/" style="font-size: 10px;">Room</a> <a href="/tags/Runtime-Error/" style="font-size: 10px;">Runtime Error</a> <a href="/tags/SOPT/" style="font-size: 15px;">SOPT</a> <a href="/tags/SP/" style="font-size: 10px;">SP</a> <a href="/tags/Serializable/" style="font-size: 10px;">Serializable</a> <a href="/tags/SharedPreference/" style="font-size: 10px;">SharedPreference</a> <a href="/tags/Singleton/" style="font-size: 10px;">Singleton</a> <a href="/tags/Static/" style="font-size: 10px;">Static</a> <a href="/tags/TCP/" style="font-size: 10.83px;">TCP</a> <a href="/tags/UDP/" style="font-size: 10px;">UDP</a> <a href="/tags/View/" style="font-size: 10px;">View</a> <a href="/tags/computer-science/" style="font-size: 10px;">computer science</a> <a href="/tags/etc/" style="font-size: 13.33px;">etc</a> <a href="/tags/network/" style="font-size: 10px;">network</a> <a href="/tags/네트워크/" style="font-size: 10px;">네트워크</a> <a href="/tags/라이브러리/" style="font-size: 11.67px;">라이브러리</a> <a href="/tags/안드로이드-기초/" style="font-size: 12.5px;">안드로이드 기초</a> <a href="/tags/오류-제어/" style="font-size: 10px;">오류 제어</a> <a href="/tags/운영체제/" style="font-size: 14.17px;">운영체제</a> <a href="/tags/인텐트/" style="font-size: 10px;">인텐트</a> <a href="/tags/자료구조/" style="font-size: 17.5px;">자료구조</a> <a href="/tags/직렬화/" style="font-size: 10px;">직렬화</a> <a href="/tags/패킷-교환/" style="font-size: 10px;">패킷 교환</a> <a href="/tags/혼잡-제어/" style="font-size: 10px;">혼잡 제어</a> <a href="/tags/흐름-제어/" style="font-size: 10px;">흐름 제어</a>
         </div>

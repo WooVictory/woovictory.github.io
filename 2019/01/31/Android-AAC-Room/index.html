@@ -6,23 +6,25 @@
     
 
     
-    <title>[안드로이드] AAC - Room | VictoryWoo</title>
+    <title>11일차 [안드로이드] AAC - Room 실습 | VictoryWoo</title>
     
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
         <meta name="keywords" content="Android" />
     
-    <meta name="description" content="Room은 Android Architecture Components(AAC) 중 하나이다. 참고  Android Room with a View - Java">
+    <meta name="description" content="Room은 Android Architecture Components(AAC) 중 하나이다. Room에 대해서 저번에 살펴봤지만, 헷갈리고 개념이 정립되어 있지 않아 다시 정리하려고 한다. 이번에는 개념적인 부분보다는 실제로 어떻게 사용을 할 수 있는지에 초점을 맞추려고 한다. Room의 3가지 주요 구성요소  RoomDatabase : 데이터베이스의 hol">
 <meta name="keywords" content="Android">
 <meta property="og:type" content="article">
-<meta property="og:title" content="[안드로이드] AAC - Room">
-<meta property="og:url" content="https://woovictory.github.io/2019/01/27/Android-AAC-Room/index.html">
+<meta property="og:title" content="11일차 [안드로이드] AAC - Room 실습">
+<meta property="og:url" content="https://woovictory.github.io/2019/01/31/Android-AAC-Room/index.html">
 <meta property="og:site_name" content="VictoryWoo">
-<meta property="og:description" content="Room은 Android Architecture Components(AAC) 중 하나이다. 참고  Android Room with a View - Java">
-<meta property="og:updated_time" content="2019-01-27T13:34:23.966Z">
+<meta property="og:description" content="Room은 Android Architecture Components(AAC) 중 하나이다. Room에 대해서 저번에 살펴봤지만, 헷갈리고 개념이 정립되어 있지 않아 다시 정리하려고 한다. 이번에는 개념적인 부분보다는 실제로 어떻게 사용을 할 수 있는지에 초점을 맞추려고 한다. Room의 3가지 주요 구성요소  RoomDatabase : 데이터베이스의 hol">
+<meta property="og:image" content="https://woovictory.github.io/img/room_Database_structure.png">
+<meta property="og:updated_time" content="2019-02-02T15:12:25.363Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="[안드로이드] AAC - Room">
-<meta name="twitter:description" content="Room은 Android Architecture Components(AAC) 중 하나이다. 참고  Android Room with a View - Java">
+<meta name="twitter:title" content="11일차 [안드로이드] AAC - Room 실습">
+<meta name="twitter:description" content="Room은 Android Architecture Components(AAC) 중 하나이다. Room에 대해서 저번에 살펴봤지만, 헷갈리고 개념이 정립되어 있지 않아 다시 정리하려고 한다. 이번에는 개념적인 부분보다는 실제로 어떻게 사용을 할 수 있는지에 초점을 맞추려고 한다. Room의 3가지 주요 구성요소  RoomDatabase : 데이터베이스의 hol">
+<meta name="twitter:image" content="https://woovictory.github.io/img/room_Database_structure.png">
     
 
     
@@ -85,7 +87,7 @@
                             <div id="search-form-wrap">
 
     <form class="search-form">
-        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
+        <input type="text" class="ins-search-input search-form-input" placeholder="Cercar" />
         <button type="submit" class="search-form-submit"></button>
     </form>
     <div class="ins-search">
@@ -106,8 +108,8 @@
         TRANSLATION: {
             POSTS: 'Posts',
             PAGES: 'Pages',
-            CATEGORIES: 'Categories',
-            TAGS: 'Tags',
+            CATEGORIES: 'categories',
+            TAGS: 'etiquetes',
             UNTITLED: '(Untitled)',
         },
         ROOT_URL: '/',
@@ -152,7 +154,7 @@
                 
     
         <h1 class="article-title" itemprop="name">
-        [안드로이드] AAC - Room
+        11일차 [안드로이드] AAC - Room 실습
         </h1>
     
 
@@ -162,8 +164,8 @@
             <div class="article-meta">
                 
     <div class="article-date">
-        <a href="/2019/01/27/Android-AAC-Room/" class="article-date">
-            <time datetime="2019-01-27T13:32:55.000Z" itemprop="datePublished">2019-01-27</time>
+        <a href="/2019/01/31/Android-AAC-Room/" class="article-date">
+            <time datetime="2019-01-31T13:32:55.000Z" itemprop="datePublished">2019-01-31</time>
         </a>
     </div>
 
@@ -179,7 +181,65 @@
         
         
         <div class="article-entry" itemprop="articleBody">
-            <p>Room은 Android Architecture Components(AAC) 중 하나이다.</p>
+            <p>Room은 Android Architecture Components(AAC) 중 하나이다. Room에 대해서 저번에 살펴봤지만, 헷갈리고 개념이 정립되어 있지 않아 다시 정리하려고 한다. 이번에는 개념적인 부분보다는 실제로 어떻게 사용을 할 수 있는지에 초점을 맞추려고 한다.</p>
+<h2 id="room의-3가지-주요-구성요소">Room의 3가지 주요 구성요소</h2>
+<ul>
+<li>RoomDatabase : 데이터베이스의 holder를 구성하며 관계형 데이터에 대한 연결을 해준다.</li>
+<li>조건
+<ol>
+<li>RoomDatabase를 extends하는 클래스는 <strong>abstract</strong> 클래스이다.</li>
+<li>annotaion으로 eneities(Table 구조와 mapping되는 clas)를 포함해야 한다.</li>
+<li>클래스 내부에 DAO(Data Access Object)를 포함해야 한다.</li>
+</ol>
+</li>
+<li>Entity : 데이터베이스 내의 테이블을 나타낸다.</li>
+<li>Dao : 데이터베이스에 접근하는 데 사용되는 함수를 정의한다.(Query를 포함한다.)</li>
+</ul>
+<img src="/img/room_Database_structure.png" width="600" height="300">
+<h2 id="entity">Entity</h2>
+<ul>
+<li>Entity는 object이자 데이터베이스의 테이블을 나타낸다.</li>
+<li>Entity 파일의 특징은 class의 변수들이 column이 되어 데이터베이스의 테이블로 된다는 것이다.</li>
+<li>ColumnInfo로 필드의 이름을 설정하지 않는다면 필드의 이름과 같은 Column 이름으로 생성된다.</li>
+<li>이때, 실제 table로 만들고 싶지 않은 필드에는 @Ignore 어노테이션을 선언한다.</li>
+</ul>
+<p><strong>Annotation 속성</strong></p>
+<p>@Entity(name = “word_table”)<br>
+: Entity의 테이블 명을 선언한다.<br>
+@PrimaryKey<br>
+: 모든 Entity는 PrimaryKey가 필요하다.(값을 구별하기 위한 식별자)<br>
+@ColumnInfo(name = “word”)<br>
+: 테이블에서 word라는 이름으로 데이터베이스 column 사용</p>
+<p><code>Entity에는 getter 함수가 필수적으로 존재해야 하고 변수들은 public 형태여야 한다.</code></p>
+<p>@Embeded<br>
+: 필드로 object를 갖는 경우 사용한다.</p>
+<ul>
+<li>Annotaion과 관련된 속성은 구글 공식 문서를 참고하거나 블로그의 다른 글을 참고하면 좋을 것 같다.</li>
+<li><a href="https://woovictory.github.io/2019/01/25/Android-Room-Basic/">5일차 [안드로이드] Room</a></li>
+</ul>
+<h2 id="dao-만들기">DAO 만들기</h2>
+<ul>
+<li>DAO는 SQL 쿼리를 지정하고 메소드 호출을 연결한다.</li>
+<li>쿼리는 별도의 스레드에서 동작하며 메인 스레드에서 동작하지 않는다.(UI - Thread에서는 동작하면 앱에 에러가 난다.)</li>
+<li>Interface class 혹은 abstract class로 사용한다.</li>
+<li>@Dao 어노테이션을 지정한다.</li>
+<li>Dao에서는 데이터베이스에 있는 테이블에서 사용할 쿼리를 지정하고 메소드와 연결을 한다. 단순히 정의만 해놓는다.</li>
+</ul>
+<p><strong>주의</strong></p>
+<p>AppDatabase object를 생성하는 코드는 비용이 많이 들기 때문에 <strong>Singleton</strong>으로 구현해야 한다.</p>
+<h2 id="room-database-만들기">Room Database 만들기</h2>
+<ul>
+<li>Room Database는 SQLite 데이터베이스 상위에 있는 데이터베이스 계층을 말한다.</li>
+<li>Room은 DAO를 이용하여 데이터베이스의 쿼리를 실행한다.</li>
+<li>기본적으로 UI 성능 저하를 피하기 위해서 Room에서는 main thread에서 쿼리를 실행할 수 없다.</li>
+<li><strong>LiveData</strong>는 필요할 때 백그라운드 스레드에서 쿼리를 비동기적으로 자동 실행하여 규칙을 적용한다.</li>
+<li>Room 클래스는 abstract 여야 하며, RoomDatabase를 상속받아야 한다.</li>
+<li>일반적으로 RoomDatabase 객체를 생성하는 코드는 비용이 많이 들기 때문에 싱글톤으로 구현해 하나의 객체만 유지한다.</li>
+</ul>
+<p><strong>어노테이션</strong><br>
+@Database(entities = {Word.class}, version = 1)<br>
+: Room Database를 정의한다. entities는 데이터베이스에 사용될 Entity를 나타낸다. version는 추후 데이터베이스의 변경 사항이 있을 시 변경해야 할 사항이다.</p>
+<h2 id="repository-만들기">Repository 만들기</h2>
 <h2 id="참고">참고</h2>
 <ul>
 <li><a href="https://codelabs.developers.google.com/codelabs/android-room-with-a-view/#16" target="_blank" rel="noopener">Android Room with a View - Java</a></li>
@@ -198,7 +258,7 @@
 
 
 
-    <a data-url="https://woovictory.github.io/2019/01/27/Android-AAC-Room/" data-id="cjrik8a5s0008t7pq6emzjxek" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="https://woovictory.github.io/2019/01/31/Android-AAC-Room/" data-id="cjrik8a5s0008t7pq6emzjxek" class="article-share-link"><i class="fa fa-share"></i>Compartir</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -279,7 +339,7 @@
                     <aside id="sidebar">
     <a class="sidebar-toggle" title="Expand Sidebar"><i class="toggle icon"></i></a>
     <div class="sidebar-top">
-        <p>follow:</p>
+        <p>Social:</p>
         <ul class="social-links">
             
                 
@@ -312,20 +372,10 @@
         
 <nav id="article-nav">
     
-        <a href="/2019/01/29/Android-MpAndroidChart/" id="article-nav-newer" class="article-nav-link-wrap">
-        <strong class="article-nav-caption">newer</strong>
-        <p class="article-nav-title">
-        
-            8일차 [안드로이드] MpAndroidChart
-        
-        </p>
-        <i class="icon fa fa-chevron-right" id="icon-chevron-right"></i>
-    </a>
     
-    
-        <a href="/2019/01/26/Java-Singleton-Pattern/" id="article-nav-older" class="article-nav-link-wrap">
-        <strong class="article-nav-caption">older</strong>
-        <p class="article-nav-title">6일차 [Java] Singleton</p>
+        <a href="/2019/01/30/Android-CustomLayout/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">antic</strong>
+        <p class="article-nav-title">10일차 [안드로이드] </p>
         <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
         </a>
     
@@ -350,6 +400,15 @@
         <h3 class="widget-title">recents</h3>
         <div class="widget">
             <ul id="recent-post" class="no-thumbnail">
+                
+                    <li>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Programming/">Programming</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/Programming/Android/">Android</a></p>
+                            <p class="item-title"><a href="/2019/01/31/Android-AAC-Room/" class="title">11일차 [안드로이드] AAC - Room 실습</a></p>
+                            <p class="item-date"><time datetime="2019-01-31T13:32:55.000Z" itemprop="datePublished">2019-01-31</time></p>
+                        </div>
+                    </li>
                 
                     <li>
                         
@@ -381,15 +440,6 @@
                     <li>
                         
                         <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/Programming/">Programming</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/Programming/Android/">Android</a></p>
-                            <p class="item-title"><a href="/2019/01/27/Android-AAC-Room/" class="title">[안드로이드] AAC - Room</a></p>
-                            <p class="item-date"><time datetime="2019-01-27T13:32:55.000Z" itemprop="datePublished">2019-01-27</time></p>
-                        </div>
-                    </li>
-                
-                    <li>
-                        
-                        <div class="item-inner">
                             <p class="item-category"><a class="article-category-link" href="/categories/Programming/">Programming</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/Programming/Java/">Java</a></p>
                             <p class="item-title"><a href="/2019/01/26/Java-Singleton-Pattern/" class="title">6일차 [Java] Singleton</a></p>
                             <p class="item-date"><time datetime="2019-01-26T03:52:38.000Z" itemprop="datePublished">2019-01-26</time></p>
@@ -403,7 +453,7 @@
             
                 
     <div class="widget-wrap widget-list">
-        <h3 class="widget-title">archives</h3>
+        <h3 class="widget-title">Archive</h3>
         <div class="widget">
             <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a><span class="archive-list-count">44</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a><span class="archive-list-count">25</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a><span class="archive-list-count">24</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a><span class="archive-list-count">34</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">February 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a><span class="archive-list-count">1</span></li></ul>
         </div>
@@ -413,7 +463,7 @@
             
                 
     <div class="widget-wrap widget-float">
-        <h3 class="widget-title">tag cloud</h3>
+        <h3 class="widget-title">etiqueta cloud</h3>
         <div class="widget tagcloud">
             <a href="/tags/3-4-Way-Handshake/" style="font-size: 10px;">3 & 4 Way Handshake</a> <a href="/tags/AAC/" style="font-size: 10px;">AAC</a> <a href="/tags/Android/" style="font-size: 19.17px;">Android</a> <a href="/tags/BOJ/" style="font-size: 20px;">BOJ</a> <a href="/tags/Blog/" style="font-size: 10px;">Blog</a> <a href="/tags/Compile-Error/" style="font-size: 10px;">Compile Error</a> <a href="/tags/DP/" style="font-size: 10px;">DP</a> <a href="/tags/Data-Structure/" style="font-size: 17.5px;">Data Structure</a> <a href="/tags/Deep-Link/" style="font-size: 10px;">Deep Link</a> <a href="/tags/Error/" style="font-size: 10px;">Error</a> <a href="/tags/Fragment/" style="font-size: 10px;">Fragment</a> <a href="/tags/Glide/" style="font-size: 10px;">Glide</a> <a href="/tags/Graph/" style="font-size: 10px;">Graph</a> <a href="/tags/Graph-Library/" style="font-size: 10px;">Graph Library</a> <a href="/tags/HTTP/" style="font-size: 10.83px;">HTTP</a> <a href="/tags/HTTPS/" style="font-size: 10px;">HTTPS</a> <a href="/tags/Hash/" style="font-size: 10px;">Hash</a> <a href="/tags/Heap/" style="font-size: 10.83px;">Heap</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/Intent/" style="font-size: 10px;">Intent</a> <a href="/tags/Java/" style="font-size: 18.33px;">Java</a> <a href="/tags/Kotlin/" style="font-size: 16.67px;">Kotlin</a> <a href="/tags/ListView/" style="font-size: 10px;">ListView</a> <a href="/tags/MVP/" style="font-size: 16.67px;">MVP</a> <a href="/tags/MarshMellow/" style="font-size: 10px;">MarshMellow</a> <a href="/tags/Network/" style="font-size: 10.83px;">Network</a> <a href="/tags/Node-js/" style="font-size: 15.83px;">Node.js</a> <a href="/tags/OS/" style="font-size: 14.17px;">OS</a> <a href="/tags/Parcelable/" style="font-size: 10px;">Parcelable</a> <a href="/tags/Permission/" style="font-size: 10px;">Permission</a> <a href="/tags/Picasso/" style="font-size: 10px;">Picasso</a> <a href="/tags/Programmers/" style="font-size: 10px;">Programmers</a> <a href="/tags/Project/" style="font-size: 10px;">Project</a> <a href="/tags/RESTful/" style="font-size: 10px;">RESTful</a> <a href="/tags/RecyclerView/" style="font-size: 10px;">RecyclerView</a> <a href="/tags/Reflection/" style="font-size: 10px;">Reflection</a> <a href="/tags/Retrofit/" style="font-size: 10px;">Retrofit</a> <a href="/tags/Room/" style="font-size: 10px;">Room</a> <a href="/tags/Runtime-Error/" style="font-size: 10px;">Runtime Error</a> <a href="/tags/SOPT/" style="font-size: 15px;">SOPT</a> <a href="/tags/SP/" style="font-size: 10px;">SP</a> <a href="/tags/Serializable/" style="font-size: 10px;">Serializable</a> <a href="/tags/SharedPreference/" style="font-size: 10px;">SharedPreference</a> <a href="/tags/Singleton/" style="font-size: 10px;">Singleton</a> <a href="/tags/Static/" style="font-size: 10px;">Static</a> <a href="/tags/TCP/" style="font-size: 10.83px;">TCP</a> <a href="/tags/UDP/" style="font-size: 10px;">UDP</a> <a href="/tags/View/" style="font-size: 10px;">View</a> <a href="/tags/computer-science/" style="font-size: 10px;">computer science</a> <a href="/tags/etc/" style="font-size: 13.33px;">etc</a> <a href="/tags/network/" style="font-size: 10px;">network</a> <a href="/tags/네트워크/" style="font-size: 10px;">네트워크</a> <a href="/tags/라이브러리/" style="font-size: 11.67px;">라이브러리</a> <a href="/tags/안드로이드-기초/" style="font-size: 12.5px;">안드로이드 기초</a> <a href="/tags/오류-제어/" style="font-size: 10px;">오류 제어</a> <a href="/tags/운영체제/" style="font-size: 14.17px;">운영체제</a> <a href="/tags/인텐트/" style="font-size: 10px;">인텐트</a> <a href="/tags/자료구조/" style="font-size: 17.5px;">자료구조</a> <a href="/tags/직렬화/" style="font-size: 10px;">직렬화</a> <a href="/tags/패킷-교환/" style="font-size: 10px;">패킷 교환</a> <a href="/tags/혼잡-제어/" style="font-size: 10px;">혼잡 제어</a> <a href="/tags/흐름-제어/" style="font-size: 10px;">흐름 제어</a>
         </div>
@@ -462,7 +512,7 @@
     var disqus_shortname = 'hexo-theme-hueman';
     
     
-    var disqus_url = 'https://woovictory.github.io/2019/01/27/Android-AAC-Room/';
+    var disqus_url = 'https://woovictory.github.io/2019/01/31/Android-AAC-Room/';
     
     (function() {
     var dsq = document.createElement('script');
