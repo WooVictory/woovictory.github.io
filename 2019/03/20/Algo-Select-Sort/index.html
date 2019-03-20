@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+
+    
+
+    
+    <title>[정렬] 정렬 알고리즘 | VictoryWoo</title>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+        <meta name="keywords" content="정렬,선택 정렬,삽입 정렬,버블 정렬" />
+    
+    <meta name="description" content="정렬 알고리즘은 개발자 면접을 보기 위해서 꼭 필요한 내용이다. 하나씩 정리해보고 숙지해보자. 정렬 알고리즘은 다음과 같이 간단하게 나눠볼 수 있다.  단순하지만 비효율적인 방법  선택 정렬, 삽입 정렬, 버블 정렬   복잡하지만 조금 더 효율적인 방법  퀵 정렬, 힙 정렬, 합병 정렬, 기수 정렬    Q. 정렬은 왜 사용할까? 탐색을 빠르게 하기 위해서">
+<meta name="keywords" content="정렬,선택 정렬,삽입 정렬,버블 정렬">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[정렬] 정렬 알고리즘">
+<meta property="og:url" content="https://woovictory.github.io/2019/03/20/Algo-Select-Sort/index.html">
+<meta property="og:site_name" content="VictoryWoo">
+<meta property="og:description" content="정렬 알고리즘은 개발자 면접을 보기 위해서 꼭 필요한 내용이다. 하나씩 정리해보고 숙지해보자. 정렬 알고리즘은 다음과 같이 간단하게 나눠볼 수 있다.  단순하지만 비효율적인 방법  선택 정렬, 삽입 정렬, 버블 정렬   복잡하지만 조금 더 효율적인 방법  퀵 정렬, 힙 정렬, 합병 정렬, 기수 정렬    Q. 정렬은 왜 사용할까? 탐색을 빠르게 하기 위해서">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2019-03-20T13:53:06.985Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="[정렬] 정렬 알고리즘">
+<meta name="twitter:description" content="정렬 알고리즘은 개발자 면접을 보기 위해서 꼭 필요한 내용이다. 하나씩 정리해보고 숙지해보자. 정렬 알고리즘은 다음과 같이 간단하게 나눠볼 수 있다.  단순하지만 비효율적인 방법  선택 정렬, 삽입 정렬, 버블 정렬   복잡하지만 조금 더 효율적인 방법  퀵 정렬, 힙 정렬, 합병 정렬, 기수 정렬    Q. 정렬은 왜 사용할까? 탐색을 빠르게 하기 위해서">
+    
+
+    
+
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/titillium-web/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" type="text/css" href="">
+    <link rel="stylesheet" href="https://cdn.rawgit.com/innks/NanumSquareRound/master/nanumsquareround.css">	
+    <link rel="stylesheet" href="https://fonts.googleapis.com/earlyaccess/nanumgothiccoding.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/3.3.1/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+
+
+</head>
+
+<body>
+    <div id="wrap">
+        <header id="header">
+    <div id="header-outer" class="outer">
+        <div class="container">
+            <div class="container-inner">
+                <div id="header-title">
+                    <h1 class="logo-wrap">
+                        <a href="/" class="logo"></a>
+                    </h1>
+                    
+                        <h2 class="subtitle-wrap">
+                            <p class="subtitle">VictoryWoo&#39;s Blog</p>
+                        </h2>
+                    
+                </div>
+                <div id="header-inner" class="nav-container">
+                    <a id="main-nav-toggle" class="nav-icon fa fa-bars"></a>
+                    <div class="nav-container-inner">
+                        <ul id="main-nav">
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/">Home</a>
+                                </li>
+                            
+                                        <ul class="main-nav-list"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Algorithm/">Algorithm</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Algorithm/BOJ/">BOJ</a></li></ul></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/">CS</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/Design-Pattern/">Design Pattern</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/OS/">OS</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/개발-상식/">개발 상식</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/네트워크/">네트워크</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/데이터베이스/">데이터베이스</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/알고리즘/">알고리즘</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/자료구조/">자료구조</a></li></ul></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programmers/">Programmers</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/">Programming</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/Android/">Android</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/Inno-SOPT/">Inno_SOPT</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/Java/">Java</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/Kotlin/">Kotlin</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/Node-js/">Node.js</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/RxJava/">RxJava</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/etc/">etc</a></li></ul></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/algorithm/">algorithm</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/algorithm/BOJ/">BOJ</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/algorithm/개념/">개념</a></li></ul></li></ul>
+                                    
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/about/index.html">About</a>
+                                </li>
+                            
+                        </ul>
+                        <nav id="sub-nav">
+                            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="Type something..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+        <div class="container">
+            <div class="main-body container-inner">
+                <div class="main-body-inner">
+                    <section id="main">
+                        <div class="main-body-header">
+    <h1 class="header">
+    
+    <a class="page-title-link" href="/categories/CS/">CS</a><i class="icon fa fa-angle-right"></i><a class="page-title-link" href="/categories/CS/알고리즘/">알고리즘</a>
+    </h1>
+</div>
+
+                        <div class="main-body-content">
+                            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({
+     google_ad_client: "ca-pub-9725307592233286",
+     enable_page_level_ads: true
+});
+</script>
+                            <article id="post-Algo-Select-Sort" class="article article-single article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+        [정렬] 정렬 알고리즘
+        </h1>
+    
+
+            </header>
+        
+        
+            <div class="article-meta">
+                
+    <div class="article-date">
+        <a href="/2019/03/20/Algo-Select-Sort/" class="article-date">
+            <time datetime="2019-03-20T08:04:04.000Z" itemprop="datePublished">2019-03-20</time>
+        </a>
+    </div>
+
+		
+
+                
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/버블-정렬/">버블 정렬</a>, <a class="tag-link" href="/tags/삽입-정렬/">삽입 정렬</a>, <a class="tag-link" href="/tags/선택-정렬/">선택 정렬</a>, <a class="tag-link" href="/tags/정렬/">정렬</a>
+    </div>
+
+            </div>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+            <p>정렬 알고리즘은 개발자 면접을 보기 위해서 꼭 필요한 내용이다. 하나씩 정리해보고 숙지해보자. 정렬 알고리즘은 다음과 같이 간단하게 나눠볼 수 있다.</p>
+<ul>
+<li>단순하지만 비효율적인 방법
+<ul>
+<li>선택 정렬, 삽입 정렬, 버블 정렬</li>
+</ul>
+</li>
+<li>복잡하지만 조금 더 효율적인 방법
+<ul>
+<li>퀵 정렬, 힙 정렬, 합병 정렬, 기수 정렬</li>
+</ul>
+</li>
+</ul>
+<p>Q. 정렬은 왜 사용할까?<br>
+탐색을 빠르게 하기 위해서 정렬을 한다. 하지만 정렬 방법은 많고 이 중에서 제일 빠른 걸 사용해야 한다. 같은 시간 복잡도를 갖더라도 요소에 따라 달라질 수 있으니 알아보자.</p>
+<h2 id="선택-정렬"># 선택 정렬</h2>
+<p>기본이 되는 정렬 중 하나이다. 현재 위치에 들어갈 값을 찾아 정렬하는 배열이다. 현재 위치에 저장될 값의 크기가 작냐, 크냐에 따라서 최소 선택 정렬(오름차순으로 정렬)과 최대 선택 정렬(내림차순으로 정렬)이 있다.</p>
+<p><strong>기본로직은 아래와 같다.</strong></p>
+<ol>
+<li>정렬되지 않은 인덱스의 맨 앞에서부터 이를 포함한 그 이후 배열의 값 중 가장 작은 값을 찾는다.</li>
+<li>가장 작은 값을 찾으면, 그 값을 현재 인덱스의 값과 바꿔준다.</li>
+<li>다음 인덱스에서 위의 과정을 반복한다.</li>
+</ol>
+<p>쉽게 설명하면 기준이 되는 수와 나머지 수를 비교해서 가장 작은 수를 앞으로 계속 보내는 정렬이다. 간단하지만 매우 비효율적이다.</p>
+<p>최악의 경우, 최선의 경우, 평균적인 경우 모두 <code>시간 복잡도 : O(N^2)</code>을 갖는다.</p>
+<p><strong>장점</strong></p>
+<ul>
+<li>데이터의 양이 적을 때 좋은 성능을 나타냄</li>
+<li>적은 값을 선택하기 위해서는 비교는 여러번 수행되지만 교환횟수가 적다.</li>
+</ul>
+<p><strong>단점</strong></p>
+<ul>
+<li>100개 이상의 자료에 대해서는 속도가 급격히 떨어져 적절히 사용되기 힘들다.</li>
+</ul>
+<h2 id="버블-정렬"># 버블 정렬</h2>
+<ul>
+<li>서로 인접한 두 원소를 검사하여 정렬하는 알고리즘을 갖는다.
+<ul>
+<li>인접한 2개의 원소를 비교하여 크기가 순서대로 되어 있지 않으면 서로 교환한다.</li>
+</ul>
+</li>
+<li>선택 정렬과 기본 개념이 유사함.</li>
+</ul>
+<p><strong>기본 로직은 아래와 같다.</strong></p>
+<ol>
+<li>버블 정렬은 첫 번째 자료와 두 번째 자료를, 두 번째 자료와 세 번째 자료를 … n-1번째 자료와 n번째 자료를 비교하여 교환하면서 자료를 정렬한다.</li>
+<li>1회전을 수행하고 나면 가장 큰 자료가 맨 뒤로 이동한다.</li>
+<li>이렇기 때문에 2회전에서는 맨 끝에 있는 자료가 정렬에서 제외되고, 2회전을 수행하고 나면 끝에서 두 번째 자료까지는 정렬에서 제외된다. 정렬을 1회전 수행할 때마다 정렬에서 제외되는 데이터가 하나씩 늘어난다.</li>
+</ol>
+<p>쉽게 설명하면 현재 원소와 다음 원소를 비교해서 큰 원소를 뒤로 보내는 정렬이다.</p>
+<p>최악의 경우, 최선의 경우, 평균적인 경우 모두 <code>시간 복잡도 : O(N^2)</code>을 갖는다.<br>
+이미 정렬된 데이터에 대해서 검사하는데는 O(N)으로 간단하게 할 수 있다.</p>
+<p><strong>장점</strong></p>
+<ul>
+<li>구현이 쉽다.</li>
+<li>이미 정렬된 데이터를 정렬할 때 가장 빠르다.</li>
+</ul>
+<p><strong>단점</strong></p>
+<ul>
+<li>다른 정렬에 비해 정렬 속도가 느리다.</li>
+<li>역순배열을 정렬할 때 가장 느리다.</li>
+<li>정말 비효율적이라 거의 쓰이지 않는다.</li>
+</ul>
+<h2 id="삽입-정렬"># 삽입 정렬</h2>
+<p>삽입 정렬의 기본 개념은 손안의 카드를 정렬하는 방법과 유사하다.</p>
+<ul>
+<li>새로운 카드를 기존의 정렬된 카드 사이의 올바른 자리를 찾아 삽입한다.</li>
+<li>새로 삽입될 카드의 수만큼 반복하게 되면 전체 카드가 정렬된다.</li>
+<li>자료 배열의 모든 요소를 <strong>앞에서부터 차례대로 이미 정렬된 배열 부분과 비교</strong>하여 자신의 위치를 찾아 삽입함으로써 정렬을 완성하는 알고리즘.</li>
+<li>매 순서마다 해당 원소를 삽입할 수 있는 위치를 찾아 해당 위치에 넣는다.</li>
+</ul>
+<p><strong>기본 로직은 아래와 같다.</strong></p>
+<ul>
+<li>오름차순을 기준으로 정렬한다.</li>
+</ul>
+<ol>
+<li>기준이 되는 인덱스는 두 번째 자료부터 시작한다. 이 기준이 되는 인덱스를 <strong>Key</strong>라고 하겠다. Key가 들어갈 자리를 찾는게 핵심이다.</li>
+<li>Key는 그 앞(왼쪽)의 자료들과 비교하여 삽입할 위치를 지정한 후 자료들을 뒤로 옮기고 지정한 자리에 Key 자료를 삽입하여 정렬한다.</li>
+<li>즉, 두 번째 자료는 첫 번째 자료와 비교하고 세 번째 자료는 두 번째와 첫 번째 자료 …  이런 방식으로 비교해서 기준이 되는 자료가 들어갈 위치를 찾는다.</li>
+<li>최종적으로 Key가 들어갈 위치를 찾았다면 자료들을 한칸씩 뒤로 이동시키고 그 자리에 삽입한다.</li>
+</ol>
+<p>쉽게 말하면 기준이 되는 인덱스의 앞쪽(왼쪽)을 검사하여 기준이 되는 인덱스가 들어갈 자리를 찾아서 삽입하는 정렬이다.</p>
+<p>최악의 경우 : O(N^2) - 자료가 역순으로 정렬되어 있을 경우/작은 값이 뒤에 몰려있을 경우<br>
+최선의 경우 : O(N) - 이동없이 1번의 비교만 이루어질 경우<br>
+평균적인 경우 : O(N^2)</p>
+<p><strong>장점</strong></p>
+<ul>
+<li>stable한 정렬 방법</li>
+<li>적은 수를 정렬할 경우 알고리즘 자체가 간단해서 다른 복잡한 정렬 방법보다 유리할 수 있다.</li>
+<li>대부분의 수가 이미 정렬되어 있는 경우에 매우 효율적이다.</li>
+</ul>
+<p><strong>단점</strong></p>
+<ul>
+<li>비교적 많은 수들의 이동을 포함한다.</li>
+<li>비교할 수가 많고 크기가 클 경우에 적합하지 않다.</li>
+</ul>
+<h2 id="결론">결론</h2>
+<p>위에서 살펴본 정렬 알고리즘들은 비교적 구현이 간단하다. 그리고 이해하기도 어렵지 않다. 하지만 속도가 느리다는 단점이 존재한다. 다음에는 이보다 속도가 좋은 정렬 알고리즘을 살펴보도록 하겠다.</p>
+<p><strong>stable과 unstable</strong></p>
+<ul>
+<li>stable : 정렬할 때 같은 값을 가진 수들이 정렬 전과 정렬 후에 순서가 바뀌지 않는 경우</li>
+<li>unstable : 정렬할 때 같은 값을 가진 수들이 정렬 전과 정렬 후에 순서가 바뀌는 경우</li>
+</ul>
+<p>다음의 예를 한 번 생각해보자.<br>
+ex) 5, 4, 8, 8, 5, 3, 1, 10, 6<br>
+숫자가 있고 순서를 부여해보자.<br>
+ex 5(1), 4(2), 8(3), 8(4), 5(5), 3(6), 1(7), 10(8), 6(9)</p>
+<p>()안의 숫자는 해당 노드(수)가 들어온 순서를 뜻한다. 만약 정렬할 시에 key 값을 기준으로 정렬을 하되, 같은 key 값을 가진 노드는 들어온 순서에 따라 다시 정렬되어야 한다면 어떻게 할 것인가? 다음 결과와 같이 최종적으로 정렬된 정보가 바로 stable한 것이다. 정렬된 결과는 다음과 같다.</p>
+<p>ex) 1(7), 3(6), 4(2), 5(1), 5(5), 6(9), 8(4), 10(8)</p>
+<ul>
+<li><strong>선택 정렬</strong> : unstable</li>
+</ul>
+<p>ex) 5(1), 4(2), 5(3), 2(4), 3(5)<br>
+위에서 5(1)과 2(4)를 교환한다.<br>
+ex) 2(4), 4(2), 5(3), 5(1), 3(5)<br>
+위의 결과가 나온다. 처음의 순서를 유지하지 않게 된다. 이러한 이유로 선택 정렬은 stable한 결과를 보장할 수 없기 때문에 <strong>unstable</strong>하다고 한다.</p>
+<ul>
+<li><strong>버블 정렬</strong> : stable</li>
+<li><strong>삽입 정렬</strong> : stable</li>
+</ul>
+<h2 id="참고">참고</h2>
+<ul>
+<li><a href="https://dpdpwl.tistory.com/17" target="_blank" rel="noopener">[Algorithm]선택정렬 예제(selection sort)</a></li>
+<li><a href="https://gmlwjd9405.github.io/2018/05/06/algorithm-insertion-sort.html" target="_blank" rel="noopener">정렬 기본</a></li>
+<li><a href="http://blog.naver.com/zephyehu/150013176075" target="_blank" rel="noopener">stable과 unstable에 대하여</a></li>
+<li><a href="https://marobiana.tistory.com/85" target="_blank" rel="noopener">[JAVA] Insertion Sort (삽입정렬)</a></li>
+<li><a href="https://geekhub.tistory.com/62" target="_blank" rel="noopener">기술면접 list - 알고리즘</a></li>
+</ul>
+
+        </div>
+        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({
+     google_ad_client: "ca-pub-9725307592233286",
+     enable_page_level_ads: true
+});
+</script>
+        <footer class="article-footer">
+            
+
+
+
+    <a data-url="https://woovictory.github.io/2019/03/20/Algo-Select-Sort/" data-id="cjth9ci4v0004ftpq6kgdayjm" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+<script>
+    (function ($) {
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+        </footer>
+    </div>
+</article>
+
+    <section id="comments">
+    
+        
+    <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+
+    
+    </section>
+
+
+
+                        </div>
+                    </section>
+                    <aside id="sidebar">
+    <a class="sidebar-toggle" title="Expand Sidebar"><i class="toggle icon"></i></a>
+    <div class="sidebar-top">
+        <p>follow:</p>
+        <ul class="social-links">
+            
+                
+                <li>
+                    <a class="social-tooltip" title="facebook" href="https://www.facebook.com/WooVictory" target="_blank" rel="noopener">
+                        <i class="icon fa fa-facebook"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="github" href="https://github.com/WooVictory" target="_blank" rel="noopener">
+                        <i class="icon fa fa-github"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="linkedin" href="https://www.linkedin.com/in/seungwoo-lee-590844177" target="_blank" rel="noopener">
+                        <i class="icon fa fa-linkedin"></i>
+                    </a>
+                </li>
+                
+            
+        </ul>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+    
+        <a href="/2019/03/14/RxJava-Chap02/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">older</strong>
+        <p class="article-nav-title">[RxJava] Chap02</p>
+        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
+        </a>
+    
+</nav>
+
+    
+    <div class="widgets-container">
+        
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">categories</h3>
+        <div class="widget">
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Algorithm/">Algorithm</a><span class="category-list-count">3</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Algorithm/BOJ/">BOJ</a><span class="category-list-count">3</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/CS/">CS</a><span class="category-list-count">28</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/CS/Design-Pattern/">Design Pattern</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/CS/OS/">OS</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/CS/개발-상식/">개발 상식</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/CS/네트워크/">네트워크</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/CS/데이터베이스/">데이터베이스</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/CS/알고리즘/">알고리즘</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/CS/자료구조/">자료구조</a><span class="category-list-count">9</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Programmers/">Programmers</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Programming/">Programming</a><span class="category-list-count">110</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Programming/Android/">Android</a><span class="category-list-count">39</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Programming/Inno-SOPT/">Inno_SOPT</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Programming/Java/">Java</a><span class="category-list-count">36</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Programming/Kotlin/">Kotlin</a><span class="category-list-count">11</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Programming/Node-js/">Node.js</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Programming/RxJava/">RxJava</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Programming/etc/">etc</a><span class="category-list-count">5</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/">algorithm</a><span class="category-list-count">45</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/BOJ/">BOJ</a><span class="category-list-count">44</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/개념/">개념</a><span class="category-list-count">1</span></li></ul></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap">
+        <h3 class="widget-title">recents</h3>
+        <div class="widget">
+            <ul id="recent-post" class="no-thumbnail">
+                
+                    <li>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/CS/">CS</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/CS/알고리즘/">알고리즘</a></p>
+                            <p class="item-title"><a href="/2019/03/20/Algo-Select-Sort/" class="title">[정렬] 정렬 알고리즘</a></p>
+                            <p class="item-date"><time datetime="2019-03-20T08:04:04.000Z" itemprop="datePublished">2019-03-20</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Programming/">Programming</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/Programming/RxJava/">RxJava</a></p>
+                            <p class="item-title"><a href="/2019/03/14/RxJava-Chap02/" class="title">[RxJava] Chap02</a></p>
+                            <p class="item-date"><time datetime="2019-03-14T14:19:14.000Z" itemprop="datePublished">2019-03-14</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Programming/">Programming</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/Programming/RxJava/">RxJava</a></p>
+                            <p class="item-title"><a href="/2019/03/12/RxJava-Chap01/" class="title">[RxJava] Chap01 리액티브 소개</a></p>
+                            <p class="item-date"><time datetime="2019-03-12T06:29:09.000Z" itemprop="datePublished">2019-03-12</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2019/03/02/2018-Review/" class="title">[2018 회고]</a></p>
+                            <p class="item-date"><time datetime="2019-03-01T15:23:37.000Z" itemprop="datePublished">2019-03-02</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Programming/">Programming</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/Programming/Java/">Java</a></p>
+                            <p class="item-title"><a href="/2019/02/27/What-Is-enum-Java/" class="title">[Java] Enum이란?</a></p>
+                            <p class="item-date"><time datetime="2019-02-27T06:34:55.000Z" itemprop="datePublished">2019-02-27</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">archives</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a><span class="archive-list-count">44</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a><span class="archive-list-count">24</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a><span class="archive-list-count">24</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a><span class="archive-list-count">34</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">February 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a><span class="archive-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-float">
+        <h3 class="widget-title">tag cloud</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/2018/" style="font-size: 10px;">2018</a> <a href="/tags/3-4-Way-Handshake/" style="font-size: 10px;">3 & 4 Way Handshake</a> <a href="/tags/AAC/" style="font-size: 10px;">AAC</a> <a href="/tags/Android/" style="font-size: 19.23px;">Android</a> <a href="/tags/Array/" style="font-size: 10px;">Array</a> <a href="/tags/AsyncTask/" style="font-size: 10px;">AsyncTask</a> <a href="/tags/BOJ/" style="font-size: 20px;">BOJ</a> <a href="/tags/Basic/" style="font-size: 17.69px;">Basic</a> <a href="/tags/Blog/" style="font-size: 10px;">Blog</a> <a href="/tags/Compile-Error/" style="font-size: 10px;">Compile Error</a> <a href="/tags/Component/" style="font-size: 10px;">Component</a> <a href="/tags/Context/" style="font-size: 10px;">Context</a> <a href="/tags/DP/" style="font-size: 10px;">DP</a> <a href="/tags/Data-Structure/" style="font-size: 17.69px;">Data Structure</a> <a href="/tags/DataBinding/" style="font-size: 10px;">DataBinding</a> <a href="/tags/Deep-Link/" style="font-size: 10px;">Deep Link</a> <a href="/tags/Error/" style="font-size: 10px;">Error</a> <a href="/tags/Factory-Pattern/" style="font-size: 10px;">Factory Pattern</a> <a href="/tags/Fragment/" style="font-size: 10.77px;">Fragment</a> <a href="/tags/Glide/" style="font-size: 10px;">Glide</a> <a href="/tags/Graph/" style="font-size: 10px;">Graph</a> <a href="/tags/Graph-Library/" style="font-size: 10px;">Graph Library</a> <a href="/tags/HTTP/" style="font-size: 10.77px;">HTTP</a> <a href="/tags/HTTPS/" style="font-size: 10px;">HTTPS</a> <a href="/tags/Hash/" style="font-size: 10px;">Hash</a> <a href="/tags/Heap/" style="font-size: 10.77px;">Heap</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/Intent/" style="font-size: 10px;">Intent</a> <a href="/tags/Java/" style="font-size: 18.46px;">Java</a> <a href="/tags/Kotlin/" style="font-size: 16.15px;">Kotlin</a> <a href="/tags/LinkedList/" style="font-size: 10px;">LinkedList</a> <a href="/tags/ListView/" style="font-size: 10px;">ListView</a> <a href="/tags/MVP/" style="font-size: 16.15px;">MVP</a> <a href="/tags/MarshMellow/" style="font-size: 10px;">MarshMellow</a> <a href="/tags/MpChart/" style="font-size: 10px;">MpChart</a> <a href="/tags/Network/" style="font-size: 10.77px;">Network</a> <a href="/tags/Node-js/" style="font-size: 15.38px;">Node.js</a> <a href="/tags/OS/" style="font-size: 13.85px;">OS</a> <a href="/tags/Observable/" style="font-size: 10px;">Observable</a> <a href="/tags/Parcelable/" style="font-size: 10px;">Parcelable</a> <a href="/tags/Permission/" style="font-size: 10px;">Permission</a> <a href="/tags/Picasso/" style="font-size: 10px;">Picasso</a> <a href="/tags/Programmers/" style="font-size: 10px;">Programmers</a> <a href="/tags/Queue/" style="font-size: 10px;">Queue</a> <a href="/tags/RESTful/" style="font-size: 10px;">RESTful</a> <a href="/tags/RecyclerView/" style="font-size: 10px;">RecyclerView</a> <a href="/tags/Reflection/" style="font-size: 10px;">Reflection</a> <a href="/tags/Retrofit/" style="font-size: 10px;">Retrofit</a> <a href="/tags/Room/" style="font-size: 10.77px;">Room</a> <a href="/tags/Runtime-Error/" style="font-size: 10px;">Runtime Error</a> <a href="/tags/RxJava/" style="font-size: 10px;">RxJava</a> <a href="/tags/Rxjava/" style="font-size: 10px;">Rxjava</a> <a href="/tags/SOPT/" style="font-size: 14.62px;">SOPT</a> <a href="/tags/SP/" style="font-size: 10px;">SP</a> <a href="/tags/Serializable/" style="font-size: 10px;">Serializable</a> <a href="/tags/SharedPreference/" style="font-size: 10px;">SharedPreference</a> <a href="/tags/Singleton/" style="font-size: 10px;">Singleton</a> <a href="/tags/Stack/" style="font-size: 10px;">Stack</a> <a href="/tags/Static/" style="font-size: 10px;">Static</a> <a href="/tags/TCP/" style="font-size: 10.77px;">TCP</a> <a href="/tags/Tip/" style="font-size: 16.92px;">Tip</a> <a href="/tags/UDP/" style="font-size: 10px;">UDP</a> <a href="/tags/View/" style="font-size: 10px;">View</a> <a href="/tags/computer-science/" style="font-size: 10px;">computer science</a> <a href="/tags/etc/" style="font-size: 13.08px;">etc</a> <a href="/tags/network/" style="font-size: 10px;">network</a> <a href="/tags/네트워크/" style="font-size: 10px;">네트워크</a> <a href="/tags/데이터베이스/" style="font-size: 10px;">데이터베이스</a> <a href="/tags/라이브러리/" style="font-size: 11.54px;">라이브러리</a> <a href="/tags/리액티브-프로그래밍/" style="font-size: 10px;">리액티브 프로그래밍</a> <a href="/tags/면접-질문/" style="font-size: 12.31px;">면접 질문</a> <a href="/tags/버블-정렬/" style="font-size: 10px;">버블 정렬</a> <a href="/tags/삽입-정렬/" style="font-size: 10px;">삽입 정렬</a> <a href="/tags/선택-정렬/" style="font-size: 10px;">선택 정렬</a> <a href="/tags/안드로이드-기초/" style="font-size: 12.31px;">안드로이드 기초</a> <a href="/tags/오류-제어/" style="font-size: 10px;">오류 제어</a> <a href="/tags/운영체제/" style="font-size: 13.85px;">운영체제</a> <a href="/tags/인텐트/" style="font-size: 10px;">인텐트</a> <a href="/tags/자료구조/" style="font-size: 17.69px;">자료구조</a> <a href="/tags/정렬/" style="font-size: 10px;">정렬</a> <a href="/tags/직렬화/" style="font-size: 10px;">직렬화</a> <a href="/tags/패킷-교환/" style="font-size: 10px;">패킷 교환</a> <a href="/tags/함수형-프로그래밍/" style="font-size: 10px;">함수형 프로그래밍</a> <a href="/tags/혼잡-제어/" style="font-size: 10px;">혼잡 제어</a> <a href="/tags/회고/" style="font-size: 10px;">회고</a> <a href="/tags/흐름-제어/" style="font-size: 10px;">흐름 제어</a>
+        </div>
+    </div>
+
+
+            
+        
+    </div>
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({
+     google_ad_client: "ca-pub-9725307592233286",
+     enable_page_level_ads: true
+});
+</script>
+</aside>
+
+                </div>
+            </div>
+        </div>
+        <footer id="footer">
+    <div class="container">
+        <div class="container-inner">
+            <a id="back-to-top" href="javascript:;"><i class="icon fa fa-angle-up"></i></a>
+            <div class="credit">
+                <h1 class="logo-wrap">
+                    <a href="/" class="logo"></a>
+                </h1>
+                <p>&copy; 2019 VictoryWoo</p>
+                <p>Powered by <a href="//hexo.io/" target="_blank">Hexo</a>. Theme by <a href="//github.com/ppoffice" target="_blank">PPOffice</a></p>
+            </div>
+            <div class="footer-plugins">
+              
+    
+
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+        
+    
+    <script>
+    var disqus_shortname = 'hexo-theme-hueman';
+    
+    
+    var disqus_url = 'https://woovictory.github.io/2019/03/20/Algo-Select-Sort/';
+    
+    (function() {
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+</html>
