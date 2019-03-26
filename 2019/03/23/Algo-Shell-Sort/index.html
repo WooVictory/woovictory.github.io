@@ -20,7 +20,7 @@
 <meta property="og:site_name" content="VictoryWoo">
 <meta property="og:description" content="저번에 살펴봤던 기본적인 정렬 알고리즘에 이어 이번에는 조금 어려운 정렬 알고리즘을 살펴보자. 물론 이번 것도 어려운 것은 아니지만 상대적으로 비교해봤을 때 저번 정렬 알고리즘들보다 어렵다! # 쉘 정렬  삽입 정렬을 보완한 알고리즘이다. 삽입 정렬이 어느 정도 정렬된 배열에 대해서는 대단히 빠르다는 것에 착안한 것이다.  삽입 정렬의 최대 문제점 : 요소">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2019-03-24T13:40:24.778Z">
+<meta property="og:updated_time" content="2019-03-26T15:23:00.292Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="[정렬] 정렬 알고리즘 Part2">
 <meta name="twitter:description" content="저번에 살펴봤던 기본적인 정렬 알고리즘에 이어 이번에는 조금 어려운 정렬 알고리즘을 살펴보자. 물론 이번 것도 어려운 것은 아니지만 상대적으로 비교해봤을 때 저번 정렬 알고리즘들보다 어렵다! # 쉘 정렬  삽입 정렬을 보완한 알고리즘이다. 삽입 정렬이 어느 정도 정렬된 배열에 대해서는 대단히 빠르다는 것에 착안한 것이다.  삽입 정렬의 최대 문제점 : 요소">
@@ -308,6 +308,63 @@
 <li>최상 : NlogN</li>
 </ul>
 <p>다음의 글을 참고하자. -&gt; <a href="https://gmlwjd9405.github.io/2018/05/08/algorithm-merge-sort.html" target="_blank" rel="noopener">병합 정렬의 시간복잡도</a></p>
+<h2 id="퀵-정렬"># 퀵 정렬</h2>
+<ul>
+<li>'찰스 앤터니 리처드 호어’가 개발한 정렬 알고리즘</li>
+<li><strong>불안정 정렬</strong>에 속하며, 다른 원소와의 비교만으로 정렬을 수행하는 <strong>비교 정렬</strong>에 속한다.</li>
+<li>분할 정복 알고리즘의 하나로, 평균적으로 <code>매우 빠른 속도를</code> 갖는 정렬 방법이다.
+<ul>
+<li>Merge sort와 달리 퀵 정렬은 리스트를 <strong>비균등</strong>하게 분할한다.</li>
+</ul>
+</li>
+<li>분할 정복(Divide and Conque) 방법
+<ul>
+<li>문제를 작은 2개의 문제로 분리하고 각각을 해결한 다음, 결과를 모아서 원래의 문제를 해결하는 전략이다.</li>
+<li>분할 정복 방법은 대개 순환 호출을 이용하여 구현한다.</li>
+</ul>
+</li>
+</ul>
+<p><strong>기본 로직은 다음과 같다.</strong></p>
+<ol>
+<li>리스트 안에 있는 한 요소를 선택한다. 이 원소를 <code>피봇</code>이라고 한다.</li>
+<li>피봇을 기준으로 피봇보다 작은 요소들은 모두 피봇의 왼쪽으로 옮겨지고 피봇보다 큰 요소들은 모두 피봇의 오른쪽으로 옮겨진다.<br>
+(피봇을 중심으로 왼쪽 : 피봇보다 작은 요소들, 피봇을 중심으로 오른쪽 : 피봇보다 큰 요소들)</li>
+<li>피봇을 제외한 왼쪽 리스트와 오른쪽 리스트를 다시 정렬한다.
+<ul>
+<li>분할된 부분 리스트에 대하여 <strong>순환 호출</strong>(재귀 호출)을 이용하여 정렬을 반복한다.</li>
+<li>부분 리스트에서도 다시 피봇을 정하고 피봇을 기준으로 2개의 부분 리스트로 나누는 과정을 반복한다.</li>
+</ul>
+</li>
+<li>부분 리스트들이 더 이상 분할이 불가능할 때까지 반복한다.
+<ul>
+<li>리스트의 크기가 0이나 1이 될때까지 반복한다.</li>
+</ul>
+</li>
+</ol>
+<p>그런데 뭔가 아직 이해가 부족하다. 더 찾아보자.<br>
+피봇을 선택하는데 기준은 없는지 궁금하다.</p>
+<p>피봇을 선택하는 방법은 여러가지가 존재한다.</p>
+<ol>
+<li>첫 번째 요소를 피봇으로 선택</li>
+<li>중간 요소를 피봇으로 선택</li>
+<li>마지막 요소를 피봇으로 선택</li>
+<li>랜덤으로 피봇을 선택</li>
+</ol>
+<p>이렇게 피봇을 선택하는 방법이 여러가지인 이유는 아마도 피봇 선택 방법에 따라서 성능이 달라지기 때문일 것이다.</p>
+<p><strong>첫 번째 요소를 피봇으로 선택</strong>하는 방식을 통해서 간단하게 진행해보겠다.<br>
+우리가 기억해야 할 것은 피봇을 기준으로 작은 수들은 왼쪽, 큰 수들은 오른쪽으로 분리하는 것이다.</p>
+<p>위의 과정은 아래의 코드에 있는 <code>partition()</code> 함수에서 실행한다.<br>
+실행 순서는 아래와 같다.</p>
+<ol>
+<li>피봇을 선택한다.</li>
+<li>오른쪽(j)에서 왼쪽으로 가면서 피봇보다 작은 수를 찾는다.</li>
+<li>왼쪽(i)에서 오른쪽으로 가면서 피봇보다 큰 수를 찾는다.</li>
+<li>각 인덱스 i,j에 대한 요소를 교환한다.</li>
+<li>2,3,4번 과정을 반복한다.</li>
+<li>2,3번 과정을 더 이상 진행할 수 없다면(즉, i와 j가 교차했다면) 현재 피봇과 교환한다.</li>
+<li>그 결과 교환된 피봇을 기준으로 왼쪽은 피봇보다 작은 수들이 존재하고, 오른쪽은 피봇보다 큰 수들이 존재한다.</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">partition</span><span class="params">(<span class="keyword">int</span>[] array, <span class="keyword">int</span> left, <span class="keyword">int</span> right)</span></span>&#123;</span><br><span class="line">    <span class="comment">// 내일하자... 졸리다..ㅜ</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h2 id="참고">참고</h2>
 <ul>
 <li><a href="https://gmlwjd9405.github.io/2018/05/08/algorithm-shell-sort.html" target="_blank" rel="noopener">[알고리즘] 셸 정렬(shell sort)이란</a></li>
@@ -492,6 +549,15 @@
                     <li>
                         
                         <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Programming/">Programming</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/Programming/Java/">Java</a></p>
+                            <p class="item-title"><a href="/2019/03/25/java-data-structure/" class="title">[Java] 기초</a></p>
+                            <p class="item-date"><time datetime="2019-03-25T03:27:02.000Z" itemprop="datePublished">2019-03-25</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-inner">
                             <p class="item-category"><a class="article-category-link" href="/categories/CS/">CS</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/CS/알고리즘/">알고리즘</a></p>
                             <p class="item-title"><a href="/2019/03/24/Algo-Get-the-Prime/" class="title">[소수 구하기] 에라토스테네스의 체</a></p>
                             <p class="item-date"><time datetime="2019-03-24T05:09:02.000Z" itemprop="datePublished">2019-03-24</time></p>
@@ -516,15 +582,6 @@
                         </div>
                     </li>
                 
-                    <li>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/Programming/">Programming</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/Programming/RxJava/">RxJava</a></p>
-                            <p class="item-title"><a href="/2019/03/14/RxJava-Chap02/" class="title">[RxJava] Chap02</a></p>
-                            <p class="item-date"><time datetime="2019-03-14T14:19:14.000Z" itemprop="datePublished">2019-03-14</time></p>
-                        </div>
-                    </li>
-                
             </ul>
         </div>
     </div>
@@ -534,7 +591,7 @@
     <div class="widget-wrap widget-list">
         <h3 class="widget-title">archives</h3>
         <div class="widget">
-            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a><span class="archive-list-count">44</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a><span class="archive-list-count">24</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a><span class="archive-list-count">24</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a><span class="archive-list-count">34</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">February 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a><span class="archive-list-count">1</span></li></ul>
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a><span class="archive-list-count">44</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a><span class="archive-list-count">24</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a><span class="archive-list-count">24</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a><span class="archive-list-count">34</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">February 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a><span class="archive-list-count">1</span></li></ul>
         </div>
     </div>
 
