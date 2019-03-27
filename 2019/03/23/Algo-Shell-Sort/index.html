@@ -20,7 +20,7 @@
 <meta property="og:site_name" content="VictoryWoo">
 <meta property="og:description" content="저번에 살펴봤던 기본적인 정렬 알고리즘에 이어 이번에는 조금 어려운 정렬 알고리즘을 살펴보자. 물론 이번 것도 어려운 것은 아니지만 상대적으로 비교해봤을 때 저번 정렬 알고리즘들보다 어렵다! # 쉘 정렬  삽입 정렬을 보완한 알고리즘이다. 삽입 정렬이 어느 정도 정렬된 배열에 대해서는 대단히 빠르다는 것에 착안한 것이다.  삽입 정렬의 최대 문제점 : 요소">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2019-03-26T15:23:00.292Z">
+<meta property="og:updated_time" content="2019-03-27T02:14:49.113Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="[정렬] 정렬 알고리즘 Part2">
 <meta name="twitter:description" content="저번에 살펴봤던 기본적인 정렬 알고리즘에 이어 이번에는 조금 어려운 정렬 알고리즘을 살펴보자. 물론 이번 것도 어려운 것은 아니지만 상대적으로 비교해봤을 때 저번 정렬 알고리즘들보다 어렵다! # 쉘 정렬  삽입 정렬을 보완한 알고리즘이다. 삽입 정렬이 어느 정도 정렬된 배열에 대해서는 대단히 빠르다는 것에 착안한 것이다.  삽입 정렬의 최대 문제점 : 요소">
@@ -364,7 +364,52 @@
 <li>2,3번 과정을 더 이상 진행할 수 없다면(즉, i와 j가 교차했다면) 현재 피봇과 교환한다.</li>
 <li>그 결과 교환된 피봇을 기준으로 왼쪽은 피봇보다 작은 수들이 존재하고, 오른쪽은 피봇보다 큰 수들이 존재한다.</li>
 </ol>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">partition</span><span class="params">(<span class="keyword">int</span>[] array, <span class="keyword">int</span> left, <span class="keyword">int</span> right)</span></span>&#123;</span><br><span class="line">    <span class="comment">// 내일하자... 졸리다..ㅜ</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">partition</span><span class="params">(<span class="keyword">int</span>[] array, <span class="keyword">int</span> left, <span class="keyword">int</span> right)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> pivot = array[left];</span><br><span class="line">    <span class="keyword">int</span> i = left;</span><br><span class="line">    <span class="keyword">int</span> j = right;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span>(i&lt;j)&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>퀵 정렬을 해보면서 빠른 정렬에 속하는 이유는 단순하게 O(N^2)을 가진 버블 정렬과 비교하면 알 수 있다.<br>
+버블 정렬은 모든 배열의 요소에 대해 인덱스를 하나하나 증가하면서 비교한다.<br>
+즉, 인접한 요소를 비교한다는 것은 짧은 거리를 통해 비교하는 것이다.<br>
+퀵 정렬의 경우에는 인접한 요소가 아닌 <strong>서로 먼 거리에 요소를 교환</strong>하는 것을 통해 차이를 체감할 수 있다.</p>
+<p>하지만 퀵 정렬 또한 최악의 경우 시간 복잡도가 <code>O(N^2)</code>이 나온다.<br>
+이 경우에는 <strong>요소들이 역순으로 존재했을 때</strong>이다.</p>
+<p>Ex)<br>
+80 70 60 50 40 30 20</p>
+<p>위와 같이 요소들이 역순으로 존재할 경우<br>
+퀵 저열의 장점을 살리지 못한다.<br>
+하지만 설계를 통해 이 문제를 개선할 수 있다.<br>
+설계란 피봇을 선택하는 것을 말한다.<br>
+첫 번째 요소를 선택했기 때문에 역순과 같은 경우 이러한 문제점이 발생한다.</p>
+<p><strong>그렇기에 단순히 피봇을 중간 요소로 선택한다면, 이 문제를 해결할 수 있다.</strong></p>
+<p>결과적으로 최악의 경우인 O(N^2)을 피할 수 있다.<br>
+또한 다른 O(NlogN)의 시간 복잡도를 가지는 정렬 알고리즘보다 빠르다.<br>
+그 이유는 먼 거리 교환 처리와 캐시 효율(한번 선택된 기준은 제외) 등으로 웬만한 O(NlogN)보다 빠르게 동작한다.</p>
+<p><strong>주의해야 할 점</strong></p>
+<ul>
+<li>피봇을 기준으로 i는 피봇보다 큰 수를 찾으면 멈춘다.</li>
+<li>피봇을 기준으로 j는 피봇보다 작은 수를 찾으면 멈춘다.</li>
+<li>위의 결과에 따라 i와 j를 바꿔준다.</li>
+<li>그리고 i와 j가 역전되었는지를 검사한다. j &lt; i 처럼 역전된 경우에는 j와 피봇을 바꾼다.</li>
+</ul>
+<p>위에서 장점과 단점을 알 수 있는데 아래에서 정리한다.</p>
+<p><strong>장점</strong></p>
+<ul>
+<li>속도가 빠르다.
+<ul>
+<li>시간 복잡도가 O(NlogN)을 가지는 다른 정렬 알고리즘과 비교했을 때도 가장 빠르다.</li>
+</ul>
+</li>
+<li>추가 메모리 공간을 필요로 하지 않는다.
+<ul>
+<li>퀵 정렬은 O(NlogN)만큼의 메모리를 필요로 한다.</li>
+</ul>
+</li>
+</ul>
+<p><strong>단점</strong></p>
+<ul>
+<li>역순으로 정렬된 요소에 대해서는 최악의 성능을 보여준다.</li>
+<li>정렬된 요소에 대해서는 퀵 정렬의 불균형 분할에 의해 오히려 수행시간이 더 많이 걸린다.</li>
+</ul>
+<p>위의 단점을 해결하기 위해서 피봇을 선택할 때 더욱 리스트를 균등하게 분할할 수 있는 데이터를 선택한다.<br>
+-&gt; 피봇을 리스틍 내의 중간 값으로 선택한다.</p>
 <h2 id="참고">참고</h2>
 <ul>
 <li><a href="https://gmlwjd9405.github.io/2018/05/08/algorithm-shell-sort.html" target="_blank" rel="noopener">[알고리즘] 셸 정렬(shell sort)이란</a></li>
@@ -384,7 +429,7 @@
 
 
 
-    <a data-url="https://woovictory.github.io/2019/03/23/Algo-Shell-Sort/" data-id="cjtp92zqg0008a7pq7jd1hrb4" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="https://woovictory.github.io/2019/03/23/Algo-Shell-Sort/" data-id="cjtqzh6zq00nieipqnni6ttp7" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
