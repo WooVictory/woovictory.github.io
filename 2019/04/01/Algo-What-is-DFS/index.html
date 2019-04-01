@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+
+    
+
+    
+    <title>[알고리즘] 그래프 탐색 | VictoryWoo</title>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+        <meta name="keywords" content="DFS,그래프,탐색" />
+    
+    <meta name="description" content="# 그래프 탐색 그래프를 탐색하는 방법에는 널리 사용되는 두 가지 방식이 있다.  DFS는 깊이 우선 탐색(Depth-First Search)이다. BFS는 너비 우선 탐색(Breadth-First Search)이다. 먼저 그래프라는 자료구조에 대한 지식이 있어야 한다.  그래프 자료 구조의 일종이다. 그래프는 정점과 간선의 집합이다. 용어  정점(Vert">
+<meta name="keywords" content="DFS,그래프,탐색">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[알고리즘] 그래프 탐색">
+<meta property="og:url" content="https://woovictory.github.io/2019/04/01/Algo-What-is-DFS/index.html">
+<meta property="og:site_name" content="VictoryWoo">
+<meta property="og:description" content="# 그래프 탐색 그래프를 탐색하는 방법에는 널리 사용되는 두 가지 방식이 있다.  DFS는 깊이 우선 탐색(Depth-First Search)이다. BFS는 너비 우선 탐색(Breadth-First Search)이다. 먼저 그래프라는 자료구조에 대한 지식이 있어야 한다.  그래프 자료 구조의 일종이다. 그래프는 정점과 간선의 집합이다. 용어  정점(Vert">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://woovictory.github.io/img/dfs_1.png">
+<meta property="og:updated_time" content="2019-04-01T14:04:15.651Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="[알고리즘] 그래프 탐색">
+<meta name="twitter:description" content="# 그래프 탐색 그래프를 탐색하는 방법에는 널리 사용되는 두 가지 방식이 있다.  DFS는 깊이 우선 탐색(Depth-First Search)이다. BFS는 너비 우선 탐색(Breadth-First Search)이다. 먼저 그래프라는 자료구조에 대한 지식이 있어야 한다.  그래프 자료 구조의 일종이다. 그래프는 정점과 간선의 집합이다. 용어  정점(Vert">
+<meta name="twitter:image" content="https://woovictory.github.io/img/dfs_1.png">
+    
+
+    
+
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/titillium-web/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" type="text/css" href="">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/theeluwin/NotoSansKR-Hestia@master/stylesheets/NotoSansKR-Hestia.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/earlyaccess/nanumgothiccoding.css">
+    
+    
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/3.3.1/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+
+
+</head>
+
+<body>
+    <div id="wrap">
+        <header id="header">
+    <div id="header-outer" class="outer">
+        <div class="container">
+            <div class="container-inner">
+                <div id="header-title">
+                    <h1 class="logo-wrap">
+                        <a href="/" class="logo"></a>
+                    </h1>
+                    
+                        <h2 class="subtitle-wrap">
+                            <p class="subtitle">VictoryWoo&#39;s Blog</p>
+                        </h2>
+                    
+                </div>
+                <div id="header-inner" class="nav-container">
+                    <a id="main-nav-toggle" class="nav-icon fa fa-bars"></a>
+                    <div class="nav-container-inner">
+                        <ul id="main-nav">
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/">Home</a>
+                                </li>
+                            
+                                        <ul class="main-nav-list"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Algorithm/">Algorithm</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Algorithm/BOJ/">BOJ</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Algorithm/Programmers/">Programmers</a></li></ul></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/">CS</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/Design-Pattern/">Design Pattern</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/OS/">OS</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/개발-상식/">개발 상식</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/네트워크/">네트워크</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/데이터베이스/">데이터베이스</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/알고리즘/">알고리즘</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/자료구조/">자료구조</a></li></ul></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/">Programming</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/Android/">Android</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/Inno-SOPT/">Inno_SOPT</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/Java/">Java</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/Kotlin/">Kotlin</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/Node-js/">Node.js</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/RxJava/">RxJava</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/etc/">etc</a></li></ul></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/algorithm/">algorithm</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/algorithm/BOJ/">BOJ</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/algorithm/개념/">개념</a></li></ul></li></ul>
+                                    
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/about/index.html">About</a>
+                                </li>
+                            
+                        </ul>
+                        <nav id="sub-nav">
+                            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="Type something..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+        <div class="container">
+            <div class="main-body container-inner">
+                <div class="main-body-inner">
+                    <section id="main">
+                        <div class="main-body-header">
+    <h1 class="header">
+    
+    <a class="page-title-link" href="/categories/CS/">CS</a><i class="icon fa fa-angle-right"></i><a class="page-title-link" href="/categories/CS/알고리즘/">알고리즘</a>
+    </h1>
+</div>
+
+                        <div class="main-body-content">
+                            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({
+     google_ad_client: "ca-pub-9725307592233286",
+     enable_page_level_ads: true
+});
+</script>
+                            <article id="post-Algo-What-is-DFS" class="article article-single article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+        [알고리즘] 그래프 탐색
+        </h1>
+    
+
+            </header>
+        
+        
+            <div class="article-meta">
+                
+    <div class="article-date">
+        <a href="/2019/04/01/Algo-What-is-DFS/" class="article-date">
+            <time datetime="2019-04-01T01:12:18.000Z" itemprop="datePublished">2019-04-01</time>
+        </a>
+    </div>
+
+		
+
+                
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/DFS/">DFS</a>, <a class="tag-link" href="/tags/그래프/">그래프</a>, <a class="tag-link" href="/tags/탐색/">탐색</a>
+    </div>
+
+            </div>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+            <h1 id="그래프-탐색"># 그래프 탐색</h1>
+<p>그래프를 탐색하는 방법에는 널리 사용되는 두 가지 방식이 있다.</p>
+<ul>
+<li>DFS는 깊이 우선 탐색(Depth-First Search)이다.</li>
+<li>BFS는 너비 우선 탐색(Breadth-First Search)이다.</li>
+<li>먼저 <strong>그래프</strong>라는 자료구조에 대한 지식이 있어야 한다.</li>
+</ul>
+<h2 id="그래프">그래프</h2>
+<p>자료 구조의 일종이다.<br>
+그래프는 정점과 간선의 집합이다.</p>
+<p><strong>용어</strong></p>
+<ul>
+<li>정점(Vertex) : 노드라고도 부른다.</li>
+<li>간선(Edge) : 정점 간의 관계를 나타낸다.
+<ul>
+<li>두 정점을 이어준다.</li>
+<li>자기 자신을 이을 수도 있다.(루프)</li>
+<li>간선에 방향이 있기도 하고 없기도 하다.</li>
+<li>가중치가 있기도 하고 없기도 하다.</li>
+</ul>
+</li>
+<li>경로(Path) : 정점 A에서 B로 가는 경로</li>
+<li>사이클 : 정점 A에서 다시 A로 돌아오는 경로</li>
+<li>단순 경로 / 단순 사이클 : 경로/사이클에서 같은 정점을 두 번 이상 방문하지 않는 경로/사이클을 의미한다.
+<ul>
+<li>특별한 말이 없으면 일반적으로 사용하는 경로와 사이클은 단순 경로/사이클을 말한다.</li>
+</ul>
+</li>
+<li>방향 있는 그래프 : 간선에 방향이 존재한다. A -&gt; C는 있지만 C -&gt; A는 없다.</li>
+<li>방향 없는 그래프 : A - C와 같이 간선에 방향이 없다. 이는 A -&gt; C와 C -&gt; A를 나타낸다. <strong>양방향 그래프</strong>라고도 한다.</li>
+<li>간선 여러개 : 두 정점 사이에 간선이 여러 개일 수도 있다.
+<ul>
+<li>두 간선은 서로 다른 간선이다.</li>
+<li>최소 비용을 구할 때는 가중치가 적은 것을 선택하면 된다.</li>
+</ul>
+</li>
+<li>루프 : 간선의 양 끝 점이 같은 경우다. A -&gt; A</li>
+<li>가중치(Weight) : 간선에 가중치가 있는 경우를 말한다.
+<ul>
+<li>A에서 B로 이동하는 거리, 이동하는데 필요한 시간, 이동하는데 필요한 비용 등등.</li>
+<li>가중치가 없는 경우에는 1이라고 생각하면 된다.</li>
+</ul>
+</li>
+<li>차수(Degree) : 정점과 연결되어 있는 간선의 개수를 말한다.</li>
+</ul>
+<!--**그래프의 표현**
+- 정점 : 변수 하나로 개수를 표현하면 된다.
+- 간선 : 무엇과 무엇이 연결되어 있는지를 저장해야 한다. (그래프를 저장하는 방식.)
+
+- 그래프를 저장하는 방식
+    1. 인접 행렬
+    2. 인접 리스트
+-->
+<h2 id="dfs"># DFS</h2>
+<p><strong>한 우물만 깊게 파다가 막히면 그제서야 돌아가서 다른 우물을 파는 성향</strong>이 있다고 할 수 있다.<br>
+모든 정점을 1번씩 방문한다.</p>
+<img src="/img/dfs_1.png" width="500" height="300">
+<ul>
+<li>먼저 정점 하나를 선택한다.</li>
+<li>그리고 <strong>그 정점의 아직 방문하지 않은 인접한 정점 중 하나를 선택해 방문</strong>한다.</li>
+<li>0이 인접한 1을 방문하면 그 다음번에는 0에 인접한 다른 정점들보다 1에 인접한 정점들이 우선적으로 방문된다.</li>
+</ul>
+<img src="/img/dfs_2.png" width="500" height="300">
+<ul>
+<li>0번 정점에서 시작한다. 인접한 정점이 여러 개라면 그 중 번호가 제일 작은 것부터 방문한다.</li>
+<li><strong>빨간색</strong>이 지금 막 방문한 노드이고 <strong>녹색</strong>은 이전에 방문한 노드, <strong>파란색</strong>은 아직 방문하지 않은 노드이다.</li>
+<li>일단 처음 방문한 0번 노드와 인접한 노드는 1,2번이다.</li>
+<li>이 중에서 더 작은 번호의 1번 노드를 방문한다.</li>
+<li>그 다음에 2번 노드를 방문하는게 아니라 주체가 바뀌어서 1번 노드의 인접한 0,3,5번 노드 중 하나를 방문할 계획이다.</li>
+<li>0번은 이미 방문했으니 3,5번 중 하나를 다음에 방문한다. 번호가 더 작은 3번 노드를 방문한다.</li>
+</ul>
+<img src="/img/dfs_3.png" width="500" height="300">
+<ul>
+<li>위의 그림처럼 더 작은 번호의 3번 노드를 방문한다. 다음에는 선택지가 하나밖에 없다. -&gt; 4번 노드</li>
+</ul>
+<img src="/img/dfs_4.png" width="500" height="300">
+<ul>
+<li>역시 선택지는 5번 노드밖에 없다.</li>
+</ul>
+<img src="/img/dfs_5.png" width="500" height="300">
+<ul>
+<li>5번 노드에서 더 이상 방문할 인접 노드가 없다. 모두 방문했기 때문.</li>
+<li>이때는 5번 노드에서 추가로 다른 노드를 방문하지 않고, 자기를 불렀던 4번 노드로 돌아가서 4번 노드의 인접한 노드들 중 아직 방문하지 않은 정점을 찾아 방문해야 한다.</li>
+<li>4번에서도 그게 없다면, 4번을 불렀던 3번으로 돌아가고 이와 같은 과정을 반복해서 0번 노드까지 돌아가게 된다.</li>
+</ul>
+<img src="/img/dfs_6.png" width="500" height="300">
+<ul>
+<li>0번 노드의 인접한 정점 중 아직 방문하지 않은 나머지 정점 2번 노드를 방문한다.</li>
+</ul>
+<img src="/img/dfs_7.png" width="500" height="300">
+<ul>
+<li>2번 노드는 마찬가지로 6번 노드를 방문한다.</li>
+</ul>
+<img src="/img/dfs_8.png" width="500" height="300">
+<ul>
+<li>6번 노드는 7번 노드를 이어서 방문한다.</li>
+<li>여기서 또 7번 노드는 더 이상 방문할 곳이 없다.</li>
+<li>이제 6번 노드로 돌아가서 6번 노드의 인접한 다른 정점인 8번 노드를 방문한다.</li>
+</ul>
+<img src="/img/dfs_9.png" width="500" height="300">
+<ul>
+<li>8번 노드를 방문하고 나면 아무리 돌아가도 더 이상 남아 있는 노드 중 방문할 정점이 없다.</li>
+<li>이러면 탐색이 종료된 것이고, <strong>시작점인 0번 노드와 직/간접적으로 연결되어 있는 모든 노드를 탐색한 것이다.</strong></li>
+</ul>
+<p>이 과정에서 만약 어떤 정점에서 더 방문할 노드가 없다면 자신을 불렀던 정점으로 돌아간다.<br>
+이걸 구현하기 위해서 <code>스택(Stack)</code>을 사용한다.</p>
+<p>방문하는 순서대로 정점을 스택에 쌓고, 방문이 끝나면 스택에서 pop하는 형태로 구현이 가능하다. 재귀 함수 또한 스택 메모리 공간에 쌓아 올려지는 구조를 띄므로 재귀 함수를 사용하여도 이것을 구현할 수 있다.</p>
+<p><strong>시간 복잡도</strong></p>
+<p>인접 행렬을 사용하는 경우 : <code>O(V^2)</code><br>
+인접 리스트를 사용하는 경우 : <code>O(V+E)</code> - 정점과 간선의 개수 합이다.</p>
+<h2 id="bfs"># BFS</h2>
+<p>역시 모든 정점을 한 번씩 순회한다.<br>
+DFS와 대립되는 성질을 갖고 있으며, 사용되는 곳도 매우 다르다.<br>
+<strong>BFS</strong> 역시 컴포넌트의 개수를 세거나 각 컴포넌트의 크기를 구하는데는 사용 가능하다.</p>
+<p>DFS가 한 우물만 계속 파다가 끝을 보고 나서야 다른 곳으로 옮기는 데 반해, BFS는 <strong>모든 곳을 똑같이 조금씩 조금씩 판다.</strong></p>
+<img src="/img/bfs_1.png" width="500" height="300">
+<ul>
+<li>dfs와 동일한 그래프를 사용한다.</li>
+<li>맨 처음에 0번 정점부터 방문을 시작한다.</li>
+</ul>
+<img src="/img/bfs_2.png" width="500" height="300">
+<ul>
+<li>DFS와 다르게 <strong>0번 정점과 인접한 정점들부터 무조건 먼저 다 방문된다.</strong></li>
+</ul>
+<img src="/img/bfs_3.png" width="500" height="300">
+<ul>
+<li>그 다음은 바로 전 단계에서 방문한 1,2번 정점들로부터 인접한 3,5,6,8번 정점들이 반드시 먼저 방문된다.</li>
+</ul>
+<img src="/img/bfs_4.png" width="500" height="300">
+<ul>
+<li>마지막으로 4,7번 정점이 방문된다.</li>
+<li>각 단계의 정점들은 그 안에서 방문 순서가 바뀔 수는 있지만, 다른 단계와는 방문 순서가 절대 뒤섞이지 않는다.</li>
+<li>0번 노드, 즉 시작점을 방문한 것을 0단계라 하고 그 다음부터 1,2,3 단계라고 부를 때, <strong>K단계에 방문하는 정점들은 시작점으로부터 최단거리가 k이다.</strong></li>
+<li>최단 거리 : 여기서는 가중치가 없으니까 A와 B의 최단거리는 A에서 B로 이동하는데 필요한 최소 개수의 간선이라고 보면 된다.</li>
+</ul>
+<p>DFS에 스택이 필요했던 것과 대조적으로 <strong>BFS는 큐가 필요하다.</strong><br>
+BFS는 먼저 방문한 노드들부터 본다.</p>
+<p>먼저 시작점을 큐에 넣고 방문했다고 표시한다.<br>
+그리고 큐가 비어있지 않을 때까지 방문을 시도한다.<br>
+큐에서 지금 나온 정점의 인접한 노드들 중 아직 방문하지 않은 애들을 다시 큐에다 넣어준다.<br>
+이런 식으로 먼저 방문한 노드들부터 차례대로 방문해 나간다.</p>
+<h2 id="마치며">마치며…</h2>
+<p>음, 아직 뭔가 감이 잡히진 않는다.<br>
+그래프를 탐색할 때 DFS와 BFS의 차이점은 알겠고 개념도 알겠는데 문제를 풀 때 어떻게 구현해야 하는지 잘 모르겠다.<br>
+다음 포스팅에서 직접 구현해보면서 정리해보도록 하겠다.</p>
+<h2 id="참고">참고</h2>
+<ul>
+<li><a href="https://kks227.blog.me/220785731077" target="_blank" rel="noopener">깊이 우선 탐색(Depth-First Search) (수정 2019-02-17)</a></li>
+<li><a href="https://kks227.blog.me/220785747864" target="_blank" rel="noopener">너비 우선 탐색(Breadth-First Search) (수정 2018-11-22)</a></li>
+</ul>
+<p>모든 가중치가 1인 경우에 최단 거리를 찾는 알고리즘이 된다.<br>
+최단 거리를 찾는 문제일 때, 모든 가중치가 1이라면 BFS를 사용한다.</p>
+
+        </div>
+        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({
+     google_ad_client: "ca-pub-9725307592233286",
+     enable_page_level_ads: true
+});
+</script>
+        <footer class="article-footer">
+            
+
+
+
+    <a data-url="https://woovictory.github.io/2019/04/01/Algo-What-is-DFS/" data-id="cjtykcbvi00nrjfpqurwtfpi0" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+<script>
+    (function ($) {
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+        </footer>
+    </div>
+</article>
+
+    <section id="comments">
+    
+        
+    <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+
+    
+    </section>
+
+
+
+                        </div>
+                    </section>
+                    <aside id="sidebar">
+    <a class="sidebar-toggle" title="Expand Sidebar"><i class="toggle icon"></i></a>
+    <div class="sidebar-top">
+        <p>follow:</p>
+        <ul class="social-links">
+            
+                
+                <li>
+                    <a class="social-tooltip" title="facebook" href="https://www.facebook.com/WooVictory" target="_blank" rel="noopener">
+                        <i class="icon fa fa-facebook"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="github" href="https://github.com/WooVictory" target="_blank" rel="noopener">
+                        <i class="icon fa fa-github"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="linkedin" href="https://www.linkedin.com/in/seungwoo-lee-590844177" target="_blank" rel="noopener">
+                        <i class="icon fa fa-linkedin"></i>
+                    </a>
+                </li>
+                
+            
+        </ul>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2019/04/01/Algo-DFS/" id="article-nav-newer" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">newer</strong>
+        <p class="article-nav-title">
+        
+            [알고리즘] DFS
+        
+        </p>
+        <i class="icon fa fa-chevron-right" id="icon-chevron-right"></i>
+    </a>
+    
+    
+        <a href="/2019/03/27/java-advanced-1/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">older</strong>
+        <p class="article-nav-title">[Java] 면접 대비-1 </p>
+        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
+        </a>
+    
+</nav>
+
+    
+    <div class="widgets-container">
+        
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">archives</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a><span class="archive-list-count">9</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a><span class="archive-list-count">44</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a><span class="archive-list-count">24</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a><span class="archive-list-count">24</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a><span class="archive-list-count">33</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">February 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a><span class="archive-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+
+            
+        
+    </div>
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({
+     google_ad_client: "ca-pub-9725307592233286",
+     enable_page_level_ads: true
+});
+</script>
+</aside>
+
+                </div>
+            </div>
+        </div>
+        <footer id="footer">
+    <div class="container">
+        <div class="container-inner">
+            <a id="back-to-top" href="javascript:;"><i class="icon fa fa-angle-up"></i></a>
+            <div class="credit">
+                <h1 class="logo-wrap">
+                    <a href="/" class="logo"></a>
+                </h1>
+                <p>&copy; 2019 VictoryWoo</p>
+                <p>Powered by <a href="//hexo.io/" target="_blank">Hexo</a>. Theme by <a href="//github.com/ppoffice" target="_blank">PPOffice</a></p>
+            </div>
+            <div class="footer-plugins">
+              
+    
+
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+        
+    
+    <script>
+    var disqus_shortname = 'hexo-theme-hueman';
+    
+    
+    var disqus_url = 'https://woovictory.github.io/2019/04/01/Algo-What-is-DFS/';
+    
+    (function() {
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+</html>
