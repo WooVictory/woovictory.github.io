@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+
+    
+
+    
+    <title>[알고리즘] BFS | VictoryWoo</title>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+        <meta name="keywords" content="알고리즘,그래프 탐색,BFS,너비 우선 탐색" />
+    
+    <meta name="description" content="# 그래프 탐색이란 그래프 탐색에 대해서는 DFS 글에서도 확인할 수 있다.  [알고리즘] DFS  # 너비 우선 탐색 너비 우선 탐색(Breadth-First Search)은 BFS라고 부른다. (이하 BFS라고 하겠다.) 루트 노드(혹은 다른 임의의 노드)에서 시작해 인접한 노드를 먼저 탐색하는 방법.  시작 정점으로부터 가까운 정점을 먼저 방문하고 멀">
+<meta name="keywords" content="알고리즘,그래프 탐색,BFS,너비 우선 탐색">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[알고리즘] BFS">
+<meta property="og:url" content="https://woovictory.github.io/2019/04/02/Algo-BFS/index.html">
+<meta property="og:site_name" content="VictoryWoo">
+<meta property="og:description" content="# 그래프 탐색이란 그래프 탐색에 대해서는 DFS 글에서도 확인할 수 있다.  [알고리즘] DFS  # 너비 우선 탐색 너비 우선 탐색(Breadth-First Search)은 BFS라고 부른다. (이하 BFS라고 하겠다.) 루트 노드(혹은 다른 임의의 노드)에서 시작해 인접한 노드를 먼저 탐색하는 방법.  시작 정점으로부터 가까운 정점을 먼저 방문하고 멀">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2019-04-02T05:57:19.844Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="[알고리즘] BFS">
+<meta name="twitter:description" content="# 그래프 탐색이란 그래프 탐색에 대해서는 DFS 글에서도 확인할 수 있다.  [알고리즘] DFS  # 너비 우선 탐색 너비 우선 탐색(Breadth-First Search)은 BFS라고 부른다. (이하 BFS라고 하겠다.) 루트 노드(혹은 다른 임의의 노드)에서 시작해 인접한 노드를 먼저 탐색하는 방법.  시작 정점으로부터 가까운 정점을 먼저 방문하고 멀">
+    
+
+    
+
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/titillium-web/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" type="text/css" href="">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/theeluwin/NotoSansKR-Hestia@master/stylesheets/NotoSansKR-Hestia.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/earlyaccess/nanumgothiccoding.css">
+    
+    
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/3.3.1/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+
+
+</head>
+
+<body>
+    <div id="wrap">
+        <header id="header">
+    <div id="header-outer" class="outer">
+        <div class="container">
+            <div class="container-inner">
+                <div id="header-title">
+                    <h1 class="logo-wrap">
+                        <a href="/" class="logo"></a>
+                    </h1>
+                    
+                        <h2 class="subtitle-wrap">
+                            <p class="subtitle">VictoryWoo&#39;s Blog</p>
+                        </h2>
+                    
+                </div>
+                <div id="header-inner" class="nav-container">
+                    <a id="main-nav-toggle" class="nav-icon fa fa-bars"></a>
+                    <div class="nav-container-inner">
+                        <ul id="main-nav">
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/">Home</a>
+                                </li>
+                            
+                                        <ul class="main-nav-list"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Algorithm/">Algorithm</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Algorithm/BOJ/">BOJ</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Algorithm/Programmers/">Programmers</a></li></ul></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/">CS</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/Design-Pattern/">Design Pattern</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/OS/">OS</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/개발-상식/">개발 상식</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/네트워크/">네트워크</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/데이터베이스/">데이터베이스</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/알고리즘/">알고리즘</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/자료구조/">자료구조</a></li></ul></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/">Programming</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/Android/">Android</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/Inno-SOPT/">Inno_SOPT</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/Java/">Java</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/Kotlin/">Kotlin</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/Node-js/">Node.js</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/RxJava/">RxJava</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/etc/">etc</a></li></ul></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/algorithm/">algorithm</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/algorithm/BOJ/">BOJ</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/algorithm/개념/">개념</a></li></ul></li></ul>
+                                    
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/about/index.html">About</a>
+                                </li>
+                            
+                        </ul>
+                        <nav id="sub-nav">
+                            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="Type something..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+        <div class="container">
+            <div class="main-body container-inner">
+                <div class="main-body-inner">
+                    <section id="main">
+                        <div class="main-body-header">
+    <h1 class="header">
+    
+    <a class="page-title-link" href="/categories/CS/">CS</a><i class="icon fa fa-angle-right"></i><a class="page-title-link" href="/categories/CS/알고리즘/">알고리즘</a>
+    </h1>
+</div>
+
+                        <div class="main-body-content">
+                            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({
+     google_ad_client: "ca-pub-9725307592233286",
+     enable_page_level_ads: true
+});
+</script>
+                            <article id="post-Algo-BFS" class="article article-single article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+        [알고리즘] BFS
+        </h1>
+    
+
+            </header>
+        
+        
+            <div class="article-meta">
+                
+    <div class="article-date">
+        <a href="/2019/04/02/Algo-BFS/" class="article-date">
+            <time datetime="2019-04-02T02:25:23.000Z" itemprop="datePublished">2019-04-02</time>
+        </a>
+    </div>
+
+		
+
+                
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/BFS/">BFS</a>, <a class="tag-link" href="/tags/그래프-탐색/">그래프 탐색</a>, <a class="tag-link" href="/tags/너비-우선-탐색/">너비 우선 탐색</a>, <a class="tag-link" href="/tags/알고리즘/">알고리즘</a>
+    </div>
+
+            </div>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+            <h1 id="그래프-탐색이란"># 그래프 탐색이란</h1>
+<p>그래프 탐색에 대해서는 DFS 글에서도 확인할 수 있다.</p>
+<ul>
+<li><a href="https://woovictory.github.io/2019/04/01/Algo-DFS/">[알고리즘] DFS</a></li>
+</ul>
+<h1 id="너비-우선-탐색"># 너비 우선 탐색</h1>
+<p>너비 우선 탐색(Breadth-First Search)은 BFS라고 부른다. (이하 BFS라고 하겠다.)</p>
+<p>루트 노드(혹은 다른 임의의 노드)에서 시작해 인접한 노드를 먼저 탐색하는 방법.</p>
+<ul>
+<li>시작 정점으로부터 가까운 정점을 먼저 방문하고 멀리 떨어져 있는 정점을 나중에 방문하는 순회 방법이다.</li>
+<li>즉, 깊게(deep) 탐색하기 전에 넓게(wide) 탐색하는 것이다.</li>
+<li>사용하는 경우 : <strong>두 노드 사이의 최단 경로</strong> 혹은 <strong>임의의 경로를 찾고 싶을 때</strong> 이 방법을 선택한다.
+<ul>
+<li>Ex) 지구상에 존재하는 모든 친구 관계를 그래프로 표현한 후 Ash와 Vanessa 사이에 존재하는 경로를 찾는 경우</li>
+<li>깊이 우선 탐색의 경우 : 모든 친구 관계를 다 살펴봐야 할지도 모른다.</li>
+<li>너비 우선 탐색의 경우 : Ash와 가까운 관계부터 탐색.</li>
+</ul>
+</li>
+<li>BFS가 DFS보다 좀 더 복잡하다.</li>
+</ul>
+<p><strong>BFS의 특징</strong></p>
+<ul>
+<li>직관적이지 않은 면이 있다.
+<ul>
+<li>BFS는 시작 노드에서 시작해서 거리에 따라 단계별로 탐색한다고 볼 수 있다.</li>
+</ul>
+</li>
+<li>BFS는 <strong>재귀적으로 동작하지 않는다.</strong></li>
+<li>그래프 탐색의 경우 <strong>어떤 노드를 방문했었는지 여부를 반드시 검사</strong>해야 한다는 것이다.
+<ul>
+<li>이를 검사하지 않을 경우 무한 루프에 빠질 위험이 있다.</li>
+</ul>
+</li>
+<li>BFS는 방문한 노드들을 차례로 저장한 후 꺼낼 수 있는 자료 구조인 <code>큐(Queue)</code>를 사용한다.
+<ul>
+<li>즉, <strong>선입선출</strong> 원칙으로 탐색</li>
+<li>일반적으로 큐를 이용해서 반복적 형태로 구현하는 것이 가장 잘 동작한다.</li>
+</ul>
+</li>
+</ul>
+<p><strong>BFS의 탐색 과정</strong></p>
+<ol>
+<li>a 노드(시작 노드)를 방문한다.(방문한 노드 체크)
+<ul>
+<li>큐에 방문된 노드를 삽입한다.(enqueu)</li>
+<li>초기 상태의 큐에는 시작 노드만 저장
+<ul>
+<li>즉, a 노드의 이웃 노드를 모두 방문한 다음에 이웃의 이웃들을 방문한다.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>큐에서 꺼낸 노드와 인접한 노드들을 모두 차례로 방문한다.
+<ul>
+<li>큐에서 꺼낸 노드를 방문한다.</li>
+<li>큐에서 꺼낸 노드와 인접한 노드들을 모두 방문한다.
+<ul>
+<li>인접한 노드가 없다면 큐의 앞에서 노드를 꺼낸다.(dequeue)</li>
+</ul>
+</li>
+<li>큐에 방문된 노드를 삽입한다.(enqueue)</li>
+</ul>
+</li>
+<li>큐가 소진될 때까지 계속한다.</li>
+</ol>
+<p><strong>BFS의 구현</strong></p>
+<ul>
+<li>구현 방법
+<ul>
+<li>자료 구조인 <code>큐(Queue)</code>를 사용.</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.*;</span><br><span class="line"><span class="keyword">import</span> java.util.*;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * created by victory_woo on 02/04/2019</span></span><br><span class="line"><span class="comment"> * DFS와 BFS 복습</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BOJ1260_RE</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String SPACE = <span class="string">" "</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> ArrayList&lt;Integer&gt;[] a;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">boolean</span>[] visit;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        BufferedReader br = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(System.in));</span><br><span class="line"></span><br><span class="line">        String[] input = br.readLine().split(SPACE);</span><br><span class="line">        <span class="keyword">int</span> n = convert(input[<span class="number">0</span>]); <span class="comment">// 정점의 개수</span></span><br><span class="line">        <span class="keyword">int</span> m = convert(input[<span class="number">1</span>]); <span class="comment">// 간선의 개수</span></span><br><span class="line">        <span class="keyword">int</span> start = convert(input[<span class="number">2</span>]); <span class="comment">// 시작할 정점 번호</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 배열 초기화.</span></span><br><span class="line">        a = <span class="keyword">new</span> ArrayList[n + <span class="number">1</span>];</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; i++) &#123;</span><br><span class="line">            a[i] = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; m; j++) &#123;</span><br><span class="line">            String[] inputs = br.readLine().split(SPACE);</span><br><span class="line">            <span class="keyword">int</span> u = convert(inputs[<span class="number">0</span>]);</span><br><span class="line">            <span class="keyword">int</span> v = convert(inputs[<span class="number">1</span>]);</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 양방향 그래프일 경우 양쪽 다 추가해준다.</span></span><br><span class="line">            a[u].add(v);</span><br><span class="line">            a[v].add(u);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 방문할 정점이 여러 개인 경우 정점 번호가 가장 작은 것부터 탐색하기 위해서 정렬한다.</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; i++) &#123;</span><br><span class="line">            Collections.sort(a[i]);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        visit = <span class="keyword">new</span> <span class="keyword">boolean</span>[n + <span class="number">1</span>];</span><br><span class="line">        bfs(start);</span><br><span class="line">        System.out.println();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">convert</span><span class="params">(String command)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> Integer.parseInt(command);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">bfs</span><span class="params">(<span class="keyword">int</span> start)</span> </span>&#123;</span><br><span class="line">        LinkedList&lt;Integer&gt; queue = <span class="keyword">new</span> LinkedList&lt;&gt;();</span><br><span class="line"></span><br><span class="line">        visit[start] = <span class="keyword">true</span>;</span><br><span class="line">        queue.add(start);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> (!queue.isEmpty()) &#123;</span><br><span class="line">            <span class="keyword">int</span> x = queue.remove(); <span class="comment">// 큐에서 정점을 뺀다.</span></span><br><span class="line"></span><br><span class="line">            System.out.print(x + SPACE);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> y : a[x]) &#123;</span><br><span class="line">                <span class="comment">// 방문한 적이 있는지 체크한다.</span></span><br><span class="line">                <span class="keyword">if</span> (!visit[y]) &#123;</span><br><span class="line">                    <span class="comment">// 해당 정점을 방문한 적이 없다면 방문했다고 true 로 체크한다.</span></span><br><span class="line">                    <span class="comment">// 그리고 해당 정점을 큐에 넣는다.</span></span><br><span class="line">                    visit[y] = <span class="keyword">true</span>;</span><br><span class="line">                    queue.add(y);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 입력</span></span><br><span class="line"><span class="number">5</span> <span class="number">5</span> <span class="number">3</span></span><br><span class="line"><span class="number">5</span> <span class="number">4</span></span><br><span class="line"><span class="number">5</span> <span class="number">2</span></span><br><span class="line"><span class="number">1</span> <span class="number">2</span></span><br><span class="line"><span class="number">3</span> <span class="number">4</span></span><br><span class="line"><span class="number">3</span> <span class="number">1</span></span><br><span class="line"><span class="comment">// 출력 결과</span></span><br><span class="line"><span class="number">3</span> <span class="number">1</span> <span class="number">4</span> <span class="number">2</span> <span class="number">5</span></span><br></pre></td></tr></table></figure>
+<p><strong>BFS의 시간 복잡도</strong></p>
+<ul>
+<li>N : 정점의 개수, E : 간선의 개수</li>
+<li>인접 리스트로 표현된 그래프 : O(N+E)</li>
+<li>인접 행렬로 표현된 그래프 : O(N^2)</li>
+<li>DFS와 마찬가지로 그래프 내에 적은 숫자의 간선만을 가지는 <strong>희소 그래프</strong>의 경우 인접 행렬보다 인접 리스트를 사용하는 것이 유리하다.</li>
+</ul>
+<h2 id="참고">참고</h2>
+<ul>
+<li><a href="https://gmlwjd9405.github.io/2018/08/15/algorithm-bfs.html" target="_blank" rel="noopener">[알고리즘] 너비 우선 탐색(BFS)이란</a></li>
+<li><a href="https://mygumi.tistory.com/102" target="_blank" rel="noopener">[그래프] DFS와 BFS 구현하기 :: 마이구미</a></li>
+</ul>
+
+        </div>
+        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({
+     google_ad_client: "ca-pub-9725307592233286",
+     enable_page_level_ads: true
+});
+</script>
+        <footer class="article-footer">
+            
+
+
+
+    <a data-url="https://woovictory.github.io/2019/04/02/Algo-BFS/" data-id="cjtzdeyxx0005xnpqs8ipje0a" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+<script>
+    (function ($) {
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+        </footer>
+    </div>
+</article>
+
+    <section id="comments">
+    
+        
+    <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+
+    
+    </section>
+
+
+
+                        </div>
+                    </section>
+                    <aside id="sidebar">
+    <a class="sidebar-toggle" title="Expand Sidebar"><i class="toggle icon"></i></a>
+    <div class="sidebar-top">
+        <p>follow:</p>
+        <ul class="social-links">
+            
+                
+                <li>
+                    <a class="social-tooltip" title="facebook" href="https://www.facebook.com/WooVictory" target="_blank" rel="noopener">
+                        <i class="icon fa fa-facebook"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="github" href="https://github.com/WooVictory" target="_blank" rel="noopener">
+                        <i class="icon fa fa-github"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="linkedin" href="https://www.linkedin.com/in/seungwoo-lee-590844177" target="_blank" rel="noopener">
+                        <i class="icon fa fa-linkedin"></i>
+                    </a>
+                </li>
+                
+            
+        </ul>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+    
+        <a href="/2019/04/01/Algo-DFS/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">older</strong>
+        <p class="article-nav-title">[알고리즘] DFS</p>
+        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
+        </a>
+    
+</nav>
+
+    
+    <div class="widgets-container">
+        
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">archives</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a><span class="archive-list-count">9</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a><span class="archive-list-count">44</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a><span class="archive-list-count">24</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a><span class="archive-list-count">24</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a><span class="archive-list-count">33</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">February 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a><span class="archive-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+
+            
+        
+    </div>
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({
+     google_ad_client: "ca-pub-9725307592233286",
+     enable_page_level_ads: true
+});
+</script>
+</aside>
+
+                </div>
+            </div>
+        </div>
+        <footer id="footer">
+    <div class="container">
+        <div class="container-inner">
+            <a id="back-to-top" href="javascript:;"><i class="icon fa fa-angle-up"></i></a>
+            <div class="credit">
+                <h1 class="logo-wrap">
+                    <a href="/" class="logo"></a>
+                </h1>
+                <p>&copy; 2019 VictoryWoo</p>
+                <p>Powered by <a href="//hexo.io/" target="_blank">Hexo</a>. Theme by <a href="//github.com/ppoffice" target="_blank">PPOffice</a></p>
+            </div>
+            <div class="footer-plugins">
+              
+    
+
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+        
+    
+    <script>
+    var disqus_shortname = 'hexo-theme-hueman';
+    
+    
+    var disqus_url = 'https://woovictory.github.io/2019/04/02/Algo-BFS/';
+    
+    (function() {
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+</html>
