@@ -20,7 +20,7 @@
 <meta property="og:site_name" content="VictoryWoo">
 <meta property="og:description" content="이번에는 Observable의 개념에 대해서 알아보도록 하겠다. 책을 보면 RxJava는 Observable에서 시작해서 Observable로 끝난다고 해도 과언이 아니라고 한다. 그렇다면 과연 어떤 것인지 공부해보자.  Observable 소개 Observable 클래스  옵저버 패턴 정적팩토리 함수 팩토리 함수들    Observable 소개 Obser">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2019-03-20T05:01:04.870Z">
+<meta property="og:updated_time" content="2019-04-19T12:35:38.376Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="[RxJava] Chap02">
 <meta name="twitter:description" content="이번에는 Observable의 개념에 대해서 알아보도록 하겠다. 책을 보면 RxJava는 Observable에서 시작해서 Observable로 끝난다고 해도 과언이 아니라고 한다. 그렇다면 과연 어떤 것인지 공부해보자.  Observable 소개 Observable 클래스  옵저버 패턴 정적팩토리 함수 팩토리 함수들    Observable 소개 Obser">
@@ -246,7 +246,31 @@ ga('send', 'pageview');
 </blockquote>
 <p>dispose()는 Observable에게 더 이상 데이터를 발행하지 않도록 구독을 해지하는 함수이다. Observable 계약(Observable Contract)에 따르면 Observable이 onComplete 알림을 보냈을 때 자동으로 dispose()를 호출해 Observable과 구독자의 관계를 끊는다.</p>
 <p>따라서 onComplete 이벤트가 정상적으로 발생했다면 구독자가 별도로 dispose()를 호출할 필요가 없다.</p>
-<p>isDisposed() 함수는 이름만 봐도 예측이 가능하다. Observable이 데이터를 발행하지 않는지(구독을 해지했는지) 확인하는 함수이다.</p>
+<ul>
+<li>isDisposed() : Observable이 데이터를 발행하지 않는지(구독을 해지했는지) 확인하는 함수이다.
+<ul>
+<li>위에서 언급했듯, onComplete 이벤트가 정상적으로 발생했다면 구독자가 별도로 dispose() 하지 않아도 구독이 해제된다.</li>
+</ul>
+</li>
+</ul>
+<p><strong>3. create()</strong></p>
+<ul>
+<li>just()는 데이터를 인자로 넣으면 자동으로 알림 이벤트가 발생하지만, create() 함수는 onNext, onComplete, onError 같은 알림을 개발자가 직접 호출해야 된다.</li>
+<li>개발자가 무언가를 하는 느낌이 강하다.</li>
+<li>데이터 발행을 위해서 onNext()를 호출해야 함.</li>
+<li>모든 데이터를 발행한 후 onComplete()를 호출해야 함.</li>
+</ul>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> sourceInt : Observable&lt;<span class="built_in">Int</span>&gt; = Observable.create &#123;</span><br><span class="line">    it.onNext(<span class="number">100</span>)</span><br><span class="line">    it.onNext(<span class="number">200</span>)</span><br><span class="line">    it.onNext(<span class="number">300</span>)</span><br><span class="line">    it.onNext(<span class="number">400</span>)</span><br><span class="line">    it.onComplete() <span class="comment">// 데이터 발행 완료.</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">sourceInt.subscribe(System.<span class="keyword">out</span>::println)</span><br><span class="line"><span class="comment">// 람다식 활용.</span></span><br><span class="line">sourceInt.subscribe &#123;</span><br><span class="line">        println(<span class="string">"data : <span class="variable">$it</span>"</span>)</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>람다식을 활용하면 메소드의 원형을 알 필요도 없고 가독성도 훨씬 높아진다.</li>
+</ul>
+<p><strong>4. fromArray()</strong></p>
+<ul>
+<li>just(), create()는 단일 데이터를 다룬다.</li>
+<li>단일 데이터가 아닐 때는 fromXXX() 함수를 사용하면 된다.</li>
+<li>배열에 들어있는 데이터를 세분화할 때 fromArray() 함수를 사용하면 된다.</li>
+<li>RxJava에서 int 배열을 인식시키려면 Integer[]로 변환해야 한다.</li>
+</ul>
 
         </div>
         
@@ -410,7 +434,7 @@ ga('send', 'pageview');
     <div class="widget-wrap widget-list">
         <h3 class="widget-title">archives</h3>
         <div class="widget">
-            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a><span class="archive-list-count">43</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a><span class="archive-list-count">24</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a><span class="archive-list-count">24</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a><span class="archive-list-count">30</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">February 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a><span class="archive-list-count">1</span></li></ul>
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a><span class="archive-list-count">42</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a><span class="archive-list-count">24</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a><span class="archive-list-count">24</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a><span class="archive-list-count">30</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">February 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a><span class="archive-list-count">1</span></li></ul>
         </div>
     </div>
 
