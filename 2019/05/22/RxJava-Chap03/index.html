@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+
+    
+
+    
+    <title>[RxJava] Chap03 | VictoryWoo</title>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+        <meta name="keywords" content="안드로이드,RxJava,Observable,연산자" />
+    
+    <meta name="description" content="연산자 ReactiveX의 연산자는 꽤 많다. 이 연산자들을 모두 안다고 하더라도 기억하기는 어렵다. 하지만, 이름을 보고 내용을 짐작할 수 있고 마블 다이어그램이 도움이 된다. 필요할 때 찾아보자. 대신, 여기서 소개하는 연산자는 자주 사용되니 꼭 알아두자! 1.map()  입력값을 어떤 함수에 넣어서 원하는 값으로 변환하는 함수이다. 입력 데이터가 있고">
+<meta name="keywords" content="안드로이드,RxJava,Observable,연산자">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[RxJava] Chap03">
+<meta property="og:url" content="https://woovictory.github.io/2019/05/22/RxJava-Chap03/index.html">
+<meta property="og:site_name" content="VictoryWoo">
+<meta property="og:description" content="연산자 ReactiveX의 연산자는 꽤 많다. 이 연산자들을 모두 안다고 하더라도 기억하기는 어렵다. 하지만, 이름을 보고 내용을 짐작할 수 있고 마블 다이어그램이 도움이 된다. 필요할 때 찾아보자. 대신, 여기서 소개하는 연산자는 자주 사용되니 꼭 알아두자! 1.map()  입력값을 어떤 함수에 넣어서 원하는 값으로 변환하는 함수이다. 입력 데이터가 있고">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://woovictory.github.io/img/rx_map.png">
+<meta property="og:updated_time" content="2019-05-22T10:31:06.061Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="[RxJava] Chap03">
+<meta name="twitter:description" content="연산자 ReactiveX의 연산자는 꽤 많다. 이 연산자들을 모두 안다고 하더라도 기억하기는 어렵다. 하지만, 이름을 보고 내용을 짐작할 수 있고 마블 다이어그램이 도움이 된다. 필요할 때 찾아보자. 대신, 여기서 소개하는 연산자는 자주 사용되니 꼭 알아두자! 1.map()  입력값을 어떤 함수에 넣어서 원하는 값으로 변환하는 함수이다. 입력 데이터가 있고">
+<meta name="twitter:image" content="https://woovictory.github.io/img/rx_map.png">
+    
+
+    
+
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/titillium-web/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" type="text/css" href="">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/theeluwin/NotoSansKR-Hestia@master/stylesheets/NotoSansKR-Hestia.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/earlyaccess/nanumgothiccoding.css">
+    
+    
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/3.3.1/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+        <script type="text/javascript">
+(function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-125410253-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+    
+    
+
+
+</head>
+
+<body>
+    <div id="wrap">
+        <header id="header">
+    <div id="header-outer" class="outer">
+        <div class="container">
+            <div class="container-inner">
+                <div id="header-title">
+                    <h1 class="logo-wrap">
+                        <a href="/" class="logo"></a>
+                    </h1>
+                    
+                        <h2 class="subtitle-wrap">
+                            <p class="subtitle">VictoryWoo&#39;s Blog</p>
+                        </h2>
+                    
+                </div>
+                <div id="header-inner" class="nav-container">
+                    <a id="main-nav-toggle" class="nav-icon fa fa-bars"></a>
+                    <div class="nav-container-inner">
+                        <ul id="main-nav">
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/">Home</a>
+                                </li>
+                            
+                                        <ul class="main-nav-list"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Algorithm/">Algorithm</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Algorithm/BOJ/">BOJ</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Algorithm/Programmers/">Programmers</a></li></ul></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/">CS</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/Design-Pattern/">Design Pattern</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/OS/">OS</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/개발-상식/">개발 상식</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/네트워크/">네트워크</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/데이터베이스/">데이터베이스</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/알고리즘/">알고리즘</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/자료구조/">자료구조</a></li></ul></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/">Programming</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/Android/">Android</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/Inno-SOPT/">Inno_SOPT</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/Java/">Java</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/Kotlin/">Kotlin</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/Node-js/">Node.js</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/RxJava/">RxJava</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/etc/">etc</a></li></ul></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/algorithm/">algorithm</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/algorithm/BOJ/">BOJ</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/algorithm/개념/">개념</a></li></ul></li></ul>
+                                    
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/about/index.html">About</a>
+                                </li>
+                            
+                        </ul>
+                        <nav id="sub-nav">
+                            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="Type something..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+        <div class="container">
+            <div class="main-body container-inner">
+                <div class="main-body-inner">
+                    <section id="main">
+                        <div class="main-body-header">
+    <h1 class="header">
+    
+    <a class="page-title-link" href="/categories/Programming/">Programming</a><i class="icon fa fa-angle-right"></i><a class="page-title-link" href="/categories/Programming/RxJava/">RxJava</a>
+    </h1>
+</div>
+
+                        <div class="main-body-content">
+                            
+                            <article id="post-RxJava-Chap03" class="article article-single article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+        [RxJava] Chap03
+        </h1>
+    
+
+            </header>
+        
+        
+            <div class="article-meta">
+                
+    <div class="article-date">
+        <a href="/2019/05/22/RxJava-Chap03/" class="article-date">
+            <time datetime="2019-05-22T06:47:34.000Z" itemprop="datePublished">2019-05-22</time>
+        </a>
+    </div>
+
+		
+
+                
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/Observable/">Observable</a>, <a class="tag-link" href="/tags/RxJava/">RxJava</a>, <a class="tag-link" href="/tags/안드로이드/">안드로이드</a>, <a class="tag-link" href="/tags/연산자/">연산자</a>
+    </div>
+
+            </div>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+            <h2 id="연산자">연산자</h2>
+<p>ReactiveX의 연산자는 꽤 많다. 이 연산자들을 모두 안다고 하더라도 기억하기는 어렵다. 하지만, 이름을 보고 내용을 짐작할 수 있고 마블 다이어그램이 도움이 된다. 필요할 때 찾아보자.</p>
+<p>대신, 여기서 소개하는 연산자는 자주 사용되니 꼭 알아두자!</p>
+<h3 id="1map">1.map()</h3>
+<ul>
+<li>입력값을 어떤 함수에 넣어서 원하는 값으로 변환하는 함수이다.</li>
+<li>입력 데이터가 있고 그것을 변환해줄 중개업자가 있다고 생각하면 좋다.</li>
+<li>map() 함수는 반환값을 확인한다. 또한, 스케줄러를 지원하지 않으므로 현재 스레드에서 실행된다.</li>
+<li><code>일대일 함수</code></li>
+</ul>
+<img src="/img/rx_map.png" width="500" height="200">
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">(args: <span class="type">Array</span>&lt;<span class="type">String</span>&gt;)</span></span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// map을 통해 10을 곱해준 값을 반환.</span></span><br><span class="line">    Observable.just(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>)</span><br><span class="line">            .map &#123; item -&gt; item * <span class="number">10</span> &#125;</span><br><span class="line">            .subscribe(&#123;</span><br><span class="line">                println(it)</span><br><span class="line">            &#125;, &#123;</span><br><span class="line">                println(it.message)</span><br><span class="line">            &#125;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 메소드 참조도 가능.</span></span><br><span class="line">    Observable.just(<span class="string">"RED"</span>, <span class="string">"BLUE"</span>, <span class="string">"YELLOW"</span>,<span class="string">"BLACK"</span>)</span><br><span class="line">            .map(Test::ballToIndex) </span><br><span class="line">            .subscribe(&#123;</span><br><span class="line">                println(it)</span><br><span class="line">            &#125;, &#123;</span><br><span class="line">                println(it.message)</span><br><span class="line">            &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">object</span> Test &#123;</span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">ballToIndex</span><span class="params">(color: <span class="type">String</span>)</span></span>: <span class="built_in">Int</span> = <span class="keyword">when</span> (color) &#123;</span><br><span class="line">        <span class="string">"RED"</span> -&gt; &#123;</span><br><span class="line">            <span class="number">1</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="string">"YELLOW"</span> -&gt; &#123;</span><br><span class="line">            <span class="number">2</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="string">"BLUE"</span> -&gt; &#123;</span><br><span class="line">            <span class="number">3</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> -&gt; &#123;</span><br><span class="line">            <span class="number">-1</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="2flatmap">2.flatMap()</h3>
+<ul>
+<li>map() 함수와 동일한 기능을 하지만 결과가 Observable로 나온다.</li>
+<li>결과값이 Observable이므로 여러 개의 데이터를 발행할 수 있다.</li>
+<li><code>일대다 함수</code> 혹은 <code>일대일 Observable</code> 함수이다.</li>
+<li>1개를 발행할 수도 여러 개를 발행할 수도 있다.</li>
+</ul>
+<img src="/img/rx_flatmap.png" width="500" height="200">
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">(args: <span class="type">Array</span>&lt;<span class="type">String</span>&gt;)</span></span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Function 인터페이스를 통해 제네릭 타입을 선언.</span></span><br><span class="line">    <span class="keyword">val</span> getDoubleDiamonds : (String) -&gt; Observable&lt;String&gt; = &#123; ball: String -&gt;</span><br><span class="line">        Observable.just&lt;String&gt;(<span class="string">"<span class="variable">$ball</span>&lt;&gt;"</span>, <span class="string">"<span class="variable">$ball</span>&lt;&gt;"</span>)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 3개의 데이터를 넣었는데 6개를 발행한다.</span></span><br><span class="line">    <span class="comment">// 일대다이고, Observable 을 반환한다.</span></span><br><span class="line">    <span class="comment">// 위에서 정의한 Function 인터페이스 사용.</span></span><br><span class="line">    Observable.just(<span class="string">"1"</span>, <span class="string">"2"</span>, <span class="string">"3"</span>)</span><br><span class="line">            .flatMap(getDoubleDiamonds)</span><br><span class="line">            .subscribe(&#123;</span><br><span class="line">                println(<span class="string">"성공 : <span class="variable">$it</span>"</span>)</span><br><span class="line">            &#125;, &#123;</span><br><span class="line">                println(<span class="string">"실패 : <span class="subst">$&#123;it.message&#125;</span>"</span>)</span><br><span class="line">            &#125;)</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 인라인을 사용.</span></span><br><span class="line">    Observable.just(<span class="string">"1"</span>,<span class="string">"2"</span>,<span class="string">"3"</span>)</span><br><span class="line">            .map &#123; ball -&gt;</span><br><span class="line">                Observable.just(<span class="string">"<span class="variable">$ball</span>&lt;&gt;"</span>,<span class="string">"<span class="variable">$ball</span>&lt;&gt;"</span>)</span><br><span class="line">            &#125;</span><br><span class="line">            .subscribe&#123;</span><br><span class="line">                println(it)</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>Function&lt;T,R&gt; : T는 입력값을 의미하고 R은 결과 함수이다.</li>
+<li>String을 넣으면 여러 개의 String을 발행하는 Observable이 나온다.</li>
+<li><strong>여러 개의 데이터를 발행하는 방법은 Observable 뿐이다.</strong></li>
+</ul>
+<h3 id="3filter-함수">3.filter() 함수</h3>
+<ul>
+<li>Observable에서 <code>원하는 데이터만 걸러내는 역할</code>을 한다.</li>
+<li>즉, 필요없는 데이터는 제거하고 관심있는 데이터만 filter() 함수를 통과한다.</li>
+<li>간단한 수식을 적용하는 것과 원하는 조건을 작성할 수도 있다.</li>
+</ul>
+<img src="/img/rx_filter.png" width="500" height="200">
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">(args: <span class="type">Array</span>&lt;<span class="type">String</span>&gt;)</span></span> &#123;</span><br><span class="line">    <span class="comment">// 짝수만 필터링.</span></span><br><span class="line">    Observable.just(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>)</span><br><span class="line">            .filter &#123; number -&gt;</span><br><span class="line">                number % <span class="number">2</span> == <span class="number">0</span></span><br><span class="line">            &#125;</span><br><span class="line">            .subscribe(&#123;</span><br><span class="line">                println(<span class="string">"result : <span class="variable">$it</span>"</span>)</span><br><span class="line">            &#125;, &#123;</span><br><span class="line">                println(<span class="string">"error : <span class="subst">$&#123;it.message&#125;</span>"</span>)</span><br><span class="line">            &#125;)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 결과</span></span><br><span class="line">result : <span class="number">2</span></span><br><span class="line">result : <span class="number">4</span></span><br><span class="line">result : <span class="number">6</span></span><br></pre></td></tr></table></figure>
+<p>이외에도 filter() 함수와 비슷한 함수들이 존재한다. 이름만 보고 어떤 기능을 할지 짐작이 가능하다.</p>
+<ul>
+<li><code>first(default)</code> : Observable의 첫 번째 값을 필터한다. 만약 값 없이 완료되면 기본값을 반환한다.</li>
+<li><code>last(default)</code> : Observable의 마지막 값을 필터한다. 만약 값 없이 완료되면 기본값을 반환한다.</li>
+<li><code>take(N)</code> : 최초 N개 값만 가져온다.</li>
+<li><code>takeLast(N)</code> : 마지막 N개 값만 필터한다.</li>
+<li><code>skip(N)</code> : 최초 N개 값을 건너뛴다.</li>
+<li><code>skipLast(N)</code> : 마지막 N개 값을 건너뛴다.</li>
+</ul>
+<p>사용 예제는 아래와 같다.</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">(args: <span class="type">Array</span>&lt;<span class="type">String</span>&gt;)</span></span> &#123;</span><br><span class="line">    <span class="keyword">val</span> source = Observable.just(<span class="number">100</span>, <span class="number">200</span>, <span class="number">300</span>, <span class="number">400</span>, <span class="number">500</span>, <span class="number">600</span>)</span><br><span class="line">    <span class="keyword">var</span> single: Single&lt;<span class="built_in">Int</span>&gt;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 1. first</span></span><br><span class="line">    single = source.first(<span class="number">-1</span>)</span><br><span class="line">    single.subscribe(&#123;</span><br><span class="line">        println(<span class="string">"first result : <span class="variable">$it</span>"</span>)</span><br><span class="line">    &#125;, &#123;</span><br><span class="line">        println(<span class="string">"error : <span class="subst">$&#123;it.message&#125;</span>"</span>)</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 2. last</span></span><br><span class="line">    single = source.last(<span class="number">-1</span>)</span><br><span class="line">    single.subscribe(&#123;</span><br><span class="line">        println(<span class="string">"last result : <span class="variable">$it</span>"</span>)</span><br><span class="line">    &#125;, &#123;</span><br><span class="line">        println(<span class="string">"error : <span class="subst">$&#123;it.message&#125;</span>"</span>)</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 3. take</span></span><br><span class="line">    source.take(<span class="number">3</span>)</span><br><span class="line">            .subscribe(&#123;</span><br><span class="line">                println(<span class="string">"take result : <span class="variable">$it</span>"</span>)</span><br><span class="line">            &#125;, &#123;</span><br><span class="line">                println(<span class="string">"error : <span class="subst">$&#123;it.message&#125;</span>"</span>)</span><br><span class="line">            &#125;)</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 4. takeLast</span></span><br><span class="line">    source.takeLast(<span class="number">3</span>)</span><br><span class="line">            .subscribe(&#123;</span><br><span class="line">                println(<span class="string">"takeLast result : <span class="variable">$it</span>"</span>)</span><br><span class="line">            &#125;, &#123;</span><br><span class="line">                println(<span class="string">"error : <span class="subst">$&#123;it.message&#125;</span>"</span>)</span><br><span class="line">            &#125;)</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 5. skip -&gt; 300,400,500,600</span></span><br><span class="line">    source.skip(<span class="number">2</span>)</span><br><span class="line">            .subscribe(&#123;</span><br><span class="line">                println(<span class="string">"skip result : <span class="variable">$it</span>"</span>)</span><br><span class="line">            &#125;, &#123;</span><br><span class="line">                println(<span class="string">"error : <span class="subst">$&#123;it.message&#125;</span>"</span>)</span><br><span class="line">            &#125;)</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 6. skipLast -&gt; 100,200,300</span></span><br><span class="line">    source.skipLast(<span class="number">3</span>)</span><br><span class="line">            .subscribe(&#123;</span><br><span class="line">                println(<span class="string">"skipLast result : <span class="variable">$it</span>"</span>)</span><br><span class="line">            &#125;, &#123;</span><br><span class="line">                println(<span class="string">"error : <span class="subst">$&#123;it.message&#125;</span>"</span>)</span><br><span class="line">            &#125;)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 결과</span></span><br><span class="line">first result : <span class="number">100</span></span><br><span class="line">last result : <span class="number">600</span></span><br><span class="line">take result : <span class="number">100</span></span><br><span class="line">take result : <span class="number">200</span></span><br><span class="line">take result : <span class="number">300</span></span><br><span class="line">takeLast result : <span class="number">400</span></span><br><span class="line">takeLast result : <span class="number">500</span></span><br><span class="line">takeLast result : <span class="number">600</span></span><br><span class="line">skip result : <span class="number">300</span></span><br><span class="line">skip result : <span class="number">400</span></span><br><span class="line">skip result : <span class="number">500</span></span><br><span class="line">skip result : <span class="number">600</span></span><br><span class="line">skipLast result : <span class="number">100</span></span><br><span class="line">skipLast result : <span class="number">200</span></span><br><span class="line">skipLast result : <span class="number">300</span></span><br></pre></td></tr></table></figure>
+<h3 id="4reduce">4.reduce()</h3>
+<ul>
+<li>발행한 데이터를 모두 사용하여 어떤 최종 결과 데이터를 합성할 때 활용한다.</li>
+<li>함수형 프로그래밍의 가장 기본 연산자인 map/filter/reduce 패턴을 이루는 마지막 필수 함수이다.</li>
+<li>Observable을 이용해 들어오는 데이터를 1개씩 모아서 최종 결과를 만들어야 할 때 사용한다고 생각하면 된다. 주로 수치와 관련된 계산 문제에서 활용하면 좋다.</li>
+</ul>
+<p>보통 Observable에 입력된 데이터를 필요한 map() 함수로 매핑하고, 원하는 데이터만 추출할 때는 불필요한 데이터를 걸러내는 filter() 함수를 사용한다. 또한 상황에 따라 발행된 데이터를 취합하여 어떤 결과를 만들어낼 때는 reduce 계열의 함수를 사용한다.</p>
+<img src="/img/rx_reduce.png" width="500" height="200">
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">(args: <span class="type">Array</span>&lt;<span class="type">String</span>&gt;)</span></span> &#123;</span><br><span class="line">    <span class="keyword">val</span> source: Maybe&lt;String&gt; = Observable.just(<span class="string">"1"</span>, <span class="string">"3"</span>, <span class="string">"5"</span>)</span><br><span class="line">            .reduce &#123; ball1, ball2 -&gt;</span><br><span class="line">                <span class="string">"<span class="variable">$ball2</span>(<span class="variable">$ball1</span>)"</span></span><br><span class="line">            &#125;</span><br><span class="line">    source.subscribe(&#123;</span><br><span class="line">        println(<span class="string">"reduce 결과 : <span class="variable">$it</span>"</span>)</span><br><span class="line">    &#125;, &#123;</span><br><span class="line">        println(<span class="string">"error : <span class="subst">$&#123;it.message&#125;</span>"</span>)</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 람다 표현식을 별도 함수로 분리.</span></span><br><span class="line">    Observable.just(<span class="string">"1"</span>,<span class="string">"3"</span>,<span class="string">"5"</span>)</span><br><span class="line">            .reduce(mergeBalls)</span><br><span class="line">            .subscribe(&#123;</span><br><span class="line">                println(<span class="string">"reduce 함수로 분리한 결과 : <span class="variable">$it</span>"</span>)</span><br><span class="line">            &#125;,&#123;</span><br><span class="line">                println(<span class="string">"error : <span class="subst">$&#123;it.message&#125;</span>"</span>)</span><br><span class="line">            &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>reduce() 함수를 호출하면 인자로 넘긴 람다 표현식에 의해 결과 없이 완료될 수도 있다. 따라서 Observable이 아니라 결과가 반환할 수도 아닐 수도 있는 <code>Maybe</code> 객체로 리턴된다.</p>
+<h3 id="예제">예제</h3>
+<p>다음과 같은 예제를 한번 작성해보자.</p>
+<ol>
+<li>전체 매출 데이터를 입력한다.</li>
+<li>매출 데이터 중 TV 매출을 필터링한다.</li>
+<li>TV 매출의 합을 구한다.</li>
+</ol>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">(args: <span class="type">Array</span>&lt;<span class="type">String</span>&gt;)</span></span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 1. 데이터 입력.</span></span><br><span class="line">    <span class="comment">// first : 상품 이름, second : 매출액.</span></span><br><span class="line">    <span class="keyword">var</span> sales = mutableListOf&lt;Pair&lt;String, <span class="built_in">Int</span>&gt;&gt;()</span><br><span class="line">    sales.add(<span class="string">"TV"</span> to <span class="number">2500</span>)</span><br><span class="line">    sales.add(<span class="string">"Camera"</span> to <span class="number">300</span>)</span><br><span class="line">    sales.add(<span class="string">"TV"</span> to <span class="number">1600</span>)</span><br><span class="line">    sales.add(<span class="string">"Phone"</span> to <span class="number">800</span>)</span><br><span class="line">    sales.add(<span class="string">"Sofa"</span> to <span class="number">10000</span>)</span><br><span class="line">    sales.add(Pair(<span class="string">"TV"</span>, <span class="number">1000</span>))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">val</span> source: Maybe&lt;<span class="built_in">Int</span>&gt; = Observable.fromIterable(sales)</span><br><span class="line">            <span class="comment">// 2. 매출 데이터 중 TV 매출을 필터링한다.</span></span><br><span class="line">            .filter &#123; sale -&gt;</span><br><span class="line">                sale.first == <span class="string">"TV"</span></span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// map 을 통해 sale 에서 매출액만 뽑는다.</span></span><br><span class="line">            .map &#123; sale -&gt;</span><br><span class="line">                sale.second</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 3. reduce 를 통해 매출의 합을 구한다.</span></span><br><span class="line">            .reduce &#123; sale1, sale2 -&gt;</span><br><span class="line">                sale1 + sale2</span><br><span class="line">            &#125;</span><br><span class="line">    <span class="comment">// reduce 를 호출하기 때문에 Observable 이 아니라 Maybe 를 사용한다.</span></span><br><span class="line"></span><br><span class="line">    source.subscribe(&#123; total -&gt;</span><br><span class="line">        println(<span class="string">"TV Sale: $ <span class="variable">$total</span>"</span>)</span><br><span class="line">    &#125;, &#123;</span><br><span class="line">        println(<span class="string">"error : <span class="subst">$&#123;it.message&#125;</span>"</span>)</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 결과</span></span><br><span class="line">TV Sale: $ <span class="number">4100</span></span><br></pre></td></tr></table></figure>
+
+        </div>
+        
+        <footer class="article-footer">
+            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({
+     google_ad_client: "ca-pub-9725307592233286",
+     enable_page_level_ads: true
+});
+</script>
+            
+
+
+
+    <a data-url="https://woovictory.github.io/2019/05/22/RxJava-Chap03/" data-id="cjvywswjn00htrlpqyqvhsyba" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+<script>
+    (function ($) {
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+        </footer>
+    </div>
+</article>
+
+    <section id="comments">
+    
+        
+    <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+
+    
+    </section>
+
+
+
+                        </div>
+                    </section>
+                    <aside id="sidebar">
+    <a class="sidebar-toggle" title="Expand Sidebar"><i class="toggle icon"></i></a>
+    <div class="sidebar-top">
+        <p>follow:</p>
+        <ul class="social-links">
+            
+                
+                <li>
+                    <a class="social-tooltip" title="facebook" href="https://www.facebook.com/WooVictory" target="_blank" rel="noopener">
+                        <i class="icon fa fa-facebook"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="github" href="https://github.com/WooVictory" target="_blank" rel="noopener">
+                        <i class="icon fa fa-github"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="linkedin" href="https://www.linkedin.com/in/seungwoo-lee-590844177" target="_blank" rel="noopener">
+                        <i class="icon fa fa-linkedin"></i>
+                    </a>
+                </li>
+                
+            
+        </ul>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+    
+        <a href="/2019/05/22/What-is-BackTracking/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">older</strong>
+        <p class="article-nav-title">[알고리즘] 백트래킹</p>
+        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
+        </a>
+    
+</nav>
+
+    
+    <div class="widgets-container">
+        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({
+     google_ad_client: "ca-pub-9725307592233286",
+     enable_page_level_ads: true
+});
+</script>
+        
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">archives</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a><span class="archive-list-count">15</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a><span class="archive-list-count">9</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a><span class="archive-list-count">42</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a><span class="archive-list-count">24</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a><span class="archive-list-count">24</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a><span class="archive-list-count">30</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">February 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a><span class="archive-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+
+            
+        
+    </div>
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({
+     google_ad_client: "ca-pub-9725307592233286",
+     enable_page_level_ads: true
+});
+</script>
+</aside>
+
+                </div>
+            </div>
+        </div>
+        <footer id="footer">
+    <div class="container">
+        <div class="container-inner">
+            <a id="back-to-top" href="javascript:;"><i class="icon fa fa-angle-up"></i></a>
+            <div class="credit">
+                <h1 class="logo-wrap">
+                    <a href="/" class="logo"></a>
+                </h1>
+                <p>&copy; 2019 VictoryWoo</p>
+                <p>Powered by <a href="//hexo.io/" target="_blank">Hexo</a>. Theme by <a href="//github.com/ppoffice" target="_blank">PPOffice</a></p>
+            </div>
+            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({
+     google_ad_client: "ca-pub-9725307592233286",
+     enable_page_level_ads: true
+});
+</script>
+            <div class="footer-plugins">
+              
+    
+
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+        
+    
+    <script>
+    var disqus_shortname = 'hexo-theme-hueman';
+    
+    
+    var disqus_url = 'https://woovictory.github.io/2019/05/22/RxJava-Chap03/';
+    
+    (function() {
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+</html>
