@@ -12,18 +12,18 @@
     
         <meta name="keywords" content="Android,Kotlin" />
     
-    <meta name="description" content="범위 지정 함수 개발을 하다 보면 특정 객체에 있는 함수를 연속해서 사용하거나 다른 함수의 인자로 전달하기 위해 변수를 선언하고 이를 다른 곳에서는 사용하지 않는 경우가 있다. 코틀린에서는 이런 경우 유용하게 사용할 수 있는 함수를 표준 라이브러리를 통해 제공한다. let() 함수 let() 함수는 이 함수를 호출한 객체를 이어지는 함수 블록의 인자로 전달">
+    <meta name="description" content="조건 확인 함수 특정 값의 일치 여부 확인  check() : 인자로 받은 표현식이 참인지 확인하며 참이 아닌 경우 IllegalStateException 예외를 발생시킨다. require() : 인자로 받은 표현식이 참인지 확인하며 참이 아닌 경우 IllegalArgumentException 예외를 발생시킨다.  check(), require() 함수 모">
 <meta name="keywords" content="Android,Kotlin">
 <meta property="og:type" content="article">
 <meta property="og:title" content="[Kotlin] Chap3">
 <meta property="og:url" content="https://woovictory.github.io/2019/05/14/kotlin-chap3/index.html">
 <meta property="og:site_name" content="VictoryWoo">
-<meta property="og:description" content="범위 지정 함수 개발을 하다 보면 특정 객체에 있는 함수를 연속해서 사용하거나 다른 함수의 인자로 전달하기 위해 변수를 선언하고 이를 다른 곳에서는 사용하지 않는 경우가 있다. 코틀린에서는 이런 경우 유용하게 사용할 수 있는 함수를 표준 라이브러리를 통해 제공한다. let() 함수 let() 함수는 이 함수를 호출한 객체를 이어지는 함수 블록의 인자로 전달">
+<meta property="og:description" content="조건 확인 함수 특정 값의 일치 여부 확인  check() : 인자로 받은 표현식이 참인지 확인하며 참이 아닌 경우 IllegalStateException 예외를 발생시킨다. require() : 인자로 받은 표현식이 참인지 확인하며 참이 아닌 경우 IllegalArgumentException 예외를 발생시킨다.  check(), require() 함수 모">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2019-05-18T16:00:31.549Z">
+<meta property="og:updated_time" content="2019-05-21T08:42:47.788Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="[Kotlin] Chap3">
-<meta name="twitter:description" content="범위 지정 함수 개발을 하다 보면 특정 객체에 있는 함수를 연속해서 사용하거나 다른 함수의 인자로 전달하기 위해 변수를 선언하고 이를 다른 곳에서는 사용하지 않는 경우가 있다. 코틀린에서는 이런 경우 유용하게 사용할 수 있는 함수를 표준 라이브러리를 통해 제공한다. let() 함수 let() 함수는 이 함수를 호출한 객체를 이어지는 함수 블록의 인자로 전달">
+<meta name="twitter:description" content="조건 확인 함수 특정 값의 일치 여부 확인  check() : 인자로 받은 표현식이 참인지 확인하며 참이 아닌 경우 IllegalStateException 예외를 발생시킨다. require() : 인자로 받은 표현식이 참인지 확인하며 참이 아닌 경우 IllegalArgumentException 예외를 발생시킨다.  check(), require() 함수 모">
     
 
     
@@ -190,7 +190,20 @@ ga('send', 'pageview');
         
         
         <div class="article-entry" itemprop="articleBody">
-            <h2 id="범위-지정-함수">범위 지정 함수</h2>
+            <h2 id="조건-확인-함수">조건 확인 함수</h2>
+<p><strong>특정 값의 일치 여부 확인</strong></p>
+<ol>
+<li>check() : 인자로 받은 표현식이 참인지 확인하며 참이 아닌 경우 IllegalStateException 예외를 발생시킨다.</li>
+<li>require() : 인자로 받은 표현식이 참인지 확인하며 참이 아닌 경우 IllegalArgumentException 예외를 발생시킨다.</li>
+</ol>
+<p>check(), require() 함수 모두 값을 확인하는 형태뿐만 아니라 조건이 일치하지 않았을 경우 수행할 작업을 함께 지정할 수 있는 형태의 함수를 지원한다.</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">showMessage</span><span class="params">(isPrepared: <span class="type">Boolean</span>, message: <span class="type">String</span>)</span></span>&#123;</span><br><span class="line">    <span class="comment">// isPrepared가 true가 아니면 IllegalStateException 발생.</span></span><br><span class="line">    check(isPrepared)</span><br><span class="line"></span><br><span class="line">    <span class="comment">// message의 길이가 10 이상이 아니면 IllegalArgumentException 발생.</span></span><br><span class="line">    require(message.length&gt;<span class="number">10</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>checkNotNull(), requireNotNull()</code> 함수를 사용해 특정 값의 널 여부를 확인하고 널이 아닌 값을 반환받을 수 있다. 이도 위의 함수처럼 <strong>단순히 값을 확인만 하는 형태와 함께 실행할 함수를 지정하는 형태를 지원한다.</strong></p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">showMessage</span><span class="params">(message: <span class="type">String</span>)</span></span>&#123;</span><br><span class="line">    <span class="comment">// message 값이 널이 아닐 때에만 해당 변수에 값이 할당된다.</span></span><br><span class="line">    <span class="keyword">val</span> msg = requireNotNull(message)</span><br><span class="line"></span><br><span class="line">    println(message)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>명시적으로 실행 중단하기</strong></p>
+<p>프로그램이 실행될 때, 호출될 가능성이 없는 영역이 있다. 하지만, 예기치 못한 이유로 이 영역이 실행되면 프로그램에 부작용이 발생하게 된다. 따라서 이 같은 영역에 진입하게 되는 경우 임의로 예외를 발생시킬 수 있다. <code>error()</code> 함수를 이용하면 된다.</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">showMessage</span><span class="params">(isPrepared: <span class="type">Boolean</span>, message: <span class="type">String</span>)</span></span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// isPrepared가 fals일 경우</span></span><br><span class="line">    <span class="comment">// IllegalArgumentException: Not prepared yet! 예외가 발생한다.</span></span><br><span class="line">    <span class="keyword">if</span>(!isPrepared)&#123;</span><br><span class="line">        error(<span class="string">"Not prepared yet!"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    println(message)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="범위-지정-함수">범위 지정 함수</h2>
 <p>개발을 하다 보면 특정 객체에 있는 함수를 연속해서 사용하거나 다른 함수의 인자로 전달하기 위해 변수를 선언하고 이를 다른 곳에서는 사용하지 않는 경우가 있다. 코틀린에서는 이런 경우 유용하게 사용할 수 있는 함수를 표준 라이브러리를 통해 제공한다.</p>
 <p><strong>let() 함수</strong></p>
 <p>let() 함수는 이 함수를 호출한 객체를 이어지는 함수 블록의 인자로 전달한다.</p>
@@ -264,7 +277,7 @@ ga('send', 'pageview');
 
 
 
-    <a data-url="https://woovictory.github.io/2019/05/14/kotlin-chap3/" data-id="cjvxdgvpu00bn3npq6ymy1b9r" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="https://woovictory.github.io/2019/05/14/kotlin-chap3/" data-id="cjvyoo9xl00bq9npqbxn4up0o" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -378,6 +391,16 @@ ga('send', 'pageview');
         
 <nav id="article-nav">
     
+        <a href="/2019/05/22/What-is-BackTracking/" id="article-nav-newer" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">newer</strong>
+        <p class="article-nav-title">
+        
+            [알고리즘] 백트래킹
+        
+        </p>
+        <i class="icon fa fa-chevron-right" id="icon-chevron-right"></i>
+    </a>
+    
     
         <a href="/2019/05/13/What-is-UML/" id="article-nav-older" class="article-nav-link-wrap">
         <strong class="article-nav-caption">older</strong>
@@ -402,7 +425,7 @@ ga('send', 'pageview');
     <div class="widget-wrap widget-list">
         <h3 class="widget-title">archives</h3>
         <div class="widget">
-            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a><span class="archive-list-count">9</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a><span class="archive-list-count">42</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a><span class="archive-list-count">24</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a><span class="archive-list-count">24</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a><span class="archive-list-count">30</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">February 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a><span class="archive-list-count">1</span></li></ul>
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a><span class="archive-list-count">14</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a><span class="archive-list-count">9</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a><span class="archive-list-count">42</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a><span class="archive-list-count">24</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a><span class="archive-list-count">24</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a><span class="archive-list-count">30</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">February 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a><span class="archive-list-count">1</span></li></ul>
         </div>
     </div>
 
