@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+
+    
+
+    
+    <title>[Kotlin] Object | VictoryWoo</title>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+        <meta name="keywords" content="kotlin,singleton" />
+    
+    <meta name="description" content="코틀린에는 static 개념이 없다. 사실 개념이 없다기 보다는 static keyword가 없기 때문에 Java의 static 개념을 코틀린에서 표현할 수 없다. 그래서 이를 어떻게 표현하는지 중점적으로 살펴보겠다.  싱글톤을 정의하는 방법 동반 객체 companion object를 이용한 팩토리 메소드 구현 익명 클래스 선언  위의 3가지를 object">
+<meta name="keywords" content="kotlin,singleton">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[Kotlin] Object">
+<meta property="og:url" content="https://woovictory.github.io/2019/05/28/What-is-Kotlin-Object/index.html">
+<meta property="og:site_name" content="VictoryWoo">
+<meta property="og:description" content="코틀린에는 static 개념이 없다. 사실 개념이 없다기 보다는 static keyword가 없기 때문에 Java의 static 개념을 코틀린에서 표현할 수 없다. 그래서 이를 어떻게 표현하는지 중점적으로 살펴보겠다.  싱글톤을 정의하는 방법 동반 객체 companion object를 이용한 팩토리 메소드 구현 익명 클래스 선언  위의 3가지를 object">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2019-05-28T02:23:30.176Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="[Kotlin] Object">
+<meta name="twitter:description" content="코틀린에는 static 개념이 없다. 사실 개념이 없다기 보다는 static keyword가 없기 때문에 Java의 static 개념을 코틀린에서 표현할 수 없다. 그래서 이를 어떻게 표현하는지 중점적으로 살펴보겠다.  싱글톤을 정의하는 방법 동반 객체 companion object를 이용한 팩토리 메소드 구현 익명 클래스 선언  위의 3가지를 object">
+    
+
+    
+
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/titillium-web/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" type="text/css" href="">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/theeluwin/NotoSansKR-Hestia@master/stylesheets/NotoSansKR-Hestia.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/earlyaccess/nanumgothiccoding.css">
+    
+    
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/3.3.1/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+        <script type="text/javascript">
+(function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-125410253-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+    
+    
+
+
+</head>
+
+<body>
+    <div id="wrap">
+        <header id="header">
+    <div id="header-outer" class="outer">
+        <div class="container">
+            <div class="container-inner">
+                <div id="header-title">
+                    <h1 class="logo-wrap">
+                        <a href="/" class="logo"></a>
+                    </h1>
+                    
+                        <h2 class="subtitle-wrap">
+                            <p class="subtitle">VictoryWoo&#39;s Blog</p>
+                        </h2>
+                    
+                </div>
+                <div id="header-inner" class="nav-container">
+                    <a id="main-nav-toggle" class="nav-icon fa fa-bars"></a>
+                    <div class="nav-container-inner">
+                        <ul id="main-nav">
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/">Home</a>
+                                </li>
+                            
+                                        <ul class="main-nav-list"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Algorithm/">Algorithm</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Algorithm/BOJ/">BOJ</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Algorithm/Programmers/">Programmers</a></li></ul></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/">CS</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/Design-Pattern/">Design Pattern</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/OS/">OS</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/개발-상식/">개발 상식</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/네트워크/">네트워크</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/데이터베이스/">데이터베이스</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/알고리즘/">알고리즘</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/자료구조/">자료구조</a></li></ul></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/">Programming</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/Android/">Android</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/Inno-SOPT/">Inno_SOPT</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/Java/">Java</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/Kotlin/">Kotlin</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/Node-js/">Node.js</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/RxJava/">RxJava</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/etc/">etc</a></li></ul></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/algorithm/">algorithm</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/algorithm/BOJ/">BOJ</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/algorithm/개념/">개념</a></li></ul></li></ul>
+                                    
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/about/index.html">About</a>
+                                </li>
+                            
+                        </ul>
+                        <nav id="sub-nav">
+                            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="Type something..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+        <div class="container">
+            <div class="main-body container-inner">
+                <div class="main-body-inner">
+                    <section id="main">
+                        <div class="main-body-header">
+    <h1 class="header">
+    
+    <a class="page-title-link" href="/categories/Programming/">Programming</a><i class="icon fa fa-angle-right"></i><a class="page-title-link" href="/categories/Programming/Kotlin/">Kotlin</a>
+    </h1>
+</div>
+
+                        <div class="main-body-content">
+                            
+                            <article id="post-What-is-Kotlin-Object" class="article article-single article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+        [Kotlin] Object
+        </h1>
+    
+
+            </header>
+        
+        
+            <div class="article-meta">
+                
+    <div class="article-date">
+        <a href="/2019/05/28/What-is-Kotlin-Object/" class="article-date">
+            <time datetime="2019-05-27T15:25:51.000Z" itemprop="datePublished">2019-05-28</time>
+        </a>
+    </div>
+
+		
+
+                
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/kotlin/">kotlin</a>, <a class="tag-link" href="/tags/singleton/">singleton</a>
+    </div>
+
+            </div>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+            <p>코틀린에는 static 개념이 없다. 사실 개념이 없다기 보다는 static keyword가 없기 때문에 Java의 static 개념을 코틀린에서 표현할 수 없다. 그래서 이를 어떻게 표현하는지 중점적으로 살펴보겠다.</p>
+<ul>
+<li>싱글톤을 정의하는 방법</li>
+<li>동반 객체 companion object를 이용한 팩토리 메소드 구현</li>
+<li>익명 클래스 선언</li>
+</ul>
+<p>위의 3가지를 <strong>object</strong> keyword를 이용해 표현한다.</p>
+<h2 id="싱글톤">싱글톤</h2>
+<p>코틀린에서는 object를 이용하여 클래스를 정의함과 동시에 객체를 생성할 수 있다. 말 그대로 싱글톤을 쉽게 구현할 수 있다. 이해하기 쉽게 간단한 예제를 만들었다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SharedPreference</span></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> SharedPreference INSTACNE=<span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">SharedPreference</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(INSTACNE == <span class="keyword">null</span>)&#123;</span><br><span class="line">            INSTACNE = SharedPreference();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>위 코드는 자바에서 사용할 수 있는 간단한 싱글톤 패턴 구현 코드이다. 그럼 이제 코틀린에서 object를 사용해 바꿔보자.</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">object</span> SharedPreference&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> const <span class="keyword">val</span> NAME = <span class="string">"Test"</span></span><br><span class="line">    <span class="keyword">private</span> const <span class="keyword">val</span> MODE = Context.MODE_PRIVATE</span><br><span class="line">    <span class="keyword">private</span> latedinit <span class="keyword">var</span> preferences: SharedPreferences</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">init</span><span class="params">(context: <span class="type">Context</span>)</span></span> &#123;</span><br><span class="line">        preferences = context.getSharedPreferences(NAME, MODE)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 생략.</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">(args: <span class="type">Array</span>&lt;<span class="type">String</span>&gt;)</span></span>&#123;</span><br><span class="line">    SharedPreference.init(applicationContext)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>위의 코드처럼 object로 선언하면 클래스 선언과 동시에 객체가 생성된다. 따라서 객체 이름을 통해 property나 메소드에 접근할 수 있다.</p>
+<p>object 클래스는 가장 바깥 클래스로 선언될 수도 있고, 내부에 중첩된 클래스 형태로 선언될 수도 있다. 하지만, 어떤 방식으로 선언되었던 간에 존재하는 object는 단일 객체만 존재한다.</p>
+<h2 id="companion-object">companion object</h2>
+<p>코틀린에서는 static을 지원하지 않는 대신 <code>top-level function</code>을 통해 같은 효과를 낼 수 있다. 단, top-level function은 class 내부에 선언된 private property에는 접근할 수 없는 제한을 받는다.</p>
+<p>이를 해결하기 위해서 <code>companion object</code>라는 개념이 존재한다. 클래스의 인스턴스 생성과 상관없이 호출해야 하지만 class의 내부 정보에 접근할 수 있는 함수가 필요할 때 companion obejct를 class 내부에 선언한다. <strong>Java로 따지면 class 내부에 static 함수를 넣는다고 생각하면 된다.</strong></p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span></span>&#123;</span><br><span class="line">    <span class="keyword">companion</span> <span class="keyword">object</span>&#123;</span><br><span class="line">        <span class="function"><span class="keyword">fun</span> <span class="title">print</span><span class="params">()</span></span>&#123;</span><br><span class="line">            println(<span class="string">"Companion obejct call!!"</span>)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">(args: <span class="type">Array</span>&lt;<span class="type">String</span>&gt;)</span></span>&#123;</span><br><span class="line">    A.print()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>이처럼 A 클래스 내부에서 선언된 companion object는 호출할 때 클래스 이름으로 바로 호출할 수 있다. (Java의 static 함수와 동일한 형태이다.)</p>
+<p>또한, <code>companion object</code>는 외부 클래스의 private property에도 접근이 가능하기 때문에, factory method를 만들 때 적합하다.</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span> <span class="keyword">private</span> <span class="keyword">constructor</span></span>(<span class="keyword">val</span> nickname: String)&#123;</span><br><span class="line">    <span class="keyword">companion</span> <span class="keyword">object</span>&#123;</span><br><span class="line">        <span class="function"><span class="keyword">fun</span> <span class="title">newSubscribingUser</span><span class="params">(email: <span class="type">String</span>)</span></span> = User(email.substringBefore(<span class="string">'@'</span>))</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">fun</span> <span class="title">newFacebookUser</span><span class="params">(accountId: <span class="type">Int</span>)</span></span> = User(getFacebookName(accountId))</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">(args: <span class="type">Array</span>&lt;<span class="type">String</span>&gt;)</span></span>&#123;</span><br><span class="line">    <span class="keyword">val</span> subscribingUser = User.newSubscribingUser(<span class="string">"jhsw0375@gmail.com"</span>)</span><br><span class="line">    <span class="keyword">val</span> facebookUser = User.newFacebookUser(<span class="number">4</span>)</span><br><span class="line"></span><br><span class="line">    println(subscribingUser.nickname)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>위에서 User 클래스는 <strong>private constructor</strong>를 가지기 때문에 외부에서 생성할 수 없다. 따라서 외부에서는 companion으로 제공되는 factory method를 이용해서만 객체를 생성할 수 있도록 제한할 수 있다.</p>
+<h2 id="companion-object의-사용">companion object의 사용</h2>
+<p>companion object는 클래스 내부에 정의된 일반 객체이다. 따라서 아래와 같은 작업이 가능하다.</p>
+<ul>
+<li>companion object에 이름 명명</li>
+<li>companion object 내부에 확장 함수나 property 정의</li>
+<li>인터페이스 상속</li>
+</ul>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span></span>(<span class="keyword">val</span> name: String)&#123;</span><br><span class="line">    <span class="keyword">companion</span> <span class="keyword">object</span> Loader&#123;</span><br><span class="line">        <span class="function"><span class="keyword">fun</span> <span class="title">fromJSON</span><span class="params">(jsonText: <span class="type">String</span>)</span></span>: Person = ... 생략.</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">(args: <span class="type">Array</span>&lt;<span class="type">String</span>&gt;)</span></span>&#123;</span><br><span class="line">    person = Person.Loader.fromJSON(<span class="string">"&#123;name: 'kim'&#125;"</span>)</span><br><span class="line">    person = Person.fromJSON(<span class="string">"&#123;name: 'lee'&#125;"</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>companion object에 이름을 붙일 수 있으며, 이름을 통해서 호출할 수도 있고 그냥 호출할 수도 있다.</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">JSONFactory</span>&lt;<span class="type">T</span>&gt; </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">fromJSON</span><span class="params">(jsonText: <span class="type">String</span>)</span></span>: T</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span></span>(<span class="keyword">val</span> name: String)&#123;</span><br><span class="line">    <span class="keyword">companion</span> <span class="keyword">object</span>: JSONFactory&#123;</span><br><span class="line">        <span class="keyword">override</span> fromJSON(jsonText: String): Person = ... 생략</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> loadFromText<span class="type">&lt;T&gt;</span><span class="params">(factory: <span class="type">JSONFactory</span>&lt;<span class="type">T</span>&gt;)</span></span>: T&#123;</span><br><span class="line">    ... 생략.</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">(args: <span class="type">Array</span>&lt;<span class="type">String</span>&gt;)</span></span>&#123;</span><br><span class="line">    loadFromText(Person)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>위의 코드처럼 companion object가 특정 interface를 구현할 수도 있고, 이 interface를 넘겨줄 때는 외부 class 이름을 사용한다.</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">ClickListener</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">onClick</span><span class="params">()</span></span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">(args: <span class="type">Array</span>&lt;<span class="type">String</span>&gt;)</span></span>&#123;</span><br><span class="line">    setClickAction(<span class="keyword">object</span>: ClickListener&#123;</span><br><span class="line">        <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onClick</span><span class="params">()</span></span>&#123;</span><br><span class="line">            println(<span class="string">"clicked!"</span>)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">setClickAction</span><span class="params">(clickListener: <span class="type">ClickListener</span>)</span></span>&#123;</span><br><span class="line">    clickListener.onClick()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>위의 코드에서 익명 클래스는 singleton이 아니다. 따라서 호출시 매번 객체가 생성된다는 점과 익명 클래스 내에서는 외부 클래스의 변수에 접근하여 값을 수정할 수도 있다.</p>
+<h2 id="sharedpreferences-예제">SharedPreferences 예제</h2>
+<p>Android에서는 간단한 값을 저장하기 위해서 <code>SharedPreferences</code>를 사용한다. 프로그램 어디서나 이 객체를 사용할 수 있어야 하기 때문에 일반적으로 <strong>Singleton</strong>을 이용해 구현하곤 한다. 자바에서는 싱글톤을 손쉽게 구현할 수 있다. 마찬가지로 코틀린에서도 object 개념을 사용해서 간단하게 구현할 수 있다.</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">object</span> SharedPreferenceManager&#123;</span><br><span class="line">    <span class="keyword">private</span> const <span class="keyword">val</span> PREF_TOKEN = <span class="string">"token"</span></span><br><span class="line">    <span class="keyword">private</span> const <span class="keyword">val</span> NAME = <span class="string">"Test"</span></span><br><span class="line">    <span class="keyword">private</span> const <span class="keyword">val</span> MODE = Context.MODE_PRIVATE</span><br><span class="line">    <span class="keyword">private</span> latedinit <span class="keyword">var</span> preferences: SharedPreferences</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">init</span><span class="params">(context: <span class="type">Context</span>)</span></span>&#123;</span><br><span class="line">        preferences = context.getSharedPreferences(NAME, MODE)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 확장 함수를 사용한다. 따라서 edit(), apply() 함수를 호출할 필요가 없다. 모든 작업을 이 함수 하나로 대체할 수 있다.</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">inline</span> <span class="function"><span class="keyword">fun</span> SharedPreferences.<span class="title">edit</span><span class="params">(operation: (<span class="type">SharedPreferences</span>.<span class="type">Editor</span>)</span></span> -&gt; <span class="built_in">Unit</span>)&#123;</span><br><span class="line">        <span class="keyword">val</span> editor = edit()</span><br><span class="line">        operation(edit)</span><br><span class="line">        editor.apply()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> token: String</span><br><span class="line">        <span class="keyword">get</span>() = preferences.getString(PREF_TOKEN,<span class="string">""</span>)</span><br><span class="line">        <span class="keyword">set</span>(value) = preferences.edit&#123;</span><br><span class="line">            it.putString(PREF_TOKEN, value)</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>간단하게 토큰을 저장하는 예제이다. 저장해서 확인해보는 과정까지 거친 코드이므로 잘 동작한다. 확장 함수를 만들어서 이를 통해 edit(), apply() 함수를 직접 호출할 필요가 없다. 작성한 함수만 사용하면 되기 때문이다.</p>
+<p>또한, 여러 개의 함수를 만들 필요 없이 하나의 함수만 사용하면 되고 저장할 값이 필요하다면 token 처럼 만들어서 사용자 지정 get,set을 사용하여 값을 가져오고 저장하는 과정을 거치면 된다.</p>
+<p>이 클래스를 만들기 위해서 처음에 어떻게 잘 짤 수 있을까를 먼저 고민해보았다. 그런데 바보 같은 생각이라는 걸 깨달았다. 처음부터 잘 짤 수는 없는 것이다. 완벽한 코드는 없으면 코드를 짜면서 공부를 하면서 수정하면 되는 것이다.</p>
+<p>그러니 처음부터 완벽한 코드를 짜려고 애쓰지 않도록 마음 먹었다. 리팩토링을 하면 나의 코드를 더 발전시켜 나갈 수 있으니 말이다. 오늘은 여기까지!</p>
+<h2 id="참고">참고</h2>
+<ul>
+<li><a href="http://lomza.totem-soft.com/tutorial-how-to-use-sharedpreferences-in-kotlin/" target="_blank" rel="noopener">[Tutorial] How to use SharedPreferences in Kotlin</a></li>
+<li><a href="https://tourspace.tistory.com/109" target="_blank" rel="noopener">[Kotlin] 코틀린 object</a></li>
+</ul>
+
+        </div>
+        
+        <footer class="article-footer">
+            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({
+     google_ad_client: "ca-pub-9725307592233286",
+     enable_page_level_ads: true
+});
+</script>
+            
+
+
+
+    <a data-url="https://woovictory.github.io/2019/05/28/What-is-Kotlin-Object/" data-id="cjw79d96500aj2apqxu70xisr" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+<script>
+    (function ($) {
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+        </footer>
+    </div>
+</article>
+
+    <section id="comments">
+    
+        
+    <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+
+    
+    </section>
+
+
+
+                        </div>
+                    </section>
+                    <aside id="sidebar">
+    <a class="sidebar-toggle" title="Expand Sidebar"><i class="toggle icon"></i></a>
+    <div class="sidebar-top">
+        <p>follow:</p>
+        <ul class="social-links">
+            
+                
+                <li>
+                    <a class="social-tooltip" title="facebook" href="https://www.facebook.com/WooVictory" target="_blank" rel="noopener">
+                        <i class="icon fa fa-facebook"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="github" href="https://github.com/WooVictory" target="_blank" rel="noopener">
+                        <i class="icon fa fa-github"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="linkedin" href="https://www.linkedin.com/in/seungwoo-lee-590844177" target="_blank" rel="noopener">
+                        <i class="icon fa fa-linkedin"></i>
+                    </a>
+                </li>
+                
+            
+        </ul>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2019/05/28/Two-Pointer-Algorithm/" id="article-nav-newer" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">newer</strong>
+        <p class="article-nav-title">
+        
+            [알고리즘] 투포인터 알고리즘
+        
+        </p>
+        <i class="icon fa fa-chevron-right" id="icon-chevron-right"></i>
+    </a>
+    
+    
+        <a href="/2019/05/24/Algorithm-Set/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">older</strong>
+        <p class="article-nav-title">[알고리즘] 부분집합</p>
+        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
+        </a>
+    
+</nav>
+
+    
+    <div class="widgets-container">
+        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({
+     google_ad_client: "ca-pub-9725307592233286",
+     enable_page_level_ads: true
+});
+</script>
+        
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">archives</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a><span class="archive-list-count">18</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a><span class="archive-list-count">9</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a><span class="archive-list-count">42</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a><span class="archive-list-count">24</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a><span class="archive-list-count">24</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a><span class="archive-list-count">30</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">February 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a><span class="archive-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+
+            
+        
+    </div>
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({
+     google_ad_client: "ca-pub-9725307592233286",
+     enable_page_level_ads: true
+});
+</script>
+</aside>
+
+                </div>
+            </div>
+        </div>
+        <footer id="footer">
+    <div class="container">
+        <div class="container-inner">
+            <a id="back-to-top" href="javascript:;"><i class="icon fa fa-angle-up"></i></a>
+            <div class="credit">
+                <h1 class="logo-wrap">
+                    <a href="/" class="logo"></a>
+                </h1>
+                <p>&copy; 2019 VictoryWoo</p>
+                <p>Powered by <a href="//hexo.io/" target="_blank">Hexo</a>. Theme by <a href="//github.com/ppoffice" target="_blank">PPOffice</a></p>
+            </div>
+            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({
+     google_ad_client: "ca-pub-9725307592233286",
+     enable_page_level_ads: true
+});
+</script>
+            <div class="footer-plugins">
+              
+    
+
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+        
+    
+    <script>
+    var disqus_shortname = 'hexo-theme-hueman';
+    
+    
+    var disqus_url = 'https://woovictory.github.io/2019/05/28/What-is-Kotlin-Object/';
+    
+    (function() {
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+</html>
