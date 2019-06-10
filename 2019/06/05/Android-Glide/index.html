@@ -21,7 +21,7 @@
 <meta property="og:description" content="안드로이드 앱에서 이미지를 보여주는 화면이 많다. 서버로부터 받은 url 이미지를 보여줘야 할 때도 있고, local에 저장해뒀다가 보여줘야 하는 경우도 있다. 오늘 이야기할 내용은 Glide를 사용해서 SVG 이미지를 화면에 보여주는 과정에서 내가 겪은 삽집을 풀도록 하겠다. 먼저, SVG 이미지가 무엇인지 알아보자. SVG VS PNG SVG는 Scal">
 <meta property="og:locale" content="en">
 <meta property="og:image" content="https://woovictory.github.io/img/68.jpeg">
-<meta property="og:updated_time" content="2019-06-05T12:25:14.748Z">
+<meta property="og:updated_time" content="2019-06-10T06:17:43.134Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="[Android] Glide 삽질 과정">
 <meta name="twitter:description" content="안드로이드 앱에서 이미지를 보여주는 화면이 많다. 서버로부터 받은 url 이미지를 보여줘야 할 때도 있고, local에 저장해뒀다가 보여줘야 하는 경우도 있다. 오늘 이야기할 내용은 Glide를 사용해서 SVG 이미지를 화면에 보여주는 과정에서 내가 겪은 삽집을 풀도록 하겠다. 먼저, SVG 이미지가 무엇인지 알아보자. SVG VS PNG SVG는 Scal">
@@ -267,10 +267,19 @@ JPEG, PNG처럼 그래픽 포맷 중 하나이다. SVG는 벡터 기반으로 �
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">implementation 'com.caverock:androidsvg:1.2.1'</span><br></pre></td></tr></table></figure>
 <p>그리고 여기서 사용되는 클래스들은 다음과 같다.</p>
 <ul>
-<li>SvgDecoder</li>
-<li>SvgDrawableTranscoder</li>
-<li>SvgSoftwareLayerSetter</li>
+<li><a href="https://github.com/bumptech/glide/blob/master/samples/svg/src/main/java/com/bumptech/glide/samples/svg/SvgDecoder.java" target="_blank" rel="noopener">SvgDecoder</a></li>
+<li><a href="https://github.com/bumptech/glide/blob/master/samples/svg/src/main/java/com/bumptech/glide/samples/svg/SvgDrawableTranscoder.java" target="_blank" rel="noopener">SvgDrawableTranscoder</a></li>
+<li><a href="https://github.com/bumptech/glide/blob/master/samples/svg/src/main/java/com/bumptech/glide/samples/svg/SvgSoftwareLayerSetter.java" target="_blank" rel="noopener">SvgSoftwareLayerSetter</a></li>
 </ul>
+<p><strong>1.SvgDecoder</strong></p>
+<p>link를 통해서 읽은 inputStream을 SVG 내부 표현으로 디코딩을 한다는 의미이다.<br>
+정확하지는 않지만 link 즉, url을 통해 읽어들인 다음 inputStream에 담고 이를 통해 SVG로 만든다. 만들 때는 <code>androidsvg</code> 라이브러리를 사용한다.</p>
+<p><strong>2. SvgDrawableTranscoder</strong></p>
+<p>1번에서 만든 SVG를 안드로이드에서 사용할 수 있는 <code>PictureDrawable</code>로 변환한다. 이는 Drawable 클래스를 상속받고 있기 때문에 이렇게 변환된 데이터를 안드로이드에서 사용할 수 있다.</p>
+<p><strong>3. SvgSoftwareLayerSetter</strong></p>
+<p>3번은 필수가 아닌 선택이다. 하지만, 필수적으로 사용해야 될 것 같다. 왜냐하면 리스너를 구현한 것이기 때문에 이를 통해서 내가 로드하려는 이미지가 성공적으로 로드되었는지, 실패했는지를 확인할 수 있다.</p>
+<p>이를 통해서 내가 로드하려는 SVG 이미지가 성공적으로 로드되었는지, 로드되지 않고 실패했다면 어떤 원인인지 파악할 수 있어 디버깅하는데 더 수월하다.</p>
+<p>여기까지 내가 삽질했던 과정을 설명했다. 사용되는 클래스에 대한 정확한 파악은 하지 못했지만, 어떻게 동작하는지는 이해가 되었다. 나의 이해를 바탕으로 작성한 글이기 때문에 사실과 다른 부분도 존재할 것이다. 이 부분에 대한 이견이 있다면 알려주시면 감사할 것 같다.</p>
 <h2 id="참고">참고</h2>
 <ul>
 <li><a href="https://brunch.co.kr/@dailyhotel/20" target="_blank" rel="noopener">왜 SVG로 갈아탔는가?</a></li>
@@ -290,7 +299,7 @@ JPEG, PNG처럼 그래픽 포맷 중 하나이다. SVG는 벡터 기반으로 �
 
 
 
-    <a data-url="https://woovictory.github.io/2019/06/05/Android-Glide/" data-id="cjwovswru00qzbcpqoepewsw0" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="https://woovictory.github.io/2019/06/05/Android-Glide/" data-id="cjwq2c0kd00rfxnpqihc3vz2i" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -438,7 +447,7 @@ JPEG, PNG처럼 그래픽 포맷 중 하나이다. SVG는 벡터 기반으로 �
     <div class="widget-wrap widget-list">
         <h3 class="widget-title">archives</h3>
         <div class="widget">
-            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a><span class="archive-list-count">18</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a><span class="archive-list-count">9</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a><span class="archive-list-count">42</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a><span class="archive-list-count">24</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a><span class="archive-list-count">24</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a><span class="archive-list-count">30</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">February 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a><span class="archive-list-count">1</span></li></ul>
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a><span class="archive-list-count">18</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a><span class="archive-list-count">42</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a><span class="archive-list-count">24</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a><span class="archive-list-count">24</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a><span class="archive-list-count">30</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">February 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a><span class="archive-list-count">1</span></li></ul>
         </div>
     </div>
 
