@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+
+    
+
+    
+    <title>[Android] RecyclerView ClickListener | VictoryWoo</title>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+        <meta name="keywords" content="Android,RecyclerView,Kotlin,ClickListener" />
+    
+    <meta name="description" content="이번에는 Android에서 RecyclerView를 사용할 때, 각 아이템의 ClickListener를 다는 방법에 대해서 설명하려고 한다. 여러가지 방법이 있겠지만, 이번에는 Kotlin의 특징 중 하나인 함수를 매개변수로 넘길 수 있다는 특징을 사용하려고 한다. 필자가 진행 중인 프로젝트의 일부 코드를 기반으로 설명할 예정이다. 구현  먼저, MainF">
+<meta name="keywords" content="Android,RecyclerView,Kotlin,ClickListener">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[Android] RecyclerView ClickListener">
+<meta property="og:url" content="https://woovictory.github.io/2019/07/05/Android-RecyclerView-ClickListener-kotlin/index.html">
+<meta property="og:site_name" content="VictoryWoo">
+<meta property="og:description" content="이번에는 Android에서 RecyclerView를 사용할 때, 각 아이템의 ClickListener를 다는 방법에 대해서 설명하려고 한다. 여러가지 방법이 있겠지만, 이번에는 Kotlin의 특징 중 하나인 함수를 매개변수로 넘길 수 있다는 특징을 사용하려고 한다. 필자가 진행 중인 프로젝트의 일부 코드를 기반으로 설명할 예정이다. 구현  먼저, MainF">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2019-07-05T04:35:59.072Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="[Android] RecyclerView ClickListener">
+<meta name="twitter:description" content="이번에는 Android에서 RecyclerView를 사용할 때, 각 아이템의 ClickListener를 다는 방법에 대해서 설명하려고 한다. 여러가지 방법이 있겠지만, 이번에는 Kotlin의 특징 중 하나인 함수를 매개변수로 넘길 수 있다는 특징을 사용하려고 한다. 필자가 진행 중인 프로젝트의 일부 코드를 기반으로 설명할 예정이다. 구현  먼저, MainF">
+    
+
+    
+
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/titillium-web/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" type="text/css" href="">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/theeluwin/NotoSansKR-Hestia@master/stylesheets/NotoSansKR-Hestia.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/earlyaccess/nanumgothiccoding.css">
+    
+    
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/3.3.1/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+        <script type="text/javascript">
+(function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-125410253-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+    
+    
+
+
+</head>
+
+<body>
+    <div id="wrap">
+        <header id="header">
+    <div id="header-outer" class="outer">
+        <div class="container">
+            <div class="container-inner">
+                <div id="header-title">
+                    <h1 class="logo-wrap">
+                        <a href="/" class="logo"></a>
+                    </h1>
+                    
+                        <h2 class="subtitle-wrap">
+                            <p class="subtitle">VictoryWoo&#39;s Blog</p>
+                        </h2>
+                    
+                </div>
+                <div id="header-inner" class="nav-container">
+                    <a id="main-nav-toggle" class="nav-icon fa fa-bars"></a>
+                    <div class="nav-container-inner">
+                        <ul id="main-nav">
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/">Home</a>
+                                </li>
+                            
+                                        <ul class="main-nav-list"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/">CS</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/Design-Pattern/">Design Pattern</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/OS/">OS</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/개발-상식/">개발 상식</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/네트워크/">네트워크</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/데이터베이스/">데이터베이스</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/알고리즘/">알고리즘</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/자료구조/">자료구조</a></li></ul></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/">Programming</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/Android/">Android</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/Inno-SOPT/">Inno_SOPT</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/Java/">Java</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/Kotlin/">Kotlin</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/Node-js/">Node.js</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/RxJava/">RxJava</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/etc/">etc</a></li></ul></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/algorithm/">algorithm</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/algorithm/BOJ/">BOJ</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/algorithm/Programmers/">Programmers</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/algorithm/개념/">개념</a></li></ul></li></ul>
+                                    
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/about/index.html">About</a>
+                                </li>
+                            
+                        </ul>
+                        <nav id="sub-nav">
+                            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="Type something..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+        <div class="container">
+            <div class="main-body container-inner">
+                <div class="main-body-inner">
+                    <section id="main">
+                        <div class="main-body-header">
+    <h1 class="header">
+    
+    <a class="page-title-link" href="/categories/Programming/">Programming</a><i class="icon fa fa-angle-right"></i><a class="page-title-link" href="/categories/Programming/Android/">Android</a>
+    </h1>
+</div>
+
+                        <div class="main-body-content">
+                            
+                            <article id="post-Android-RecyclerView-ClickListener-kotlin" class="article article-single article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+        [Android] RecyclerView ClickListener
+        </h1>
+    
+
+            </header>
+        
+        
+            <div class="article-meta">
+                
+    <div class="article-date">
+        <a href="/2019/07/05/Android-RecyclerView-ClickListener-kotlin/" class="article-date">
+            <time datetime="2019-07-05T03:34:18.000Z" itemprop="datePublished">2019-07-05</time>
+        </a>
+    </div>
+
+		
+
+                
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/Android/">Android</a>, <a class="tag-link" href="/tags/ClickListener/">ClickListener</a>, <a class="tag-link" href="/tags/Kotlin/">Kotlin</a>, <a class="tag-link" href="/tags/RecyclerView/">RecyclerView</a>
+    </div>
+
+            </div>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+            <p>이번에는 Android에서 RecyclerView를 사용할 때, 각 아이템의 ClickListener를 다는 방법에 대해서 설명하려고 한다. 여러가지 방법이 있겠지만, 이번에는 Kotlin의 특징 중 하나인 <strong>함수를 매개변수로 넘길 수 있다는 특징</strong>을 사용하려고 한다.</p>
+<p>필자가 진행 중인 프로젝트의 일부 코드를 기반으로 설명할 예정이다.</p>
+<h2 id="구현">구현</h2>
+<ol>
+<li>먼저, MainFragment에서 RecyclerView를 사용할 것이다. 그리고 RecyclerView의 각 아이템을 눌렀을 때 어떤 동작을 할 것인지를 미리 정의해둔다.</li>
+</ol>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">fun</span> <span class="title">startToDetailActivity</span><span class="params">(id: <span class="type">Int</span>, message: <span class="type">String</span>)</span></span> &#123;</span><br><span class="line">        <span class="keyword">val</span> intent = Intent(context, MissionDetailActivity::<span class="class"><span class="keyword">class</span>.<span class="title">java</span>)</span></span><br><span class="line">        intent.putExtra(<span class="string">"id"</span>, id)</span><br><span class="line">        intent.putExtra(<span class="string">"completeMessage"</span>, message)</span><br><span class="line">        intent.putExtra(<span class="string">"main"</span>,<span class="string">"main"</span>)</span><br><span class="line">        startActivity(intent)</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>Int 타입인 id와 String 타입인 message를 매개변수로 받는 함수이다. 이 함수는 id, message를 가지고 MissionDetailActivity로 이동하는 함수이다.</p>
+<ol start="2">
+<li>이제는 이 함수를 RecyclerView에서 사용될 Adapter에 매개변수로 넘기는 과정이 필요하다. 이 과정은 두 단계로 나눠보도록 하겠다.</li>
+</ol>
+<ul>
+<li>Adapter에서 함수를 인자로 받을 수 있도록 수정.</li>
+<li>MainFragment에서 Adapter 객체를 만들 때 위에서 만든 함수를 전달한다.</li>
+</ul>
+<p>Adapter에서 함수를 인자로 받을 수 있도록 수정해보도록 하겠다.</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MainMissionAdapter</span></span>(<span class="keyword">private</span> <span class="keyword">var</span> onMainMissionItemClick: (<span class="built_in">Int</span>, String) -&gt; <span class="built_in">Unit</span>) :</span><br><span class="line">    RecyclerView.Adapter&lt;MainMissionViewHolder&gt;() &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">var</span> itemsMock = ArrayList&lt;MissionFeedResponse&gt;()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreateViewHolder</span><span class="params">(parent: <span class="type">ViewGroup</span>, viewType: <span class="type">Int</span>)</span></span>: MainMissionViewHolder &#123;</span><br><span class="line">        <span class="keyword">val</span> binding = ItemListMainMissionBinding.inflate(</span><br><span class="line">            LayoutInflater.from(parent.context)</span><br><span class="line">            , parent, <span class="literal">false</span></span><br><span class="line">        )</span><br><span class="line">        <span class="keyword">return</span> MainMissionViewHolder(binding, onMainMissionItemClick)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 생략.</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>MainMissionAdapter의 기본 생성자를 호출하면서 <code>(Int, String) -&gt; Unit</code>을 확인할 수 있다. 이는 Int, String을 인자로 받고 반환값이 없는 함수를 의미한다. 따라서 Int, String을 인자로 받고 반환값이 없는 함수를 매개변수를 받겠다는 의미이다.</p>
+<p>그리고 <strong>onCreateViewHodler</strong>에서 <strong>MainMissionViewHolder</strong>에 매개변수로 받은 <code>onMainMissionItemClick</code> 함수를 넘기고 있다. ViewHolder는 위의 남은 단계가 끝나고 살펴볼 예정이다.</p>
+<p>그러면 MainFragment에서 함수를 전달해보도록 하자. 함수를 전달할 때는 람다식을 사용할 수 있다. 이유는 익명 함수이기 때문에 람다식을 이용해서 가독성을 높이고 쉽게 처리할 수 있기 때문이다.</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mainMissionAdapter = MainMissionAdapter &#123; id, message -&gt;</span><br><span class="line">            startToDetailActivity(id, message)</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+<p>초기화 하는 코드이다. MainMissionAdapter의 인자로 id, message를 받는 익명함수가 전달되어야 하기 때문에 람다식을 통해서 id, message를 넘겨 받는다. 이는 위에서 구현해놓은 <code>startToDetailActivity()</code> 함수의 매개변수로 넘겨줘야 한다.</p>
+<p>이것은 실제로 값을 받는 코드가 아니다. 이렇게 값을 받을 것이다라고 선언만 해놓은 것이지 아직 코드가 실행되지 않는다.<br>
+어떻게 보면 <strong>startToDetailActivity</strong> 함수를 Adapter에 넘기는 것이다. 이 함수는 위치는 MainFragment에 존재하는 것이고 이 함수의 호출을 대신하기 위해서 함수를 넘기는 것이다.</p>
+<p>따라서 함수를 넘긴다는 것의 의미는 실제로 이 함수를 넘기는 것이 아니라 원하는 값을 얻어 이 함수에 담아서 호출하기 위함이다. 그래서 Adapter에서 ViewHolder로 넘기면 ViewHolder에서 <strong>onMainMissionItemClick</strong> 이라는 익명 함수를 받는다. 코드를 먼저 보도록 하자.</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MainMissionViewHolder</span></span>(</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">val</span> binding: ItemListMainMissionBinding</span><br><span class="line">    , <span class="keyword">private</span> <span class="keyword">val</span> onMainMissionItemClick: (<span class="built_in">Int</span>, String) -&gt; <span class="built_in">Unit</span></span><br><span class="line">) : RecyclerView.ViewHolder(binding.root) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">onBind</span><span class="params">(item: <span class="type">MissionFeedResponse</span>)</span></span> &#123;</span><br><span class="line">        binding.item = item</span><br><span class="line">        binding.executePendingBindings()</span><br><span class="line"></span><br><span class="line">        binding.itemMainImage.setOnClickListener &#123;</span><br><span class="line">            onMainMissionItemClick.invoke(item.mission.id, item.mission.category.completeMessage)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>ViewHolder에서 필자가 원하는 아이템에 <strong>setOnClickListener</strong>를 통해서 클릭 리스너를 달아준다. 그리고 그 안에서 <code>onMainMissionItemClick.invoke()</code>를 호출함으로써 넘겨받은 함수를 대신 호출할 수 있도록 해준다. <strong>invoke()</strong> 함수가 함수를 대신 호출하는 의미를 가진듯 하다.</p>
+<p>그래서 여기서 호출하게 되면 MainFragment에서 정의했던 startToDetailActivity() 함수가 호출되고 원하는 동작을 할 수 있게 된다.</p>
+<p>내가 원하는 값을 인자로 받는 부분은 ViewHolder에서 이루어지게 되고 실제 함수는 MainFragment에 존재한다. 그리고 호출도 이 함수를 호출하게 되는 것이다.</p>
+<p>설명을 두서없이 하였다. 다음에 Kotlin의 사용자 정의 get(), set()을 통해 변경된 코드로 다시 한번 설명하도록 하겠다. 그 때는 더 깔끔하게 글을 쓰도록 할 예정이다. 마지막으로 이 글을 쓴 목적은 코틀린스럽게 코드를 작성하고자 하는 사람들이 영어로 된 자료말고 이 자료를 통해서 더 쉽게 해당 지식을 얻어갔으면 하는 바램에서 작성하게 되었다.</p>
+
+        </div>
+        
+        <footer class="article-footer">
+            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({
+     google_ad_client: "ca-pub-9725307592233286",
+     enable_page_level_ads: true
+});
+</script>
+            
+
+
+
+    <a data-url="https://woovictory.github.io/2019/07/05/Android-RecyclerView-ClickListener-kotlin/" data-id="cjxplacl1002jjepqht9iuj4f" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+<script>
+    (function ($) {
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+        </footer>
+    </div>
+</article>
+
+    <section id="comments">
+    
+        
+    <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+
+    
+    </section>
+
+
+
+                        </div>
+                    </section>
+                    <aside id="sidebar">
+    <a class="sidebar-toggle" title="Expand Sidebar"><i class="toggle icon"></i></a>
+    <div class="sidebar-top">
+        <p>follow:</p>
+        <ul class="social-links">
+            
+                
+                <li>
+                    <a class="social-tooltip" title="facebook" href="https://www.facebook.com/WooVictory" target="_blank" rel="noopener">
+                        <i class="icon fa fa-facebook"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="github" href="https://github.com/WooVictory" target="_blank" rel="noopener">
+                        <i class="icon fa fa-github"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="linkedin" href="https://www.linkedin.com/in/seungwoo-lee-590844177" target="_blank" rel="noopener">
+                        <i class="icon fa fa-linkedin"></i>
+                    </a>
+                </li>
+                
+            
+        </ul>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+    
+        <a href="/2019/07/04/Android-EditTextFunction/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">older</strong>
+        <p class="article-nav-title">[Android] EditText 유용한 기능</p>
+        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
+        </a>
+    
+</nav>
+
+    
+    <div class="widgets-container">
+        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({
+     google_ad_client: "ca-pub-9725307592233286",
+     enable_page_level_ads: true
+});
+</script>
+        
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">archives</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a><span class="archive-list-count">19</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a><span class="archive-list-count">18</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a><span class="archive-list-count">42</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a><span class="archive-list-count">24</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a><span class="archive-list-count">24</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a><span class="archive-list-count">30</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">February 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a><span class="archive-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+
+            
+        
+    </div>
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({
+     google_ad_client: "ca-pub-9725307592233286",
+     enable_page_level_ads: true
+});
+</script>
+</aside>
+
+                </div>
+            </div>
+        </div>
+        <footer id="footer">
+    <div class="container">
+        <div class="container-inner">
+            <a id="back-to-top" href="javascript:;"><i class="icon fa fa-angle-up"></i></a>
+            <div class="credit">
+                <h1 class="logo-wrap">
+                    <a href="/" class="logo"></a>
+                </h1>
+                <p>&copy; 2019 VictoryWoo</p>
+                <p>Powered by <a href="//hexo.io/" target="_blank">Hexo</a>. Theme by <a href="//github.com/ppoffice" target="_blank">PPOffice</a></p>
+            </div>
+            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({
+     google_ad_client: "ca-pub-9725307592233286",
+     enable_page_level_ads: true
+});
+</script>
+            <div class="footer-plugins">
+              
+    
+
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+        
+    
+    <script>
+    var disqus_shortname = 'hexo-theme-hueman';
+    
+    
+    var disqus_url = 'https://woovictory.github.io/2019/07/05/Android-RecyclerView-ClickListener-kotlin/';
+    
+    (function() {
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+</html>
