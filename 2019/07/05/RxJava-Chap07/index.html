@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+
+    
+
+    
+    <title>[RxJava] Chap07. 디버깅 | VictoryWoo</title>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+        <meta name="keywords" content="Android,RxJava,디버깅" />
+    
+    <meta name="description" content="디버깅 코딩하는 도중에 로그를 넣는 이유는 잘못되었을 때를 대처하기 위함이다. 하지만 RxJava 코드는 로그를 넣을 수 있는 공간이 없다. Observable로 시작하는 업스트림(upstream)과 그것을 받아서 처리하는 다운스트림(downstream)이 동일한 문장으로 이루어져 있기 때문이다. 즉, 전체 동작을 선언적으로 만들 수 있으므로 전체 맥락에">
+<meta name="keywords" content="Android,RxJava,디버깅">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[RxJava] Chap07. 디버깅">
+<meta property="og:url" content="https://woovictory.github.io/2019/07/05/RxJava-Chap07/index.html">
+<meta property="og:site_name" content="VictoryWoo">
+<meta property="og:description" content="디버깅 코딩하는 도중에 로그를 넣는 이유는 잘못되었을 때를 대처하기 위함이다. 하지만 RxJava 코드는 로그를 넣을 수 있는 공간이 없다. Observable로 시작하는 업스트림(upstream)과 그것을 받아서 처리하는 다운스트림(downstream)이 동일한 문장으로 이루어져 있기 때문이다. 즉, 전체 동작을 선언적으로 만들 수 있으므로 전체 맥락에">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2019-07-05T15:29:14.351Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="[RxJava] Chap07. 디버깅">
+<meta name="twitter:description" content="디버깅 코딩하는 도중에 로그를 넣는 이유는 잘못되었을 때를 대처하기 위함이다. 하지만 RxJava 코드는 로그를 넣을 수 있는 공간이 없다. Observable로 시작하는 업스트림(upstream)과 그것을 받아서 처리하는 다운스트림(downstream)이 동일한 문장으로 이루어져 있기 때문이다. 즉, 전체 동작을 선언적으로 만들 수 있으므로 전체 맥락에">
+    
+
+    
+
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/titillium-web/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" type="text/css" href="">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/theeluwin/NotoSansKR-Hestia@master/stylesheets/NotoSansKR-Hestia.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/earlyaccess/nanumgothiccoding.css">
+    
+    
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/3.3.1/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+        <script type="text/javascript">
+(function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-125410253-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+    
+    
+
+
+</head>
+
+<body>
+    <div id="wrap">
+        <header id="header">
+    <div id="header-outer" class="outer">
+        <div class="container">
+            <div class="container-inner">
+                <div id="header-title">
+                    <h1 class="logo-wrap">
+                        <a href="/" class="logo"></a>
+                    </h1>
+                    
+                        <h2 class="subtitle-wrap">
+                            <p class="subtitle">VictoryWoo&#39;s Blog</p>
+                        </h2>
+                    
+                </div>
+                <div id="header-inner" class="nav-container">
+                    <a id="main-nav-toggle" class="nav-icon fa fa-bars"></a>
+                    <div class="nav-container-inner">
+                        <ul id="main-nav">
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/">Home</a>
+                                </li>
+                            
+                                        <ul class="main-nav-list"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/">CS</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/Design-Pattern/">Design Pattern</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/OS/">OS</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/개발-상식/">개발 상식</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/네트워크/">네트워크</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/데이터베이스/">데이터베이스</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/알고리즘/">알고리즘</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/자료구조/">자료구조</a></li></ul></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/">Programming</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/Android/">Android</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/Inno-SOPT/">Inno_SOPT</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/Java/">Java</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/Kotlin/">Kotlin</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/Node-js/">Node.js</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/RxJava/">RxJava</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/etc/">etc</a></li></ul></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/algorithm/">algorithm</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/algorithm/BOJ/">BOJ</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/algorithm/Programmers/">Programmers</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/algorithm/개념/">개념</a></li></ul></li></ul>
+                                    
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/about/index.html">About</a>
+                                </li>
+                            
+                        </ul>
+                        <nav id="sub-nav">
+                            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="Type something..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+        <div class="container">
+            <div class="main-body container-inner">
+                <div class="main-body-inner">
+                    <section id="main">
+                        <div class="main-body-header">
+    <h1 class="header">
+    
+    <a class="page-title-link" href="/categories/Programming/">Programming</a><i class="icon fa fa-angle-right"></i><a class="page-title-link" href="/categories/Programming/Android/">Android</a>
+    </h1>
+</div>
+
+                        <div class="main-body-content">
+                            
+                            <article id="post-RxJava-Chap07" class="article article-single article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+        [RxJava] Chap07. 디버깅
+        </h1>
+    
+
+            </header>
+        
+        
+            <div class="article-meta">
+                
+    <div class="article-date">
+        <a href="/2019/07/05/RxJava-Chap07/" class="article-date">
+            <time datetime="2019-07-05T14:23:57.000Z" itemprop="datePublished">2019-07-05</time>
+        </a>
+    </div>
+
+		
+
+                
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/Android/">Android</a>, <a class="tag-link" href="/tags/RxJava/">RxJava</a>, <a class="tag-link" href="/tags/디버깅/">디버깅</a>
+    </div>
+
+            </div>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+            <h2 id="디버깅">디버깅</h2>
+<p>코딩하는 도중에 로그를 넣는 이유는 잘못되었을 때를 대처하기 위함이다. 하지만 RxJava 코드는 로그를 넣을 수 있는 공간이 없다. Observable로 시작하는 업스트림(upstream)과 그것을 받아서 처리하는 다운스트림(downstream)이 동일한 문장으로 이루어져 있기 때문이다. 즉, 전체 동작을 선언적으로 만들 수 있으므로 전체 맥락에 대한 가독성은 높아지지만 예외 코드를 어떻게 넣어야 하는지에 대한 어려움이 있다.</p>
+<p>원래 함수형 프로그래밍은 함수의 부수 효과를 없도록 하는 것이 원칙이지만 doOnXXX() 계열 함수는 오히려 부수 효과를 일으켜서 내가 작성하는 코드가 문제없는지 알아볼 수 있게 도와준다.</p>
+<p>이번 Chapter에서 알아보자.</p>
+<h2 id="doonxxx-함수">doOnXXX() 함수</h2>
+<p>doOnNext(), doOnComplete(), doOnError() 3가지 함수는 Observable의 알림 이벤트에 해당한다. Observable에서 어떤 데이터를 발행할 때는 onNext, 중간에 에러가 발생하면 onError, 모든 데이터를 발행하면 onComplete 이벤트가 발생한다. <strong>어떻게 보면 이 알림 이벤트를 위의 함수가 가로채서 디버깅을 할 수 있도록 도와주는 것이다.</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">doOnXXX</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Observable.just(<span class="string">"1"</span>, <span class="string">"3"</span>, <span class="string">"5"</span>)</span><br><span class="line">                .doOnNext(data -&gt; Log.d(<span class="string">"onNext()"</span>, data))</span><br><span class="line">                .doOnComplete(() -&gt; Log.d(<span class="string">"onComplete()"</span>))</span><br><span class="line">                .doOnError(error -&gt; Log.e(<span class="string">"onError"</span>, error))</span><br><span class="line">                .subscribe(Log::i);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 결과</span></span><br><span class="line">main | onNext() | debug = <span class="number">1</span></span><br><span class="line">main | value = <span class="number">1</span></span><br><span class="line">main | onNext() | debug = <span class="number">3</span></span><br><span class="line">main | value = <span class="number">3</span></span><br><span class="line">main | onNext() | debug = <span class="number">5</span></span><br><span class="line">main | value = <span class="number">5</span></span><br><span class="line">main | debug = onComplete()</span><br></pre></td></tr></table></figure>
+<p>결과는 위와 같이 나온다. doOnNext(), doOnComplete(), doOnError() 함수를 사용해 로그를 출력해봤다. 모두 main 스레드에서 실행되었고, 실제로 Observable이 구독자에게 발행한 데이터는 value로 표시하였다.</p>
+<p>하지만, doOnError() 함수의 동작을 보지 못했다. 다른 예제를 통해서 확인해보자.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">doOnXXX</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Observable.just(<span class="number">10</span>, <span class="number">5</span>, <span class="number">0</span>)</span><br><span class="line">                .map(divider -&gt; <span class="number">1000</span> / divider)</span><br><span class="line">                .doOnNext(data -&gt; Log.d(<span class="string">"onNext()"</span>, data))</span><br><span class="line">                .doOnComplete(() -&gt; Log.d(<span class="string">"onComplete()"</span>))</span><br><span class="line">                .doOnError(error -&gt; Log.e(<span class="string">"onError()"</span>, error.getMessage()))</span><br><span class="line">                .subscribe(Log::i);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 결과</span></span><br><span class="line">main | onNext() | debug = <span class="number">100</span></span><br><span class="line">main | value = <span class="number">100</span></span><br><span class="line">main | onNext() | debug = <span class="number">200</span></span><br><span class="line">main | value = <span class="number">200</span></span><br><span class="line">main | onError() | error = / by zero</span><br><span class="line">io.reactivex.exceptions.OnErrorNotImplementedException: <span class="function">The exception was not handled due to missing onError handler in the <span class="title">subscribe</span><span class="params">()</span> method call. Further reading</span></span><br></pre></td></tr></table></figure>
+<p>어떤 수를 0으로 나누려고 하기 때문에 0 데이터가 발행될 때 에러가 발생하는 것을 볼 수 있다.</p>
+<h2 id="dooneach-함수">doOnEach() 함수</h2>
+<p>onNext, onComplete, onError 이벤트를 각각 처리하는 것이 아니라 한 번에 처리할 수 있기 때문에 편리하다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">doOnEach</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Observable.just(<span class="string">"ONE"</span>, <span class="string">"TWO"</span>, <span class="string">"THREE"</span>)</span><br><span class="line">                .doOnEach(noti -&gt; &#123;</span><br><span class="line">                    <span class="keyword">if</span> (noti.isOnNext()) &#123;</span><br><span class="line">                        Log.d(<span class="string">"onNext()"</span>, noti.getValue());</span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                    <span class="keyword">if</span> (noti.isOnComplete()) &#123;</span><br><span class="line">                        Log.d(<span class="string">"onComplete()"</span>);</span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                    <span class="keyword">if</span> (noti.isOnError()) &#123;</span><br><span class="line">                        Log.d(<span class="string">"onError()"</span>, noti.getError().getMessage());</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;)</span><br><span class="line">                .subscribe(Log::i);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 결과</span></span><br><span class="line">main | onNext() | debug = ONE</span><br><span class="line">main | value = ONE</span><br><span class="line">main | onNext() | debug = TWO</span><br><span class="line">main | value = TWO</span><br><span class="line">main | onNext() | debug = THREE</span><br><span class="line">main | value = THREE</span><br><span class="line">main | debug = onComplete()</span><br></pre></td></tr></table></figure>
+<p>Notification<t> 객체는 발생한 이벤트의 종류를 알 수 있는 boolean 타입의 isOnNext(), isOnComplete(), isOnError() 함수를 제공한다. onNext()의 경우는 getValue() 함수를 호출하면 발행된 값을 얻을 수 있다. onError() 함수의 경우 getError() 함수를 호출하면 Throwable 객체를 얻을 수 있다.</t></p>
+<p><code>doOnEach()</code> 함수는 오직 onNext, onComplete, onNext 이벤트만 처리한다. 그리고 람다식을 잘 활용하여 간결하 코드를 유지하도록 한다.</p>
+<h2 id="doonsubscribe-doondispose-기타-함수">doOnSubscribe(), doOnDispose(), 기타 함수</h2>
+<p>Observable의 알림 이벤트 중에는 onSubscribe와 onDispose 이벤트도 있다. 각각 Observable을 구독했을 때와 구독 해지했을 때의 이벤트를 처리할 수 있다.</p>
+<ul>
+<li>doOnSubscribe() : Observable을 구독했을 때 어떤 작업을 할 수 있다. 람다 표현식의 인자로는 구독의 결과로 나오는 Disposable 객체가 제공된다.</li>
+<li>doOnDispose() : Observable의 구독을 해지했을 때 호출되며 인자는 Action 객체이다. 여러 스레드에서 Observable을 참조할 수 있기 때문에 Action 객체는 <code>Thread-Safe</code>하게 동작해야 한다.</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">doOnSubscribe</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Observable&lt;String&gt; source = Observable.just(<span class="string">"1"</span>, <span class="string">"3"</span>, <span class="string">"5"</span>, <span class="string">"2"</span>, <span class="string">"6"</span>)</span><br><span class="line">                .zipWith(Observable.interval(<span class="number">100L</span>, TimeUnit.MILLISECONDS), (a, b) -&gt; a)</span><br><span class="line">                .doOnSubscribe(data -&gt; Log.d(<span class="string">"onSubscribe()"</span>))</span><br><span class="line">                .doOnDispose(() -&gt; Log.d(<span class="string">"onDispose"</span>));</span><br><span class="line"></span><br><span class="line">        Disposable d = source.subscribe(Log::i);</span><br><span class="line"></span><br><span class="line">        CommonUtils.sleep(<span class="number">200</span>);</span><br><span class="line">        d.dispose();</span><br><span class="line">        CommonUtils.sleep(<span class="number">300</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 결과</span></span><br><span class="line">main | debug = onSubscribe()</span><br><span class="line">RxComputationThreadPool-<span class="number">1</span> | value = <span class="number">1</span></span><br><span class="line">RxComputationThreadPool-<span class="number">1</span> | value = <span class="number">3</span></span><br><span class="line">main | debug = onDispose</span><br></pre></td></tr></table></figure>
+<p>한편 doOnSubscribe()와 doOnDispose() 함수를 각각 호출하지 않고 한번에 호출하는 함수인 <code>doOnLifeCycle()</code> 함수가 존재한다. 위의 코드에서 doOnSubscribe()와 doOnDispose() 함수를 빼고 <code>doOnLifeCycle()</code> 함수를 사용하면 된다. 결과는 같다.</p>
+<p>또한, <code>doOnTerminate()</code> 함수는 Observable이 끝나는 조건이 onComplete 혹은 onError 이벤트가 발생했을 때 실행하는 함수이다. 정확하게는 onComplete() 혹은 onError() 이벤트 발생 직전에 호출된다.</p>
+<p>다음 코드를 통해서 결과를 확인해보자.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">doOnTerminate</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Observable.just(<span class="string">"1"</span>, <span class="string">"3"</span>, <span class="string">"5"</span>, <span class="string">"7"</span>)</span><br><span class="line">                .doOnTerminate(() -&gt; Log.d(<span class="string">"onTerminate()"</span>))</span><br><span class="line">                .doOnNext(data -&gt; Log.d(<span class="string">"onNext()"</span>, data))</span><br><span class="line">                .doOnComplete(() -&gt; Log.d(<span class="string">"onComplete()"</span>))</span><br><span class="line">                .doOnError(error -&gt; Log.d(<span class="string">"onError()"</span>, error.getMessage()))</span><br><span class="line">                .subscribe(Log::i);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 결과</span></span><br><span class="line">main | onNext() | debug = <span class="number">1</span></span><br><span class="line">main | value = <span class="number">1</span></span><br><span class="line">main | onNext() | debug = <span class="number">3</span></span><br><span class="line">main | value = <span class="number">3</span></span><br><span class="line">main | onNext() | debug = <span class="number">5</span></span><br><span class="line">main | value = <span class="number">5</span></span><br><span class="line">main | onNext() | debug = <span class="number">7</span></span><br><span class="line">main | value = <span class="number">7</span></span><br><span class="line">main | debug = onTerminate()</span><br><span class="line">main | debug = onComplete()</span><br></pre></td></tr></table></figure>
+<p>onComplete 이벤트가 발생하기 직전에 <code>doOnTerminate()</code> 함수가 호출되는 것을 확인할 수 있다.</p>
+
+        </div>
+        
+        <footer class="article-footer">
+            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({
+     google_ad_client: "ca-pub-9725307592233286",
+     enable_page_level_ads: true
+});
+</script>
+            
+
+
+
+    <a data-url="https://woovictory.github.io/2019/07/05/RxJava-Chap07/" data-id="cjxq98c0600bcgbpqzzcoqp0p" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+<script>
+    (function ($) {
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+        </footer>
+    </div>
+</article>
+
+    <section id="comments">
+    
+        
+    <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+
+    
+    </section>
+
+
+
+                        </div>
+                    </section>
+                    <aside id="sidebar">
+    <a class="sidebar-toggle" title="Expand Sidebar"><i class="toggle icon"></i></a>
+    <div class="sidebar-top">
+        <p>follow:</p>
+        <ul class="social-links">
+            
+                
+                <li>
+                    <a class="social-tooltip" title="facebook" href="https://www.facebook.com/WooVictory" target="_blank" rel="noopener">
+                        <i class="icon fa fa-facebook"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="github" href="https://github.com/WooVictory" target="_blank" rel="noopener">
+                        <i class="icon fa fa-github"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="linkedin" href="https://www.linkedin.com/in/seungwoo-lee-590844177" target="_blank" rel="noopener">
+                        <i class="icon fa fa-linkedin"></i>
+                    </a>
+                </li>
+                
+            
+        </ul>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+    
+        <a href="/2019/07/05/Android-RecyclerView-ClickListener-kotlin/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">older</strong>
+        <p class="article-nav-title">[Android] RecyclerView ClickListener</p>
+        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
+        </a>
+    
+</nav>
+
+    
+    <div class="widgets-container">
+        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({
+     google_ad_client: "ca-pub-9725307592233286",
+     enable_page_level_ads: true
+});
+</script>
+        
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">archives</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a><span class="archive-list-count">19</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a><span class="archive-list-count">18</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a><span class="archive-list-count">42</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a><span class="archive-list-count">24</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a><span class="archive-list-count">24</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a><span class="archive-list-count">30</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">February 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a><span class="archive-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+
+            
+        
+    </div>
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({
+     google_ad_client: "ca-pub-9725307592233286",
+     enable_page_level_ads: true
+});
+</script>
+</aside>
+
+                </div>
+            </div>
+        </div>
+        <footer id="footer">
+    <div class="container">
+        <div class="container-inner">
+            <a id="back-to-top" href="javascript:;"><i class="icon fa fa-angle-up"></i></a>
+            <div class="credit">
+                <h1 class="logo-wrap">
+                    <a href="/" class="logo"></a>
+                </h1>
+                <p>&copy; 2019 VictoryWoo</p>
+                <p>Powered by <a href="//hexo.io/" target="_blank">Hexo</a>. Theme by <a href="//github.com/ppoffice" target="_blank">PPOffice</a></p>
+            </div>
+            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({
+     google_ad_client: "ca-pub-9725307592233286",
+     enable_page_level_ads: true
+});
+</script>
+            <div class="footer-plugins">
+              
+    
+
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+        
+    
+    <script>
+    var disqus_shortname = 'hexo-theme-hueman';
+    
+    
+    var disqus_url = 'https://woovictory.github.io/2019/07/05/RxJava-Chap07/';
+    
+    (function() {
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+</html>
