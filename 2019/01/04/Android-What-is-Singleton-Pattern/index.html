@@ -21,7 +21,7 @@
 <meta property="og:description" content="싱글톤 패턴 싱글톤 패턴은 애플리케이션이 시작될 때 어떤 클래스가 최초 한번만 메모리를 할당하고(Static) 그 메모리에 인스턴스를 만들어 사용하는 디자인 패턴을 말한다. 생성자가 여러번 호출되더라도 실제로 생성되는 객체는 하나이고 최초 생성 이후에 호출된 생성자는 최초에 생성한 객체를 반환한다.[자바에서는 생성자를 private으로 선언해서 생성 불가능">
 <meta property="og:locale" content="en">
 <meta property="og:image" content="https://woovictory.github.io/img/Java_volatile.png">
-<meta property="og:updated_time" content="2019-02-07T06:15:13.300Z">
+<meta property="og:updated_time" content="2019-07-31T08:40:58.466Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="[디자인패턴] 싱글톤 패턴">
 <meta name="twitter:description" content="싱글톤 패턴 싱글톤 패턴은 애플리케이션이 시작될 때 어떤 클래스가 최초 한번만 메모리를 할당하고(Static) 그 메모리에 인스턴스를 만들어 사용하는 디자인 패턴을 말한다. 생성자가 여러번 호출되더라도 실제로 생성되는 객체는 하나이고 최초 생성 이후에 호출된 생성자는 최초에 생성한 객체를 반환한다.[자바에서는 생성자를 private으로 선언해서 생성 불가능">
@@ -211,26 +211,20 @@ ga('send', 'pageview');
 [객체 지향 설계 원칙 찾아보기]</p>
 <p>따라서 수정이 어려워지고 테스트하기도 어려워진다. 또한 멀티 쓰레드 환경에서 동기화 처리를 안하면 인스턴스가 두 개가 생성된다던지 하는 경우가 발생할 수 있다. 즉, 싱글톤이 Thred-safe 하지않을 수 있다. 불필요한 오버헤드가 생길 수 있다.</p>
 <h2 id="멀티쓰레드에서-안전한thred-safe-싱글톤-클래스-인스턴스-만드는-방법">멀티쓰레드에서 안전한(Thred-safe) 싱글톤 클래스, 인스턴스 만드는 방법</h2>
-<ol>
-<li>Thread safe Lazy initialization(게으른 초기화)</li>
-</ol>
+<p><code>1. Thread safe Lazy initialization(게으른 초기화)</code></p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SingleTon</span></span>&#123;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> SingleTon instance;</span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">SingleTon</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="comment">// private한 생성자</span></span><br><span class="line">    &#125;</span><br><span class="line">     </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">synchronized</span> SingleTon <span class="title">getInstance</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(instance == <span class="keyword">null</span>)&#123;</span><br><span class="line">            instance = <span class="keyword">new</span> SingleTon();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> instance;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>위의 방식은 <code>private static</code>으로 인스턴스 변수를 만들고 <strong>private</strong> 생성자로 외부에서 생성할 수 있는 여지를 막았으며 <strong>synchronized</strong> 키워드를 사용해서 <code>thread-safe</code>하게 만들었다.</p>
 <p>하지만 synchronized 특성상 비교적 큰 성능 저하가 발생하므로 권장하는 방법은 아니다. synchronized 키워드는 100배 정도 성능 저하를 가져온다고 한다.</p>
 <ul>
 <li>때문에 싱글톤 패턴으로 만들어진 클래스의 인스턴스에 volatile 키워드를 사용하여 멀티 쓰레드의 가시성 문제를 해결하여 모든 객체에 대해 synchronized 키워드가 불리는 것을 막아 성능을 향상시킨다.</li>
 </ul>
-<ol start="2">
-<li>Thread safe lazy initialization + Double-checked locking</li>
-</ol>
+<p><code>2. Thread safe lazy initialization + Double-checked locking</code></p>
 <p>게으른 초기화의 성능 저하를 완화시키는 방법</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SingleTon</span> </span>&#123;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">volatile</span> <span class="keyword">static</span> SingleTon instance;</span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">SingleTon</span><span class="params">()</span></span>&#123;&#125;</span><br><span class="line">     </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> SingleTon <span class="title">getInstance</span><span class="params">()</span></span>&#123;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span>(instance == <span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">synchronized</span> (SingleTon.class) &#123;</span><br><span class="line">                <span class="keyword">if</span>(instance == <span class="keyword">null</span>)</span><br><span class="line">                    instance = <span class="keyword">new</span> SingleTon();</span><br><span class="line">            &#125;</span><br><span class="line"> </span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> instance;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>getInstance()에 synchronized를 사용하는 것이 아니라 첫 번째 if문으로 인스턴스의 존재 여부를 체크하고 두 번째 if문에서 다시 한 번 체크할 때 <strong>동기화</strong>시켜서 인스턴스를 생성하므로 <code>thread-safe</code>하면서도 처음 생성 이후에 synchronized 블록을 타지 않기 때문에 성능 저하를 완화했다. 이렇게 volatile 키워드를 사용하는 것과 두 번 체크하는 기법을 <strong>double-checked locking</strong>이라고 한다.</p>
 <p>그러나 완벽한 방법은 아니다. 이 방법은 메소드에서 <code>synchronized</code>를 빼면서 동기화 오버헤드를 줄여보고자 하는 의도로 설계된 방법이다. instance가 null인지 체크하고 null일 경우에만 동기화 블록에 진입하게 된다. 그래서 최초 객체가 생성된 이후로는 동기화 블록에 진입하지 않기 때문에 효율적인 방법이라고 생각할 수 있다.</p>
 <p>하지만 아주 안좋은 케이스로 정상 동작하지 않을 수 있다. 예를 들어, Thread A와 Thread B가 있다고 하자. Thread A가 instance의 생성을 완료하기 전에 메모리 공간에 할당이 가능하기 때문에(static이기 때문에 Class가 로딩될 때 메모리에 할당됨) Thread B가 할당된 것을 보고 instance를 사용하려고 하나 생성과정이 모두 끝난 상태가 아니기 때문에 오동작할 수 있다는 것이다. 물론 이런 확률은 적겠지만 혹시 모를 문제를 생각하여 사용하지 않는 것이 좋다.</p>
-<ol start="3">
-<li>Initialization on demand holder idiom (holder에 의한 초기화)</li>
-</ol>
+<p><code>3. Initialization on demand holder idiom (holder에 의한 초기화)</code></p>
 <p>클래스안에 클래스(Holder)를 두어 JVM의 Class loader 매커니즘과 Class가 로드되는 시점을 이용한 방법이다.</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Something</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Something</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">LazyHolder</span> </span>&#123;</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> Something INSTANCE = <span class="keyword">new</span> Something();</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Something <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> LazyHolder.INSTANCE;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>개발자가 직접 동기화 문제에 대해 코드를 작성하고 문제를 회피하려 한다면 프로그램 구조가 그만큼 복잡해지고 비용 문제가 생길 수 있고 특히 정확하지 못한 경우가 많다.(100%가 아닐 수 있다…ㅎ)</p>
@@ -270,7 +264,7 @@ ga('send', 'pageview');
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SharedObject</span></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">volatile</span> <span class="keyword">int</span> counter = <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>이러한 <code>volatile</code> 키워드는 멀티 쓰레드 환경에서 하나의 Thread만 read&amp;write 하고 나머지 Thread가 read하는 상황에서 <strong>가장 최신의 값을 보장</strong>한다.</p>
 <p>그렇다면 항상 volatile이 옳은 방법일까??<br>
-example</p>
+아래의 예시를 확인해보자.</p>
 <ul>
 <li>Thread-1이 값을 읽어 1을 추가하는 연산을 진행한다.
 <ul>
@@ -283,7 +277,7 @@ example</p>
 </ul>
 </li>
 <li>두 개의 Thread가 1을 추가하는 연산을 하여 최종 결과가 2가 되어야 하는 상황이지만 각각 결과를 Main Memory에 반영하게 된다면 1만 남는 상황이 발생하게 된다.</li>
-<li>하나의 Thread가 아닌 여러 Thread가 write하는 상황에서는 적합하지 않다.</li>
+<li><strong>하나의 Thread가 아닌 여러 Thread가 write하는 상황에서는 적합하지 않다.</strong></li>
 <li>여러 Thead가 write하는 상황이라면 <code>synchronized</code>를 통해 변수 read &amp; write의 원자성(atomic)을 보장해야 한다.</li>
 </ul>
 <p><strong>volatile 성능은?</strong></p>
@@ -293,14 +287,18 @@ example</p>
 </ul>
 <p><strong>요약</strong></p>
 <ul>
-<li>volatile : Main Memory에 값을 read &amp; write 하는 키워드</li>
+<li><code>volatile</code> : Main Memory에 값을 read &amp; write 하는 키워드</li>
 <li>상황?
 <ul>
-<li>하나의 Thread가 write하고 나머지 Thread가 read하는 상황인 경우</li>
+<li><strong>하나의 Thread만 write하고 나머지 Thread가 read하는 상황인 경우</strong></li>
 <li>변수의 값이 최신의 값으로 읽어와야 하는경우(최신의 값을 보장)</li>
 </ul>
 </li>
-<li>주의할 점 : 성능에 어느 정도 영향을 줄 수 있다.</li>
+<li>주의할 점 : 성능에 어느 정도 영향을 줄 수 있다.
+<ul>
+<li>이유 : CPU cache보다 Main Memory 접근이 비용이 더 크기 때문이다.</li>
+</ul>
+</li>
 </ul>
 <h2 id="참고">참고</h2>
 <ul>
@@ -324,7 +322,7 @@ example</p>
 
 
 
-    <a data-url="https://woovictory.github.io/2019/01/04/Android-What-is-Singleton-Pattern/" data-id="cjyqrpwx700uq2gpq4esbnvsz" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="https://woovictory.github.io/2019/01/04/Android-What-is-Singleton-Pattern/" data-id="cjyr1wv0d00u2prpqjm3pyqti" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -472,7 +470,7 @@ example</p>
     <div class="widget-wrap widget-list">
         <h3 class="widget-title">archives</h3>
         <div class="widget">
-            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a><span class="archive-list-count">18</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a><span class="archive-list-count">18</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a><span class="archive-list-count">42</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a><span class="archive-list-count">24</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a><span class="archive-list-count">24</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a><span class="archive-list-count">25</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">February 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a><span class="archive-list-count">1</span></li></ul>
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a><span class="archive-list-count">18</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a><span class="archive-list-count">18</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a><span class="archive-list-count">42</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a><span class="archive-list-count">24</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a><span class="archive-list-count">24</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a><span class="archive-list-count">25</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">February 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a><span class="archive-list-count">1</span></li></ul>
         </div>
     </div>
 
