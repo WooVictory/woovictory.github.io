@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+
+    
+
+    
+    <title>[Android] koin part.2 | VictoryWoo</title>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+        <meta name="keywords" content="Android,DI,koin" />
+    
+    <meta name="description" content="koin과 관련된 두 번째 포스팅이다. 첫 번째 포스팅이 궁금하다면 다음 링크를 참고하면 된다. koin part.1 koin과 Dagger를 간단하게 비교하고 koin에서 추가되거나 변경된 기능에 대해서 살펴보도록 하겠다. koin과 Dagger의 차이점 Dagger는 Annotation을 통해 컴파일 과정에서 DI를 주입한다. 물론 Annotation을">
+<meta name="keywords" content="Android,DI,koin">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[Android] koin part.2">
+<meta property="og:url" content="https://woovictory.github.io/2019/08/08/Android-koin2/index.html">
+<meta property="og:site_name" content="VictoryWoo">
+<meta property="og:description" content="koin과 관련된 두 번째 포스팅이다. 첫 번째 포스팅이 궁금하다면 다음 링크를 참고하면 된다. koin part.1 koin과 Dagger를 간단하게 비교하고 koin에서 추가되거나 변경된 기능에 대해서 살펴보도록 하겠다. koin과 Dagger의 차이점 Dagger는 Annotation을 통해 컴파일 과정에서 DI를 주입한다. 물론 Annotation을">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2019-08-08T12:28:13.327Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="[Android] koin part.2">
+<meta name="twitter:description" content="koin과 관련된 두 번째 포스팅이다. 첫 번째 포스팅이 궁금하다면 다음 링크를 참고하면 된다. koin part.1 koin과 Dagger를 간단하게 비교하고 koin에서 추가되거나 변경된 기능에 대해서 살펴보도록 하겠다. koin과 Dagger의 차이점 Dagger는 Annotation을 통해 컴파일 과정에서 DI를 주입한다. 물론 Annotation을">
+    
+
+    
+
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/titillium-web/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" type="text/css" href="">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/theeluwin/NotoSansKR-Hestia@master/stylesheets/NotoSansKR-Hestia.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/earlyaccess/nanumgothiccoding.css">
+    
+    
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/3.3.1/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+        <script type="text/javascript">
+(function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-125410253-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+    
+    
+
+
+</head>
+
+<body>
+    <div id="wrap">
+        <header id="header">
+    <div id="header-outer" class="outer">
+        <div class="container">
+            <div class="container-inner">
+                <div id="header-title">
+                    <h1 class="logo-wrap">
+                        <a href="/" class="logo"></a>
+                    </h1>
+                    
+                        <h2 class="subtitle-wrap">
+                            <p class="subtitle">VictoryWoo&#39;s Blog</p>
+                        </h2>
+                    
+                </div>
+                <div id="header-inner" class="nav-container">
+                    <a id="main-nav-toggle" class="nav-icon fa fa-bars"></a>
+                    <div class="nav-container-inner">
+                        <ul id="main-nav">
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/">Home</a>
+                                </li>
+                            
+                                        <ul class="main-nav-list"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/">CS</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/Design-Pattern/">Design Pattern</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/OS/">OS</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/개발-상식/">개발 상식</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/네트워크/">네트워크</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/데이터베이스/">데이터베이스</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/알고리즘/">알고리즘</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/CS/자료구조/">자료구조</a></li></ul></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/">Programming</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/Android/">Android</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/Inno-SOPT/">Inno_SOPT</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/Java/">Java</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/Kotlin/">Kotlin</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/Node-js/">Node.js</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/RxJava/">RxJava</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Programming/etc/">etc</a></li></ul></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/algorithm/">algorithm</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/algorithm/BOJ/">BOJ</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/algorithm/Programmers/">Programmers</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/algorithm/개념/">개념</a></li></ul></li></ul>
+                                    
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/about/index.html">About</a>
+                                </li>
+                            
+                        </ul>
+                        <nav id="sub-nav">
+                            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="Type something..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+        <div class="container">
+            <div class="main-body container-inner">
+                <div class="main-body-inner">
+                    <section id="main">
+                        <div class="main-body-header">
+    <h1 class="header">
+    
+    <a class="page-title-link" href="/categories/Programming/">Programming</a><i class="icon fa fa-angle-right"></i><a class="page-title-link" href="/categories/Programming/Android/">Android</a>
+    </h1>
+</div>
+
+                        <div class="main-body-content">
+                            
+                            <article id="post-Android-koin2" class="article article-single article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+        [Android] koin part.2
+        </h1>
+    
+
+            </header>
+        
+        
+            <div class="article-meta">
+                
+    <div class="article-date">
+        <a href="/2019/08/08/Android-koin2/" class="article-date">
+            <time datetime="2019-08-08T11:42:07.000Z" itemprop="datePublished">2019-08-08</time>
+        </a>
+    </div>
+
+		
+
+                
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/Android/">Android</a>, <a class="tag-link" href="/tags/DI/">DI</a>, <a class="tag-link" href="/tags/koin/">koin</a>
+    </div>
+
+            </div>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+            <p>koin과 관련된 두 번째 포스팅이다. 첫 번째 포스팅이 궁금하다면 다음 링크를 참고하면 된다.<br>
+<a href="https://woovictory.github.io/2019/05/08/Android-koin/">koin part.1</a></p>
+<p>koin과 Dagger를 간단하게 비교하고 koin에서 추가되거나 변경된 기능에 대해서 살펴보도록 하겠다.</p>
+<h2 id="koin과-dagger의-차이점">koin과 Dagger의 차이점</h2>
+<p><code>Dagger</code>는 Annotation을 통해 컴파일 과정에서 DI를 주입한다. 물론 Annotation을 처리하는 과정에서 컴파일 속도가 느려질 순 있지만 논리적으로는 런타임 과정에서 에러가 발생하지않고 순수한 자바로 되어있다.</p>
+<p><code>Koin</code>은 런타임 과정에서 DI를 주입하고 컴파일 시 오버헤드가 없는 반면, 런타임중 Crash가 자주 발생한다. 또한, Kotlin DSL에 의존하고 있기 때문에 순수한 코틀린 코드로 작성되어있다.</p>
+<p><strong>Dagger</strong></p>
+<ul>
+<li>장점
+<ul>
+<li>순수 자바</li>
+<li>안정적이고 유연하다.</li>
+<li>런타임 에러가 발생하지 않는다.</li>
+<li>런타임시에 매우 빠르다.</li>
+</ul>
+</li>
+<li>단점
+<ul>
+<li>컴파일시 오버헤드가 발생한다.</li>
+<li>학습곡선이 상당하다. (쉽지않음.)</li>
+</ul>
+</li>
+</ul>
+<p><strong>Koin</strong></p>
+<ul>
+<li>장점
+<ul>
+<li>Annotation 과정이 없어 컴파일이 빠르다.</li>
+<li>학습하기 쉽고 설치도 간단하다.</li>
+</ul>
+</li>
+<li>단점
+<ul>
+<li>런타임 중 에러가 발생한다.</li>
+<li>Dagger에 비해 런타임시 오버헤드가 있다.</li>
+</ul>
+</li>
+</ul>
+<h2 id="koin-정식버전">Koin 정식버전</h2>
+<p>Koin의 안정적인 정식 버전이 나왔다. 이로 인해 변경되거나 추가된 기능이 있는데, 일부만 살펴보겠다.<br>
+자세한 내용은 아래 링크를 참조하면 된다.<br>
+<a href="https://medium.com/koin-developers/ready-for-koin-2-0-2722ab59cac3" target="_blank" rel="noopener">Koin developers</a></p>
+<p><strong>1.Bean이 아닌 Single</strong></p>
+<ul>
+<li>기존 싱글톤을 만들 때, bean{}으로 만들었지만, 이제는 single{}을 이용해서 만든다.</li>
+</ul>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> retrofitModule = module&#123;</span><br><span class="line">    single&#123;</span><br><span class="line">        BusinessService()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>2. Scope 추가</strong></p>
+<ul>
+<li>MVP 패턴 사용시 Presenter에 Scope를 주어 메모리를 효율적으로 관리할 수 있다.</li>
+</ul>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> appModule = module&#123;</span><br><span class="line">    <span class="comment">// Scope로 session을 준다.</span></span><br><span class="line">    <span class="comment">// Application Level에서 Module을 정의할 때, 사용.</span></span><br><span class="line">    scope(<span class="string">"session"</span>)&#123;</span><br><span class="line">        MyScopePresenter(<span class="keyword">get</span>())</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>Activity나 Fragment 레벨에서 다음과 같이 사용한다.</li>
+</ul>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span>: <span class="type">AppCompatActivity</span></span>()&#123;</span><br><span class="line">    <span class="comment">// scope에 바인딩된 Presenter를 생성한다.</span></span><br><span class="line">    <span class="keyword">val</span> scopePresenter: MyScopePresenter <span class="keyword">by</span> inject()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreate</span><span class="params">(savedInstanceState: <span class="type">Bundle</span>?)</span></span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState)</span><br><span class="line">        setContentView(R.layout.activity_main)</span><br><span class="line"></span><br><span class="line">        <span class="comment">// session scope가 현재 액티비티의 Lifecycle을 따름을 선언한다.</span></span><br><span class="line">        bindScope(getOnCreateScope(<span class="string">"session"</span>))</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>Dagger처럼 Scope를 도입하기는 했지만, 생각보다 유연하지 않은 것 같다고 합니다.</li>
+</ul>
+<p><strong>3. Parameter 전달</strong></p>
+<ul>
+<li>ViewModel 등에 Parameter를 넘기는 문법이 바뀌었다. 다음과 같다.</li>
+</ul>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">viewModel &#123; parameterList -&gt;</span><br><span class="line">    SomeViewModel(</span><br><span class="line">        parameterList[<span class="number">0</span>], parameterList[<span class="number">1</span>], parameterList[<span class="number">2</span>]</span><br><span class="line">    )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>위와 같이 람다식으로 파라미터를 선언한다.</li>
+</ul>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SomeViewModel</span>: <span class="type">ViewModel</span></span>(<span class="keyword">val</span> pararmFirst: String, <span class="keyword">val</span> paramTwo: String, <span class="keyword">val</span> paramThree: String)&#123;</span><br><span class="line">    <span class="comment">// 생략.</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>뷰모델 클래스에서 인자만큼 선언해준다. 그 다음은 아래와 같다.</li>
+</ul>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">by</span> viewModel&lt;DialogViewModel&gt;&#123;parametersOf(<span class="string">"param1"</span>, <span class="string">"param2"</span>)&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>위와 같이 parametersOf를 이용해 인자들을 전달한다.</li>
+</ul>
+<p><strong>4. Koin Test</strong></p>
+<ul>
+<li>테스트를 하기 위해 아래의 의존성을 Gradle에 추가한다.<br>
+<code>implementatin 'org.koin:koin-test:1.0.1'</code></li>
+</ul>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">open</span> <span class="class"><span class="keyword">class</span> <span class="title">BaseTest</span>: <span class="type">KoinTest&#123;</span></span></span><br><span class="line">    <span class="meta">@Before</span></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">before</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="comment">// StandAloneContext로 코인을 시작한다.</span></span><br><span class="line">        StandAloneContext.startKoin(</span><br><span class="line">            listOf(contextModule, networkModule,</span><br><span class="line">            repositoriesModule)</span><br><span class="line">        )</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">myTest</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="comment">// DI를 주입한다.</span></span><br><span class="line">        <span class="keyword">val</span> service: BusinessService = <span class="keyword">get</span>()</span><br><span class="line">        <span class="comment">// by inject도 가능하다.</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 테스트 코드 작성.</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@After</span></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">after</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="comment">// 테스트 후 Koin을 정지한다.</span></span><br><span class="line">        StandAloneContext.stopKoin()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>이외에도 Koin에서는 많은 테스트 메소드를 제공하고 있다.<br>
+<a href="https://insert-koin.io/docs/2.0/quick-references/starting-koin/?" target="_blank" rel="noopener">이곳</a>에서 확인할 수 있다.</p>
+<h2 id="reference">Reference</h2>
+<ul>
+<li><a href="https://github.com/InsertKoinIO/koin" target="_blank" rel="noopener">koin github</a></li>
+<li><a href="https://medium.com/koin-developers/ready-for-koin-2-0-2722ab59cac3" target="_blank" rel="noopener">koin developers</a></li>
+<li><a href="https://medium.com/harrythegreat/android-koin-%EB%A0%88%EB%B2%A8%EC%97%85-deep-drive-56b63b2e35d2" target="_blank" rel="noopener">[Android] Koin vs Dagger 그리고 추가된기능</a></li>
+</ul>
+
+        </div>
+        
+        <footer class="article-footer">
+            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({
+     google_ad_client: "ca-pub-9725307592233286",
+     enable_page_level_ads: true
+});
+</script>
+            
+
+
+
+    <a data-url="https://woovictory.github.io/2019/08/08/Android-koin2/" data-id="cjz2mhkgg002x1dpqso7hpb70" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+<script>
+    (function ($) {
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+        </footer>
+    </div>
+</article>
+
+    <section id="comments">
+    
+        
+    <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+
+    
+    </section>
+
+
+
+                        </div>
+                    </section>
+                    <aside id="sidebar">
+    <a class="sidebar-toggle" title="Expand Sidebar"><i class="toggle icon"></i></a>
+    <div class="sidebar-top">
+        <p>follow:</p>
+        <ul class="social-links">
+            
+                
+                <li>
+                    <a class="social-tooltip" title="facebook" href="https://www.facebook.com/WooVictory" target="_blank" rel="noopener">
+                        <i class="icon fa fa-facebook"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="github" href="https://github.com/WooVictory" target="_blank" rel="noopener">
+                        <i class="icon fa fa-github"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="linkedin" href="https://www.linkedin.com/in/seungwoo-lee-590844177" target="_blank" rel="noopener">
+                        <i class="icon fa fa-linkedin"></i>
+                    </a>
+                </li>
+                
+            
+        </ul>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+    
+        <a href="/2019/08/08/Kotlin-Double-Ref/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">older</strong>
+        <p class="article-nav-title">[Kotlin] 더블콜론(::) 참조</p>
+        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
+        </a>
+    
+</nav>
+
+    
+    <div class="widgets-container">
+        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({
+     google_ad_client: "ca-pub-9725307592233286",
+     enable_page_level_ads: true
+});
+</script>
+        
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">archives</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a><span class="archive-list-count">18</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a><span class="archive-list-count">18</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a><span class="archive-list-count">42</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a><span class="archive-list-count">24</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a><span class="archive-list-count">24</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a><span class="archive-list-count">25</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">February 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a><span class="archive-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+
+            
+        
+    </div>
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({
+     google_ad_client: "ca-pub-9725307592233286",
+     enable_page_level_ads: true
+});
+</script>
+</aside>
+
+                </div>
+            </div>
+        </div>
+        <footer id="footer">
+    <div class="container">
+        <div class="container-inner">
+            <a id="back-to-top" href="javascript:;"><i class="icon fa fa-angle-up"></i></a>
+            <div class="credit">
+                <h1 class="logo-wrap">
+                    <a href="/" class="logo"></a>
+                </h1>
+                <p>&copy; 2019 VictoryWoo</p>
+                <p>Powered by <a href="//hexo.io/" target="_blank">Hexo</a>. Theme by <a href="//github.com/ppoffice" target="_blank">PPOffice</a></p>
+            </div>
+            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({
+     google_ad_client: "ca-pub-9725307592233286",
+     enable_page_level_ads: true
+});
+</script>
+            <div class="footer-plugins">
+              
+    
+
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+        
+    
+    <script>
+    var disqus_shortname = 'hexo-theme-hueman';
+    
+    
+    var disqus_url = 'https://woovictory.github.io/2019/08/08/Android-koin2/';
+    
+    (function() {
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+</html>
