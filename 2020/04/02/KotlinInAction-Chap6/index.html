@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+
+    
+
+    
+    <title>[Kotlin] Chap6. 코틀린 타입 시스템 | VictoryWoo</title>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+        <meta name="keywords" content="Android,Kotlin,코틀린,프로그래밍 언어" />
+    
+    <meta name="description" content="1. 널 가능성(Nullability)  물음표 기호 ’ ? &apos;를 사용하여 Null이 될 수 있는 여부를 컴파일러가 미리 감지하게 함. NPE처리를 위해 Nullable타입을 명시적으로 지원  1public void strLen(@NotNull String s1, @Nullable String s2) &amp;#123;...&amp;#125; 1fun strLen(s1">
+<meta name="keywords" content="Android,Kotlin,코틀린,프로그래밍 언어">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[Kotlin] Chap6. 코틀린 타입 시스템">
+<meta property="og:url" content="https://woovictory.github.io/2020/04/02/KotlinInAction-Chap6/index.html">
+<meta property="og:site_name" content="VictoryWoo">
+<meta property="og:description" content="1. 널 가능성(Nullability)  물음표 기호 ’ ? &apos;를 사용하여 Null이 될 수 있는 여부를 컴파일러가 미리 감지하게 함. NPE처리를 위해 Nullable타입을 명시적으로 지원  1public void strLen(@NotNull String s1, @Nullable String s2) &amp;#123;...&amp;#125; 1fun strLen(s1">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2020-04-02T06:49:14.308Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="[Kotlin] Chap6. 코틀린 타입 시스템">
+<meta name="twitter:description" content="1. 널 가능성(Nullability)  물음표 기호 ’ ? &apos;를 사용하여 Null이 될 수 있는 여부를 컴파일러가 미리 감지하게 함. NPE처리를 위해 Nullable타입을 명시적으로 지원  1public void strLen(@NotNull String s1, @Nullable String s2) &amp;#123;...&amp;#125; 1fun strLen(s1">
+    
+
+    
+
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/titillium-web/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" type="text/css" href="">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/theeluwin/NotoSansKR-Hestia@master/stylesheets/NotoSansKR-Hestia.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/earlyaccess/nanumgothiccoding.css">
+    
+    
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/3.3.1/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+        <script type="text/javascript">
+(function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-125410253-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+    
+    
+
+
+</head>
+
+<body>
+    <div id="wrap">
+        <header id="header">
+    <div id="header-outer" class="outer">
+        <div class="container">
+            <div class="container-inner">
+                <div id="header-title">
+                    <h1 class="logo-wrap">
+                        <a href="/" class="logo"></a>
+                    </h1>
+                    
+                        <h2 class="subtitle-wrap">
+                            <p class="subtitle">VictoryWoo&#39;s Blog</p>
+                        </h2>
+                    
+                </div>
+                <div id="header-inner" class="nav-container">
+                    <a id="main-nav-toggle" class="nav-icon fa fa-bars"></a>
+                    <div class="nav-container-inner">
+                        <ul id="main-nav">
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/">Home</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/about/index.html">About</a>
+                                </li>
+                            
+                        </ul>
+                        <nav id="sub-nav">
+                            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="Type something..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+        <div class="container">
+            <div class="main-body container-inner">
+                <div class="main-body-inner">
+                    <section id="main">
+                        <div class="main-body-header">
+    <h1 class="header">
+    
+    <a class="page-title-link" href="/categories/Kotlin/">Kotlin</a>
+    </h1>
+</div>
+
+                        <div class="main-body-content">
+                            
+                            <article id="post-KotlinInAction-Chap6" class="article article-single article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+        [Kotlin] Chap6. 코틀린 타입 시스템
+        </h1>
+    
+
+            </header>
+        
+        
+            <div class="article-meta">
+                
+    <div class="article-date">
+        <a href="/2020/04/02/KotlinInAction-Chap6/" class="article-date">
+            <time datetime="2020-04-02T06:40:07.000Z" itemprop="datePublished">2020-04-02</time>
+        </a>
+    </div>
+
+		
+
+                
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/Android/">Android</a>, <a class="tag-link" href="/tags/Kotlin/">Kotlin</a>, <a class="tag-link" href="/tags/코틀린/">코틀린</a>, <a class="tag-link" href="/tags/프로그래밍-언어/">프로그래밍 언어</a>
+    </div>
+
+            </div>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+            <h4 id="1-널-가능성nullability">1. 널 가능성(Nullability)</h4>
+<ul>
+<li>물음표 기호 ’ ? '를 사용하여 Null이 될 수 있는 여부를 컴파일러가 미리 감지하게 함.</li>
+<li>NPE처리를 위해 Nullable타입을 명시적으로 지원</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">strLen</span><span class="params">(@NotNull String s1, @Nullable String s2)</span> </span>&#123;...&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">strLen</span><span class="params">(s1 : <span class="type">String</span>, s2 : <span class="type">String</span>?)</span></span> &#123;...&#125;</span><br></pre></td></tr></table></figure>
+<p>Ex)</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">strLen</span><span class="params">(s : <span class="type">String</span>)</span></span> = s.length</span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">strLenSafe</span><span class="params">(s : <span class="type">String</span>?)</span></span> = s!!.length	<span class="comment">//모순...</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">strLenSafe2</span><span class="params">(s : <span class="type">String</span>?)</span></span> = <span class="keyword">if</span>(s != <span class="literal">null</span>) s.length <span class="keyword">else</span> <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">(args: <span class="type">Array</span>&lt;<span class="type">String</span>&gt;)</span></span> &#123;</span><br><span class="line">    println(strLen(<span class="string">"abc"</span>))			<span class="comment">// 3</span></span><br><span class="line">    println(strLenSafe(<span class="string">"abc"</span>))		<span class="comment">// 3</span></span><br><span class="line">    println(strLenSafe2(<span class="string">"abc"</span>))		<span class="comment">// 3</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">val</span> x: String? = <span class="literal">null</span></span><br><span class="line">    println(strLenSafe(x))			<span class="comment">// ? </span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>Kotlin에서는 NPE가 일어나지 않는가?</strong></p>
+</blockquote>
+<ul>
+<li>NullPointerException을 상속한 KotlinNullPointerException이 발생</li>
+<li>인자로 넘겨준 값이 Nullable이라면 함수내에서도 Nullable 통일!</li>
+</ul>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">open</span> <span class="class"><span class="keyword">class</span> <span class="title">KotlinNullPointerException</span> : <span class="type">NullPointerException &#123;</span></span></span><br><span class="line">    <span class="keyword">constructor</span>()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">constructor</span>(message: String?) : <span class="keyword">super</span>(message)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="11-safe-call-연산자">1.1 Safe Call 연산자</h4>
+<ul>
+<li>Safe Call 연산자는 ’ .? ’ 을 붙여 사용</li>
+<li>Null검사와 메소드 호출을 한 번의 연산으로 수행</li>
+</ul>
+<p>Ex.1) Safe Call 연쇄시키기1</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">printAllCaps</span><span class="params">(s: <span class="type">String</span>?)</span></span> &#123;</span><br><span class="line">    <span class="keyword">val</span> allCaps: String? = s?.toUpperCase()</span><br><span class="line">    println(allCaps)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">(args: <span class="type">Array</span>&lt;<span class="type">String</span>&gt;)</span></span> &#123;</span><br><span class="line">    printAllCaps(<span class="string">"abc"</span>)			<span class="comment">//ABC</span></span><br><span class="line">    printAllCaps(<span class="literal">null</span>)			<span class="comment">//null</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Ex.2) Safe Call 연쇄시키기2</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Address</span></span>(<span class="keyword">val</span> streetAddress: String, <span class="keyword">val</span> zipCode: <span class="built_in">Int</span>,</span><br><span class="line">              <span class="keyword">val</span> city: String, <span class="keyword">val</span> country: String)</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Company</span></span>(<span class="keyword">val</span> name: String, <span class="keyword">val</span> address: Address?)</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span></span>(<span class="keyword">val</span> name: String, <span class="keyword">val</span> company: Company?)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> Person.<span class="title">countryName</span><span class="params">()</span></span>: String &#123;</span><br><span class="line">   <span class="keyword">val</span> country = <span class="keyword">this</span>.company?.address?.country</span><br><span class="line">   <span class="keyword">return</span> <span class="keyword">if</span> (country != <span class="literal">null</span>) country <span class="keyword">else</span> <span class="string">"Unknown"</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">(args: <span class="type">Array</span>&lt;<span class="type">String</span>&gt;)</span></span> &#123;</span><br><span class="line">    <span class="keyword">val</span> person = Person(name = <span class="string">"Dmitry"</span>, company = <span class="literal">null</span>)</span><br><span class="line">    println(person.countryName())</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>생각해보자!</strong></p>
+</blockquote>
+<p>위의 <strong>Safe Call 연산자</strong>를 보고 처음엔 읽기 불편했지만 아래의 예시를 보고 느낌이 왔다.</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> country = <span class="keyword">this</span>.company?.address?.country</span><br><span class="line"><span class="keyword">return</span> <span class="keyword">if</span> (country != <span class="literal">null</span>) country <span class="keyword">else</span> <span class="string">"Unknown"</span></span><br></pre></td></tr></table></figure>
+<p>저 부분만 Java로 변환하면</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(<span class="keyword">this</span>.getCompany() != <span class="keyword">null</span> </span><br><span class="line">&amp;&amp; <span class="keyword">this</span>.getCompany().getAddress() != <span class="keyword">null</span> </span><br><span class="line">&amp;&amp; <span class="keyword">this</span>.getCompany().getAddress().getCountry() != <span class="keyword">null</span>)</span><br><span class="line">&#123;</span><br><span class="line"> String country = <span class="keyword">this</span>.getCompany().getAddress().getCountry();</span><br><span class="line"> <span class="keyword">return</span> country;</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line"> <span class="keyword">return</span> <span class="string">"Unknown"</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="12-elvis-연산자">1.2 Elvis 연산자</h4>
+<ul>
+<li><strong>널복합 연산자</strong>(Null coalescing) 라고도 함</li>
+<li>이항연산자로 좌항을 계산한 값이 Null인 경우, 특정 값(우항)으로 값을 할당</li>
+<li>예외 처리에 유용</li>
+<li>삼항 연산자 + Null 처리(Kotlin에서는 삼항 연산자를 지원하지 않음)</li>
+</ul>
+<p>Ex .1)  Safe Call 연산자 vs Elvis 연산자</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Safe Call 연산자</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> Person.<span class="title">countryName</span><span class="params">()</span></span>: String &#123;</span><br><span class="line">   <span class="keyword">val</span> country = <span class="keyword">this</span>.company?.address?.country</span><br><span class="line">   <span class="keyword">return</span> <span class="keyword">if</span> (country != <span class="literal">null</span>) country <span class="keyword">else</span> <span class="string">"Unknown"</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//Elvis 연산자</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> Person.<span class="title">countryName</span><span class="params">()</span></span> = <span class="keyword">this</span>.company?.address?.country ?: <span class="string">"Unknown"</span></span><br></pre></td></tr></table></figure>
+<p>Ex.2) Elvis 연산자를 이용한 예외 처리</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Address</span></span>(<span class="keyword">val</span> streetAddress: String, <span class="keyword">val</span> zipCode: <span class="built_in">Int</span>,</span><br><span class="line">              <span class="keyword">val</span> city: String, <span class="keyword">val</span> country: String)</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Company</span></span>(<span class="keyword">val</span> name: String, <span class="keyword">val</span> address: Address?)</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span></span>(<span class="keyword">val</span> name: String, <span class="keyword">val</span> company: Company?)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">printShippingLabel</span><span class="params">(person: <span class="type">Person</span>)</span></span> &#123;</span><br><span class="line">    <span class="keyword">val</span> address = person.company?.address</span><br><span class="line">      ?: <span class="keyword">throw</span> IllegalArgumentException(<span class="string">"No address"</span>)</span><br><span class="line">    with (address) &#123;</span><br><span class="line">        println(streetAddress)</span><br><span class="line">        println(<span class="string">"<span class="variable">$zipCode</span> <span class="variable">$city</span>, <span class="variable">$country</span>"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">(args: <span class="type">Array</span>&lt;<span class="type">String</span>&gt;)</span></span> &#123;</span><br><span class="line">    <span class="keyword">val</span> address = Address(<span class="string">"Elsestr. 47"</span>, <span class="number">80687</span>, <span class="string">"Munich"</span>, <span class="string">"Germany"</span>)</span><br><span class="line">    <span class="keyword">val</span> jetbrains = Company(<span class="string">"JetBrains"</span>, address)</span><br><span class="line">    <span class="keyword">val</span> person = Person(<span class="string">"Dmitry"</span>, jetbrains)</span><br><span class="line">    printShippingLabel(person)	<span class="comment">//Elsestr. 47</span></span><br><span class="line">    <span class="comment">//80687 Munich, Germany</span></span><br><span class="line">    printShippingLabel(Person(<span class="string">"Alexey"</span>, <span class="literal">null</span>))	  <span class="comment">//java.lang.IllegalArgumentException: No address</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="13-type-cast-연산자-as-와-safe-cast-as">1.3  Type Cast 연산자  : as 와 Safe Cast :as?</h4>
+<ul>
+<li>as?는 변환 가능한 타입인지 검사 후, 아니면 Null값 반환</li>
+</ul>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span></span>(<span class="keyword">val</span> firstName: String, <span class="keyword">val</span> lastName: String) &#123;</span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">equals</span><span class="params">(o: <span class="type">Any</span>?)</span></span>: <span class="built_in">Boolean</span> &#123;</span><br><span class="line">    <span class="keyword">val</span> otherPerson = o <span class="keyword">as</span>? Person ?: <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> otherPerson.firstName == firstName &amp;&amp;</span><br><span class="line">            otherPerson.lastName == lastName</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">hashCode</span><span class="params">()</span></span>: <span class="built_in">Int</span> =</span><br><span class="line">    firstName.hashCode() * <span class="number">37</span> + lastName.hashCode()</span><br><span class="line">&#125;</span><br><span class="line">  </span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">(args: <span class="type">Array</span>&lt;<span class="type">String</span>&gt;)</span></span> &#123;</span><br><span class="line">    <span class="keyword">val</span> p1 = Person(<span class="string">"Dmitry"</span>, <span class="string">"Jemerov"</span>)</span><br><span class="line">    <span class="keyword">val</span> p2 = Person(<span class="string">"Dmitry"</span>, <span class="string">"Jemerov"</span>)</span><br><span class="line">    println(p1 == p2)					<span class="comment">//true</span></span><br><span class="line">    println(p1.equals(<span class="number">42</span>))				<span class="comment">//false</span></span><br><span class="line">    </span><br><span class="line">    println(<span class="string">"p1 HashCode : "</span> + p1.hashCode())</span><br><span class="line">    println(<span class="string">"p1 HashCode : "</span> + p2.hashCode())</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>심화학습…</strong>	//혼자 다 설명할 수 없음…</p>
+</blockquote>
+<p>위의 코드를 보면, 뜬금없이 hashCode를 재정의한 것을 볼 수 있는데</p>
+<p>그 이유를 간략히 설명하자면, Effective Java에서는 다음과 같이 설명한다.<br>
+<code>equals를 재정의한 클래스에서는 hashcode도 재정의 해야한다.</code><br>
+그렇지 않으면 hash를 사용하는 HashMap, HashSet과 같은 컬렉션의 원소로 사용될 때 문제가 발생할 것이다.</p>
+<p>따라서, eqauls를 재정의 하는 경우 다음 3가지 규약을 지켜야한다.</p>
+<ul>
+<li>equals비교에 사용되는 정보가 변경되지 않았다면, 객체의 hashcode 메서드는 몇번을 호출해도 항상 일관된 값을 반환해야 한다.<br>
+(단, Application을 다시 실행한다면 값이 달라져도 상관없다. (메모리 소가 달라지기 때문))</li>
+<li>equals메서드 통해 두 개의 객체가 같다고 판단했다면, 두 객체는 똑같은 hashcode 값을 반환해야 한다.</li>
+<li>equals메서드가 두 개의 객체를 다르다고 판단했다 하더라도, 두 객체의 hashcode가 서로 다른 값을 가질 필요는 없다. (Hash Collision) 단, 다른 객체에 대해서는 다른 값을 반환해야 해시테이블의 성능이 좋아진다.</li>
+<li>참고
+<ol>
+<li>HashCode() 재정의 이유 : <a href="https://jaehun2841.github.io/2019/01/12/effective-java-item11/#%EC%84%9C%EB%A1%A0" target="_blank" rel="noopener">https://jaehun2841.github.io/2019/01/12/effective-java-item11/#서론</a></li>
+<li>37을 곱한 이유 : <a href="https://d2.naver.com/helloworld/831311" target="_blank" rel="noopener">https://d2.naver.com/helloworld/831311</a></li>
+</ol>
+</li>
+</ul>
+<h4 id="14-널-아님-단언not-null-assertion">1.4 널 아님 단언(Not-null Assertion)</h4>
+<ul>
+<li>널 아님 단언은 ’ !! '로 표현</li>
+<li>컴파일러에게 &quot;나는 이 값이 null이 아님을 잘 알고있으며, 예외가 발생해도 감수하겠다&quot;라는 표현</li>
+</ul>
+<p>Ex.1) Swing(프레임워크)에서 널 아님 단언 사용</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CopyRowAction</span></span>(<span class="keyword">val</span> list: JList&lt;String&gt;): AbstractAction()&#123;</span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">isEnabled</span><span class="params">()</span></span>: <span class="built_in">Boolean</span> = list.selectedValue != <span class="literal">null</span></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">actionPerformed</span><span class="params">(e : <span class="type">ActionEvent</span>)</span></span>&#123;</span><br><span class="line">        <span class="keyword">val</span> value = list.selectedValue!!</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>한 줄에 나란히 널 아님 단언이 쓰였을 경우, 어떤 식에서 발생한 예외인지 알 수 없으니 나란히 사용은 피하자</li>
+</ul>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">person.company!!.address!!.country</span><br></pre></td></tr></table></figure>
+<h4 id="15-let함수">1.5 let함수</h4>
+<ul>
+<li>널이 될 수 있는 값(Nullable)을 널이 아닌 값(NotNull)만 인자로 받을 때, 용이하게 사용</li>
+<li>여러 값에 대한 null 체크 시, let을 중첩해서 사용하면 코드가 복잡해지므로 피하는 것이 좋다.
+<ul>
+<li>(if (something != null) 사용을 권장)</li>
+</ul>
+</li>
+</ul>
+<p>Ex.1) let을 사용해 Null이 아닌 인자로 함수 호출하기</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">sendEmailTo</span><span class="params">(email: <span class="type">String</span>)</span></span> &#123;</span><br><span class="line">    println(<span class="string">"Sending email to <span class="variable">$email</span>"</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">(args: <span class="type">Array</span>&lt;<span class="type">String</span>&gt;)</span></span> &#123;</span><br><span class="line">    <span class="keyword">var</span> email: String? = <span class="string">"yole@example.com"</span></span><br><span class="line">    email?.let &#123; sendEmailTo(it) &#125;		<span class="comment">//Sending email to yole@example.com</span></span><br><span class="line">    email = <span class="literal">null</span></span><br><span class="line">    email?.let &#123; sendEmailTo(it) &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>let을 호출하면 람다의 인자인 it은 널이 될 수 있는 타입으로 추론됨</p>
+</blockquote>
+<h4 id="16-lateinit-변경자">1.6 lateinit 변경자</h4>
+<ul>
+<li>lateinit 변경자를 사용하면 Nullable, NotNull을 난잡하게 사용하지않고 프로퍼티를 나중에 초기화 할 수 있다.</li>
+<li>프로퍼티가 val인 경우는 적용할 수 없고, 항상 var여야만 한다.</li>
+</ul>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.junit.Before</span><br><span class="line"><span class="keyword">import</span> org.junit.Test</span><br><span class="line"><span class="keyword">import</span> org.junit.Assert</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyService</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">performAction</span><span class="params">()</span></span>: String = <span class="string">"foo"</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyTest</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">var</span> myService: MyService? = <span class="literal">null</span></span><br><span class="line">    <span class="comment">//lateinit 변경자 선언 시</span></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">lateinit</span> myService : MyService</span><br><span class="line">    <span class="meta">@Before</span> <span class="function"><span class="keyword">fun</span> <span class="title">setUp</span><span class="params">()</span></span> &#123;</span><br><span class="line">        myService = MyService()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span> <span class="function"><span class="keyword">fun</span> <span class="title">testAction</span><span class="params">()</span></span> &#123;</span><br><span class="line">        Assert.assertEquals(<span class="string">"foo"</span>, myService!!.performAction())</span><br><span class="line">        <span class="comment">//lateinit 변경자로 선언 시,</span></span><br><span class="line">        Assert.assertEquals(<span class="string">"foo"</span>, myService.performAction())</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>lateinit에 대한 초기화진행 여부를 확인하기 위해서는 ex) ::myService.isInitialized 형태로 분기처리하여 확인할 수 있다</li>
+</ul>
+<h4 id="17-널-가능-타입의-확장">1.7 널 가능 타입의 확장</h4>
+<ul>
+<li>null이 될 수 있는 타입에 대한 확장함수를 정의하면, Safe Call을 하지않아도 된다.</li>
+</ul>
+<p>Ex.1) Null이 될 수 있는 수신 객체에 대해 확장 함수 호출</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">verifyUserInput</span><span class="params">(input: <span class="type">String</span>?)</span></span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (input.isNullOrBlank()) &#123;	<span class="comment">//&lt;- input이 Nullable이지만 Safe Call 연산자를 쓰지않음</span></span><br><span class="line">        println(<span class="string">"Please fill in the required fields"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">(args: <span class="type">Array</span>&lt;<span class="type">String</span>&gt;)</span></span> &#123;</span><br><span class="line">    verifyUserInput(<span class="string">" "</span>)		<span class="comment">//Please fill in the required fields</span></span><br><span class="line">    verifyUserInput(<span class="literal">null</span>)		<span class="comment">//Please fill in the required fields</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//String에서의 확장함수 정의</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">inline</span> <span class="function"><span class="keyword">fun</span> CharSequence?.<span class="title">isNullOrBlank</span><span class="params">()</span></span>: <span class="built_in">Boolean</span> &#123;</span><br><span class="line">    contract &#123;</span><br><span class="line">        returns(<span class="literal">false</span>) implies (<span class="keyword">this</span><span class="symbol">@isNullOrBlank</span> != <span class="literal">null</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span> == <span class="literal">null</span> || <span class="keyword">this</span>.isBlank()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="18-타입-파라미터의-널-가능성">1.8 타입 파라미터의 널 가능성</h4>
+<ul>
+<li>Kotlin에서는 함수나 클래스의 모든 타입 파라미터는 기본적으로 널이 될 수 있다.(t를 Any 타입으로 추론하기 때문)</li>
+<li>타입 파라미터는 타입 상한을 지정하지 않는다면 Null이 될 수 있다.(t를 Any?의 타입으로 추론하기 때문)</li>
+</ul>
+<p>Ex.)  널이 될 수 있는 타입파라미터와 상한 지정</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//널이 될 수 있는 타입 파라미터</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="type">&lt;T&gt;</span> <span class="title">printHashCode</span><span class="params">(t: <span class="type">T</span>)</span></span> &#123;</span><br><span class="line">    println(t?.hashCode())</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">(args: <span class="type">Array</span>&lt;<span class="type">String</span>&gt;)</span></span> &#123;</span><br><span class="line">    printHashCode(<span class="literal">null</span>)		<span class="comment">//null</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//상한을 지정한 타입 파라미터</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="type">&lt;T : Any&gt;</span> <span class="title">printHashCode</span><span class="params">(t: <span class="type">T</span>)</span></span> &#123;</span><br><span class="line">    println(t.hashCode())</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">(args: <span class="type">Array</span>&lt;<span class="type">String</span>&gt;)</span></span> &#123;</span><br><span class="line">    printHashCode(<span class="literal">null</span>)</span><br><span class="line">    <span class="comment">//Type parameter bound for T in fun &lt;T : Any&gt; printHashCode(t: T): Unit is not satisfied</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>참고: <a href="https://stackoverflow.com/questions/54760309/why-i-cant-assign-nullable-type-to-any-in-kotlin" target="_blank" rel="noopener">https://stackoverflow.com/questions/54760309/why-i-cant-assign-nullable-type-to-any-in-kotlin</a></p>
+<h4 id="19-플랫폼-타입">1.9 플랫폼 타입</h4>
+<ul>
+<li>플랫폼 타입은 Kotlin이 널 관련 정보를 알 수 없는 Java 타입을 지칭</li>
+<li>Kotlin은 보통 NotNull타입의 값에 대해 널 안정성을 검사하지만 플랫폼 타입의 값에 대해서는 경고하지않음</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Java</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Person</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> String name;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Person</span><span class="params">(String name)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Kotlin</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">yellAtSafe</span><span class="params">(person: <span class="type">Person</span>)</span></span> &#123;</span><br><span class="line">    println(person.name.toUpperCase() + <span class="string">"!!!"</span>)</span><br><span class="line">    <span class="comment">//toUpperCase()의 수신객체의 person.name이 non-null인데 null이라 컴파일 에러 </span></span><br><span class="line">    println((person.name ?: <span class="string">"Anyone"</span>).toUpperCase() + <span class="string">"!!!"</span>)</span><br><span class="line">    <span class="comment">//ANYONE!!!</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">(args: <span class="type">Array</span>&lt;<span class="type">String</span>&gt;)</span></span> &#123;</span><br><span class="line">    yellAtSafe(Person(<span class="literal">null</span>))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>전부 다 널이 될 수 있는 타입으로 하면 되지않을까?</strong><br>
+모든 자바 타입을 널이 될 수 있는 타입으로 처리하기엔 널 안정성 검사로 인해 얻는 이익보다 쓸데없는 비용이 늘어나 프로그래머에게 타입의 널 가능성의 책임을 부여함.</p>
+</blockquote>
+<h4 id="110-상속">1.10 상속</h4>
+<ul>
+<li>자바클래스를 코틀린에서 상속할때, 파라미터나 반환타입의 Null처리를 결정해야함</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Java</span></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">StringProcessor</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">process</span><span class="params">(String value)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Kotlin</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">StringPrinter</span> : <span class="type">StringProcessor&#123;</span></span></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">process</span><span class="params">(value: <span class="type">String</span>)</span></span>&#123;		<span class="comment">// notnull 선언</span></span><br><span class="line">        println(value)		</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">NullableStringPrinter</span> : <span class="type">StringProcessor&#123;</span></span></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">process</span><span class="params">(value: <span class="type">String</span>?)</span></span>&#123;		<span class="comment">//nullable 선언</span></span><br><span class="line">        value?.let&#123;println(it)&#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="2-코틀린의-원시-타입">2. 코틀린의 원시 타입</h4>
+<ul>
+<li>Kotlin은 원시타입과 참조타입을 구분하지 않고, 항상 같은 타입을 사용</li>
+<li>대부분, Kotlin의 Int타입은 Java의 int 타입으로 컴파일 되고, Int를 타입인자로 넘기는 경우 Integer로 컴파일된다.</li>
+</ul>
+<h4 id="21-null이-될-수-있는-원시타입-int-boolean-등">2.1 null이 될 수 있는 원시타입 : Int?, Boolean? 등</h4>
+<ul>
+<li>코틀린에서 null이 될 수 있는 원시 타입을 사용하면 그 타입은 자바의 래퍼 타입으로 컴파일 된다.</li>
+</ul>
+<p>Ex.)</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">data</span> <span class="class"><span class="keyword">class</span> <span class="title">Person</span></span>(<span class="keyword">val</span> name: String, <span class="keyword">val</span> age: <span class="built_in">Int</span>? = <span class="literal">null</span>) &#123;</span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">isOlderThan</span><span class="params">(other: <span class="type">Person</span>)</span></span> : <span class="built_in">Boolean</span>? &#123;</span><br><span class="line">        <span class="keyword">if</span> (age == <span class="literal">null</span> || other.age == <span class="literal">null</span>)</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">null</span></span><br><span class="line">        <span class="keyword">return</span> age &gt; other.age    </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">(args: <span class="type">Array</span>&lt;<span class="type">String</span>&gt;)</span></span> &#123;</span><br><span class="line">    println(Person(<span class="string">"Sam"</span>, <span class="number">35</span>).isOlderThan(Person(<span class="string">"Amy"</span>, <span class="number">42</span>))) <span class="comment">//false</span></span><br><span class="line">    println(Person(<span class="string">"Sam"</span>, <span class="number">35</span>).isOlderThan(Person(<span class="string">"Jane"</span>)))	  <span class="comment">//null</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>age는 컴파일러에 의해 널 안정성 검사를 마친 후 값을 비교가 허용되므로, age의 프로퍼티값은래퍼 타입으로 저장된다.</li>
+</ul>
+<h4 id="22-숫자-변환">2.2 숫자 변환</h4>
+<ul>
+<li>Kotlin은 Boolean을 제외한 모든 원시 타입에 대한 변환 함수를 제공</li>
+<li>Kotlin은 한 타입의 숫자를 다른 타입으로 자동변환 하지 않음.</li>
+<li>명시적으로 변환 메소드를 사용해야함</li>
+</ul>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> i = <span class="number">1</span></span><br><span class="line"><span class="keyword">val</span> l = <span class="built_in">Long</span> = i  <span class="comment">// "Error: type mismatch" 컴파일 오류 발생</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">val</span> i = <span class="number">1</span></span><br><span class="line"><span class="keyword">val</span> l: <span class="built_in">Long</span> = i.toLong()	<span class="comment">// 명시적으로 변환 메소드 사용</span></span><br><span class="line"></span><br><span class="line">---------------------------명시 이유---------------------------</span><br><span class="line"><span class="keyword">val</span> x = <span class="number">1</span>  <span class="comment">// Int</span></span><br><span class="line"><span class="keyword">val</span> list = listOf(<span class="number">1</span>L, <span class="number">2</span>L, <span class="number">3</span>L) <span class="comment">// Long 리스트 </span></span><br><span class="line">x <span class="keyword">in</span> list <span class="comment">// 묵시적 타입 변환으로 인해 false</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">val</span> x = <span class="number">1</span></span><br><span class="line">println(x.toLong() <span class="keyword">in</span> listOf(<span class="number">1</span>L, <span class="number">2</span>L, <span class="number">3</span>L)) <span class="comment">//true</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">foo</span><span class="params">(l: <span class="type">Long</span>)</span></span> = pinrtln(l)</span><br><span class="line"></span><br><span class="line"><span class="keyword">val</span> b: <span class="built_in">Byte</span> = <span class="number">1</span> <span class="comment">// 상수 값는 적절한 타입으로 해석 된다.</span></span><br><span class="line"><span class="keyword">val</span> l = b + <span class="number">1</span>L  <span class="comment">// +는 Byte와 Long을 인자로 받을 수 있다.</span></span><br><span class="line">foo(<span class="number">42</span>)         <span class="comment">// 함수 인자이므로 42를 Long으로 해석한다.</span></span><br></pre></td></tr></table></figure>
+<h4 id="23-any-any-최상위-타입">2.3 Any, Any? : 최상위 타입</h4>
+<ul>
+<li>Java는 Object, Kotlin은 Any가 널이 될 수 없는 타입의 최상위타입</li>
+<li>내부적으로 Any는 자바의 java.lang.Object로 컴파일 된다.</li>
+<li>모든 코틀린 클래스에는 toString, equals, hashCode 라는 3개의 메소드가 있다. 하지만 java.lang.Object에 있는 다른 메소드(wait나 notify 등)는 Any에서 사용할 수 없다. 그런 메소드를 사용하고 싶다면 java.lang.Object로 캐스트해야 한다.</li>
+</ul>
+<h4 id="24-unit-타입-kotlin의-void">2.4 Unit 타입 : Kotlin의 void</h4>
+<ul>
+<li>Kotlin의 Unit타입은 Java의 void와 같은 기능을 함.</li>
+</ul>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">f</span><span class="params">()</span></span>: <span class="built_in">Unit</span>&#123;...&#125;</span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">f</span><span class="params">()</span></span>&#123;...&#125;		<span class="comment">//fun의 기본 선언은 void라고 생각</span></span><br></pre></td></tr></table></figure>
+<p>Ex.) void 와Unit의 차이</p>
+<ul>
+<li>반환 타입으로 Unit을 반환가능</li>
+<li>타입 매개변수로 Unit을 쓸 수 있다</li>
+</ul>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Processor</span>&lt;<span class="type">T</span>&gt; </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">process</span><span class="params">()</span></span>: T</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//반환 타입으로 Unit을 묵시적으로 반환 가능</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">NoResultProcessor</span> : <span class="type">Processor</span>&lt;<span class="type">Unit</span>&gt; </span>&#123;</span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">process</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="comment">// 업무 처리 코드</span></span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ResultProcessor</span> : <span class="type">Processor</span>&lt;<span class="type">Integer</span>&gt; </span>&#123;</span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">process</span><span class="params">()</span></span>: <span class="built_in">Int</span> &#123;</span><br><span class="line">        <span class="comment">// 업무 처리 코드</span></span><br><span class="line">        <span class="keyword">return</span> someInt</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>Kotlin은 왜 void가 아닌 Unit을 만들었을까?</strong><br>
+Kotlin의 Unit은 Java의 void와 다르게 두 가지 특징을 가진다</p>
+</blockquote>
+<ol>
+<li>Unit은 싱글톤 인스턴스이다. 그래서 Kotlin에서 Unit이라는 키워드는 타입이면서도 동시에 객체</li>
+</ol>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> unit : <span class="built_in">Unit</span> = <span class="built_in">Unit</span></span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>Unit은 객체이기도 하기때문에 Any를 상속하는 서브 클래스이다.</li>
+</ol>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> unit : Any = <span class="built_in">Unit</span></span><br></pre></td></tr></table></figure>
+<h4 id="25-nothing-타입-이-함수는-결코-정상적으로-끝나지-않는다">2.5 Nothing 타입: 이 함수는 결코 정상적으로 끝나지 않는다.</h4>
+<ul>
+<li>함수가 정상적으로 끝나지 않는 사실을 표현할 때 사용</li>
+<li>Nothing 타입은 아무 값도 포함하지 않음 = return이라는 행위 자체를 하지않음</li>
+</ul>
+<p>Ex. 1) 함수가 리턴 될 일이 없을 경우</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">infiniteLoop</span><span class="params">()</span></span>: <span class="built_in">Nothing</span> &#123;</span><br><span class="line">    <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">        println(<span class="string">"Hi there!"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Ex. 2) 예외를 던지는(throw Exception)함수의 리턴 타입</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">throwException</span><span class="params">()</span></span>: <span class="built_in">Nothing</span> &#123;</span><br><span class="line">    <span class="keyword">throw</span> IllegalStateException()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Ex. 3) 함수의 리턴 타입이 Nothing? 일 경우</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">mayThrowAnException</span><span class="params">(throwException: <span class="type">Boolean</span>)</span></span>: <span class="built_in">Nothing</span>? &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">if</span> (throwException) &#123;</span><br><span class="line">        <span class="keyword">throw</span> IllegalStateException()</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        println(<span class="string">"Exception not thrown :)"</span>)</span><br><span class="line">        <span class="literal">null</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">val</span> result = mayThrowAnException(<span class="literal">true</span>)</span><br><span class="line">    <span class="keyword">if</span> (result == <span class="literal">null</span>) &#123; <span class="comment">// Always true</span></span><br><span class="line">        println(<span class="string">"Ignored code"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="3-컬렉션과-배열">3. 컬렉션과 배열</h4>
+<h4 id="31-널-가능성과-컬렉션">3.1 널 가능성과 컬렉션</h4>
+<p>Ex.1)null이 될 수 있는 값으로 이뤄진 컬렉션</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">readNumbers</span><span class="params">(reader: <span class="type">BufferedReader</span>)</span></span>: List&lt;<span class="built_in">Int</span>?&gt; &#123;</span><br><span class="line">    <span class="keyword">val</span> result = ArrayList&lt;<span class="built_in">Int</span>?&gt;()</span><br><span class="line">    <span class="keyword">for</span> (line <span class="keyword">in</span> reader.lineSequence()) &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">val</span> number = line.toInt()</span><br><span class="line">            result.add(number)</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">catch</span>(e: NumberFormatException) &#123;</span><br><span class="line">            result.add(<span class="literal">null</span>)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> result</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">addValidNumbers</span><span class="params">(numbers: <span class="type">List</span>&lt;<span class="type">Int</span>?&gt;)</span></span> &#123;</span><br><span class="line">    <span class="keyword">var</span> sumOfValidNumbers = <span class="number">0</span></span><br><span class="line">    <span class="keyword">var</span> invalidNumbers = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> (number <span class="keyword">in</span> numbers) &#123;</span><br><span class="line">        <span class="keyword">if</span> (number != <span class="literal">null</span>) &#123;</span><br><span class="line">            sumOfValidNumbers += number</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            invalidNumbers++</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    println(<span class="string">"Sum of valid numbers: <span class="variable">$sumOfValidNumbers</span>"</span>)</span><br><span class="line">    println(<span class="string">"Invalid numbers: <span class="variable">$invalidNumbers</span>"</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">(args: <span class="type">Array</span>&lt;<span class="type">String</span>&gt;)</span></span> &#123;</span><br><span class="line">    <span class="keyword">val</span> reader = BufferedReader(StringReader(<span class="string">"1\nabc\n42"</span>))</span><br><span class="line">    <span class="keyword">val</span> numbers = readNumbers(reader)</span><br><span class="line">    addValidNumbers(numbers)		<span class="comment">//Sum of valid numbers: 43</span></span><br><span class="line">								  <span class="comment">//Invalid numbers: 1</span></span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>List&lt;Int?&gt; 과 List<int>?과 List&lt;Int?&gt;? 잘 구분해서 쓸 것!</int></li>
+</ul>
+<h4 id="32-읽기-전용과-변경-가능한-컬렉션">3.2 읽기 전용과 변경 가능한 컬렉션</h4>
+<ul>
+<li>Kotlin 컬렉션은 자바와 다르게 읽기 전용 컬렉션(Collection<t>)과 변경가능 컬렉션(MutableCollection<t>)이 분리되어있다.</t></t></li>
+</ul>
+<p>Ex) Collection(size, iterator(), contains())    /    MutableCollection(add(), remove(), clear())</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="type">&lt;T&gt;</span> <span class="title">copyElements</span><span class="params">(source: <span class="type">Collection</span>&lt;<span class="type">T</span>&gt;,</span></span></span><br><span class="line"><span class="function"><span class="params">                    target: <span class="type">MutableCollection</span>&lt;<span class="type">T</span>&gt;)</span></span> &#123;</span><br><span class="line">    <span class="keyword">for</span> (item <span class="keyword">in</span> source) &#123;</span><br><span class="line">        target.add(item)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">(args: <span class="type">Array</span>&lt;<span class="type">String</span>&gt;)</span></span> &#123;</span><br><span class="line">    <span class="keyword">val</span> source: Collection&lt;<span class="built_in">Int</span>&gt; = arrayListOf(<span class="number">3</span>, <span class="number">5</span>, <span class="number">7</span>)</span><br><span class="line">    <span class="keyword">val</span> target: MutableCollection&lt;<span class="built_in">Int</span>&gt; = arrayListOf(<span class="number">1</span>)</span><br><span class="line">    copyElements(source, target)</span><br><span class="line">    println(target)		<span class="comment">//[1, 3, 5, 7]</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Ex) Thread-safe하지않은 읽기전용 Collection</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//MutableCollection이 Collection 참조</span></span><br><span class="line"><span class="keyword">val</span> collection: Collection&lt;<span class="built_in">Int</span>&gt; = arrayListOf(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>)</span><br><span class="line"><span class="keyword">val</span> mutableCollection: MutableCollection&lt;<span class="built_in">Int</span>&gt; = collection</span><br><span class="line">error: type mismatch: inferred type <span class="keyword">is</span> Collection&lt;<span class="built_in">Int</span>&gt; but MutableCollection&lt;<span class="built_in">Int</span>&gt; was expected</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// Collection이 MutableCollection 참조</span></span><br><span class="line"><span class="keyword">val</span> mutableCollection: MutableCollection&lt;<span class="built_in">Int</span>&gt; = arrayListOf(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>)</span><br><span class="line"><span class="keyword">val</span> collection: Collection&lt;<span class="built_in">Int</span>&gt; = mutableCollection <span class="comment">//가능 </span></span><br><span class="line">&gt;&gt;&gt; collection</span><br><span class="line">[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]</span><br><span class="line">&gt;&gt;&gt; mutableCollection</span><br><span class="line">[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]</span><br><span class="line">&gt;&gt;&gt; mutableCollection.add(<span class="number">5</span>)</span><br><span class="line">&gt;&gt;&gt; mutableCollection</span><br><span class="line">[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">5</span>]</span><br><span class="line">&gt;&gt;&gt; collection</span><br><span class="line">[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">5</span>]    <span class="comment">// mutalbeCollection에 5를 추가했지만 collection에도 영향을 미친다</span></span><br><span class="line"><span class="comment">// 같은 객체를 다른 타입의 참조들이 가리키고 있다.</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>따라서, ConcurrentModificationException등의 오류가 발생할 수 있으므로, 다중 스레드 환경에서 데이터를 다루는 경우 그 데이터를 적절히 동기화 하거나 동시 접근을 허용하는 데이터 구조를 활용해야한다.</li>
+</ul>
+<h4 id="33-코틀린-컬렉션과-자바">3.3 코틀린 컬렉션과 자바</h4>
+<ul>
+<li>코틀린에서 읽기 전용인 Collection으로 선언된 객체라도 자바코드에서는, 이를 구분하지 않으므로 수정가능</li>
+<li>코틀린 컴파일러가 컬렉션이 어떤 일을 하는지 정확한 분석이 어려움</li>
+<li>어차피 ImmutableList가 나와도 자바로 가면 변경이 가능하니 차라리 변경 가능한 컬렉션을 넘기고 명시를 정확히 해두는 것이 좋다.</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Java</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CollectionUtils</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> List&lt;String&gt; <span class="title">uppercaseAll</span><span class="params">(List&lt;String&gt; items)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; items.size(); i++) &#123;</span><br><span class="line">            items.set(i, items.get(i).toUpperCase());</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> items;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Kotlin</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">printInUppercase</span><span class="params">(list: <span class="type">List</span>&lt;<span class="type">String</span>&gt;)</span></span> &#123;</span><br><span class="line">    println(CollectionUtils.uppercaseAll(list))</span><br><span class="line">    println(list.first())</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">(args: <span class="type">Array</span>&lt;<span class="type">String</span>&gt;)</span></span> &#123;</span><br><span class="line">    <span class="keyword">val</span> list = listOf(<span class="string">"a"</span>, <span class="string">"b"</span>, <span class="string">"c"</span>)</span><br><span class="line">    printInUppercase(list)			<span class="comment">//[A, B, C]</span></span><br><span class="line">    							   <span class="comment">//A</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="34-자바의-콜렉션-타입을-플랫폼-타입으로-다루기">3.4 자바의 콜렉션 타입을 플랫폼 타입으로 다루기</h4>
+<ul>
+<li>자바의 콜렉션 타입은 읽기전용이나 변경 가능으로 다룰 수 있음</li>
+<li>시그니처에서 콜렉션 타입을 사용한 자바 메서드를 오버라이드할 경우 코틀린 타입 선택 필요
+<ul>
+<li>선택 사항
+<ul>
+<li>컬렉션이 널이 될 수 있는가?</li>
+<li>컬렉션의 원소가 널이 될 수 있는가?</li>
+<li>오버라이드하는 메서드가 컬렉션을 변경할 수 있는가?</li>
+</ul>
+</li>
+<li>자바 인터페이스나 클래스가 어떤 맥락에서 사용되는지 정확히 알아야한다.</li>
+</ul>
+</li>
+</ul>
+<h4 id="35-객체의-배열과-원시타입의-배열">3.5 객체의 배열과 원시타입의 배열</h4>
+<ul>
+<li>코틀린에서 배열을 만드는 방법
+<ul>
+<li>arrayOf : 함수에 원소를 넘김</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">(args: <span class="type">Array</span>&lt;<span class="type">String</span>&gt;)</span></span> &#123;</span><br><span class="line">    <span class="keyword">val</span> strings = listOf(<span class="string">"a"</span>, <span class="string">"b"</span>, <span class="string">"c"</span>)</span><br><span class="line">    println(<span class="string">"%s/%s/%s"</span>.format(*strings.toTypedArray()))		<span class="comment">// a/b/c</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>arrayOfNuls : 원소타입이 널이 될 수 있는 타입인 경우에만 호출할 수 있고, 인자에 배열의 크기를 넘김</li>
+</ul>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> nullStorableArray = arrayOfNulls&lt;String&gt;(<span class="number">3</span>)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>Array() : 배열의 크기와 람다를 인자로 받아, 람다를 호출하여 각 배열 원소를 초기화</li>
+</ul>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">(args: <span class="type">Array</span>&lt;<span class="type">String</span>&gt;)</span></span> &#123;</span><br><span class="line">    <span class="keyword">val</span> squares = IntArray(<span class="number">5</span>) &#123; i -&gt; (i+<span class="number">1</span>) * (i+<span class="number">1</span>) &#125;</span><br><span class="line">    println(squares.joinToString())		<span class="comment">//1, 4, 9, 16, 25</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="참고">참고</h2>
+<ul>
+<li><a href="http://www.yes24.com/Product/Goods/55148593" target="_blank" rel="noopener">Kotlin In Action</a></li>
+<li>Made by <a href="https://github.com/iyj9328" target="_blank" rel="noopener">iyj9328</a></li>
+</ul>
+
+        </div>
+        
+        <footer class="article-footer">
+            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({
+     google_ad_client: "ca-pub-9725307592233286",
+     enable_page_level_ads: true
+});
+</script>
+            
+
+
+
+    <a data-url="https://woovictory.github.io/2020/04/02/KotlinInAction-Chap6/" data-id="ck8ieljhl015a32pq0k7u29mg" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+<script>
+    (function ($) {
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+        </footer>
+    </div>
+</article>
+
+    <section id="comments">
+    
+        
+    <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+
+    
+    </section>
+
+
+
+                        </div>
+                    </section>
+                    <aside id="sidebar">
+    <a class="sidebar-toggle" title="Expand Sidebar"><i class="toggle icon"></i></a>
+    <div class="sidebar-top">
+        <p>follow:</p>
+        <ul class="social-links">
+            
+                
+                <li>
+                    <a class="social-tooltip" title="facebook" href="https://www.facebook.com/WooVictory" target="_blank" rel="noopener">
+                        <i class="icon fa fa-facebook"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="github" href="https://github.com/WooVictory" target="_blank" rel="noopener">
+                        <i class="icon fa fa-github"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="linkedin" href="https://www.linkedin.com/in/seungwoo-lee-590844177" target="_blank" rel="noopener">
+                        <i class="icon fa fa-linkedin"></i>
+                    </a>
+                </li>
+                
+            
+        </ul>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2020/04/02/KotlinInAction-Chap7/" id="article-nav-newer" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">newer</strong>
+        <p class="article-nav-title">
+        
+            [Kotlin] Chap7. 연산자 오버로딩과 기타 관례
+        
+        </p>
+        <i class="icon fa fa-chevron-right" id="icon-chevron-right"></i>
+    </a>
+    
+    
+        <a href="/2020/04/02/KotlinInAction-Chap5/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">older</strong>
+        <p class="article-nav-title">[Kotlin] Chap5. 람다</p>
+        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
+        </a>
+    
+</nav>
+
+    
+    <div class="widgets-container">
+        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({
+     google_ad_client: "ca-pub-9725307592233286",
+     enable_page_level_ads: true
+});
+</script>
+        
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">categories</h3>
+        <div class="widget">
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Android/">Android</a><span class="category-list-count">58</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/CS/">CS</a><span class="category-list-count">42</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/CS/Design-Pattern/">Design Pattern</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/CS/OS/">OS</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/CS/개발-상식/">개발 상식</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/CS/네트워크/">네트워크</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/CS/데이터베이스/">데이터베이스</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/CS/알고리즘/">알고리즘</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/CS/자료구조/">자료구조</a><span class="category-list-count">9</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Kotlin/">Kotlin</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Programming/">Programming</a><span class="category-list-count">85</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Programming/Android/">Android</a><span class="category-list-count">13</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Programming/Inno-SOPT/">Inno_SOPT</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Programming/Java/">Java</a><span class="category-list-count">34</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Programming/Kotlin/">Kotlin</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Programming/Node-js/">Node.js</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Programming/RxJava/">RxJava</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Programming/etc/">etc</a><span class="category-list-count">5</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/">algorithm</a><span class="category-list-count">52</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/BOJ/">BOJ</a><span class="category-list-count">49</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/Programmers/">Programmers</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/개념/">개념</a><span class="category-list-count">1</span></li></ul></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap">
+        <h3 class="widget-title">recents</h3>
+        <div class="widget">
+            <ul id="recent-post" class="no-thumbnail">
+                
+                    <li>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Kotlin/">Kotlin</a></p>
+                            <p class="item-title"><a href="/2020/04/02/KotlinInAction-Chap7/" class="title">[Kotlin] Chap7. 연산자 오버로딩과 기타 관례</a></p>
+                            <p class="item-date"><time datetime="2020-04-02T06:52:56.000Z" itemprop="datePublished">2020-04-02</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Kotlin/">Kotlin</a></p>
+                            <p class="item-title"><a href="/2020/04/02/KotlinInAction-Chap6/" class="title">[Kotlin] Chap6. 코틀린 타입 시스템</a></p>
+                            <p class="item-date"><time datetime="2020-04-02T06:40:07.000Z" itemprop="datePublished">2020-04-02</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Kotlin/">Kotlin</a></p>
+                            <p class="item-title"><a href="/2020/04/02/KotlinInAction-Chap5/" class="title">[Kotlin] Chap5. 람다</a></p>
+                            <p class="item-date"><time datetime="2020-04-02T06:27:53.000Z" itemprop="datePublished">2020-04-02</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Kotlin/">Kotlin</a></p>
+                            <p class="item-title"><a href="/2020/04/01/KotlinInAction-Chap4/" class="title">[Kotlin] Chap4. 클래스와 인터페이스</a></p>
+                            <p class="item-date"><time datetime="2020-04-01T11:26:32.000Z" itemprop="datePublished">2020-04-01</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Kotlin/">Kotlin</a></p>
+                            <p class="item-title"><a href="/2020/04/01/KotlinInAction-Chap3/" class="title">[Kotlin] Chap3. 함수 정의와 호출</a></p>
+                            <p class="item-date"><time datetime="2020-04-01T11:02:44.000Z" itemprop="datePublished">2020-04-01</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+            
+        
+    </div>
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({
+     google_ad_client: "ca-pub-9725307592233286",
+     enable_page_level_ads: true
+});
+</script>
+</aside>
+
+                </div>
+            </div>
+        </div>
+        <footer id="footer">
+    <div class="container">
+        <div class="container-inner">
+            <a id="back-to-top" href="javascript:;"><i class="icon fa fa-angle-up"></i></a>
+            <div class="credit">
+                <h1 class="logo-wrap">
+                    <a href="/" class="logo"></a>
+                </h1>
+                <p>&copy; 2020 VictoryWoo</p>
+                <p>Powered by <a href="//hexo.io/" target="_blank">Hexo</a>. Theme by <a href="//github.com/ppoffice" target="_blank">PPOffice</a></p>
+            </div>
+            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({
+     google_ad_client: "ca-pub-9725307592233286",
+     enable_page_level_ads: true
+});
+</script>
+            <div class="footer-plugins">
+              
+    
+
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+        
+    
+    <script>
+    var disqus_shortname = 'hexo-theme-hueman';
+    
+    
+    var disqus_url = 'https://woovictory.github.io/2020/04/02/KotlinInAction-Chap6/';
+    
+    (function() {
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+</html>
