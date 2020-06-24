@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+
+    
+
+    
+    <title>[Java] 어떤 알고리즘이 사용될까? | VictoryWoo</title>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+        <meta name="keywords" content="Java,Sorting,Algorithm,정렬 알고리즘" />
+    
+    <meta name="description" content="서론  자바의 정렬 함수를 자주 사용하는데, 내부적으로 어떤 알고리즘이 사용되는지 궁금해서 작성하게 되었다. 참고로 이번 글은 정렬 알고리즘을 설명하는 게 아닌 어떤 알고리즘이 쓰이는지를 정리하는 글이다.  본론  Java나 Android에서 Arrays.sort()는 Primitive Type이나 Object Type의 Array를 정렬할 때 사용한다.">
+<meta name="keywords" content="Java,Sorting,Algorithm,정렬 알고리즘">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[Java] 어떤 알고리즘이 사용될까?">
+<meta property="og:url" content="https://woovictory.github.io/2020/06/24/Java-Sort-Methods/index.html">
+<meta property="og:site_name" content="VictoryWoo">
+<meta property="og:description" content="서론  자바의 정렬 함수를 자주 사용하는데, 내부적으로 어떤 알고리즘이 사용되는지 궁금해서 작성하게 되었다. 참고로 이번 글은 정렬 알고리즘을 설명하는 게 아닌 어떤 알고리즘이 쓰이는지를 정리하는 글이다.  본론  Java나 Android에서 Arrays.sort()는 Primitive Type이나 Object Type의 Array를 정렬할 때 사용한다.">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2020-06-24T11:19:05.205Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="[Java] 어떤 알고리즘이 사용될까?">
+<meta name="twitter:description" content="서론  자바의 정렬 함수를 자주 사용하는데, 내부적으로 어떤 알고리즘이 사용되는지 궁금해서 작성하게 되었다. 참고로 이번 글은 정렬 알고리즘을 설명하는 게 아닌 어떤 알고리즘이 쓰이는지를 정리하는 글이다.  본론  Java나 Android에서 Arrays.sort()는 Primitive Type이나 Object Type의 Array를 정렬할 때 사용한다.">
+    
+
+    
+
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/titillium-web/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" type="text/css" href="">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/theeluwin/NotoSansKR-Hestia@master/stylesheets/NotoSansKR-Hestia.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/earlyaccess/nanumgothiccoding.css">
+    
+    
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/3.3.1/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+        <script type="text/javascript">
+(function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-125410253-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+    
+    
+
+
+</head>
+
+<body>
+    <div id="wrap">
+        <header id="header">
+    <div id="header-outer" class="outer">
+        <div class="container">
+            <div class="container-inner">
+                <div id="header-title">
+                    <h1 class="logo-wrap">
+                        <a href="/" class="logo"></a>
+                    </h1>
+                    
+                        <h2 class="subtitle-wrap">
+                            <p class="subtitle">VictoryWoo&#39;s Blog</p>
+                        </h2>
+                    
+                </div>
+                <div id="header-inner" class="nav-container">
+                    <a id="main-nav-toggle" class="nav-icon fa fa-bars"></a>
+                    <div class="nav-container-inner">
+                        <ul id="main-nav">
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/">Home</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/about/index.html">About</a>
+                                </li>
+                            
+                        </ul>
+                        <nav id="sub-nav">
+                            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="Type something..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+        <div class="container">
+            <div class="main-body container-inner">
+                <div class="main-body-inner">
+                    <section id="main">
+                        <div class="main-body-header">
+    <h1 class="header">
+    
+    <a class="page-title-link" href="/categories/Java/">Java</a>
+    </h1>
+</div>
+
+                        <div class="main-body-content">
+                            
+                            <article id="post-Java-Sort-Methods" class="article article-single article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+        [Java] 어떤 알고리즘이 사용될까?
+        </h1>
+    
+
+            </header>
+        
+        
+            <div class="article-meta">
+                
+    <div class="article-date">
+        <a href="/2020/06/24/Java-Sort-Methods/" class="article-date">
+            <time datetime="2020-06-24T08:09:34.000Z" itemprop="datePublished">2020-06-24</time>
+        </a>
+    </div>
+
+		
+
+                
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/Algorithm/">Algorithm</a>, <a class="tag-link" href="/tags/Java/">Java</a>, <a class="tag-link" href="/tags/Sorting/">Sorting</a>, <a class="tag-link" href="/tags/정렬-알고리즘/">정렬 알고리즘</a>
+    </div>
+
+            </div>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+            <h3 id="서론">서론</h3>
+<ul>
+<li>자바의 정렬 함수를 자주 사용하는데, 내부적으로 어떤 알고리즘이 사용되는지 궁금해서 작성하게 되었다.</li>
+<li>참고로 이번 글은 정렬 알고리즘을 설명하는 게 아닌 어떤 알고리즘이 쓰이는지를 정리하는 글이다.</li>
+</ul>
+<h3 id="본론">본론</h3>
+<ul>
+<li>Java나 Android에서 Arrays.sort()는 Primitive Type이나 Object Type의 Array를 정렬할 때 사용한다.</li>
+<li>Collections.sort()는 Collection의 List를 정렬할 때 사용한다.</li>
+<li>기본적으로 둘 다 오름차순 정렬이고, 인자로서 Array 또는 List를 넣어주면 인자로 넘겨진 객체의 내용 자체가 바뀐다. 또한, 둘 다 static method이므로 객체를 생성하지 않고 호출이 가능하다.</li>
+</ul>
+<p><strong>참고</strong></p>
+<ul>
+<li>Arrays는 하나의 알고리즘만을 쓰는 것이 아니다.</li>
+<li>기본적으로 <strong>Insertion Sort, Merge Sort, Quick Sort</strong> 3가지를 사용한다.</li>
+<li>예전에는 3가지 Sorting이 구분되어 사용되었다.</li>
+<li>하지만, 현재는 이를 변형한 <code>Tim Sort, Dual-Pivot Quick Sort</code>를 쓴다고 한다.</li>
+</ul>
+<p>&lt;예전 기준&gt;<br>
+<strong>1. 배열의 크기가 아주 작을 때(7개 미만) -&gt; Insertion Sort</strong></p>
+<ul>
+<li>왜 7개 미만일 때, <strong>Insertion Sort</strong>를 사용하는지는 수학적으로, 빅오 표기법의 맹점에 대해 접근할 수 있다.</li>
+<li><strong>Insertion Sort</strong>는 대상의 갯수에 따라 비교 횟수가 다르다.
+<ul>
+<li>2개의 대상일 때는 1번 비교</li>
+<li>3개의 대상일 때는 2번 비교</li>
+<li>4개의 대상일 때는 3번 비교</li>
+</ul>
+</li>
+<li>즉, n개일 때 (n-1)번 비교한다. 이는 1+2+…+n-1+n이고 n(n-1)/2라는 공식이 도출된다. n^2이 영향이 가장 크므로 빅오 표기법으로는 O(N^2)이 되지만 정확히는 n(n-1)<br>
+/2이다.</li>
+<li>n=6일 때, 6x5 / 2 = 15가 나오며, n=7일 때, 7x6 / 2 = 21이 나온다.</li>
+<li>[<strong>Merge Sort</strong>]
+<ul>
+<li>Merge Sort의 시간 복잡도는 O(N logN)이다.</li>
+<li>n=6일 때, 대략 15.509가 나오며, n=7일 때, 19.651이 나온다.</li>
+</ul>
+</li>
+<li>따라서 n=6일 때는 일반적으로 <strong>Insertion Sort</strong>가 유리하며, n=7일 때는 <strong>Merge Sort</strong>가 유리하다.</li>
+<li>n=6 이하일 때는 Insertion Sort를 사용하고, n=7 이상일 때는 Merge Sort를 사용하는 것이 빠른 경우이다.</li>
+<li>Insertion Sort의 최악의 경우는 정렬할 데이터가 완전히 역순일 때이다. 하지만, 이러한 경우는 특별한 케이스이기 때문에 무시하고 평균적으로 n=6일 때, Insertion Sort가 더 빠르므로 사용하는 것이다.</li>
+</ul>
+<p><strong>2. Merge Sort와 Quick Sort를 사용하는 여부는 Sorting 알고리즘의 Stable과 관계가 있다.</strong></p>
+<ul>
+<li><code>Stable</code> : 안전성을 의미하며, 정렬에서의 Stable은 같은 값을 비교했을 때 기존의 순서가 바뀌는지, 안바뀌는지를 의미한다.</li>
+<li>Primitive Type의 Array를 정렬하는 것은 값의 대소를 비교하며, 같은 값을 가지는 2개의 숫자를 구분할 방법은 없다.</li>
+<li>ex) [2 1 2 3] 배열을 오름차순 정렬하면 [1 2 2 3]이 된다. 이때 2와 2는 서로 같은 값을 가지지만, 정렬 과정에서 상대적인 위치가 바뀔 수 있다. 하지만, Primitive Type끼리는 이를 구분할 수 없고 별다른 영향도 없기에 구분할 필요도 없다.</li>
+<li>위와 같은 것을 <code>Not Stable</code>하다고 한다. Merge Sort를 써도 상관 없으나 <strong>일반적으로 Quick Sort가 더 빠르므로 Primitive Type은 Quick Sort를 사용하여 정렬한다.</strong></li>
+<li>Quick Sort가 Merge Sort보다 값에 대한 비교를 더 많이한다고 할지라도 Array에 대한 Access 횟수가 적기 때문에 크게 봤을 때, 더 빠르다.</li>
+<li>Quick, Merge Sort 모두 분할 정복 방법에 기반하여 서브 리스트를 나누어 작은 배열을 정렬하는 방식을 사용한다.</li>
+<li>일반적으로 Quick Sort가 더 빠른 이유는 어느 정도 정렬을 하면서 서브 리스트로 분할하고 마지막에도 정렬을 한다. 하지만, Merge Sort는 쪼개질 수 없을 때까지 나눈 후 이를 합칠 때 부터서야 조금씩 정렬하기 때문에 Quick Sort보다 느리다.</li>
+<li>[<strong>Object Array</strong>]
+<ul>
+<li>이 경우에는 조금 달라진다. 객체는 주소를 가지고 있고 엄연히 구분될 수 있기 때문에 구분할 필요가 있다.</li>
+<li>따라서 이러한 Object Sorting은 Stable한 정렬 방법을 사용해야 한다. 특정 애플리케이션에서 값은 같은데 객체 자체가 다른 경우, 개발자가 생각한 것과 다른 결과물을 낼 수 있기 때문이다.</li>
+<li>Stable한 정렬 방법 중 빠른 편에 속하는 것이 Merge Sort이다.</li>
+</ul>
+</li>
+</ul>
+<h3 id="결론">결론</h3>
+<ul>
+<li>Primitive Type Array -&gt; Quick Sort</li>
+<li>Object Type Array -&gt; Merge Sort</li>
+<li>Quick Sort : Not Stable</li>
+<li>Merge Sort : Stable</li>
+</ul>
+<p>&lt;현재 기준&gt;</p>
+<ul>
+<li>예전에는 3개의 알고리즘인 완전히 나뉘었지만, 지금은 Insertion Sort와 Merge Sort를 합친 <code>Tim Sort</code>라는 것을 사용하고 Quick Sort 역시 그냥 쓰는게 아니라 <code>Dual-Pivot Quick Sort</code>라는 것을 사용한다.</li>
+<li>Tim Sort는 Stable하므로 Object에 사용한다.</li>
+<li>Dual-Pivot Quick Sort는 Not Stable하므로 Primitive Type에 사용한다.</li>
+<li>마지막으로 Quickt Sort는 최악의 경우 O(N^2)으로 O(N logN)을 보장하지 않지만, Merge Sort는 최악의 경우일지라도 O(N log N)을 보장한다.</li>
+</ul>
+<h3 id="reference">Reference</h3>
+<ul>
+<li><a href="https://defacto-standard.tistory.com/18" target="_blank" rel="noopener">[Java] 정렬 알고리즘</a></li>
+</ul>
+
+        </div>
+        
+        <footer class="article-footer">
+            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({
+     google_ad_client: "ca-pub-9725307592233286",
+     enable_page_level_ads: true
+});
+</script>
+            
+
+
+
+    <a data-url="https://woovictory.github.io/2020/06/24/Java-Sort-Methods/" data-id="ckbt5ze2s00a9y0pqjscfo3yh" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+<script>
+    (function ($) {
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+        </footer>
+    </div>
+</article>
+
+    <section id="comments">
+    
+        
+    <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+
+    
+    </section>
+
+
+
+                        </div>
+                    </section>
+                    <aside id="sidebar">
+    <a class="sidebar-toggle" title="Expand Sidebar"><i class="toggle icon"></i></a>
+    <div class="sidebar-top">
+        <p>follow:</p>
+        <ul class="social-links">
+            
+                
+                <li>
+                    <a class="social-tooltip" title="facebook" href="https://www.facebook.com/WooVictory" target="_blank" rel="noopener">
+                        <i class="icon fa fa-facebook"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="github" href="https://github.com/WooVictory" target="_blank" rel="noopener">
+                        <i class="icon fa fa-github"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="linkedin" href="https://www.linkedin.com/in/seungwoo-lee-590844177" target="_blank" rel="noopener">
+                        <i class="icon fa fa-linkedin"></i>
+                    </a>
+                </li>
+                
+            
+        </ul>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+    
+        <a href="/2020/06/24/Android-RecyclerView-Attr/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">older</strong>
+        <p class="article-nav-title">[Android] RecyclerView의 setHasFixedSize 이해</p>
+        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
+        </a>
+    
+</nav>
+
+    
+    <div class="widgets-container">
+        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({
+     google_ad_client: "ca-pub-9725307592233286",
+     enable_page_level_ads: true
+});
+</script>
+        
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">categories</h3>
+        <div class="widget">
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Android/">Android</a><span class="category-list-count">75</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Book/">Book</a><span class="category-list-count">2</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Book/CleanCode/">CleanCode</a><span class="category-list-count">2</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Design-Pattern/">Design Pattern</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Git/">Git</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Inno-SOPT/">Inno_SOPT</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">39</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Kotlin/">Kotlin</a><span class="category-list-count">14</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Node-js/">Node.js</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Operation-System/">Operation System</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/RxJava/">RxJava</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/">algorithm</a><span class="category-list-count">51</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/BOJ/">BOJ</a><span class="category-list-count">49</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/Programmers/">Programmers</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/etc/">etc</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/개발-상식/">개발 상식</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/네트워크/">네트워크</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/데이터베이스/">데이터베이스</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/삼성-기출/">삼성 기출</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/알고리즘/">알고리즘</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/자료구조/">자료구조</a><span class="category-list-count">10</span></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap">
+        <h3 class="widget-title">recents</h3>
+        <div class="widget">
+            <ul id="recent-post" class="no-thumbnail">
+                
+                    <li>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Java/">Java</a></p>
+                            <p class="item-title"><a href="/2020/06/24/Java-Sort-Methods/" class="title">[Java] 어떤 알고리즘이 사용될까?</a></p>
+                            <p class="item-date"><time datetime="2020-06-24T08:09:34.000Z" itemprop="datePublished">2020-06-24</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Android/">Android</a></p>
+                            <p class="item-title"><a href="/2020/06/24/Android-RecyclerView-Attr/" class="title">[Android] RecyclerView의 setHasFixedSize 이해</a></p>
+                            <p class="item-date"><time datetime="2020-06-24T05:43:50.000Z" itemprop="datePublished">2020-06-24</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2020/06/15/Android-BottomSheet/" class="title">title</a></p>
+                            <p class="item-date"><time datetime="2020-06-15T01:25:48.000Z" itemprop="datePublished">2020-06-15</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Book/">Book</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/Book/CleanCode/">CleanCode</a></p>
+                            <p class="item-title"><a href="/2020/06/14/CleanCode-2/" class="title">[CleanCode] 2장. 의미있는 이름</a></p>
+                            <p class="item-date"><time datetime="2020-06-14T10:31:36.000Z" itemprop="datePublished">2020-06-14</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Android/">Android</a></p>
+                            <p class="item-title"><a href="/2020/06/13/Android-FlexBoxLayout/" class="title">[Android] FlexBoxLayout</a></p>
+                            <p class="item-date"><time datetime="2020-06-13T12:28:29.000Z" itemprop="datePublished">2020-06-13</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+            
+        
+    </div>
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({
+     google_ad_client: "ca-pub-9725307592233286",
+     enable_page_level_ads: true
+});
+</script>
+</aside>
+
+                </div>
+            </div>
+        </div>
+        <footer id="footer">
+    <div class="container">
+        <div class="container-inner">
+            <a id="back-to-top" href="javascript:;"><i class="icon fa fa-angle-up"></i></a>
+            <div class="credit">
+                <h1 class="logo-wrap">
+                    <a href="/" class="logo"></a>
+                </h1>
+                <p>&copy; 2020 VictoryWoo</p>
+                <p>Powered by <a href="//hexo.io/" target="_blank">Hexo</a>. Theme by <a href="//github.com/ppoffice" target="_blank">PPOffice</a></p>
+            </div>
+            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({
+     google_ad_client: "ca-pub-9725307592233286",
+     enable_page_level_ads: true
+});
+</script>
+            <div class="footer-plugins">
+              
+    
+
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+        
+    
+    <script>
+    var disqus_shortname = 'hexo-theme-hueman';
+    
+    
+    var disqus_url = 'https://woovictory.github.io/2020/06/24/Java-Sort-Methods/';
+    
+    (function() {
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+</html>
