@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+
+    
+
+    
+    <title>[Android] Koin | VictoryWoo</title>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+        <meta name="keywords" content="Android,Koin,의존성 주입,Dependency Injection" />
+    
+    <meta name="description" content="Dependency Injection에 관한 내용은 이 글을 참고하자. DI를 구현할 수 있는 방법 중 Koin에 대해서 알아보려고 한다.  Koin 이란? Koin은 Android에서 주로 사용되는 경량화된 의존성 주입용 프레임워크이다. 순수 코틀린만으로 작성된 라이브러리이며 학습 곡선이 높은 Dagger에 비해 상대적으로 낮은 학습 곡선을 가지고 있다">
+<meta name="keywords" content="Android,Koin,의존성 주입,Dependency Injection">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[Android] Koin">
+<meta property="og:url" content="https://woovictory.github.io/2020/07/06/Android-koin-1/index.html">
+<meta property="og:site_name" content="VictoryWoo">
+<meta property="og:description" content="Dependency Injection에 관한 내용은 이 글을 참고하자. DI를 구현할 수 있는 방법 중 Koin에 대해서 알아보려고 한다.  Koin 이란? Koin은 Android에서 주로 사용되는 경량화된 의존성 주입용 프레임워크이다. 순수 코틀린만으로 작성된 라이브러리이며 학습 곡선이 높은 Dagger에 비해 상대적으로 낮은 학습 곡선을 가지고 있다">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://woovictory.github.io/img/di_performance.png">
+<meta property="og:updated_time" content="2020-07-06T06:49:56.751Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="[Android] Koin">
+<meta name="twitter:description" content="Dependency Injection에 관한 내용은 이 글을 참고하자. DI를 구현할 수 있는 방법 중 Koin에 대해서 알아보려고 한다.  Koin 이란? Koin은 Android에서 주로 사용되는 경량화된 의존성 주입용 프레임워크이다. 순수 코틀린만으로 작성된 라이브러리이며 학습 곡선이 높은 Dagger에 비해 상대적으로 낮은 학습 곡선을 가지고 있다">
+<meta name="twitter:image" content="https://woovictory.github.io/img/di_performance.png">
+    
+
+    
+
+    
+        <link rel="icon" href="/css/images/victorywoo.png" />
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/titillium-web/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" type="text/css" href="">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/theeluwin/NotoSansKR-Hestia@master/stylesheets/NotoSansKR-Hestia.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/earlyaccess/nanumgothiccoding.css">
+    
+    
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/3.3.1/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+        <script type="text/javascript">
+(function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-125410253-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+    
+    
+
+
+</head>
+
+<body>
+    <div id="wrap">
+        <header id="header">
+    <div id="header-outer" class="outer">
+        <div class="container">
+            <div class="container-inner">
+                <div id="header-title">
+                    <h1 class="logo-wrap">
+                        <a href="/" class="logo"></a>
+                    </h1>
+                    
+                        <h2 class="subtitle-wrap">
+                            <p class="subtitle">VictoryWoo&#39;s Blog</p>
+                        </h2>
+                    
+                </div>
+                <div id="header-inner" class="nav-container">
+                    <a id="main-nav-toggle" class="nav-icon fa fa-bars"></a>
+                    <div class="nav-container-inner">
+                        <ul id="main-nav">
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/">Home</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/about/index.html">About</a>
+                                </li>
+                            
+                        </ul>
+                        <nav id="sub-nav">
+                            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="Type something..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+        <div class="container">
+            <div class="main-body container-inner">
+                <div class="main-body-inner">
+                    <section id="main">
+                        <div class="main-body-header">
+    <h1 class="header">
+    
+    <a class="page-title-link" href="/categories/Android/">Android</a>
+    </h1>
+</div>
+
+                        <div class="main-body-content">
+                            
+                            <article id="post-Android-koin-1" class="article article-single article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+        [Android] Koin
+        </h1>
+    
+
+            </header>
+        
+        
+            <div class="article-meta">
+                
+    <div class="article-date">
+        <a href="/2020/07/06/Android-koin-1/" class="article-date">
+            <time datetime="2020-07-06T03:27:54.000Z" itemprop="datePublished">2020-07-06</time>
+        </a>
+    </div>
+
+		
+
+                
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/Android/">Android</a>, <a class="tag-link" href="/tags/Dependency-Injection/">Dependency Injection</a>, <a class="tag-link" href="/tags/Koin/">Koin</a>, <a class="tag-link" href="/tags/의존성-주입/">의존성 주입</a>
+    </div>
+
+            </div>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+            <ul>
+<li><a href="https://woovictory.github.io/2019/05/04/What-is-DI/">Dependency Injection</a>에 관한 내용은 이 글을 참고하자.</li>
+<li>DI를 구현할 수 있는 방법 중 <code>Koin</code>에 대해서 알아보려고 한다.</li>
+</ul>
+<h3 id="koin-이란">Koin 이란?</h3>
+<p><code>Koin</code>은 Android에서 주로 사용되는 경량화된 의존성 주입용 프레임워크이다. 순수 코틀린만으로 작성된 라이브러리이며 학습 곡선이 높은 <code>Dagger</code>에 비해 상대적으로 낮은 학습 곡선을 가지고 있다. 어노테이션 프로세싱 및 리플렉션을 사용하지 않기 때문에 상대적으로 가볍다.</p>
+<p>더 자세한 내용은 <a href="https://insert-koin.io/" target="_blank" rel="noopener">Koin</a>의 공식 사이트에서 확인할 수 있다.</p>
+<ul>
+<li>장점
+<ul>
+<li>어노테이션 과정이 없으므로 컴파일이 빠르다.</li>
+<li>학습 곡선이 낮고, 설치도 간단하다.</li>
+</ul>
+</li>
+<li>단점
+<ul>
+<li>런타임 중 에러가 발생한다.</li>
+<li>Dagger에 비해 런타임시 오버헤드가 발생할 확률이 높다.</li>
+</ul>
+</li>
+</ul>
+<h3 id="set-up">Set Up</h3>
+<ul>
+<li>최신 버전은 <a href="https://github.com/InsertKoinIO/koin" target="_blank" rel="noopener">Koin</a> Github을 참고하자.</li>
+<li><strong>2020.07.06</strong> 기준으로 최신 버전은 '2.1.6’이다.</li>
+<li>root의 build.gradle 파일에 버전을 정의한다.</li>
+</ul>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">koin_version = <span class="string">'2.1.6'</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>jcenter를 repositories 부분에 추가한다.</li>
+</ul>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Add Jcenter to your repositories if needed</span></span><br><span class="line"><span class="keyword">repositories</span> &#123;</span><br><span class="line">	jcenter()    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>그리고 app의 build.gradle 파일에 dependency를 설정한다.</li>
+</ul>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">buildscript</span> &#123;</span><br><span class="line">    <span class="keyword">repositories</span> &#123;</span><br><span class="line">        jcenter()</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">dependencies</span> &#123;</span><br><span class="line">        <span class="keyword">classpath</span> <span class="string">"org.koin:koin-gradle-plugin:$koin_version"</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">apply plugin: <span class="string">'koin'</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>마지막으로 아래와 같이 dependency를 필요에 따라 설정하면 된다.</li>
+</ul>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Koin for Kotlin</span></span><br><span class="line">implementation <span class="string">"org.koin:koin-core:$koin_version"</span></span><br><span class="line"><span class="comment">// Koin extended &amp; experimental features</span></span><br><span class="line">implementation <span class="string">"org.koin:koin-core-ext:$koin_version"</span></span><br><span class="line"><span class="comment">// Koin for Unit tests</span></span><br><span class="line">testImplementation <span class="string">"org.koin:koin-test:$koin_version"</span></span><br><span class="line"><span class="comment">// Koin for Java developers is now part of core</span></span><br><span class="line"><span class="comment">// implementation "org.koin:koin-java:$koin_version"</span></span><br></pre></td></tr></table></figure>
+<h3 id="start-koin">Start Koin</h3>
+<ul>
+<li>Koin은 DSL을 사용하여 프로젝트 의존성을 관리한다. main() 함수에서는 단순하게 아래처럼 시작할 수 있다.</li>
+</ul>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">(args: <span class="type">Array</span>&lt;<span class="type">String</span>&gt;)</span></span>&#123;</span><br><span class="line">    startKoin &#123;</span><br><span class="line">        <span class="comment">// 로그를 찍어볼 수 있다.</span></span><br><span class="line">        printlogger()</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 리스트로 된 모든 모듈을 가져온다.</span></span><br><span class="line">        modules(appModules)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>Android에서도 쉽게 사용할 수 있다.</li>
+</ul>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyApplication</span> : <span class="type">Application</span></span>()&#123;</span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreate</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate()</span><br><span class="line">        <span class="comment">// start Koin!</span></span><br><span class="line">        startKoin &#123;</span><br><span class="line">            <span class="comment">// Android Context</span></span><br><span class="line">            androidContext(<span class="keyword">this</span><span class="symbol">@MyApplication</span>)</span><br><span class="line">            <span class="comment">// modules</span></span><br><span class="line">            modules(appModules)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="modules-amp-definitions">Modules &amp; Definitions</h3>
+<ul>
+<li>modules() 안에서 의존성을 관리하는 모듈에 대해 알아보자.</li>
+<li>아래처럼 Repository 클래스를 사용한다고 하자.</li>
+</ul>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Repository</span></span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MemoRepository</span> : <span class="type">Repository</span></span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>그리고 아래처럼 간단하게 모듈을 생성할 수 있다.</li>
+</ul>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> appModules = module &#123;</span><br><span class="line">    single&lt;Repository&gt; &#123; MemoRepository() &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>module</strong> 안에 <code>single</code>로 <code>MemoRepository()</code>를 정의했다.</li>
+<li>Repository를 singleton으로 주입하되 그것의 구현체로 MemoRepository()를 주입한다는 것을 의미한다.</li>
+<li>이를 통해서 인터페이스를 통한 느슨한 결합을 정의할 수 있다.</li>
+</ul>
+<p><strong>[About Koin DSL]</strong></p>
+<ul>
+<li><code>module { }</code> : koin 모듈 또는 하위 모듈을 정의할 때 사용한다.</li>
+<li><code>factory { }</code> : inject할 때마다 항상 새로운 인스턴스를 생성한다.</li>
+<li><code>single { }</code> : 싱글톤 타입으로 인스턴스를 생성한다.</li>
+<li><code>get()</code> : 타입 추론을 통해 컴포넌트 내에서 알맞은 의존성을 주입한다. (컴포넌트 종속성을 해결해줌)</li>
+<li><code>named()</code> : Enum이나 String으로 한정자를 정의해준다.</li>
+<li><code>bind</code> : 지정된 컴포넌트의 타입을 추가적으로 바인딩해준다.</li>
+<li><code>getProperty()</code> : 필요한 프로퍼티를 가져온다.</li>
+</ul>
+<ul>
+<li>예시를 위해 아래의 클래스 및 인터페이스를 사용한다고 해보자.</li>
+</ul>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MemoRepository</span></span>()</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">ApiService</span></span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MemoApiService</span></span>(<span class="keyword">val</span> repository: MemoRepository) : ApiService</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MemoHttpClient</span></span>(<span class="keyword">val</span> url: String)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>koin을 사용하여 아래처럼 정의할 수 있다.</li>
+</ul>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> appModules = module &#123;</span><br><span class="line">    <span class="comment">// 싱글톤</span></span><br><span class="line">    single &#123; MemoRepository() &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// factory로 정의하여 항상 새로운 인스턴스를 ApiService 타입으로 생성한다.</span></span><br><span class="line">    <span class="comment">// get()을 통해 타입 추론을 사용하고 필요한 의존성을 해결(주입) [MemoRepository()]</span></span><br><span class="line">    factory&lt;ApiService&gt; &#123; MemoApiService(<span class="keyword">get</span>()) &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 싱글톤</span></span><br><span class="line">    <span class="comment">// "server_url"이라는 프로퍼티를 가져와서 사용한다.</span></span><br><span class="line">    single &#123; MemoHttpClient(getProperty(<span class="string">"server_url"</span>)) &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>또한, 모듈을 만든 후, 다른 모듈과 합쳐서 사용할 수도 있다.</li>
+</ul>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> module1 = module &#123;</span><br><span class="line">    single &#123; MemoRepository() &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">val</span> module2 = module &#123;</span><br><span class="line">    factory&lt;ApiService&gt; &#123; MemoApiService(<span class="keyword">get</span>()) &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// combine</span></span><br><span class="line">startKoin &#123;</span><br><span class="line">    modules(module1, module2)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>정의한 모듈을 다른 모듈에서 재정의하여 사용할 수도 있다.</li>
+</ul>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// definition level 재정의</span></span><br><span class="line"><span class="keyword">val</span> module1 = module &#123;</span><br><span class="line">    single&lt;ApiService&gt; &#123; MemoApiService(<span class="keyword">get</span>()) &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">val</span> module2 = module &#123;</span><br><span class="line">    <span class="comment">// 현재 definition만 재정의할 수 있음</span></span><br><span class="line">    single&lt;ApiService&gt;(<span class="keyword">override</span> = <span class="literal">true</span>) &#123; DiaryApiService() &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// module level 재정의</span></span><br><span class="line"><span class="keyword">val</span> myModule1 = module &#123;</span><br><span class="line">    single&lt;ApiService&gt; &#123; MemoApiService(<span class="keyword">get</span>()) &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 모든 definitions를 재정의할 수 있음</span></span><br><span class="line"><span class="keyword">val</span> myModule2 = module(<span class="keyword">override</span> = <span class="literal">true</span>) &#123;</span><br><span class="line">    single&lt;ApiService&gt; &#123; DiaryApiService() &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="for-android">For Android</h3>
+<ul>
+<li>이제 Android에서 사용하는 법을 알아보자.</li>
+<li>위의 방법을 사용하여 모듈을 생성하면 되는데, Android는 Context의 사용을 피할 수 없다. 파라미터로 받아서 사용하는 경우에는 Context를 주입해 줄 수 있다.</li>
+</ul>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">module &#123;</span><br><span class="line">    single &#123; MemoRepository(androidContext()) &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>이렇게 모듈에 선언한 컴포넌트들은 Activity 혹은 Fragment에서 간단하게 사용할 수 있다.</li>
+</ul>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> : <span class="type">AppCompatActivity</span></span>() &#123;</span><br><span class="line">    <span class="comment">// 1. MemoRepository 주입</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">val</span> repository : MemoRepository <span class="keyword">by</span> inject()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreate</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate()</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 2. 다이렉트로 가져와서 사용할 수도 있다.</span></span><br><span class="line">        <span class="keyword">val</span> memoRepository : MemoRepository = <span class="keyword">get</span>()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>ViewModel 또한 쉽게 주입받을 수 있다.</li>
+</ul>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MemoViewModel</span></span>(<span class="keyword">val</span> taskId: <span class="built_in">Int</span> = <span class="number">1</span>, <span class="keyword">val</span> repository: Repository)&#123;</span><br><span class="line">    ... </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Repository</span></span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MemoRepository</span> : <span class="type">Repository</span></span></span><br></pre></td></tr></table></figure>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> viewModelModule = module &#123;</span><br><span class="line">    <span class="comment">// get()을 통해 Repository를 가져온다.</span></span><br><span class="line">    viewModel &#123; MemoViewModel(<span class="keyword">get</span>()) &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 싱글톤</span></span><br><span class="line">    single&lt;Repository&gt; &#123; MemoRepository() &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">val</span> viewModelModule = module &#123;</span><br><span class="line">    viewModel &#123; (taskId: <span class="built_in">Int</span>) -&gt;</span><br><span class="line">        MemoViewModel(</span><br><span class="line">            taskId = taskId,</span><br><span class="line">            repository = <span class="keyword">get</span>()</span><br><span class="line">        )</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    single&lt;Repository&gt; &#123; MemoRepository() &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>정의한 모듈을 사용하여 의존성을 주입한다.</li>
+</ul>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> : <span class="type">AppCompatActivity</span></span>() &#123;</span><br><span class="line">    <span class="comment">// 전달한 파라미터가 없는 경우</span></span><br><span class="line">    <span class="comment">// Lazy하게 MemoViewModel 주입</span></span><br><span class="line">    <span class="keyword">val</span> viewModelWithoutParam : MemoViewModel <span class="keyword">by</span> viewModel()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">val</span> viewModelWithParam : MemoViewModel <span class="keyword">by</span> viewModel &#123;</span><br><span class="line">        parameterOf(<span class="number">1</span>)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreate</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate()</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 다이렉트로 인스턴스 가져오기 without Parameter</span></span><br><span class="line">        <span class="keyword">val</span> viewModelWithoutParam : MemoViewModel = getViewModel()</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 다이렉트로 인스턴스 가져오기 with Parameter</span></span><br><span class="line">        <span class="keyword">val</span> viewModelWithParam : MemoViewModel = getViewModel &#123;</span><br><span class="line">            parameterOf(<span class="number">1</span>)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>상당히 쉽고 간편하게 <code>Dependency Injection</code>을 사용할 수 있는 것이 Koin의 큰 장점이다. 하지만 성능적으로 Dagger에 미치지 못한다는 평이 많았는데, 2.0 버전에서 inject 성능이 비슷해질 정도로 많이 향상되었다고 한다.</p>
+<ul>
+<li><a href="https://medium.com/koin-developers/ready-for-koin-2-0-2722ab59cac3" target="_blank" rel="noopener">성능 측정 및 Koin 2.0 소개</a></li>
+<li><a href="https://start.insert-koin.io/#/getting-started/testing" target="_blank" rel="noopener">테스트 관련 이야기</a></li>
+</ul>
+<img src="/img/di_performance.png" width="200" height="200">
+<h3 id="reference">Reference</h3>
+<ul>
+<li><a href="https://jungwoon.github.io/android/2019/08/21/Koin/" target="_blank" rel="noopener">Koin 정리하기</a></li>
+<li><a href="https://medium.com/hongbeomi-dev/koin-%EC%9E%98-%EC%82%AC%EC%9A%A9%ED%95%98%EA%B8%B0-5a96a8bb94d3" target="_blank" rel="noopener">Koin 잘 사용하기</a></li>
+<li><a href="https://kaidroid.me/post/dependency-injection-with-kotlin-koin/" target="_blank" rel="noopener">Kotlin 안드로이드 의존성 주입 라이브러리 Koin을 소개합니다.</a></li>
+<li><a href="https://medium.com/harrythegreat/kotlin%EC%97%90%EC%84%9C-dagger2-%EC%93%B0%EA%B8%B0-%ED%9E%98%EB%93%9C%EB%8B%88-%EA%B7%B8%EB%9F%BC-%EB%84%8C-koin%EC%9D%B4%EC%95%BC-e9e42ec1288e" target="_blank" rel="noopener">Kotlin에서 Dagger2 쓰기 힘드니? 그럼 넌 Koin이야</a></li>
+</ul>
+
+        </div>
+        
+        <footer class="article-footer">
+            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({
+     google_ad_client: "ca-pub-9725307592233286",
+     enable_page_level_ads: true
+});
+</script>
+            
+
+
+
+    <a data-url="https://woovictory.github.io/2020/07/06/Android-koin-1/" data-id="ckca58jju00xvm5pqlxoat6o6" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+<script>
+    (function ($) {
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+        </footer>
+    </div>
+</article>
+
+    <section id="comments">
+    
+        
+    <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+
+    
+    </section>
+
+
+
+                        </div>
+                    </section>
+                    <aside id="sidebar">
+    <a class="sidebar-toggle" title="Expand Sidebar"><i class="toggle icon"></i></a>
+    <div class="sidebar-top">
+        <p>follow:</p>
+        <ul class="social-links">
+            
+                
+                <li>
+                    <a class="social-tooltip" title="facebook" href="https://www.facebook.com/WooVictory" target="_blank" rel="noopener">
+                        <i class="icon fa fa-facebook"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="github" href="https://github.com/WooVictory" target="_blank" rel="noopener">
+                        <i class="icon fa fa-github"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="linkedin" href="https://www.linkedin.com/in/seungwoo-lee-590844177" target="_blank" rel="noopener">
+                        <i class="icon fa fa-linkedin"></i>
+                    </a>
+                </li>
+                
+            
+        </ul>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+    
+        <a href="/2020/07/05/Java-binding/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">older</strong>
+        <p class="article-nav-title">[Java] 동적바인딩 vs 정적바인딩</p>
+        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
+        </a>
+    
+</nav>
+
+    
+    <div class="widgets-container">
+        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({
+     google_ad_client: "ca-pub-9725307592233286",
+     enable_page_level_ads: true
+});
+</script>
+        
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">categories</h3>
+        <div class="widget">
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Android/">Android</a><span class="category-list-count">78</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Book/">Book</a><span class="category-list-count">2</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Book/CleanCode/">CleanCode</a><span class="category-list-count">2</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Design-Pattern/">Design Pattern</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ETC/">ETC</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Git/">Git</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Inno-SOPT/">Inno_SOPT</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">39</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Kotlin/">Kotlin</a><span class="category-list-count">16</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Node-js/">Node.js</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Operation-System/">Operation System</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/RxJava/">RxJava</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/">algorithm</a><span class="category-list-count">51</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/BOJ/">BOJ</a><span class="category-list-count">49</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/Programmers/">Programmers</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/개발-상식/">개발 상식</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/네트워크/">네트워크</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/데이터베이스/">데이터베이스</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/삼성-기출/">삼성 기출</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/알고리즘/">알고리즘</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/자료구조/">자료구조</a><span class="category-list-count">10</span></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap">
+        <h3 class="widget-title">recents</h3>
+        <div class="widget">
+            <ul id="recent-post" class="no-thumbnail">
+                
+                    <li>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Android/">Android</a></p>
+                            <p class="item-title"><a href="/2020/07/06/Android-koin-1/" class="title">[Android] Koin</a></p>
+                            <p class="item-date"><time datetime="2020-07-06T03:27:54.000Z" itemprop="datePublished">2020-07-06</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Java/">Java</a></p>
+                            <p class="item-title"><a href="/2020/07/05/Java-binding/" class="title">[Java] 동적바인딩 vs 정적바인딩</a></p>
+                            <p class="item-date"><time datetime="2020-07-05T14:34:50.000Z" itemprop="datePublished">2020-07-05</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Android/">Android</a></p>
+                            <p class="item-title"><a href="/2020/07/05/What-is-DI/" class="title">[Android] Dependency Injection</a></p>
+                            <p class="item-date"><time datetime="2020-07-05T13:08:42.000Z" itemprop="datePublished">2020-07-05</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Kotlin/">Kotlin</a></p>
+                            <p class="item-title"><a href="/2020/07/05/Kotlin-Collection-Filter-Map/" class="title">[Kotlin] filter, map 호출 순서에 따른 성능 차이</a></p>
+                            <p class="item-date"><time datetime="2020-07-05T07:50:52.000Z" itemprop="datePublished">2020-07-05</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Kotlin/">Kotlin</a></p>
+                            <p class="item-title"><a href="/2020/07/05/Kotlin-Sequence/" class="title">[Kotlin] Sequence</a></p>
+                            <p class="item-date"><time datetime="2020-07-05T05:53:05.000Z" itemprop="datePublished">2020-07-05</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+            
+        
+    </div>
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({
+     google_ad_client: "ca-pub-9725307592233286",
+     enable_page_level_ads: true
+});
+</script>
+</aside>
+
+                </div>
+            </div>
+        </div>
+        <footer id="footer">
+    <div class="container">
+        <div class="container-inner">
+            <a id="back-to-top" href="javascript:;"><i class="icon fa fa-angle-up"></i></a>
+            <div class="credit">
+                <h1 class="logo-wrap">
+                    <a href="/" class="logo"></a>
+                </h1>
+                <p>&copy; 2020 VictoryWoo</p>
+                <p>Powered by <a href="//hexo.io/" target="_blank">Hexo</a>. Theme by <a href="//github.com/ppoffice" target="_blank">PPOffice</a></p>
+            </div>
+            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({
+     google_ad_client: "ca-pub-9725307592233286",
+     enable_page_level_ads: true
+});
+</script>
+            <div class="footer-plugins">
+              
+    
+
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+        
+    
+    <script>
+    var disqus_shortname = 'hexo-theme-hueman';
+    
+    
+    var disqus_url = 'https://woovictory.github.io/2020/07/06/Android-koin-1/';
+    
+    (function() {
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+</html>
