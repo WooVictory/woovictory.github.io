@@ -6,24 +6,24 @@
     
 
     
-    <title>[Java] Static Method Overriding?! | VictoryWoo</title>
+    <title>[Java] 동적바인딩 vs 정적바인딩 | VictoryWoo</title>
     
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
-        <meta name="keywords" content="Java,자바,Static 메소드,Overriding,오버라이딩" />
+        <meta name="keywords" content="Java,Binding,동적 바인딩,정적 바인딩" />
     
-    <meta name="description" content="Java에서 오버라이딩이란 기본적이면서 중요한 개념이다. 간략하게 말하면 부모 클래스의 메소드를 자식 클래스에서 재정의하여 사용하는 것이라고 할 수 있다. 그러면 여기서 의문이 하나 생기는데, static 메소드는 오버라이딩이 될까? 오버라이딩이 어떤 개념이라는 것은 알지만, 실제로 이런 경우를 생각해보니 대답을 하기 쉽지 않다. 대답을 하더라도 이유를 정">
-<meta name="keywords" content="Java,자바,Static 메소드,Overriding,오버라이딩">
+    <meta name="description" content="최근에 갑자기 동적 바인딩과 정적 바인딩에 관한 내용이 떠올랐는데, 말로 설명하지 못하는 모습을 보고 정확히 알지 못한다는 것을 알게 되었다. 그래서 정리하려고 한다. 동적 바인딩 vs 정적 바인딩  동적 바인딩(Dynamic Binding)  다형성을 사용하여 메소드를 호출할 때, 발생하는 현상이다. 실행 시간(Runtime) 즉, 파일을 실행하는 시점에">
+<meta name="keywords" content="Java,Binding,동적 바인딩,정적 바인딩">
 <meta property="og:type" content="article">
-<meta property="og:title" content="[Java] Static Method Overriding?!">
-<meta property="og:url" content="https://woovictory.github.io/2019/07/31/Java-Static-Method-Override/index.html">
+<meta property="og:title" content="[Java] 동적바인딩 vs 정적바인딩">
+<meta property="og:url" content="https://woovictory.github.io/2020/07/05/Java-binding/index.html">
 <meta property="og:site_name" content="VictoryWoo">
-<meta property="og:description" content="Java에서 오버라이딩이란 기본적이면서 중요한 개념이다. 간략하게 말하면 부모 클래스의 메소드를 자식 클래스에서 재정의하여 사용하는 것이라고 할 수 있다. 그러면 여기서 의문이 하나 생기는데, static 메소드는 오버라이딩이 될까? 오버라이딩이 어떤 개념이라는 것은 알지만, 실제로 이런 경우를 생각해보니 대답을 하기 쉽지 않다. 대답을 하더라도 이유를 정">
+<meta property="og:description" content="최근에 갑자기 동적 바인딩과 정적 바인딩에 관한 내용이 떠올랐는데, 말로 설명하지 못하는 모습을 보고 정확히 알지 못한다는 것을 알게 되었다. 그래서 정리하려고 한다. 동적 바인딩 vs 정적 바인딩  동적 바인딩(Dynamic Binding)  다형성을 사용하여 메소드를 호출할 때, 발생하는 현상이다. 실행 시간(Runtime) 즉, 파일을 실행하는 시점에">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2020-04-22T07:47:33.490Z">
+<meta property="og:updated_time" content="2020-07-06T03:00:11.430Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="[Java] Static Method Overriding?!">
-<meta name="twitter:description" content="Java에서 오버라이딩이란 기본적이면서 중요한 개념이다. 간략하게 말하면 부모 클래스의 메소드를 자식 클래스에서 재정의하여 사용하는 것이라고 할 수 있다. 그러면 여기서 의문이 하나 생기는데, static 메소드는 오버라이딩이 될까? 오버라이딩이 어떤 개념이라는 것은 알지만, 실제로 이런 경우를 생각해보니 대답을 하기 쉽지 않다. 대답을 하더라도 이유를 정">
+<meta name="twitter:title" content="[Java] 동적바인딩 vs 정적바인딩">
+<meta name="twitter:description" content="최근에 갑자기 동적 바인딩과 정적 바인딩에 관한 내용이 떠올랐는데, 말로 설명하지 못하는 모습을 보고 정확히 알지 못한다는 것을 알게 되었다. 그래서 정리하려고 한다. 동적 바인딩 vs 정적 바인딩  동적 바인딩(Dynamic Binding)  다형성을 사용하여 메소드를 호출할 때, 발생하는 현상이다. 실행 시간(Runtime) 즉, 파일을 실행하는 시점에">
     
 
     
@@ -156,14 +156,14 @@ ga('send', 'pageview');
 
                         <div class="main-body-content">
                             
-                            <article id="post-Java-Static-Method-Override" class="article article-single article-type-post" itemscope itemprop="blogPost">
+                            <article id="post-Java-binding" class="article article-single article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
             <header class="article-header">
                 
     
         <h1 class="article-title" itemprop="name">
-        [Java] Static Method Overriding?!
+        [Java] 동적바인딩 vs 정적바인딩
         </h1>
     
 
@@ -173,8 +173,8 @@ ga('send', 'pageview');
             <div class="article-meta">
                 
     <div class="article-date">
-        <a href="/2019/07/31/Java-Static-Method-Override/" class="article-date">
-            <time datetime="2019-07-31T08:45:34.000Z" itemprop="datePublished">2019-07-31</time>
+        <a href="/2020/07/05/Java-binding/" class="article-date">
+            <time datetime="2020-07-05T14:34:50.000Z" itemprop="datePublished">2020-07-05</time>
         </a>
     </div>
 
@@ -183,38 +183,86 @@ ga('send', 'pageview');
                 
     <div class="article-tag">
         <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/Java/">Java</a>, <a class="tag-link" href="/tags/Overriding/">Overriding</a>, <a class="tag-link" href="/tags/Static-메소드/">Static 메소드</a>, <a class="tag-link" href="/tags/오버라이딩/">오버라이딩</a>, <a class="tag-link" href="/tags/자바/">자바</a>
+        <a class="tag-link" href="/tags/Binding/">Binding</a>, <a class="tag-link" href="/tags/Java/">Java</a>, <a class="tag-link" href="/tags/동적-바인딩/">동적 바인딩</a>, <a class="tag-link" href="/tags/정적-바인딩/">정적 바인딩</a>
     </div>
 
             </div>
         
         
         <div class="article-entry" itemprop="articleBody">
-            <p>Java에서 오버라이딩이란 기본적이면서 중요한 개념이다. 간략하게 말하면 <strong>부모 클래스의 메소드를 자식 클래스에서 재정의하여 사용하는 것이라고 할 수 있다.</strong></p>
-<p>그러면 여기서 의문이 하나 생기는데, static 메소드는 오버라이딩이 될까? 오버라이딩이 어떤 개념이라는 것은 알지만, 실제로 이런 경우를 생각해보니 대답을 하기 쉽지 않다. 대답을 하더라도 이유를 정확히 아는 것인지도 모르겠다.</p>
-<p>그래서 '과연 가능한가? 불가능한가?'를 알아보기 위해서 해당 글을 작성하게 되었다.</p>
-<h2 id="static-메소드는-오버라이딩이-될까">static 메소드는 오버라이딩이 될까?</h2>
-<p>필자는 static 메소드가 오버라이딩이 된다고 생각을 했다. 이유는 인터페이스에 디폴트 메소드와 static 메소드가 추가된 것이 생각나서 그렇게 생각했다. 그런데, 다시 생각해보니까 아닌 것 같았다.</p>
-<p>static 메소드는 컴파일할 때, 메모리에 올라가서 메소드 영역에 존재한다. 즉, 객체 생성과 관련이 없고 해당 클래스로부터의 모든 인스턴스가 공유할 것이다. 그런데 이게 오버라이딩이 되면 논리가 맞지 않는다.</p>
-<p>나의 생각이 맞는지 확인해보자.<br>
-일단, 실제로 되는지 안되는지 테스트해보자.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 부모 클래스.</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Parent</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">louder</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"나는 부모 클래스의 louder 이다."</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">talk</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"나는 부모 클래스의 talk 이다."</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 자식 클래스.</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Child</span> <span class="keyword">extends</span> <span class="title">Parent</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">louder</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"나는 자식 클래스의 louder 이다."</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">talk</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"나는 자식 클래스의 talk 이다."</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>이렇게 구성한 클래스를 실행시켜보자.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CheckMain</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Parent p = <span class="keyword">new</span> Parent();</span><br><span class="line">        p.louder();</span><br><span class="line">        p.talk();</span><br><span class="line"></span><br><span class="line">        Parent c = <span class="keyword">new</span> Child();</span><br><span class="line">        c.louder();</span><br><span class="line">        c.talk();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 예상 결과</span></span><br><span class="line">나는 부모 클래스의 louder 이다.</span><br><span class="line">나는 부모 클래스의 talk 이다.</span><br><span class="line">나는 자식 클래스의 louder 이다.</span><br><span class="line">나는 자식 클래스의 talk 이다.</span><br><span class="line"></span><br><span class="line"><span class="comment">// 실제 결과</span></span><br><span class="line">나는 부모 클래스의 louder 이다.</span><br><span class="line">나는 부모 클래스의 talk 이다.</span><br><span class="line">나는 부모 클래스의 louder 이다.</span><br><span class="line">나는 자식 클래스의 talk 이다.</span><br></pre></td></tr></table></figure>
-<p>static 메소드는 상속이 되지 않는다. 이유는 static 메소드는 클래스가 컴파일되는 시점에 결정이 되지만 override의 경우에는 런타임 시점에 사용될 메소드가 결정이 된다. 그래서 애초에 성립하기가 어려운 것이다.</p>
-<p>static 메소드의 경우 클래스 단위로 만들어지기 때문에 객체 단위로 형성되는 Override는 성립될 수 없다.</p>
-<p><strong>즉, 런타임시에 c 객체가 실제로 참조하고 있는 클래스를 찾아가는 것이 아니라 컴파일시에 결정된 클래스를 찾아가서 해당 메소드를 호출하기 때문이다.</strong></p>
-<p>필자가 생각했던 것과 비슷한 이유이다. 그런데 뭔가 아직 부족한 것 같은 느낌이 든다.</p>
-<p>JVM은 static method를 호출할 때, <strong>instance method</strong>의 경우 런타임시 해당 메소드를 구현하고 있는 실제 객체를 찾아 호출한다. -&gt; 다형성.</p>
-<p>하지만 컴파일러와 JVM 모두 static method에 대해서는 실제 객체를 찾는 작업을 시행하지 않기 때문에 <strong>class method</strong>(static method)의 경우, 컴파일 시점에 선언된 타입의 메소드를 호출한다. 컴파일러와 JVM 모두 클래스 (스태틱)메소드에 대해서는 실제 객체를 찾는 작업을 시행하지 않기 때문이다. <code>그래서 static 메소드에서는 다형성이 적용되지 않는다.</code></p>
-<p>원칙적으로는 오버라이딩이 안되지만 아래 코드처럼 오버라이딩된 것처럼 구현이 가능하다. 자바에서는 이같은 경우를 하이딩(hiding)이라고 한다. 하이딩은 이론적으로만 존재할 뿐, 실제 프로그래밍에서 클래스를 설계할 때 추천되는 방법은 아니다.</p>
-<ol>
-<li>오버라이드된(하이딩된) static method를 정확하게 호출하려면 메소드가 포함된 실제 객체로 선언해야 한다.</li>
-<li>웬만하면, 하이딩의 사용은 피하자.</li>
-</ol>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 기본적인 상속과 구현.</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">A</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">test</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"A test()"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span> <span class="keyword">extends</span> <span class="title">A</span></span>&#123;</span><br><span class="line">    <span class="meta">@Override</span> <span class="comment">// 컴파일 오류</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">test</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"B test()"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 하이딩.</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">A</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">test</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"A test()"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span> <span class="keyword">extends</span> <span class="title">A</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">test</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"A test()"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="참고">참고</h2>
+            <p>최근에 갑자기 동적 바인딩과 정적 바인딩에 관한 내용이 떠올랐는데, 말로 설명하지 못하는 모습을 보고 정확히 알지 못한다는 것을 알게 되었다. 그래서 정리하려고 한다.</p>
+<h3 id="동적-바인딩-vs-정적-바인딩">동적 바인딩 vs 정적 바인딩</h3>
 <ul>
+<li><code>동적 바인딩(Dynamic Binding)</code>
+<ul>
+<li>다형성을 사용하여 메소드를 호출할 때, 발생하는 현상이다.</li>
+<li><strong>실행 시간</strong>(Runtime) 즉, 파일을 실행하는 시점에 성격이 결정된다.</li>
+<li>실제 참조하는 객체는 서브 클래스이니 서브 클래스의 메소드를 호출한다.</li>
+</ul>
+</li>
+<li><code>정적 바인딩(Static Binding)</code>
+<ul>
+<li><strong>컴파일</strong>(Compile) 시간에 성격이 결정된다.</li>
+<li>변수의 타입이 수퍼 클래스이니 수퍼 클래스의 메소드를 호출한다.</li>
+</ul>
+</li>
+</ul>
+<p><strong>[Sample Code]</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * created by victory_woo on 2020/07/06</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PolymorphismTest</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        SuperClass superClass = <span class="keyword">new</span> SuperClass();</span><br><span class="line">        superClass.methodA();</span><br><span class="line">        superClass.methodB();</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        SuperClass subClass = <span class="keyword">new</span> SubClass();</span><br><span class="line">        subClass.methodA();</span><br><span class="line">        subClass.methodB();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SuperClass</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">methodA</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"SuperClass A "</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">methodB</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"SuperClass B"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SubClass</span> <span class="keyword">extends</span> <span class="title">SuperClass</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">methodA</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"SubClass A"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">methodB</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"SubClass B"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 예상 결과</span></span><br><span class="line">SuperClass A </span><br><span class="line">SuperClass B</span><br><span class="line">SubClass A</span><br><span class="line">SubClass B</span><br><span class="line"></span><br><span class="line"><span class="comment">// 실제 결과</span></span><br><span class="line">SuperClass A </span><br><span class="line">SuperClass B</span><br><span class="line">SubClass A</span><br><span class="line">SuperClass B</span><br></pre></td></tr></table></figure>
+<ul>
+<li>SubClass는 SuperClass의 <code>methodA()</code>를 상속받아 오버라이딩했다.</li>
+<li><code>methodA()</code>가 어떤 클래스의 메소드인지 Runtime 즉, 클래스 파일이 실행되는 시점에 결정된다.</li>
+<li>다시 말해, <strong>동적 바인딩은 Runtime 시점에 해당 메소드를 구현하고 있는 실제 객체 타입을 기준으로 찾아가서 실행될 함수를 호출한다.</strong></li>
+<li>subClass 참조 변수로 접근 가능한 것은 부모 클래스의 멤버이지만, 자식 클래스에서 메소드를 오버라이딩했으므로 자식 클래스의 메소드를 호출한다.</li>
+</ul>
+<ul>
+<li>subClass 참조 변수는 런타임시에 SubClass의 methodA() 호출</li>
+<li>subClass 참조 변수는 컴파일시에 SuperClass의 static 메소드인 methodB() 호출</li>
+</ul>
+<ul>
+<li><code>결론</code>
+<ul>
+<li>모든 인스턴스 메소드는 Runtime에 결정된다.</li>
+<li>클래스(static) 메소드와 인스턴스 변수는 Compile 시에 결정된다.</li>
+<li>따라서 instance인지, statice인지에 따라서 달라진다.</li>
+</ul>
+</li>
+</ul>
+<h3 id="static-method-overriding">Static Method Overriding</h3>
+<p>동적 바인딩과 정적 바인딩의 개념과 차이를 알았으므로 <strong>static 메소드의 오버라이딩</strong> 여부에 대해서 이야기 해 볼 수 있을 것 같다. 예전에 &quot;static 메소드는 오버라이딩 된다&quot;라고 말했지만, 이유를 말할 수 없었던 기억이 난다. 이제는 말할 수 있을 것 같다.</p>
+<p><strong>결론</strong> : <code>static 메소드는 오버라이딩 할 수 없다.</code></p>
+<ul>
+<li>static 메소드는 컴파일 시, 메모리에 올라가고 메소드 영역에 존재한다.</li>
+<li>즉, 객체 생성과 관련이 없고 해당 클래스로부터의 모든 인스턴스가 공유한다.</li>
+<li>따라서 static 메소드가 오버라이딩 된다면 논리적으로 맞지 않는다.</li>
+</ul>
+<p>위의 <strong>Sample Code</strong>를 통해서 static 메소드가 오버라이딩 되지 않는다는 것을 알았다. 이유는 static 메소드는 클래스가 Compile 되는 시점에 결정되지만, Override의 경우에는 Runtime 시점에 사용될 메소드가 결정되기 때문이다. 그래서 애초에 성립하기 어렵다.</p>
+<p><strong>static 메소드의 경우, 클래스 단위로 만들어지기 때문에 객체 단위로 형성되는 Override는 성립될 수 없다는 게 결론이다.</strong></p>
+<ul>
+<li><code>instance method</code>
+<ul>
+<li><strong>Runtime</strong> 시 해당 메소드를 구현하고 있는 실제 객체를 찾아 호출한다.</li>
+<li>즉, 다형성을 보여준다.</li>
+</ul>
+</li>
+<li><code>static method</code>
+<ul>
+<li>JVM과 컴파일러 모두 <code>static method</code>에 대해서는 실제 객체를 찾는 작업을 시행하지 않기 때문에 static method(class method)의 경우에는 <strong>Compile</strong> 시점에 선언된 타입의 메소드를 호출한다.</li>
+<li>따라서 static method에서는 다형성이 적용되지 않는다.</li>
+</ul>
+</li>
+<li>static 메소드는 원칙적으로 오버라이딩이 안되지만, 아래처럼 가능하게끔 할 수 있다.</li>
+<li>이를 <strong>하이딩</strong>(hiding)이라고 한다. 이론적으로만 존재할 뿐, 실제 프로그래밍에서 클래스를 설계할 때, 추천되는 방법은 아니다.
+<ol>
+<li>오버라이드된 static method를 정확하게 호출하려면 메소드가 포함된 실제 객체로 선언해야 한다.</li>
+<li>하이딩의 사용은 피하는게 좋다.</li>
+</ol>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 기본적인 상속과 구현.</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">A</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">test</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"A test()"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span> <span class="keyword">extends</span> <span class="title">A</span></span>&#123;</span><br><span class="line">    <span class="meta">@Override</span> <span class="comment">// 컴파일 오류</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">test</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"B test()"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 하이딩.</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">A</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">test</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"A test()"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span> <span class="keyword">extends</span> <span class="title">A</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">test</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"A test()"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="reference">Reference</h3>
+<ul>
+<li><a href="https://baekjungho.github.io/java-binding/" target="_blank" rel="noopener">동적바인딩 vs 정적바인딩</a></li>
 <li><a href="https://wedul.site/457" target="_blank" rel="noopener">static method와 Override hiding 대한 정리</a></li>
 <li><a href="http://bitly.kr/r2OxQF" target="_blank" rel="noopener">왜 자바에서 static메소드의 오버라이딩을 허용하지 않는걸까요?</a></li>
 <li><a href="https://ohgyun.com/242" target="_blank" rel="noopener">Overriding Vs Hiding - Override Static Method</a></li>
@@ -234,7 +282,7 @@ ga('send', 'pageview');
 
 
 
-    <a data-url="https://woovictory.github.io/2019/07/31/Java-Static-Method-Override/" data-id="ckc8t0jal00b3s1pqfhuxwcz2" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="https://woovictory.github.io/2020/07/05/Java-binding/" data-id="ckc9x38k000bjmgpqoniv4sce" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -348,20 +396,10 @@ ga('send', 'pageview');
         
 <nav id="article-nav">
     
-        <a href="/2019/08/03/AsyncTask/" id="article-nav-newer" class="article-nav-link-wrap">
-        <strong class="article-nav-caption">newer</strong>
-        <p class="article-nav-title">
-        
-            [Android] AsyncTask
-        
-        </p>
-        <i class="icon fa fa-chevron-right" id="icon-chevron-right"></i>
-    </a>
     
-    
-        <a href="/2019/07/31/RxJava-Chap01-Introduce/" id="article-nav-older" class="article-nav-link-wrap">
+        <a href="/2020/07/05/Kotlin-Collection-Filter-Map/" id="article-nav-older" class="article-nav-link-wrap">
         <strong class="article-nav-caption">older</strong>
-        <p class="article-nav-title">[RxJava] Chap01 리액티브 소개</p>
+        <p class="article-nav-title">[Kotlin] filter, map 호출 순서에 따른 성능 차이</p>
         <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
         </a>
     
@@ -397,6 +435,15 @@ ga('send', 'pageview');
                     <li>
                         
                         <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Java/">Java</a></p>
+                            <p class="item-title"><a href="/2020/07/05/Java-binding/" class="title">[Java] 동적바인딩 vs 정적바인딩</a></p>
+                            <p class="item-date"><time datetime="2020-07-05T14:34:50.000Z" itemprop="datePublished">2020-07-05</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-inner">
                             <p class="item-category"><a class="article-category-link" href="/categories/Kotlin/">Kotlin</a></p>
                             <p class="item-title"><a href="/2020/07/05/Kotlin-Collection-Filter-Map/" class="title">[Kotlin] filter, map 호출 순서에 따른 성능 차이</a></p>
                             <p class="item-date"><time datetime="2020-07-05T07:50:52.000Z" itemprop="datePublished">2020-07-05</time></p>
@@ -427,15 +474,6 @@ ga('send', 'pageview');
                             <p class="item-category"><a class="article-category-link" href="/categories/ETC/">ETC</a></p>
                             <p class="item-title"><a href="/2020/06/26/ETC-Terms/" class="title">[ETC] 여러 용어</a></p>
                             <p class="item-date"><time datetime="2020-06-26T04:24:26.000Z" itemprop="datePublished">2020-06-26</time></p>
-                        </div>
-                    </li>
-                
-                    <li>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/Android/">Android</a></p>
-                            <p class="item-title"><a href="/2020/06/25/Convariant-With-Kotlin/" class="title">[Kotlin] 공변과 불변</a></p>
-                            <p class="item-date"><time datetime="2020-06-25T03:51:20.000Z" itemprop="datePublished">2020-06-25</time></p>
                         </div>
                     </li>
                 
@@ -492,7 +530,7 @@ ga('send', 'pageview');
     var disqus_shortname = 'hexo-theme-hueman';
     
     
-    var disqus_url = 'https://woovictory.github.io/2019/07/31/Java-Static-Method-Override/';
+    var disqus_url = 'https://woovictory.github.io/2020/07/05/Java-binding/';
     
     (function() {
     var dsq = document.createElement('script');
