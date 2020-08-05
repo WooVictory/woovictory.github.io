@@ -1,197 +1,301 @@
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
+    
 <head>
-    <meta charset="utf-8" />
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="VictoryWoo">
+    <title>[안드로이드] 안드로이드 면접 4 - VictoryWoo</title>
+    <meta name="author" content="VictoryWoo">
     
-
     
-    <title>[안드로이드] 안드로이드 면접 4 | VictoryWoo</title>
     
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    
-        <meta name="keywords" content="Android,안드로이드 기초,면접 질문" />
-    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg"},"articleBody":"\n안드로이드 백그라운드\n액티비티 생명주기\n프래그먼트 생명주기\nContent Provider VS Content Resolver\n\n안드로이드 백그라운드\n안드로이드 UI는 기본적으로 싱글 스레드 모델로 작동하므로, 이 영향을 고려해서 개발하지 않으면 애플리케이션의 성능이 저하될 수 있다. 따라서 메인 스레드에서 긴 작업을 하는 것을 피하기 위해 여분의 스레드를 사용해야 한다. 다른 스레드에서 UI 스레드로 접근할 수 있도록 안드로이드에서 제공하는 스레드 간 통신 방법을 알아보자.\n# 소개\n안드로이드의 애플리케이션을 실행하면 시스템은 메인 액티비티를 메모리로 올려 프로세스를 만들며, 이 때 메인 스레드가 자동으로 생성된다. 메인 스레드는 안드로이드의 주요 컴포넌트를 실행하는 곳이자 UI를 그리거나 갱신하는 일을 담당할 수 있는 유일한 스레드이므로 이를 UI 스레드라고 부른다.\n안드로이드 화면을 구성하는 뷰나 뷰 그룹을 하나의 스레드에서만 담당하는 원칙을 싱글 스레드 모델이라고 한다. 싱글 스레드 모델의 규칙은 다음과 같다.\n\n메인 스레드(UI 스레드)를 블럭하지 말 것.\n안드로이드 UI 툴킷은 오직 UI 스레드에서만 접근할 수 있도록 할 것.\n\n이런 싱글 스레드 모델의 영향을 고려하지 않으면 애플리케이션의 성능이 저하될 수 있다. 긴 시간이 걸리는 작업을 메인 스레드에서 담당하면 애플리케이션의 반응성이 낮아질 수 있고, 급기야 사용자의 불편함을 방지하고자 시스템이 애플리케이션을 ANR 상태로 전환시킬 수도 있다.\n따라서 시간이 걸리는 작업을 하는 코드는 여분의 스레드를 사용하여 메인 스레드에서 분리해야 하고, 자연스럽게 메인 스레드와 다른 스레드가 통신하는 방법이 필요하게 된다.\n다른 스레드에서 메인 스레드로 접근하기 위해 Looper와 Handler를 사용할 수 있으며, 안드로이드는 Java의 Thread를 좀 더 쉽게 사용할 수 있도록 래핑한 HandlerThread. 더 나아가 Thread나 Message Loop 등의 작동 원리를 크게 고려하지 않고도 사용이 가능한 AsyncTask 등의 클래스를 제공한다. 그럼 먼저 Thread-Looper-Handler의 개념을 이해하고 다음 내용을 알아보자.\nLooper와 Handler의 사용 목적\n왜 안드로이드는 메인 스레드에서만 UI 작업이 가능하도록 제한할까? 메인 스레드가 아닌 스레드가 병렬적으로 실행되고 있을 때, 메인 스레드와 다른 스레드, 두 개 이상의 스레드가 동시에 같은 텍스트 뷰에 setText()를 시도하는 경우를 생각하면 간단하다.\n\n위의 그림처럼 둘 중 어느 스레드의 setText()가 적용될지 예측할 수 없고, 사용자는 둘 중 하나의 값만을 볼 수 있어 다른 한 스레드의 결과는 버려진다. 이같이 두 개 이상의 스레드를 사용할 때의 동기화 이슈를 차단하기 위해서 Looper와 Handler를 사용하게 된다.\nLooper와 Handler의 작동 원리\n안드로이드 면접 3에서도 살펴보았지만, 더 보도록 하겠다. 먼저 스레드와 Looper, Handler가 어떻게 작동하는지 보자. 메인 스레드는 내부적으로 Looper를 가지며 그 안에는 Message Queue가 포함된다. Message Queue는 스레드가 다른 스레드나 혹은 자기 자신으로부터 전달받은 Message를 기본적으로 FIFO(선입선출) 형식으로 보관하는 Queue이다.\nLooper는 Message Queue에서 Message나 Runnable 객체를 차례로 꺼내 Handler가 처리하도록 전달한다. Handler는 Looper로부터 받은 Message를 실행, 처리하거나 다른 스레드로부터 메시지를 받아서 Message Queue에 넣는 역할을 하는 스레드 간의 통신 장치이다.\n\nHandler\nHandler는 스레드의 Message Queue와 연계하여 Message나 Runnable 객체를 받거나 처리하여 스레드 간의 통신을 할 수 있도록 한다. Handler 객체는 하나의 스레드와 해당 스레드의 Message Queue에 종속된다. 새로 Handler 객체를 만든 경우 이를 만든 스레드와 해당 스레드의 Message Queue에 바인드 된다.\n다른 스레드가 특정 스레드에게 메시지를 전달하려면 특정 스레드에 속한 Handler의 post나 sendMessage 등의 메소드를 호출하면 된다. 앞서 Message Queue는 전달받은 Message를 선입선출 형식으로 보관한다고 설명했지만, 전달 시점에 다른 메소드를 사용하여 Queue의 맨 위로 보내거나 원하는 만큼 Message나 Runnable 객체의 전송을 지연시킬 수도 있다. 자주 쓰이는 Handler의 메소드는 아래 글을 참고하자.\n참고 글\n외부, 혹은 자기 스레드로부터 받은 메시지를 어떤 식으로 처리할지는 handleMessage() 메소드를 구현하여 정리한다. sendMessage()나 post()로 특정 Handler에게 메시지를 전달할 수 있고, 재귀적인 호출도 가능하므로 딜레이를 이용한 타이머나 스케줄링 역할도 할 수 있어 편리하다.\nLooper와 Message Queue\nLooper는 무한히 루프를 돌며 자신이 속한 스레드의 Message Queue에 들어온 Message나 Runnable 객체를 차례로 꺼내서 이를 처리할 Handler에 전달하는 역할을 한다. 메인 스레드는 Looper가 기본적으로 생성돼 있지만, 새로 생성한 스레드는 기본적으로 Looper를 가지고 있지 않고, 단지 run 메소드만 실행한 후 종료하기 때문에 메시지를 받을 수 없다.\n따라서 기본 스레드에서 메시지를 전달받으려면 prepare() 메소드를 통해 Looper를 생성하고, loop() 메소드를 통해 Looper가 무한히 루프를 돌며 Message Queue에 쌓인 Message나 Runnable 객체를 꺼내 Handler에 전달하도록 한다. 이렇게 활성화된 Looper는 quit()이나 quitSafely() 메소드로 중단할 수 있다. quit() 메소드가 호출되면 Looper는 즉시 종료되고, quitSafely() 메소드가 호출되면 현재 Message Queue에 쌓인 메시지들을 처리한 후 종료된다.\n\nMessage와 Runnable\nMessage\nMessage란 스레드 간 통신할 내용을 담는 객체이자 Queue에 들어갈 일감의 단위로 Handler를 통해 보낼 수 있다. 일반적으로 Message가 필요할 때 새 Message 객체를 생성하면 성능 이슈가 생길 수 있으므로 안드로이드가 시스템에 만들어 둔 Message Pool의 객체를 재사용한다. obtain() 메소드는 빈 Message 객체를, obtain(Handler h, int what …)은 목적 Handler와 다른 인자들을 담은 Message 객체를 리턴한다.\nRunnable\n새 스레드는 Thread() 생성자로 만들어서 내부적으로 run()을 구현하던지, Thread(Runnable runnable) 생성자로 만들어서 Runnable 인터페이스를 구현한 객체를 생성하여 전달하던지 둘 중 하나의 방법으로 스레드를 만들 수 있다. 후자에서 사용하는 것이 Runnable로 스레드의 run() 메소드를 분리한 것이다. 따라서 Runnable 인터페이스는 run() 추상 메소드를 가지고 있으므로 상속받은 클래스는 run() 코드를 반드시 구현해야 한다. 앞서 언급한대로 Message가 int나 Object 같이 스레드 간 통신할 내용을 담는다면 Runnable은 실행할 run()메소드와 그 내부에서 실행될 코드를 담는다는 차이점이 있다.\nHandlerThread\nLooper에서 언급했듯이 안드로이드의 스레드는 Java의 스레드를 사용하기 때문에 안드로이드에서 도입한 Looper를 기본으로 가지지 않는다는 불편함이 있다. 이같은 불편함을 개선하기 위해 생성할 때 Looper를 자동으로 보유한 클래스를 제공하는데, 이것이 바로 HandlerThread이다. HandlerThread는 일반적인 스레드를 확장한 클래스로 내부에 반복해서 루프를 도는 Looper를 가진다. 자동으로 Looper 내부의 Message Queue도 생성되므로 이를 통해 스레드로 Message나 Runnable을 전달받을 수 있다.\nAsyncTask\nAsyncTask는 스레드나 메시지 루프 등의 작동 원리를 잘 몰라도 하나의 클래스에서 UI 작업과 background 작업을 쉽게 할 수 있도록 안드로이드에서 제공하는 클래스이다. 캡슐화가 잘되어 있기 때문에 사용시 코드 가독성이 증대되는 장점이 있으며, 태스크 스케줄을 관리할 수 있는 콜백 메소드를 제공하고 필요할 때 쉽게 UI 갱신도 가능하며 작업 취소도 쉽다. 따라서 리스트에 보여주기 위한 데이터 다운로드 등 UI와 관련된 독립된 작업을 실행할 경우 AsyncTask로 간단하게 구현할 수 있다.\n\nAsyncTask 구조\n그러나 AsyncTask를 사용해서 스케줄링할 수 있는 작업 수의 제한이 있고, 몇 초 정도의 짧은 작업에서만 이상적으로 동작한다는 한계가 있다. 또한, 안드로이드의 버전 별로 병렬 처리 동작이 다르므로 허니콤 이후 버전에서 멀티 스레드로 병렬적인 동작을 원한다면 AsyncTask를 실행할 때 AsyncTask.THREAD_POOL_EXECUTOR 스케줄러를 지정해야 한다.\n한편, 앞서 살펴본 Handler와 Looper를 사용한다면 동작 원리를 고려해야 하며 구현을 직접해야 하고 코드가 복잡해져서 가독성을 저해한다는 단점이 있지만 그만큼 개발 범위가 자유롭다. 또한 UI 스레드에서만 작업하지 않아도 되므로 보다 많은 자율성을 가지고 코드를 제어하기를 원한다면 Handler나 HandlerThread 사용을 고려해보는 것도 좋다.\n무엇을 사용할지는 개발자가 어떤 기준을 가지고 개발하는지에 따라 다르다. 그럼에도 나는 AsyncTask를 사용할 것 같다. 왜냐하면 핸들러는 스레드 안에서 실행되어야 할 코드와 UI 접근을 위한 코드가 각각 다른 위치에서 구현을 한다. 그러므로 가독성이 떨어진다.\n하지만, AsyncTask는 하나의 클래스 안에 스레드로 동작하는 부분과 화면을 갱신하는 부분을 함께 구현해놓을 수 있다. 이 때문에 스레드를 사용하는 하나의 작업단위가 하나의 클래스로 만들어질 수 있게 되므로 가독성이 훨씬 좋아지게 된다.\n간단한 예제는 아래 블록를 참고하자^0^\nAsyncTask 예제\nContent Provider VS Content Resolver\n\n\nContent Provider : 어플리케이션 내에서 사용할 수 있는 데이터를 공유하기 위한 컴포넌트\nex) 연락처, 이미지 등(카카오톡)\n\n\nContent Resolver : 앱이 Content Provider를 접근할 때에는 Content Resolver를 통해서 접근하게 됨. 기본적으로 CRUD 함수들 제공 -&gt; 다른 앱의 데이터베이스를 조작할 수 있음\nex) contentResolver.query()\n\n\nXML 기반 레이아웃이 중요한 이유\n동작을 제어하는 코드로부터 분리시킬 수 있고, UI의 구조를 시각화하기 더 쉽기 때문이다. 소스로 레이아웃을 작성했다면, 레이아웃을 변경할 때마다 재컴파일 해야 하는 번거로움이 있다.\nManifest\n애플리케이션에 대한 필수적인 정보를 안드로이드 플랫폼에 알려준다. 모든 안드로이드 앱은 반드시 AndroidManifest.xml 파일을 자신의 루트 디렉토리에 가지고 있어야 한다.\nVector Vs Bitmap\n\n\nVector : 리사이징이 되어도 전혀 깨지지 않는다. 모든 해상도에서 자유자재로 활용할 수 있기 때문에 특정 해상도에 제한되어 있지 않다는 것이 핵심 ex)SVG\n\n\nBitmap : 픽셀로 구성되어 있다. 자유자재로 바꿀 수가 없고 움직일 수도 없다. ex)PNG, JPEG\n\n\n참고\n\n안드로이드 백그라운드 잘 다루기 Thread, Looper, Handler\n[Android] AsyncTask\n\n","dateCreated":"2019-01-07T14:26:19+09:00","dateModified":"2020-03-01T19:24:45+09:00","datePublished":"2019-01-07T14:26:19+09:00","description":"","headline":"[안드로이드] 안드로이드 면접 4","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://woovictory.github.io/2019/01/07/Android-For-Interview-4/"},"publisher":{"@type":"Organization","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg","logo":{"@type":"ImageObject","url":"Victory.jpeg"}},"url":"https://woovictory.github.io/2019/01/07/Android-For-Interview-4/","keywords":"Android, 안드로이드 기초, 면접 질문"}</script>
     <meta name="description" content="안드로이드 백그라운드 액티비티 생명주기 프래그먼트 생명주기 Content Provider VS Content Resolver  안드로이드 백그라운드 안드로이드 UI는 기본적으로 싱글 스레드 모델로 작동하므로, 이 영향을 고려해서 개발하지 않으면 애플리케이션의 성능이 저하될 수 있다. 따라서 메인 스레드에서 긴 작업을 하는 것을 피하기 위해 여분의 스레드를">
 <meta name="keywords" content="Android,안드로이드 기초,면접 질문">
-<meta property="og:type" content="article">
+<meta property="og:type" content="blog">
 <meta property="og:title" content="[안드로이드] 안드로이드 면접 4">
 <meta property="og:url" content="https://woovictory.github.io/2019/01/07/Android-For-Interview-4/index.html">
 <meta property="og:site_name" content="VictoryWoo">
 <meta property="og:description" content="안드로이드 백그라운드 액티비티 생명주기 프래그먼트 생명주기 Content Provider VS Content Resolver  안드로이드 백그라운드 안드로이드 UI는 기본적으로 싱글 스레드 모델로 작동하므로, 이 영향을 고려해서 개발하지 않으면 애플리케이션의 성능이 저하될 수 있다. 따라서 메인 스레드에서 긴 작업을 하는 것을 피하기 위해 여분의 스레드를">
 <meta property="og:locale" content="en">
 <meta property="og:image" content="https://woovictory.github.io/img/android_thread_reason.png">
+<meta property="og:image" content="https://woovictory.github.io/img/android_looper_handler.png">
+<meta property="og:image" content="https://woovictory.github.io/img/android_looper_message_queue.png">
+<meta property="og:image" content="https://woovictory.github.io/img/android_AsyncTask.png">
 <meta property="og:updated_time" content="2020-03-01T10:24:45.868Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="[안드로이드] 안드로이드 면접 4">
 <meta name="twitter:description" content="안드로이드 백그라운드 액티비티 생명주기 프래그먼트 생명주기 Content Provider VS Content Resolver  안드로이드 백그라운드 안드로이드 UI는 기본적으로 싱글 스레드 모델로 작동하므로, 이 영향을 고려해서 개발하지 않으면 애플리케이션의 성능이 저하될 수 있다. 따라서 메인 스레드에서 긴 작업을 하는 것을 피하기 위해 여분의 스레드를">
 <meta name="twitter:image" content="https://woovictory.github.io/img/android_thread_reason.png">
     
-
+    
+        
+    
+    
+        <meta property="og:image" content="https://woovictory.github.io/assets/images/Victory.jpeg"/>
+    
+    
+    
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/all.css">
+    <link rel="stylesheet" href="/assets/css/jquery.fancybox.css">
+    <link rel="stylesheet" href="/assets/css/thumbs.css">
+    <link rel="stylesheet" href="/assets/css/tranquilpeak.css">
+    <!--STYLES END-->
     
 
     
-        <link rel="icon" href="/css/images/victorywoo.png" />
-    
 
-    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/libs/titillium-web/styles.css">
-    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
-
-    <link rel="stylesheet" type="text/css" href="">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/theeluwin/NotoSansKR-Hestia@master/stylesheets/NotoSansKR-Hestia.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/earlyaccess/nanumgothiccoding.css">
     
+        
     
-    <link rel="stylesheet" href="/css/style.css">
-
-    <script src="/libs/jquery/3.3.1/jquery.min.js"></script>
-    
-    
-        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
-    
-    
-        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
-    
-    
-        <script type="text/javascript">
-(function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-125410253-1', 'auto');
-ga('send', 'pageview');
-
-</script>
-    
-    
-
-
 </head>
 
-<body>
-    <div id="wrap">
-        <header id="header">
-    <div id="header-outer" class="outer">
-        <div class="container">
-            <div class="container-inner">
-                <div id="header-title">
-                    <h1 class="logo-wrap">
-                        <a href="/" class="logo"></a>
-                    </h1>
-                    
-                        <h2 class="subtitle-wrap">
-                            <p class="subtitle">VictoryWoo&#39;s Blog</p>
-                        </h2>
-                    
-                </div>
-                <div id="header-inner" class="nav-container">
-                    <a id="main-nav-toggle" class="nav-icon fa fa-bars"></a>
-                    <div class="nav-container-inner">
-                        <ul id="main-nav">
-                            
-                                <li class="main-nav-list-item" >
-                                    <a class="main-nav-list-link" href="/">Home</a>
-                                </li>
-                            
-                                <li class="main-nav-list-item" >
-                                    <a class="main-nav-list-link" href="/about/index.html">About</a>
-                                </li>
-                            
-                        </ul>
-                        <nav id="sub-nav">
-                            <div id="search-form-wrap">
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
 
-    <form class="search-form">
-        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
-        <button type="submit" class="search-form-submit"></button>
-    </form>
-    <div class="ins-search">
-    <div class="ins-search-mask"></div>
-    <div class="ins-search-container">
-        <div class="ins-input-wrapper">
-            <input type="text" class="ins-search-input" placeholder="Type something..." />
-            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
-        </div>
-        <div class="ins-section-wrapper">
-            <div class="ins-section-container"></div>
-        </div>
-    </div>
-</div>
-<script>
-(function (window) {
-    var INSIGHT_CONFIG = {
-        TRANSLATION: {
-            POSTS: 'Posts',
-            PAGES: 'Pages',
-            CATEGORIES: 'Categories',
-            TAGS: 'Tags',
-            UNTITLED: '(Untitled)',
-        },
-        ROOT_URL: '/',
-        CONTENT_URL: '/content.json',
-    };
-    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
-})(window);
-</script>
-<script src="/js/insight.js"></script>
 
-</div>
-                        </nav>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</header>
-        <div class="container">
-            <div class="main-body container-inner">
-                <div class="main-body-inner">
-                    <section id="main">
-                        <div class="main-body-header">
-    <h1 class="header">
     
-    <a class="page-title-link" href="/categories/Android/">Android</a>
-    </h1>
-</div>
-
-                        <div class="main-body-content">
-                            
-                            <article id="post-Android-For-Interview-4" class="article article-single article-type-post" itemscope itemprop="blogPost">
-    <div class="article-inner">
         
-            <header class="article-header">
-                
-    
-        <h1 class="article-title" itemprop="name">
-        [안드로이드] 안드로이드 면접 4
-        </h1>
+            
+        
     
 
-            </header>
-        
-        
-            <div class="article-meta">
-                
-    <div class="article-date">
-        <a href="/2019/01/07/Android-For-Interview-4/" class="article-date">
-            <time datetime="2019-01-07T05:26:19.000Z" itemprop="datePublished">2019-01-07</time>
+<header id="header" data-behavior="4">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a
+            class="header-title-link"
+            href="/ "
+            aria-label=""
+        >
+            VictoryWoo
         </a>
     </div>
+    
+        
+            <a
+                class="header-right-picture "
+                href="#about"
+                aria-label="Open the link: /#about"
+            >
+        
+        
+            <img class="header-picture" src="/assets/images/Victory.jpeg" alt="Author&#39;s picture"/>
+        
+        </a>
+    
+</header>
 
-		
+            <!-- Define author's picture -->
 
+
+
+        
+    
+
+<nav id="sidebar" data-behavior="4">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a
+                    href="/#about"
+                    aria-label="Read more about the author"
+                >
+                    <img class="sidebar-profile-picture" src="/assets/images/Victory.jpeg" alt="Author&#39;s picture"/>
+                </a>
+                <h4 class="sidebar-profile-name">VictoryWoo</h4>
                 
-    <div class="article-tag">
-        <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/Android/">Android</a>, <a class="tag-link" href="/tags/면접-질문/">면접 질문</a>, <a class="tag-link" href="/tags/안드로이드-기초/">안드로이드 기초</a>
-    </div>
-
+                    <h5 class="sidebar-profile-bio"><p>기록을 통해 사람들과 공유하는 것을 좋아합니다.</p>
+</h5>
+                
             </div>
         
         
-        <div class="article-entry" itemprop="articleBody">
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/"
+                            
+                            rel="noopener"
+                            title="Home"
+                        >
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-categories"
+                            
+                            rel="noopener"
+                            title="Categories"
+                        >
+                        <i class="sidebar-button-icon fa fa-bookmark" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Categories</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-tags"
+                            
+                            rel="noopener"
+                            title="Tags"
+                        >
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Tags</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link open-algolia-search"
+                            href="#search"
+                            
+                            rel="noopener"
+                            title="Search"
+                        >
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Search</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="#about"
+                            
+                            rel="noopener"
+                            title="About"
+                        >
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://github.com/WooVictory"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="GitHub"
+                        >
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://www.facebook.com/WooVictory"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Facebook"
+                        >
+                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Facebook</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://www.linkedin.com/profile/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="LinkedIn"
+                        >
+                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">LinkedIn</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/jhsw0375@gmail.com"
+                            
+                            rel="noopener"
+                            title="Mail"
+                        >
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="4"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            [안드로이드] 안드로이드 면접 4
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2019-01-07T14:26:19+09:00">
+	
+		    Jan 07, 2019
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/Android/">Android</a>
+
+
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
             <ol>
 <li><a href="#%EC%95%88%EB%93%9C%EB%A1%9C%EC%9D%B4%EB%93%9C-%EB%B0%B1%EA%B7%B8%EB%9D%BC%EC%9A%B4%EB%93%9C">안드로이드 백그라운드</a></li>
 <li><a href="https://woovictory.github.io/2018/03/02/Android-ActivityLifeCycle/">액티비티 생명주기</a></li>
@@ -274,313 +378,331 @@ ex) contentResolver.query()</p>
 <li><a href="https://one-delay.tistory.com/29?category=766130" target="_blank" rel="noopener">[Android] AsyncTask</a></li>
 </ul>
 
-        </div>
-        
-        <footer class="article-footer">
-            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({
-     google_ad_client: "ca-pub-9725307592233286",
-     enable_page_level_ads: true
-});
-</script>
             
 
 
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">TAGGED IN</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/Android/">Android</a> <a class="tag tag--primary tag--small t-link" href="/tags/면접-질문/">면접 질문</a> <a class="tag tag--primary tag--small t-link" href="/tags/안드로이드-기초/">안드로이드 기초</a>
 
-    <a data-url="https://woovictory.github.io/2019/01/07/Android-For-Interview-4/" data-id="ckd6xgt0t00xa51pquzm379vu" class="article-share-link"><i class="fa fa-share"></i>Share</a>
-<script>
-    (function ($) {
-        $('body').on('click', function() {
-            $('.article-share-box.on').removeClass('on');
-        }).on('click', '.article-share-link', function(e) {
-            e.stopPropagation();
+            </div>
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2019/01/13/DesignPattern-Bridge/"
+                    data-tooltip="[디자인 패턴] 브릿지 패턴"
+                    aria-label="PREVIOUS: [디자인 패턴] 브릿지 패턴"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2019/01/07/Android-For-Interview-3/"
+                    data-tooltip="[안드로이드] 안드로이드 면접 3"
+                    aria-label="NEXT: [안드로이드] 안드로이드 면접 3"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="Share this post"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://woovictory.github.io/2019/01/07/Android-For-Interview-4/"
+                    title="Share on Facebook"
+                    aria-label="Share on Facebook"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://woovictory.github.io/2019/01/07/Android-For-Interview-4/"
+                    title="Share on Twitter"
+                    aria-label="Share on Twitter"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://woovictory.github.io/2019/01/07/Android-For-Interview-4/"
+                    title="Share on Google+"
+                    aria-label="Share on Google+"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
 
-            var $this = $(this),
-                url = $this.attr('data-url'),
-                encodedUrl = encodeURIComponent(url),
-                id = 'article-share-box-' + $this.attr('data-id'),
-                offset = $this.offset(),
-                box;
 
-            if ($('#' + id).length) {
-                box = $('#' + id);
-
-                if (box.hasClass('on')){
-                    box.removeClass('on');
-                    return;
-                }
-            } else {
-                var html = [
-                    '<div id="' + id + '" class="article-share-box">',
-                        '<input class="article-share-input" value="' + url + '">',
-                        '<div class="article-share-links">',
-                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
-                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
-                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
-                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
-                        '</div>',
-                    '</div>'
-                ].join('');
-
-              box = $(html);
-
-              $('body').append(box);
-            }
-
-            $('.article-share-box.on').hide();
-
-            box.css({
-                top: offset.top + 25,
-                left: offset.left
-            }).addClass('on');
-
-        }).on('click', '.article-share-box', function (e) {
-            e.stopPropagation();
-        }).on('click', '.article-share-box-input', function () {
-            $(this).select();
-        }).on('click', '.article-share-box-link', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-
-            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
-        });
-    })(jQuery);
-</script>
-
-        </footer>
+        
+        
+            
+        
     </div>
 </article>
 
-    <section id="comments">
-    
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2020 VictoryWoo. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2019/01/13/DesignPattern-Bridge/"
+                    data-tooltip="[디자인 패턴] 브릿지 패턴"
+                    aria-label="PREVIOUS: [디자인 패턴] 브릿지 패턴"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2019/01/07/Android-For-Interview-3/"
+                    data-tooltip="[안드로이드] 안드로이드 면접 3"
+                    aria-label="NEXT: [안드로이드] 안드로이드 면접 3"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="Share this post"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
         
-    <div id="disqus_thread">
-        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-    </div>
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://woovictory.github.io/2019/01/07/Android-For-Interview-4/"
+                    title="Share on Facebook"
+                    aria-label="Share on Facebook"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://woovictory.github.io/2019/01/07/Android-For-Interview-4/"
+                    title="Share on Twitter"
+                    aria-label="Share on Twitter"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://woovictory.github.io/2019/01/07/Android-For-Interview-4/"
+                    title="Share on Google+"
+                    aria-label="Share on Google+"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
 
-    
-    </section>
 
-
-
-                        </div>
-                    </section>
-                    <aside id="sidebar">
-    <a class="sidebar-toggle" title="Expand Sidebar"><i class="toggle icon"></i></a>
-    <div class="sidebar-top">
-        <p>follow:</p>
-        <ul class="social-links">
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
             
                 
-                <li>
-                    <a class="social-tooltip" title="facebook" href="https://www.facebook.com/WooVictory" target="_blank" rel="noopener">
-                        <i class="icon fa fa-facebook"></i>
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://woovictory.github.io/2019/01/07/Android-For-Interview-4/"
+                        aria-label="Share on Facebook"
+                    >
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Share on Facebook</span>
                     </a>
                 </li>
-                
             
                 
-                <li>
-                    <a class="social-tooltip" title="github" href="https://github.com/WooVictory" target="_blank" rel="noopener">
-                        <i class="icon fa fa-github"></i>
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://twitter.com/intent/tweet?text=https://woovictory.github.io/2019/01/07/Android-For-Interview-4/"
+                        aria-label="Share on Twitter"
+                    >
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Share on Twitter</span>
                     </a>
                 </li>
-                
             
                 
-                <li>
-                    <a class="social-tooltip" title="linkedin" href="https://www.linkedin.com/in/seungwoo-lee-590844177" target="_blank" rel="noopener">
-                        <i class="icon fa fa-linkedin"></i>
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://plus.google.com/share?url=https://woovictory.github.io/2019/01/07/Android-For-Interview-4/"
+                        aria-label="Share on Google+"
+                    >
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>Share on Google+</span>
                     </a>
                 </li>
-                
             
         </ul>
     </div>
-    
-        
-<nav id="article-nav">
-    
-        <a href="/2019/01/13/DesignPattern-Bridge/" id="article-nav-newer" class="article-nav-link-wrap">
-        <strong class="article-nav-caption">newer</strong>
-        <p class="article-nav-title">
-        
-            [디자인 패턴] 브릿지 패턴
-        
-        </p>
-        <i class="icon fa fa-chevron-right" id="icon-chevron-right"></i>
-    </a>
-    
-    
-        <a href="/2019/01/07/Android-For-Interview-3/" id="article-nav-older" class="article-nav-link-wrap">
-        <strong class="article-nav-caption">older</strong>
-        <p class="article-nav-title">[안드로이드] 안드로이드 면접 3</p>
-        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
-        </a>
-    
-</nav>
-
-    
-    <div class="widgets-container">
-        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({
-     google_ad_client: "ca-pub-9725307592233286",
-     enable_page_level_ads: true
-});
-</script>
-        
-            
-                
-    <div class="widget-wrap widget-list">
-        <h3 class="widget-title">categories</h3>
-        <div class="widget">
-            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Android/">Android</a><span class="category-list-count">79</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Book/">Book</a><span class="category-list-count">4</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Book/CleanCode/">CleanCode</a><span class="category-list-count">4</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Design-Pattern/">Design Pattern</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ETC/">ETC</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Git/">Git</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Inno-SOPT/">Inno_SOPT</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">39</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Kotlin/">Kotlin</a><span class="category-list-count">17</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Node-js/">Node.js</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Operation-System/">Operation System</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/RxJava/">RxJava</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/">algorithm</a><span class="category-list-count">51</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/BOJ/">BOJ</a><span class="category-list-count">49</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/Programmers/">Programmers</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/개발-상식/">개발 상식</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/네트워크/">네트워크</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/데이터베이스/">데이터베이스</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/삼성-기출/">삼성 기출</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/알고리즘/">알고리즘</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/자료구조/">자료구조</a><span class="category-list-count">10</span></li></ul>
-        </div>
-    </div>
 
 
             
-                
-    <div class="widget-wrap">
-        <h3 class="widget-title">recents</h3>
-        <div class="widget">
-            <ul id="recent-post" class="no-thumbnail">
-                
-                    <li>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/ETC/">ETC</a></p>
-                            <p class="item-title"><a href="/2020/07/29/Memo-Privacy/" class="title">[Memo] 개인정보 처리 방침</a></p>
-                            <p class="item-date"><time datetime="2020-07-29T05:11:19.000Z" itemprop="datePublished">2020-07-29</time></p>
-                        </div>
-                    </li>
-                
-                    <li>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/Book/">Book</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/Book/CleanCode/">CleanCode</a></p>
-                            <p class="item-title"><a href="/2020/07/21/CleanCode4/" class="title">[CleanCode] 4장. 주석</a></p>
-                            <p class="item-date"><time datetime="2020-07-21T14:40:14.000Z" itemprop="datePublished">2020-07-21</time></p>
-                        </div>
-                    </li>
-                
-                    <li>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/Android/">Android</a></p>
-                            <p class="item-title"><a href="/2020/07/08/Android-SingleLiveEventToEventWrapper/" class="title">[Android] MVVM UI Event Wrapper</a></p>
-                            <p class="item-date"><time datetime="2020-07-08T01:34:10.000Z" itemprop="datePublished">2020-07-08</time></p>
-                        </div>
-                    </li>
-                
-                    <li>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/Kotlin/">Kotlin</a></p>
-                            <p class="item-title"><a href="/2020/07/07/Kotlin-Coroutine-1/" class="title">[Kotlin] Coroutine 이해하기</a></p>
-                            <p class="item-date"><time datetime="2020-07-07T02:05:54.000Z" itemprop="datePublished">2020-07-07</time></p>
-                        </div>
-                    </li>
-                
-                    <li>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/Book/">Book</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/Book/CleanCode/">CleanCode</a></p>
-                            <p class="item-title"><a href="/2020/07/06/CleanCode-3/" class="title">[CleanCode] 3장. 함수</a></p>
-                            <p class="item-date"><time datetime="2020-07-06T07:57:43.000Z" itemprop="datePublished">2020-07-06</time></p>
-                        </div>
-                    </li>
-                
-            </ul>
         </div>
-    </div>
-
-            
         
-    </div>
-    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({
-     google_ad_client: "ca-pub-9725307592233286",
-     enable_page_level_ads: true
-});
-</script>
-</aside>
 
-                </div>
-            </div>
-        </div>
-        <footer id="footer">
-    <div class="container">
-        <div class="container-inner">
-            <a id="back-to-top" href="javascript:;"><i class="icon fa fa-angle-up"></i></a>
-            <div class="credit">
-                <h1 class="logo-wrap">
-                    <a href="/" class="logo"></a>
-                </h1>
-                <p>&copy; 2020 VictoryWoo</p>
-                <p>Powered by <a href="//hexo.io/" target="_blank">Hexo</a>. Theme by <a href="//github.com/ppoffice" target="_blank">PPOffice</a></p>
-            </div>
-            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({
-     google_ad_client: "ca-pub-9725307592233286",
-     enable_page_level_ads: true
-});
-</script>
-            <div class="footer-plugins">
-              
+
     
-
-
-            </div>
-        </div>
-    </div>
-</footer>
-
         
     
-    <script>
-    var disqus_shortname = 'hexo-theme-hueman';
-    
-    
-    var disqus_url = 'https://woovictory.github.io/2019/01/07/Android-For-Interview-4/';
-    
-    (function() {
-    var dsq = document.createElement('script');
-    dsq.type = 'text/javascript';
-    dsq.async = true;
-    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
-    </script>
 
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <img id="about-card-picture" src="/assets/images/Victory.jpeg" alt="Author&#39;s picture"/>
+        
+            <h4 id="about-card-name">VictoryWoo</h4>
+        
+            <div id="about-card-bio"><p>기록을 통해 사람들과 공유하는 것을 좋아합니다.</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>Android Developer</p>
 
-
-
-    
-        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
-    
-    
-        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
-    
-    
-
-
-
-<!-- Custom Scripts -->
-<script src="/js/main.js"></script>
-
+            </div>
+        
+        
     </div>
-</body>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/cover-v1.2.0.jpg');"></div>
+        <!--SCRIPTS-->
+<script src="/assets/js/jquery.js"></script>
+<script src="/assets/js/jquery.fancybox.js"></script>
+<script src="/assets/js/thumbs.js"></script>
+<script src="/assets/js/tranquilpeak.js"></script>
+<!--SCRIPTS END-->
+
+
+    
+
+
+
+
+    </body>
 </html>

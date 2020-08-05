@@ -1,197 +1,303 @@
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
+    
 <head>
-    <meta charset="utf-8" />
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="VictoryWoo">
+    <title>[안드로이드] View 함수 Testing - VictoryWoo</title>
+    <meta name="author" content="VictoryWoo">
     
-
     
-    <title>[안드로이드] View 함수 Testing | VictoryWoo</title>
     
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    
-        <meta name="keywords" content="Android,라이브러리" />
-    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg"},"articleBody":"예전에는 안드로이드에서 액티비티 파일을 만들고 xml 파일에 View, ViewGroup들을 정의하고, Activity의 생명주기 함수나 혹은 프래그먼트의 생명주기 함수가 호출되는 것이 가장 중요한 개념이 아닐까 생각했었다.\n하지만, 이런 Activity, Fragment의 View, ViewGroup들이 결국 화면에 그려지기 위해서는 분명 화면에 그리는 함수들이 존재할 것이다. 나는 이 개념과 함수들을 부스트 캠프를 준비하면서 알게 되었다.\n안드로이드에서 ViewGroup이나 View를 화면에 그릴 때, View Lifecycle의 개념이 중요하다. 이 개념을 아직 완벽하게 이해하진 못했지만, ViewGroup의 성능 측정을 위해서 실험을 하였다. View와 관련된 개념은 이전에 공부한 포스팅에 내용을 추가할 예정이다. 그리고 성능 측정을 위해서 LinearLayout, RelativeLayout, ConstraintLayout의 세가지 ViewGroup을 Custom하여 테스트해보았다.\n3개의 ViewGroup의 View 함수들이 어떻게 호출되는지 확인하기 위해서 간단한 CustomView를 만들었다. 이 예제는 박상권님의 블로그를 참고했으며, 참고 링크는 아래에 기재해두었다.\nCustomView 만들기\nCustomView가 사용되는 경우는 같은 형식의 버튼이 3개라면 하나의 레이아웃 소스 코드를 복사해서 3번 붙여넣기 하면 만들 수 있다. 만약 버튼이 100개라면 100번 정도 복사 / 붙여 넣기 작업을 반복하면 된다.\n그런데, padding 값이나 margin값을 바꾸고 싶다면? 100개의 버튼에 대해서 똑같은 작업을 반복하는 지옥에 빠지게 된다.(상상만 해도 끔찍하다.) 이러한 경우 CustomView를 만들어서 이를 재사용하는 것이 좋다. 예제로 로그인 버튼 형태의 레이아웃을 유지하고 아이콘과 텍스트만 변경하도록 구성해보겠다.\n\n위와 같이 custom하게 만든 속성을 이용해서 배경색, 아이콘 이미지, 텍스트, 텍스트 색상 등을 지정할 수 있다. 복잡한 레이아웃 구성도 하나의 CustomView로 만들어 준뒤 해당 CustomView를 재사용하면 편리하고 유용하게 화면을 구성할 수 있다.\n1. layout xml파일 생성하기\nCustomView의 기본으로 사용될 layout xml 파일을 만든다.\n123456789101112131415161718192021222324252627282930&lt;?xml version=\"1.0\" encoding=\"utf-8\"?&gt;&lt;LinearLayout        android:id=\"@+id/bgLinear\"        xmlns:android=\"http://schemas.android.com/apk/res/android\"        android:layout_width=\"match_parent\"        android:layout_height=\"55dp\"        android:background=\"@color/kakao_color\"        android:layout_gravity=\"center\"&gt;    &lt;ImageView            android:id=\"@+id/symbolLinear\"            android:layout_width=\"32dp\"            android:layout_height=\"32dp\"            android:layout_gravity=\"center_vertical\"            android:layout_marginLeft=\"20dp\"            android:src=\"@drawable/kakao\"/&gt;    &lt;TextView            android:id=\"@+id/textLinear\"            android:layout_width=\"0dp\"            android:layout_weight=\"1\"            android:gravity=\"center\"            android:text=\"카카오톡 로그인\"            android:textColor=\"@color/text_color\"            android:textStyle=\"bold\"            android:layout_height=\"match_parent\"/&gt;&lt;/LinearLayout&gt;\n2. attrs.xml 설정\ncustom하게 만들어 줄 atrribute를 설정해준다. 해당 파일은 value -&gt; attrs.xml 파일을 만들고 이 안에 내용을 추가해준다. 추가해주는 속성은 CustomView를 사용할 xml에서 속성을 지정하기 위함이다. 즉, 내가 넣고자 하는 속성을 넣어서 마음대로 만들 수 있다는 뜻이다.\n\n이 attr 속성을 보았을 때 4가지를 나중에 속성값으로 받아서 적용할 수 있게 할 것이다. 이 attr은 나중에 app:text=&quot; … &quot; 로 쓰일 수 있으며 “가나다라” 같은 직접적인 String과 @string/exam 같은 reference를 넣어줄 수도 있다.\n3. CustomView 만들기\n\nCustomView의 생성자를 모두 만들고 그 안에서 initView, getAttrs 함수를 호출한다. [주의할 사항은 꼭 커스텀 뷰의 생성자를 모두 생성해야 하는 것이다.]\n\n12345678910constructor(context: Context, attrs: AttributeSet) : this(context) &#123;    initView()    getAttrs(attrs)&#125;constructor(context: Context, attrs: AttributeSet, defStyle: Int) : this(context, attrs) &#123;    initView()    getAttrs(attrs, defStyle)&#125;\n\ninitView()에서는 미리 만들어둔 xml 파일을 할당하고 각각의 view를 설정해준다. inflate를 통해서 xml 파일을 view 객체로 메모리에 올린다. 그리고 addView(view)를 해준다.\n\n123456private fun initView()&#123;    var inflaterService : String = Context.LAYOUT_INFLATER_SERVICE    var inflater : LayoutInflater = context.getSystemService(inflaterService) as LayoutInflater    var view = inflater.inflate(R.layout.login_button_linear, this, false)    addView(view)&#125;\n\ngetAttrs() 함수를 통해서 attrs.xml 파일에 선언해둔 attribute를 가지고 오는 작업을 수행한다. 그리고 setTypeArray() 함수로 넘겨준다.\n\n123456789private fun getAttrs(attrs : AttributeSet, defStyle: Int)&#123;    var typedArray : TypedArray = context.obtainStyledAttributes(attrs,R.styleable.LoginButton, defStyle,0)    setTypeArray(typedArray)&#125;private fun getAttrs(attrs: AttributeSet)&#123;    var typedArray : TypedArray = context.obtainStyledAttributes(attrs,R.styleable.LoginButton)    setTypeArray(typedArray)&#125;\n\nsetTypeArray() 함수를 통해서 attrs.xml 파일에 정의한 속성을 적용해서 layout이 가지고 있는 view에게 값을 설정해주는 작업을 수행한다.\n\n123456789101112131415private fun setTypeArray(typedArray: TypedArray)&#123;    var backgroundResourceId = typedArray.getResourceId(R.styleable.LoginButton_bg, R.color.naver_color)    bgLinear.setBackgroundResource(backgroundResourceId)    var symbolResourceId = typedArray.getResourceId(R.styleable.LoginButton_symbol, R.drawable.naver)    symbolLinear.setImageResource(symbolResourceId)    var textColor = typedArray.getColor(R.styleable.LoginButton_textColor, 0)    textLinear.setTextColor(textColor)    var textString = typedArray.getString(R.styleable.LoginButton_text)    textLinear.text = textString    typedArray.recycle()&#125;\n느낀점\n뷰를 화면에 그릴 때는 View의 Lifecycle이 중요하다. 이는 우리가 구성한 뷰를 사용자의 화면에 보여주기 때문이다. 그리고 렌더링되는 속도는 뷰를 그리는 것과 연관이 되어있다. 그렇다면 View의 Lifecycle을 한 번 더 살펴보자.\n\n실제로 RelativeLayout이나 LinearLayout보다는 ConstraintLayout이 뷰의 계층을 줄여주고 훨씬 효율적으로 뷰를 구성할 수 있다고 한다. 이로 인해서 얻을 수 있는 이점은 무엇이 있을까 생각해봐야 한다.\n\n뷰의 계층을 수평적으로 만들 수 있다.\n이로 인해 findViewById를 호출하는 횟수도 감소시킬 수 있다.\nView Lifecycle 함수들의 호출 횟수를 줄일 수 있다.\n\n\nLinear\n\n\nLiearLayout을 상속받은 CustomView\n\nRelative\n\n\nRelativeLayout을 상속받은 CustomView\n\nConstraint\n\n\nConstraintLayout을 상속받은 CustomView\n결론\nRelativeLayout이 Linear나 ConstraintLayout보다 onMeasure() 함수가 2배 정도 많이 호출되는 것을 확인할 수 있었다. 아마도 RelativeLayout이 자신의 크기를 측정하고 자식의 크기를 측정하는 과정이 필요하기 때문에 2배 호출되는 것으로 생각하고 있다. RelativeLayout은 뷰를 구성할 때 상대적인 위치를 고려해서 배치하거나 상하좌우에 배치시킬 때 나는 주로 이용했었다.\n하지만, 복잡한 레이아웃을 구성할 때 RelativeLayout을 사용한다면 View의 계층이 깊어지게 되고 이로 인해서 View의 크기를 측정하는 과정이 길어지면서 결국에는 렌더링 속도에 영향을 미치는 좋지 않을 결과를 초래할 것이다.\n그래서 앞으로는 ConstraintLayout을 사용해보면서 익히고 주로 사용해볼 생각을 하고 있다.\n사실, 제대로 테스트를 진행하기 위해서는 커스텀 뷰그룹 안에 커스텀 뷰를 넣어야 한다. 하지만 나는 커스텀 뷰 그룹 안에 TextView, ImageView를 그대로 넣었다.[이 부분은 나중에 다시 테스트 할 예정]\n참고\n\n[Android] View에 대한 기본 지식 및 ViewGroup 성능 측정 삽질기\n[안드로이드/Android]CustomView를 만들어서 재사용하기\nhttps://developer.android.com/training/custom-views/create-view?hl=ko\nhttps://developer.android.com/guide/topics/ui/custom-components?hl=ko#custom\n\n","dateCreated":"2019-01-14T22:19:50+09:00","dateModified":"2020-03-01T19:26:46+09:00","datePublished":"2019-01-14T22:19:50+09:00","description":"","headline":"[안드로이드] View 함수 Testing","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://woovictory.github.io/2019/01/14/Android-View-Lifecycle-Test/"},"publisher":{"@type":"Organization","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg","logo":{"@type":"ImageObject","url":"Victory.jpeg"}},"url":"https://woovictory.github.io/2019/01/14/Android-View-Lifecycle-Test/","keywords":"Android, 라이브러리"}</script>
     <meta name="description" content="예전에는 안드로이드에서 액티비티 파일을 만들고 xml 파일에 View, ViewGroup들을 정의하고, Activity의 생명주기 함수나 혹은 프래그먼트의 생명주기 함수가 호출되는 것이 가장 중요한 개념이 아닐까 생각했었다. 하지만, 이런 Activity, Fragment의 View, ViewGroup들이 결국 화면에 그려지기 위해서는 분명 화면에 그리는">
 <meta name="keywords" content="Android,라이브러리">
-<meta property="og:type" content="article">
+<meta property="og:type" content="blog">
 <meta property="og:title" content="[안드로이드] View 함수 Testing">
 <meta property="og:url" content="https://woovictory.github.io/2019/01/14/Android-View-Lifecycle-Test/index.html">
 <meta property="og:site_name" content="VictoryWoo">
 <meta property="og:description" content="예전에는 안드로이드에서 액티비티 파일을 만들고 xml 파일에 View, ViewGroup들을 정의하고, Activity의 생명주기 함수나 혹은 프래그먼트의 생명주기 함수가 호출되는 것이 가장 중요한 개념이 아닐까 생각했었다. 하지만, 이런 Activity, Fragment의 View, ViewGroup들이 결국 화면에 그려지기 위해서는 분명 화면에 그리는">
 <meta property="og:locale" content="en">
 <meta property="og:image" content="https://woovictory.github.io/img/android_customview_loginbutton.png">
+<meta property="og:image" content="https://woovictory.github.io/img/android_customview_attrs.png">
+<meta property="og:image" content="https://woovictory.github.io/img/android_view_method.png">
+<meta property="og:image" content="https://woovictory.github.io/img/android_customview_linear.png">
+<meta property="og:image" content="https://woovictory.github.io/img/android_customview_relative.png">
+<meta property="og:image" content="https://woovictory.github.io/img/android_customview_constraint.png">
 <meta property="og:updated_time" content="2020-03-01T10:26:46.513Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="[안드로이드] View 함수 Testing">
 <meta name="twitter:description" content="예전에는 안드로이드에서 액티비티 파일을 만들고 xml 파일에 View, ViewGroup들을 정의하고, Activity의 생명주기 함수나 혹은 프래그먼트의 생명주기 함수가 호출되는 것이 가장 중요한 개념이 아닐까 생각했었다. 하지만, 이런 Activity, Fragment의 View, ViewGroup들이 결국 화면에 그려지기 위해서는 분명 화면에 그리는">
 <meta name="twitter:image" content="https://woovictory.github.io/img/android_customview_loginbutton.png">
     
-
+    
+        
+    
+    
+        <meta property="og:image" content="https://woovictory.github.io/assets/images/Victory.jpeg"/>
+    
+    
+    
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/all.css">
+    <link rel="stylesheet" href="/assets/css/jquery.fancybox.css">
+    <link rel="stylesheet" href="/assets/css/thumbs.css">
+    <link rel="stylesheet" href="/assets/css/tranquilpeak.css">
+    <!--STYLES END-->
     
 
     
-        <link rel="icon" href="/css/images/victorywoo.png" />
-    
 
-    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/libs/titillium-web/styles.css">
-    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
-
-    <link rel="stylesheet" type="text/css" href="">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/theeluwin/NotoSansKR-Hestia@master/stylesheets/NotoSansKR-Hestia.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/earlyaccess/nanumgothiccoding.css">
     
+        
     
-    <link rel="stylesheet" href="/css/style.css">
-
-    <script src="/libs/jquery/3.3.1/jquery.min.js"></script>
-    
-    
-        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
-    
-    
-        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
-    
-    
-        <script type="text/javascript">
-(function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-125410253-1', 'auto');
-ga('send', 'pageview');
-
-</script>
-    
-    
-
-
 </head>
 
-<body>
-    <div id="wrap">
-        <header id="header">
-    <div id="header-outer" class="outer">
-        <div class="container">
-            <div class="container-inner">
-                <div id="header-title">
-                    <h1 class="logo-wrap">
-                        <a href="/" class="logo"></a>
-                    </h1>
-                    
-                        <h2 class="subtitle-wrap">
-                            <p class="subtitle">VictoryWoo&#39;s Blog</p>
-                        </h2>
-                    
-                </div>
-                <div id="header-inner" class="nav-container">
-                    <a id="main-nav-toggle" class="nav-icon fa fa-bars"></a>
-                    <div class="nav-container-inner">
-                        <ul id="main-nav">
-                            
-                                <li class="main-nav-list-item" >
-                                    <a class="main-nav-list-link" href="/">Home</a>
-                                </li>
-                            
-                                <li class="main-nav-list-item" >
-                                    <a class="main-nav-list-link" href="/about/index.html">About</a>
-                                </li>
-                            
-                        </ul>
-                        <nav id="sub-nav">
-                            <div id="search-form-wrap">
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
 
-    <form class="search-form">
-        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
-        <button type="submit" class="search-form-submit"></button>
-    </form>
-    <div class="ins-search">
-    <div class="ins-search-mask"></div>
-    <div class="ins-search-container">
-        <div class="ins-input-wrapper">
-            <input type="text" class="ins-search-input" placeholder="Type something..." />
-            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
-        </div>
-        <div class="ins-section-wrapper">
-            <div class="ins-section-container"></div>
-        </div>
-    </div>
-</div>
-<script>
-(function (window) {
-    var INSIGHT_CONFIG = {
-        TRANSLATION: {
-            POSTS: 'Posts',
-            PAGES: 'Pages',
-            CATEGORIES: 'Categories',
-            TAGS: 'Tags',
-            UNTITLED: '(Untitled)',
-        },
-        ROOT_URL: '/',
-        CONTENT_URL: '/content.json',
-    };
-    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
-})(window);
-</script>
-<script src="/js/insight.js"></script>
 
-</div>
-                        </nav>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</header>
-        <div class="container">
-            <div class="main-body container-inner">
-                <div class="main-body-inner">
-                    <section id="main">
-                        <div class="main-body-header">
-    <h1 class="header">
     
-    <a class="page-title-link" href="/categories/Android/">Android</a>
-    </h1>
-</div>
-
-                        <div class="main-body-content">
-                            
-                            <article id="post-Android-View-Lifecycle-Test" class="article article-single article-type-post" itemscope itemprop="blogPost">
-    <div class="article-inner">
         
-            <header class="article-header">
-                
-    
-        <h1 class="article-title" itemprop="name">
-        [안드로이드] View 함수 Testing
-        </h1>
+            
+        
     
 
-            </header>
-        
-        
-            <div class="article-meta">
-                
-    <div class="article-date">
-        <a href="/2019/01/14/Android-View-Lifecycle-Test/" class="article-date">
-            <time datetime="2019-01-14T13:19:50.000Z" itemprop="datePublished">2019-01-14</time>
+<header id="header" data-behavior="4">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a
+            class="header-title-link"
+            href="/ "
+            aria-label=""
+        >
+            VictoryWoo
         </a>
     </div>
+    
+        
+            <a
+                class="header-right-picture "
+                href="#about"
+                aria-label="Open the link: /#about"
+            >
+        
+        
+            <img class="header-picture" src="/assets/images/Victory.jpeg" alt="Author&#39;s picture"/>
+        
+        </a>
+    
+</header>
 
-		
+            <!-- Define author's picture -->
 
+
+
+        
+    
+
+<nav id="sidebar" data-behavior="4">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a
+                    href="/#about"
+                    aria-label="Read more about the author"
+                >
+                    <img class="sidebar-profile-picture" src="/assets/images/Victory.jpeg" alt="Author&#39;s picture"/>
+                </a>
+                <h4 class="sidebar-profile-name">VictoryWoo</h4>
                 
-    <div class="article-tag">
-        <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/Android/">Android</a>, <a class="tag-link" href="/tags/라이브러리/">라이브러리</a>
-    </div>
-
+                    <h5 class="sidebar-profile-bio"><p>기록을 통해 사람들과 공유하는 것을 좋아합니다.</p>
+</h5>
+                
             </div>
         
         
-        <div class="article-entry" itemprop="articleBody">
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/"
+                            
+                            rel="noopener"
+                            title="Home"
+                        >
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-categories"
+                            
+                            rel="noopener"
+                            title="Categories"
+                        >
+                        <i class="sidebar-button-icon fa fa-bookmark" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Categories</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-tags"
+                            
+                            rel="noopener"
+                            title="Tags"
+                        >
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Tags</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link open-algolia-search"
+                            href="#search"
+                            
+                            rel="noopener"
+                            title="Search"
+                        >
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Search</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="#about"
+                            
+                            rel="noopener"
+                            title="About"
+                        >
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://github.com/WooVictory"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="GitHub"
+                        >
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://www.facebook.com/WooVictory"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Facebook"
+                        >
+                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Facebook</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://www.linkedin.com/profile/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="LinkedIn"
+                        >
+                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">LinkedIn</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/jhsw0375@gmail.com"
+                            
+                            rel="noopener"
+                            title="Mail"
+                        >
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="4"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            [안드로이드] View 함수 Testing
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2019-01-14T22:19:50+09:00">
+	
+		    Jan 14, 2019
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/Android/">Android</a>
+
+
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
             <p>예전에는 안드로이드에서 액티비티 파일을 만들고 xml 파일에 View, ViewGroup들을 정의하고, Activity의 생명주기 함수나 혹은 프래그먼트의 생명주기 함수가 호출되는 것이 가장 중요한 개념이 아닐까 생각했었다.</p>
 <p>하지만, 이런 Activity, Fragment의 View, ViewGroup들이 결국 화면에 그려지기 위해서는 분명 화면에 그리는 함수들이 존재할 것이다. 나는 이 개념과 함수들을 부스트 캠프를 준비하면서 알게 되었다.</p>
 <p>안드로이드에서 ViewGroup이나 View를 화면에 그릴 때, <strong>View Lifecycle</strong>의 개념이 중요하다. 이 개념을 아직 완벽하게 이해하진 못했지만, ViewGroup의 성능 측정을 위해서 실험을 하였다. View와 관련된 개념은 이전에 공부한 포스팅에 내용을 추가할 예정이다. 그리고 성능 측정을 위해서 <code>LinearLayout, RelativeLayout, ConstraintLayout</code>의 세가지 ViewGroup을 Custom하여 테스트해보았다.</p>
@@ -262,313 +368,331 @@ RelativeLayout이 Linear나 ConstraintLayout보다 <code>onMeasure()</code> 함�
 <li><a href="https://developer.android.com/guide/topics/ui/custom-components?hl=ko#custom" target="_blank" rel="noopener">https://developer.android.com/guide/topics/ui/custom-components?hl=ko#custom</a></li>
 </ul>
 
-        </div>
-        
-        <footer class="article-footer">
-            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({
-     google_ad_client: "ca-pub-9725307592233286",
-     enable_page_level_ads: true
-});
-</script>
             
 
 
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">TAGGED IN</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/Android/">Android</a> <a class="tag tag--primary tag--small t-link" href="/tags/라이브러리/">라이브러리</a>
 
-    <a data-url="https://woovictory.github.io/2019/01/14/Android-View-Lifecycle-Test/" data-id="ckd6xgt1300xs51pqj74l0i2p" class="article-share-link"><i class="fa fa-share"></i>Share</a>
-<script>
-    (function ($) {
-        $('body').on('click', function() {
-            $('.article-share-box.on').removeClass('on');
-        }).on('click', '.article-share-link', function(e) {
-            e.stopPropagation();
+            </div>
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2019/01/16/Android-MVP-Step1/"
+                    data-tooltip="[안드로이드] MVP 따라하기 1"
+                    aria-label="PREVIOUS: [안드로이드] MVP 따라하기 1"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2019/01/13/DesignPattern-Bridge/"
+                    data-tooltip="[디자인 패턴] 브릿지 패턴"
+                    aria-label="NEXT: [디자인 패턴] 브릿지 패턴"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="Share this post"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://woovictory.github.io/2019/01/14/Android-View-Lifecycle-Test/"
+                    title="Share on Facebook"
+                    aria-label="Share on Facebook"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://woovictory.github.io/2019/01/14/Android-View-Lifecycle-Test/"
+                    title="Share on Twitter"
+                    aria-label="Share on Twitter"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://woovictory.github.io/2019/01/14/Android-View-Lifecycle-Test/"
+                    title="Share on Google+"
+                    aria-label="Share on Google+"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
 
-            var $this = $(this),
-                url = $this.attr('data-url'),
-                encodedUrl = encodeURIComponent(url),
-                id = 'article-share-box-' + $this.attr('data-id'),
-                offset = $this.offset(),
-                box;
 
-            if ($('#' + id).length) {
-                box = $('#' + id);
-
-                if (box.hasClass('on')){
-                    box.removeClass('on');
-                    return;
-                }
-            } else {
-                var html = [
-                    '<div id="' + id + '" class="article-share-box">',
-                        '<input class="article-share-input" value="' + url + '">',
-                        '<div class="article-share-links">',
-                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
-                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
-                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
-                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
-                        '</div>',
-                    '</div>'
-                ].join('');
-
-              box = $(html);
-
-              $('body').append(box);
-            }
-
-            $('.article-share-box.on').hide();
-
-            box.css({
-                top: offset.top + 25,
-                left: offset.left
-            }).addClass('on');
-
-        }).on('click', '.article-share-box', function (e) {
-            e.stopPropagation();
-        }).on('click', '.article-share-box-input', function () {
-            $(this).select();
-        }).on('click', '.article-share-box-link', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-
-            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
-        });
-    })(jQuery);
-</script>
-
-        </footer>
+        
+        
+            
+        
     </div>
 </article>
 
-    <section id="comments">
-    
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2020 VictoryWoo. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2019/01/16/Android-MVP-Step1/"
+                    data-tooltip="[안드로이드] MVP 따라하기 1"
+                    aria-label="PREVIOUS: [안드로이드] MVP 따라하기 1"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2019/01/13/DesignPattern-Bridge/"
+                    data-tooltip="[디자인 패턴] 브릿지 패턴"
+                    aria-label="NEXT: [디자인 패턴] 브릿지 패턴"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="Share this post"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
         
-    <div id="disqus_thread">
-        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-    </div>
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://woovictory.github.io/2019/01/14/Android-View-Lifecycle-Test/"
+                    title="Share on Facebook"
+                    aria-label="Share on Facebook"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://woovictory.github.io/2019/01/14/Android-View-Lifecycle-Test/"
+                    title="Share on Twitter"
+                    aria-label="Share on Twitter"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://woovictory.github.io/2019/01/14/Android-View-Lifecycle-Test/"
+                    title="Share on Google+"
+                    aria-label="Share on Google+"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
 
-    
-    </section>
 
-
-
-                        </div>
-                    </section>
-                    <aside id="sidebar">
-    <a class="sidebar-toggle" title="Expand Sidebar"><i class="toggle icon"></i></a>
-    <div class="sidebar-top">
-        <p>follow:</p>
-        <ul class="social-links">
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
             
                 
-                <li>
-                    <a class="social-tooltip" title="facebook" href="https://www.facebook.com/WooVictory" target="_blank" rel="noopener">
-                        <i class="icon fa fa-facebook"></i>
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://woovictory.github.io/2019/01/14/Android-View-Lifecycle-Test/"
+                        aria-label="Share on Facebook"
+                    >
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Share on Facebook</span>
                     </a>
                 </li>
-                
             
                 
-                <li>
-                    <a class="social-tooltip" title="github" href="https://github.com/WooVictory" target="_blank" rel="noopener">
-                        <i class="icon fa fa-github"></i>
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://twitter.com/intent/tweet?text=https://woovictory.github.io/2019/01/14/Android-View-Lifecycle-Test/"
+                        aria-label="Share on Twitter"
+                    >
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Share on Twitter</span>
                     </a>
                 </li>
-                
             
                 
-                <li>
-                    <a class="social-tooltip" title="linkedin" href="https://www.linkedin.com/in/seungwoo-lee-590844177" target="_blank" rel="noopener">
-                        <i class="icon fa fa-linkedin"></i>
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://plus.google.com/share?url=https://woovictory.github.io/2019/01/14/Android-View-Lifecycle-Test/"
+                        aria-label="Share on Google+"
+                    >
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>Share on Google+</span>
                     </a>
                 </li>
-                
             
         </ul>
     </div>
-    
-        
-<nav id="article-nav">
-    
-        <a href="/2019/01/16/Android-MVP-Step1/" id="article-nav-newer" class="article-nav-link-wrap">
-        <strong class="article-nav-caption">newer</strong>
-        <p class="article-nav-title">
-        
-            [안드로이드] MVP 따라하기 1
-        
-        </p>
-        <i class="icon fa fa-chevron-right" id="icon-chevron-right"></i>
-    </a>
-    
-    
-        <a href="/2019/01/13/DesignPattern-Bridge/" id="article-nav-older" class="article-nav-link-wrap">
-        <strong class="article-nav-caption">older</strong>
-        <p class="article-nav-title">[디자인 패턴] 브릿지 패턴</p>
-        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
-        </a>
-    
-</nav>
-
-    
-    <div class="widgets-container">
-        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({
-     google_ad_client: "ca-pub-9725307592233286",
-     enable_page_level_ads: true
-});
-</script>
-        
-            
-                
-    <div class="widget-wrap widget-list">
-        <h3 class="widget-title">categories</h3>
-        <div class="widget">
-            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Android/">Android</a><span class="category-list-count">79</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Book/">Book</a><span class="category-list-count">4</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Book/CleanCode/">CleanCode</a><span class="category-list-count">4</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Design-Pattern/">Design Pattern</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ETC/">ETC</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Git/">Git</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Inno-SOPT/">Inno_SOPT</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">39</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Kotlin/">Kotlin</a><span class="category-list-count">17</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Node-js/">Node.js</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Operation-System/">Operation System</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/RxJava/">RxJava</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/">algorithm</a><span class="category-list-count">51</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/BOJ/">BOJ</a><span class="category-list-count">49</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/Programmers/">Programmers</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/개발-상식/">개발 상식</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/네트워크/">네트워크</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/데이터베이스/">데이터베이스</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/삼성-기출/">삼성 기출</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/알고리즘/">알고리즘</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/자료구조/">자료구조</a><span class="category-list-count">10</span></li></ul>
-        </div>
-    </div>
 
 
             
-                
-    <div class="widget-wrap">
-        <h3 class="widget-title">recents</h3>
-        <div class="widget">
-            <ul id="recent-post" class="no-thumbnail">
-                
-                    <li>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/ETC/">ETC</a></p>
-                            <p class="item-title"><a href="/2020/07/29/Memo-Privacy/" class="title">[Memo] 개인정보 처리 방침</a></p>
-                            <p class="item-date"><time datetime="2020-07-29T05:11:19.000Z" itemprop="datePublished">2020-07-29</time></p>
-                        </div>
-                    </li>
-                
-                    <li>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/Book/">Book</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/Book/CleanCode/">CleanCode</a></p>
-                            <p class="item-title"><a href="/2020/07/21/CleanCode4/" class="title">[CleanCode] 4장. 주석</a></p>
-                            <p class="item-date"><time datetime="2020-07-21T14:40:14.000Z" itemprop="datePublished">2020-07-21</time></p>
-                        </div>
-                    </li>
-                
-                    <li>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/Android/">Android</a></p>
-                            <p class="item-title"><a href="/2020/07/08/Android-SingleLiveEventToEventWrapper/" class="title">[Android] MVVM UI Event Wrapper</a></p>
-                            <p class="item-date"><time datetime="2020-07-08T01:34:10.000Z" itemprop="datePublished">2020-07-08</time></p>
-                        </div>
-                    </li>
-                
-                    <li>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/Kotlin/">Kotlin</a></p>
-                            <p class="item-title"><a href="/2020/07/07/Kotlin-Coroutine-1/" class="title">[Kotlin] Coroutine 이해하기</a></p>
-                            <p class="item-date"><time datetime="2020-07-07T02:05:54.000Z" itemprop="datePublished">2020-07-07</time></p>
-                        </div>
-                    </li>
-                
-                    <li>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/Book/">Book</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/Book/CleanCode/">CleanCode</a></p>
-                            <p class="item-title"><a href="/2020/07/06/CleanCode-3/" class="title">[CleanCode] 3장. 함수</a></p>
-                            <p class="item-date"><time datetime="2020-07-06T07:57:43.000Z" itemprop="datePublished">2020-07-06</time></p>
-                        </div>
-                    </li>
-                
-            </ul>
         </div>
-    </div>
-
-            
         
-    </div>
-    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({
-     google_ad_client: "ca-pub-9725307592233286",
-     enable_page_level_ads: true
-});
-</script>
-</aside>
 
-                </div>
-            </div>
-        </div>
-        <footer id="footer">
-    <div class="container">
-        <div class="container-inner">
-            <a id="back-to-top" href="javascript:;"><i class="icon fa fa-angle-up"></i></a>
-            <div class="credit">
-                <h1 class="logo-wrap">
-                    <a href="/" class="logo"></a>
-                </h1>
-                <p>&copy; 2020 VictoryWoo</p>
-                <p>Powered by <a href="//hexo.io/" target="_blank">Hexo</a>. Theme by <a href="//github.com/ppoffice" target="_blank">PPOffice</a></p>
-            </div>
-            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({
-     google_ad_client: "ca-pub-9725307592233286",
-     enable_page_level_ads: true
-});
-</script>
-            <div class="footer-plugins">
-              
+
     
-
-
-            </div>
-        </div>
-    </div>
-</footer>
-
         
     
-    <script>
-    var disqus_shortname = 'hexo-theme-hueman';
-    
-    
-    var disqus_url = 'https://woovictory.github.io/2019/01/14/Android-View-Lifecycle-Test/';
-    
-    (function() {
-    var dsq = document.createElement('script');
-    dsq.type = 'text/javascript';
-    dsq.async = true;
-    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
-    </script>
 
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <img id="about-card-picture" src="/assets/images/Victory.jpeg" alt="Author&#39;s picture"/>
+        
+            <h4 id="about-card-name">VictoryWoo</h4>
+        
+            <div id="about-card-bio"><p>기록을 통해 사람들과 공유하는 것을 좋아합니다.</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>Android Developer</p>
 
-
-
-    
-        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
-    
-    
-        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
-    
-    
-
-
-
-<!-- Custom Scripts -->
-<script src="/js/main.js"></script>
-
+            </div>
+        
+        
     </div>
-</body>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/cover-v1.2.0.jpg');"></div>
+        <!--SCRIPTS-->
+<script src="/assets/js/jquery.js"></script>
+<script src="/assets/js/jquery.fancybox.js"></script>
+<script src="/assets/js/thumbs.js"></script>
+<script src="/assets/js/tranquilpeak.js"></script>
+<!--SCRIPTS END-->
+
+
+    
+
+
+
+
+    </body>
 </html>

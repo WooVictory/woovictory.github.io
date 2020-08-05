@@ -1,197 +1,301 @@
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
+    
 <head>
-    <meta charset="utf-8" />
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="VictoryWoo">
+    <title>[운영체제] 쓰레드 - VictoryWoo</title>
+    <meta name="author" content="VictoryWoo">
     
-
     
-    <title>[운영체제] 쓰레드 | VictoryWoo</title>
     
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    
-        <meta name="keywords" content="OS,운영체제" />
-    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg"},"articleBody":"\n메모리 관점에서 본 쓰레드\nIPC\n쓰레드란?\n쓰레드를 생성하여 프로세스를 수행했을 때의 장점\n프로세스와 쓰레드의 차이\n\n메모리 관점에서 본 쓰레드\n이를 보기 전에 먼저 메모리 관점에서 본 프로세스편을 보고 오기를 추천한다.\n각각의 프로세스는 메모리 공간에서 독립적으로 존재한다.\n\n위의 그림은 프로세스를 구성하는 메모리 공간의 모습이다. 각각의 프로세스는 자신만의 이런 메모리 구조를 가진다. 프로세스 A, B, C가 존재한다면 각각의 프로세스는 모두 위와 같은 구조의 메모리 공간을 가진다.\n독립적인 만큼 다른 프로세스의 메모리 공간에 접근할 수도 없다. A가 B의 메모리 공간에 접근하게 된다면 재앙이 발생할 수도 있다.\n예를 들면, Chrome이 windows 메모리 공간에 접근한다면 안전성이 보장되지 않는 문제가 발생할 것이다.\n운영체제의 메모리 공간에 접근하여 뭔가를 변경한다면 심각한 문제가 발생할 수 있다.(물론 운영체제의 메모리 공간에 접근하는 것은 원천적으로 불가능하다.) 그러므로 프로세스의 안전성을 보장하기 위해서는 프로세스는 각각 독립된 메모리 공간을 가져야 한다.\n그렇다면 프로세스 A에서 연산한 결과를 프로세스 B가 받아서 사용하고 싶다면 어떻게 해야할까??\nIPC\n(inter process communication)\n\nA의 메모리 공간에 B가 직접 접근하지 못하기 때문에 프로세스간의 통신을 하는 특별한 방법이 존재하는데 메일슬롯, 파이프 등이 바로 프로세스 간의 통신 즉, IPC의 예라고 할 수 있다.\nIPC에 대한 설명은 프로세스부분을 참고하면 된다.\n여기서 중요한 점은 프로세스는 독립적인 메모리 공간을 지니기 때문에 IPC를 통하지 않고서는 통신할 수 없다는 사실이다. 그리고 프로세스가 여럿이 병렬적으로 실행되기 위해서는 필연적으로 Context Switching이 발생할 수밖에 없다.\n12독립적인 메모리 공간으로 컨텍스트 스위칭이 발생한다.프로세스 간 통신하기 위해서는 IPC가 필요하다.\n위의 두 가지 프로세스가 지니는 문제점을 한 번에 해결할 수 있는 녀석이 쓰레드이다.\n메모리 공간에서의 쓰레드\n\n위 그림은 프로세스와 쓰레드의 메모리 구조의 차이점을 보여주는 그림이다. 왼쪽의 프로세스는 앞에서 설명했고, 오른쪽의 쓰레드의 메모리 구조를 확인해보자.\n쓰레드는 프로세스 안에 존재하는 실행 흐름이다. 메모리 구조 역시 그러하다. 특이한 점은 쓰레드는 프로세스의 heap, stack, code 영역 등을 공유한다는 사실이다. 각각의 프로세스가 독립적인 stack, heap, data, code 영역을 가진 반면에 한 프로세스에 속한 쓰레드는 stack 영역을 제외한 메모리 영역은 프로세스의 메모리 영역을 공유해서 사용한다.\n쓰레드가 code 영역을 공유하기 때문에 한 프로세스 내부의 다른 쓰레드들은 프로세스가 가지고 있는 함수를 자연스럽게 호출할 수 있다.\n뿐만 아니라 쓰레드는 data, heap 영역을 공유하기 때문에 IPC 없이도 쓰레드 간의 통신이 가능하다. 동일한 프로세스 내부에 존재하는 쓰레드 A, B가 통신하기 위해 heap 영역에 메모리 공간을 할당하고 두 쓰레드가 자유롭게 접근한다고 생각하면 된다.\n쓰레드는 프로세스처럼 스케줄리으이 대상이다. 이 과정에서 컨텍스트 스위칭이 발생한다. 하지만 쓰레드는 공유하고 있는 메모리 영역 덕분에 컨텍스트 스위칭이 발생하는 오버헤드가 프로세스에 비해 작다.\n쓰레드란?\n\n동일한 일을 하는 부분이 많은 프로세스를 여러 개 생성하는 것은 메모리 낭비이다. 그래서 프로세스는 하나만 생성하고 Program Counter만 여러 개 생성한다. 즉, CPU 수행 단위를 여러 개를 두는 것이며 이를 쓰레드라고 한다.\n각각 다른 Instruction을 수행하려면 Program Counter 값이 존재해야 하고, 메모리에 어떤 레지스터 값들을 세팅해야 할텐데, 쓰레드마다 Program Counter 값과 레지스터 값들이 들어가는 것이다. 이렇게 쓰레드를 생성하여 쓰레드마다 다른 부분의 코드를 실행할 수 있게 하면 된다.\n\n\n쓰레드란 프로그램(프로세스) 실행의 단위이며 하나의 프로세스는 1개 이상의 쓰레드로 구성이 가능하다.\n\n\n하나의 프로세스를 구성하는 쓰레드들은 프로세스에 할당된 메모리, 자원 등을 공유한다.\n\n\n프로세스와 같이 실행, 준비, 대기 등의 실행 상태를 가지며 실행 상태가 변할 때마다 쓰레드 문맥 교환(context switching)을 수행한다.\n\n\n각 쓰레드별로 자신만의 스택과 레지스터를 가진다.\n\n\n특징\n\n스레드는 프로세스 내에서 Stack만 따로 할당받고, 프로세스의 Code, Data, Heap 영역은 공유한다.\n스레드는 한 프로세스 내에서 동작되는 여러 실행의 흐름으로, 프로세스 내의 주소 공간이나 자원들(힙 공간 등)을 같은 프로세스 내에 스레드끼리 공유하며 실행된다.\n같은 프로세스 안에 있는 여러 스레드들은 같은 힙 공간을 공유한다. 반면에 프로세스는 다른 프로세스의 메모리에 직접 접근할 수 없다.\n각각의 스레드는 별도의 레지스터와 스택을 갖고 있지만, 힙 메모리는 서로 읽고 쓸 수 있다.\n한 스레드가 프로세스 자원을 변경하면, 다른 이웃 스레드(sibling thread)도 그 변경 결과를 즉시 볼 수 있다.\n\n\n\n\n쓰레드를 생성하여 프로세스를 수행했을 때의 장점\n\n응답시간이 줄어든다.(Responsiveness)\n\n하나의 프로세스 안에 여러 쓰레드를 두게 되면 즉, 다중 쓰레드로 구성된 프로세스 내에서는 하나의 서버 쓰레드가 blocked(or waiting)상태인 동안에도 동일한 프로세스 내의 다른 쓰레드가 실행되어 보다 빠른 처리가 가능하다. 웹 브라우저에서 네트워크를 통해 웹 페이지를 읽어올 때 읽어오는 작업이 오래 걸리기 때문에, 웹 브라우저 상태가 blocked 상태가 된다. 하나의 쓰레드가 데이터를 읽어오는 동안에 다른 쓰레드가 읽어온 데이터를 화면에 뿌려주는 역할을 하면 되는 것이다.\n\n시스템의 자원소모가 줄어든다.(Resource Sharing로 인해)\n\n하나의 프로세스 안에 여러 개의 쓰레드를 두면 메모리 낭비를 줄일 수 있다. 비슷한 작업에 대해서는 리소스를 공유한 결과이다.\n\nEconomy\n\n생성하고 switch 하는 면에서 프로세스보다 오버헤드가 적고 빠르다. 이를 경제적이라고 표현한다.[아직 정확한 원리를 잘 모른다.]\n\nUtilization of MP(MultiProcessor) Architectures\n\n쓰레드를 생성하게 되면 병렬성을 높일 수 있다. 이는 CPU가 여러 개인 컴퓨터에서만 얻을 수 있는 장점이지만 쓰레드를 통해 이 장점을 취할 수 있다.\n프로세스와 쓰레드의 차이\n프로세스는 운영체제로부터 자원을 할당받는 작업의 단위이고\n쓰레드는 프로세스가 할당받은 자원을 이용하는 실행의 단위이다.\n\n\n프로세스는 실행중인 프로그램으로 디스크로부터 메모리에 적재되어 CPU의 할당을 받을 수 있는 것을 말한다.\n\n\n하지만 프로세스의 생성은 많은 시간과 자원을 소모한다.\n\n\n쓰레드는 프로세스의 실행단위라고 위에서 설명했다.\n\n\n한 프로세스 내에서 동작하는 여러 실행 흐름으로 프로세스 내의 주소 공간이나 자원 등을 공유할 수 있다.\n\n\n이 경우 각각의 쓰레드는 독립적인 작업을 수행해야 하기 때문에 각자의 스택과 PC 레지스터 값을 갖고 있다.\n\n\n\n쓰레드마다 스택을 독립적으로 할당하는 이유\n\n스택은 함수 호출시 전달되는 인자, 복귀 주소값 및 함수 내에서 선언하는 변수 등을 저장하기 위해 사용되는 메모리 공간으로 스택 메모리 공간이 독립적이라는 것은 독립적인 함수 호출이 가능하다는 것이고 이는 독립적인 실행 흐름이 가능하게 한다.\n따라서 독립적인 실행 흐름을 위한 최소 조건으로 독립된 스택을 할당한다.\n\n쓰레드마다 PC Register를 독립적으로 할당하는 이유\n\nPC 값은 쓰레드가 명령어의 어디까지 수행했는지를 나타내게 된다. 쓰레드는 CPU를 할당받았다가 스케쥴러에 의해 다시 선점당한다. 그렇기 때문에 명령어가 연속적으로 수행되지 못하고 어느 부분까지 수행했는지 기억할 필요가 있다. 따라서 PC 레지스터를 독립적으로 할당하는 것이다.\n쓰레드의 장점\n\n쓰레드는 프로세스보다 생성 및 종료시간, 쓰레드간 전환시간이 짧다.\n쓰레드는 프로세스의 메모리 자원 ㄷ으을 공유하므로 커널의 도움 없이\n상호 간에 통신이 가능하다.\n프로세스 간의 통신 방법에 비해 쓰레드의 간의 통신 방법이 훨씬 간단하다.[별도의 자원을 이용하는 것이 아니라 전역 변수의 공간을 이용하여 데이터를 주고 받을 수 있다.]\n\n쓰레드의 단점\n\n동기화 문제\n\n앞에서 언급한 쓰레드의 장점 중에서 쓰레드 간의 통신시 데이터를 주고 받는 방법은 메모리 공간을 공유하여 데이터 세그먼트, 즉 전역변수를 이용한다고 했다. 그런데 공유하는 전역 변수를 여러 쓰레드가 함께 사용하려면 충돌하는 문제가 발생한다.\n따라서 쓰레드 간에 통신할 경우에는 충돌 문제가 발생하지 않도록 동기화를 통하여 문제를 해결해야 한다.\n\n멀티 쓰레드를 이용할 때 주의 깊게 설계해야 한다.\n프로그램 디버깅이 어렵다.(왜지?)\n단일 프로세서 시스템에서는 효과를 기대하기 어렵다.\n\n쓰레드의 종류\n\nkernel Thread(커널 쓰레드)\n\n프레소스 내 스레드가 여러 개라는 것을 OS가 알고 있는 쓰레드이다. 그래서 커널이 쓰레드 스케쥴링을 맡아서 하게 된다.\n\nUser Thread(유저 쓰레드)\n\n라이브러리 차원에서 지원되는 쓰레드이다. 프로세스 안에 쓰레드가 여러 개 있다는 것을 OS가 모르기 때문에 커널 입장에서는 하나의 일반적인 프로세스로 인식된다.\n참고\n\n[운영체제 이론] 스레드\n쓰레드란 무엇인가?\n프로세스와 쓰레드의 차이\n프로세스와 쓰레드 차이\n\n","dateCreated":"2018-12-26T14:05:44+09:00","dateModified":"2020-05-13T00:13:30+09:00","datePublished":"2018-12-26T14:05:44+09:00","description":"","headline":"[운영체제] 쓰레드","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://woovictory.github.io/2018/12/26/OS-Thread/"},"publisher":{"@type":"Organization","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg","logo":{"@type":"ImageObject","url":"Victory.jpeg"}},"url":"https://woovictory.github.io/2018/12/26/OS-Thread/","keywords":"OS, 운영체제"}</script>
     <meta name="description" content="메모리 관점에서 본 쓰레드 IPC 쓰레드란? 쓰레드를 생성하여 프로세스를 수행했을 때의 장점 프로세스와 쓰레드의 차이  메모리 관점에서 본 쓰레드 이를 보기 전에 먼저 메모리 관점에서 본 프로세스편을 보고 오기를 추천한다. 각각의 프로세스는 메모리 공간에서 독립적으로 존재한다.  위의 그림은 프로세스를 구성하는 메모리 공간의 모습이다. 각각의 프로세스는">
 <meta name="keywords" content="OS,운영체제">
-<meta property="og:type" content="article">
+<meta property="og:type" content="blog">
 <meta property="og:title" content="[운영체제] 쓰레드">
 <meta property="og:url" content="https://woovictory.github.io/2018/12/26/OS-Thread/index.html">
 <meta property="og:site_name" content="VictoryWoo">
 <meta property="og:description" content="메모리 관점에서 본 쓰레드 IPC 쓰레드란? 쓰레드를 생성하여 프로세스를 수행했을 때의 장점 프로세스와 쓰레드의 차이  메모리 관점에서 본 쓰레드 이를 보기 전에 먼저 메모리 관점에서 본 프로세스편을 보고 오기를 추천한다. 각각의 프로세스는 메모리 공간에서 독립적으로 존재한다.  위의 그림은 프로세스를 구성하는 메모리 공간의 모습이다. 각각의 프로세스는">
 <meta property="og:locale" content="en">
 <meta property="og:image" content="https://woovictory.github.io/img/process_memory_organization.png">
+<meta property="og:image" content="https://woovictory.github.io/img/IPC.png">
+<meta property="og:image" content="https://woovictory.github.io/img/diff_process_thread.png">
+<meta property="og:image" content="https://woovictory.github.io/img/thread_os.png">
 <meta property="og:updated_time" content="2020-05-12T15:13:30.461Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="[운영체제] 쓰레드">
 <meta name="twitter:description" content="메모리 관점에서 본 쓰레드 IPC 쓰레드란? 쓰레드를 생성하여 프로세스를 수행했을 때의 장점 프로세스와 쓰레드의 차이  메모리 관점에서 본 쓰레드 이를 보기 전에 먼저 메모리 관점에서 본 프로세스편을 보고 오기를 추천한다. 각각의 프로세스는 메모리 공간에서 독립적으로 존재한다.  위의 그림은 프로세스를 구성하는 메모리 공간의 모습이다. 각각의 프로세스는">
 <meta name="twitter:image" content="https://woovictory.github.io/img/process_memory_organization.png">
     
-
+    
+        
+    
+    
+        <meta property="og:image" content="https://woovictory.github.io/assets/images/Victory.jpeg"/>
+    
+    
+    
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/all.css">
+    <link rel="stylesheet" href="/assets/css/jquery.fancybox.css">
+    <link rel="stylesheet" href="/assets/css/thumbs.css">
+    <link rel="stylesheet" href="/assets/css/tranquilpeak.css">
+    <!--STYLES END-->
     
 
     
-        <link rel="icon" href="/css/images/victorywoo.png" />
-    
 
-    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/libs/titillium-web/styles.css">
-    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
-
-    <link rel="stylesheet" type="text/css" href="">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/theeluwin/NotoSansKR-Hestia@master/stylesheets/NotoSansKR-Hestia.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/earlyaccess/nanumgothiccoding.css">
     
+        
     
-    <link rel="stylesheet" href="/css/style.css">
-
-    <script src="/libs/jquery/3.3.1/jquery.min.js"></script>
-    
-    
-        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
-    
-    
-        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
-    
-    
-        <script type="text/javascript">
-(function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-125410253-1', 'auto');
-ga('send', 'pageview');
-
-</script>
-    
-    
-
-
 </head>
 
-<body>
-    <div id="wrap">
-        <header id="header">
-    <div id="header-outer" class="outer">
-        <div class="container">
-            <div class="container-inner">
-                <div id="header-title">
-                    <h1 class="logo-wrap">
-                        <a href="/" class="logo"></a>
-                    </h1>
-                    
-                        <h2 class="subtitle-wrap">
-                            <p class="subtitle">VictoryWoo&#39;s Blog</p>
-                        </h2>
-                    
-                </div>
-                <div id="header-inner" class="nav-container">
-                    <a id="main-nav-toggle" class="nav-icon fa fa-bars"></a>
-                    <div class="nav-container-inner">
-                        <ul id="main-nav">
-                            
-                                <li class="main-nav-list-item" >
-                                    <a class="main-nav-list-link" href="/">Home</a>
-                                </li>
-                            
-                                <li class="main-nav-list-item" >
-                                    <a class="main-nav-list-link" href="/about/index.html">About</a>
-                                </li>
-                            
-                        </ul>
-                        <nav id="sub-nav">
-                            <div id="search-form-wrap">
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
 
-    <form class="search-form">
-        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
-        <button type="submit" class="search-form-submit"></button>
-    </form>
-    <div class="ins-search">
-    <div class="ins-search-mask"></div>
-    <div class="ins-search-container">
-        <div class="ins-input-wrapper">
-            <input type="text" class="ins-search-input" placeholder="Type something..." />
-            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
-        </div>
-        <div class="ins-section-wrapper">
-            <div class="ins-section-container"></div>
-        </div>
-    </div>
-</div>
-<script>
-(function (window) {
-    var INSIGHT_CONFIG = {
-        TRANSLATION: {
-            POSTS: 'Posts',
-            PAGES: 'Pages',
-            CATEGORIES: 'Categories',
-            TAGS: 'Tags',
-            UNTITLED: '(Untitled)',
-        },
-        ROOT_URL: '/',
-        CONTENT_URL: '/content.json',
-    };
-    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
-})(window);
-</script>
-<script src="/js/insight.js"></script>
 
-</div>
-                        </nav>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</header>
-        <div class="container">
-            <div class="main-body container-inner">
-                <div class="main-body-inner">
-                    <section id="main">
-                        <div class="main-body-header">
-    <h1 class="header">
     
-    <a class="page-title-link" href="/categories/Operation-System/">Operation System</a>
-    </h1>
-</div>
-
-                        <div class="main-body-content">
-                            
-                            <article id="post-OS-Thread" class="article article-single article-type-post" itemscope itemprop="blogPost">
-    <div class="article-inner">
         
-            <header class="article-header">
-                
-    
-        <h1 class="article-title" itemprop="name">
-        [운영체제] 쓰레드
-        </h1>
+            
+        
     
 
-            </header>
-        
-        
-            <div class="article-meta">
-                
-    <div class="article-date">
-        <a href="/2018/12/26/OS-Thread/" class="article-date">
-            <time datetime="2018-12-26T05:05:44.000Z" itemprop="datePublished">2018-12-26</time>
+<header id="header" data-behavior="4">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a
+            class="header-title-link"
+            href="/ "
+            aria-label=""
+        >
+            VictoryWoo
         </a>
     </div>
+    
+        
+            <a
+                class="header-right-picture "
+                href="#about"
+                aria-label="Open the link: /#about"
+            >
+        
+        
+            <img class="header-picture" src="/assets/images/Victory.jpeg" alt="Author&#39;s picture"/>
+        
+        </a>
+    
+</header>
 
-		
+            <!-- Define author's picture -->
 
+
+
+        
+    
+
+<nav id="sidebar" data-behavior="4">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a
+                    href="/#about"
+                    aria-label="Read more about the author"
+                >
+                    <img class="sidebar-profile-picture" src="/assets/images/Victory.jpeg" alt="Author&#39;s picture"/>
+                </a>
+                <h4 class="sidebar-profile-name">VictoryWoo</h4>
                 
-    <div class="article-tag">
-        <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/OS/">OS</a>, <a class="tag-link" href="/tags/운영체제/">운영체제</a>
-    </div>
-
+                    <h5 class="sidebar-profile-bio"><p>기록을 통해 사람들과 공유하는 것을 좋아합니다.</p>
+</h5>
+                
             </div>
         
         
-        <div class="article-entry" itemprop="articleBody">
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/"
+                            
+                            rel="noopener"
+                            title="Home"
+                        >
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-categories"
+                            
+                            rel="noopener"
+                            title="Categories"
+                        >
+                        <i class="sidebar-button-icon fa fa-bookmark" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Categories</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-tags"
+                            
+                            rel="noopener"
+                            title="Tags"
+                        >
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Tags</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link open-algolia-search"
+                            href="#search"
+                            
+                            rel="noopener"
+                            title="Search"
+                        >
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Search</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="#about"
+                            
+                            rel="noopener"
+                            title="About"
+                        >
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://github.com/WooVictory"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="GitHub"
+                        >
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://www.facebook.com/WooVictory"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Facebook"
+                        >
+                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Facebook</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://www.linkedin.com/profile/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="LinkedIn"
+                        >
+                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">LinkedIn</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/jhsw0375@gmail.com"
+                            
+                            rel="noopener"
+                            title="Mail"
+                        >
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="4"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            [운영체제] 쓰레드
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2018-12-26T14:05:44+09:00">
+	
+		    Dec 26, 2018
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/Operation-System/">Operation System</a>
+
+
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
             <ul>
 <li><a href="#%EB%A9%94%EB%AA%A8%EB%A6%AC-%EA%B4%80%EC%A0%90%EC%97%90%EC%84%9C-%EB%B3%B8-%EC%93%B0%EB%A0%88%EB%93%9C">메모리 관점에서 본 쓰레드</a></li>
 <li><a href="#IPC">IPC</a></li>
@@ -333,313 +437,331 @@ ga('send', 'pageview');
 <li><a href="http://ralf79.tistory.com/34" target="_blank" rel="noopener">프로세스와 쓰레드 차이</a></li>
 </ul>
 
-        </div>
-        
-        <footer class="article-footer">
-            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({
-     google_ad_client: "ca-pub-9725307592233286",
-     enable_page_level_ads: true
-});
-</script>
             
 
 
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">TAGGED IN</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/OS/">OS</a> <a class="tag tag--primary tag--small t-link" href="/tags/운영체제/">운영체제</a>
 
-    <a data-url="https://woovictory.github.io/2018/12/26/OS-Thread/" data-id="ckd6xgt2j010a51pq0ttijc7v" class="article-share-link"><i class="fa fa-share"></i>Share</a>
-<script>
-    (function ($) {
-        $('body').on('click', function() {
-            $('.article-share-box.on').removeClass('on');
-        }).on('click', '.article-share-link', function(e) {
-            e.stopPropagation();
+            </div>
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2018/12/26/OS-MultiThread-Concept/"
+                    data-tooltip="[운영체제] 멀티 쓰레드"
+                    aria-label="PREVIOUS: [운영체제] 멀티 쓰레드"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2018/12/25/OS-Process/"
+                    data-tooltip="[운영체제] 프로세스"
+                    aria-label="NEXT: [운영체제] 프로세스"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="Share this post"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://woovictory.github.io/2018/12/26/OS-Thread/"
+                    title="Share on Facebook"
+                    aria-label="Share on Facebook"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://woovictory.github.io/2018/12/26/OS-Thread/"
+                    title="Share on Twitter"
+                    aria-label="Share on Twitter"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://woovictory.github.io/2018/12/26/OS-Thread/"
+                    title="Share on Google+"
+                    aria-label="Share on Google+"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
 
-            var $this = $(this),
-                url = $this.attr('data-url'),
-                encodedUrl = encodeURIComponent(url),
-                id = 'article-share-box-' + $this.attr('data-id'),
-                offset = $this.offset(),
-                box;
 
-            if ($('#' + id).length) {
-                box = $('#' + id);
-
-                if (box.hasClass('on')){
-                    box.removeClass('on');
-                    return;
-                }
-            } else {
-                var html = [
-                    '<div id="' + id + '" class="article-share-box">',
-                        '<input class="article-share-input" value="' + url + '">',
-                        '<div class="article-share-links">',
-                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
-                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
-                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
-                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
-                        '</div>',
-                    '</div>'
-                ].join('');
-
-              box = $(html);
-
-              $('body').append(box);
-            }
-
-            $('.article-share-box.on').hide();
-
-            box.css({
-                top: offset.top + 25,
-                left: offset.left
-            }).addClass('on');
-
-        }).on('click', '.article-share-box', function (e) {
-            e.stopPropagation();
-        }).on('click', '.article-share-box-input', function () {
-            $(this).select();
-        }).on('click', '.article-share-box-link', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-
-            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
-        });
-    })(jQuery);
-</script>
-
-        </footer>
+        
+        
+            
+        
     </div>
 </article>
 
-    <section id="comments">
-    
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2020 VictoryWoo. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2018/12/26/OS-MultiThread-Concept/"
+                    data-tooltip="[운영체제] 멀티 쓰레드"
+                    aria-label="PREVIOUS: [운영체제] 멀티 쓰레드"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2018/12/25/OS-Process/"
+                    data-tooltip="[운영체제] 프로세스"
+                    aria-label="NEXT: [운영체제] 프로세스"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="Share this post"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
         
-    <div id="disqus_thread">
-        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-    </div>
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://woovictory.github.io/2018/12/26/OS-Thread/"
+                    title="Share on Facebook"
+                    aria-label="Share on Facebook"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://woovictory.github.io/2018/12/26/OS-Thread/"
+                    title="Share on Twitter"
+                    aria-label="Share on Twitter"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://woovictory.github.io/2018/12/26/OS-Thread/"
+                    title="Share on Google+"
+                    aria-label="Share on Google+"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
 
-    
-    </section>
 
-
-
-                        </div>
-                    </section>
-                    <aside id="sidebar">
-    <a class="sidebar-toggle" title="Expand Sidebar"><i class="toggle icon"></i></a>
-    <div class="sidebar-top">
-        <p>follow:</p>
-        <ul class="social-links">
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
             
                 
-                <li>
-                    <a class="social-tooltip" title="facebook" href="https://www.facebook.com/WooVictory" target="_blank" rel="noopener">
-                        <i class="icon fa fa-facebook"></i>
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://woovictory.github.io/2018/12/26/OS-Thread/"
+                        aria-label="Share on Facebook"
+                    >
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Share on Facebook</span>
                     </a>
                 </li>
-                
             
                 
-                <li>
-                    <a class="social-tooltip" title="github" href="https://github.com/WooVictory" target="_blank" rel="noopener">
-                        <i class="icon fa fa-github"></i>
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://twitter.com/intent/tweet?text=https://woovictory.github.io/2018/12/26/OS-Thread/"
+                        aria-label="Share on Twitter"
+                    >
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Share on Twitter</span>
                     </a>
                 </li>
-                
             
                 
-                <li>
-                    <a class="social-tooltip" title="linkedin" href="https://www.linkedin.com/in/seungwoo-lee-590844177" target="_blank" rel="noopener">
-                        <i class="icon fa fa-linkedin"></i>
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://plus.google.com/share?url=https://woovictory.github.io/2018/12/26/OS-Thread/"
+                        aria-label="Share on Google+"
+                    >
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>Share on Google+</span>
                     </a>
                 </li>
-                
             
         </ul>
     </div>
-    
-        
-<nav id="article-nav">
-    
-        <a href="/2018/12/26/OS-MultiThread-Concept/" id="article-nav-newer" class="article-nav-link-wrap">
-        <strong class="article-nav-caption">newer</strong>
-        <p class="article-nav-title">
-        
-            [운영체제] 멀티 쓰레드
-        
-        </p>
-        <i class="icon fa fa-chevron-right" id="icon-chevron-right"></i>
-    </a>
-    
-    
-        <a href="/2018/12/25/OS-Process/" id="article-nav-older" class="article-nav-link-wrap">
-        <strong class="article-nav-caption">older</strong>
-        <p class="article-nav-title">[운영체제] 프로세스</p>
-        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
-        </a>
-    
-</nav>
-
-    
-    <div class="widgets-container">
-        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({
-     google_ad_client: "ca-pub-9725307592233286",
-     enable_page_level_ads: true
-});
-</script>
-        
-            
-                
-    <div class="widget-wrap widget-list">
-        <h3 class="widget-title">categories</h3>
-        <div class="widget">
-            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Android/">Android</a><span class="category-list-count">79</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Book/">Book</a><span class="category-list-count">4</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Book/CleanCode/">CleanCode</a><span class="category-list-count">4</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Design-Pattern/">Design Pattern</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ETC/">ETC</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Git/">Git</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Inno-SOPT/">Inno_SOPT</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">39</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Kotlin/">Kotlin</a><span class="category-list-count">17</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Node-js/">Node.js</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Operation-System/">Operation System</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/RxJava/">RxJava</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/">algorithm</a><span class="category-list-count">51</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/BOJ/">BOJ</a><span class="category-list-count">49</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/Programmers/">Programmers</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/개발-상식/">개발 상식</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/네트워크/">네트워크</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/데이터베이스/">데이터베이스</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/삼성-기출/">삼성 기출</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/알고리즘/">알고리즘</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/자료구조/">자료구조</a><span class="category-list-count">10</span></li></ul>
-        </div>
-    </div>
 
 
             
-                
-    <div class="widget-wrap">
-        <h3 class="widget-title">recents</h3>
-        <div class="widget">
-            <ul id="recent-post" class="no-thumbnail">
-                
-                    <li>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/ETC/">ETC</a></p>
-                            <p class="item-title"><a href="/2020/07/29/Memo-Privacy/" class="title">[Memo] 개인정보 처리 방침</a></p>
-                            <p class="item-date"><time datetime="2020-07-29T05:11:19.000Z" itemprop="datePublished">2020-07-29</time></p>
-                        </div>
-                    </li>
-                
-                    <li>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/Book/">Book</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/Book/CleanCode/">CleanCode</a></p>
-                            <p class="item-title"><a href="/2020/07/21/CleanCode4/" class="title">[CleanCode] 4장. 주석</a></p>
-                            <p class="item-date"><time datetime="2020-07-21T14:40:14.000Z" itemprop="datePublished">2020-07-21</time></p>
-                        </div>
-                    </li>
-                
-                    <li>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/Android/">Android</a></p>
-                            <p class="item-title"><a href="/2020/07/08/Android-SingleLiveEventToEventWrapper/" class="title">[Android] MVVM UI Event Wrapper</a></p>
-                            <p class="item-date"><time datetime="2020-07-08T01:34:10.000Z" itemprop="datePublished">2020-07-08</time></p>
-                        </div>
-                    </li>
-                
-                    <li>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/Kotlin/">Kotlin</a></p>
-                            <p class="item-title"><a href="/2020/07/07/Kotlin-Coroutine-1/" class="title">[Kotlin] Coroutine 이해하기</a></p>
-                            <p class="item-date"><time datetime="2020-07-07T02:05:54.000Z" itemprop="datePublished">2020-07-07</time></p>
-                        </div>
-                    </li>
-                
-                    <li>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/Book/">Book</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/Book/CleanCode/">CleanCode</a></p>
-                            <p class="item-title"><a href="/2020/07/06/CleanCode-3/" class="title">[CleanCode] 3장. 함수</a></p>
-                            <p class="item-date"><time datetime="2020-07-06T07:57:43.000Z" itemprop="datePublished">2020-07-06</time></p>
-                        </div>
-                    </li>
-                
-            </ul>
         </div>
-    </div>
-
-            
         
-    </div>
-    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({
-     google_ad_client: "ca-pub-9725307592233286",
-     enable_page_level_ads: true
-});
-</script>
-</aside>
 
-                </div>
-            </div>
-        </div>
-        <footer id="footer">
-    <div class="container">
-        <div class="container-inner">
-            <a id="back-to-top" href="javascript:;"><i class="icon fa fa-angle-up"></i></a>
-            <div class="credit">
-                <h1 class="logo-wrap">
-                    <a href="/" class="logo"></a>
-                </h1>
-                <p>&copy; 2020 VictoryWoo</p>
-                <p>Powered by <a href="//hexo.io/" target="_blank">Hexo</a>. Theme by <a href="//github.com/ppoffice" target="_blank">PPOffice</a></p>
-            </div>
-            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({
-     google_ad_client: "ca-pub-9725307592233286",
-     enable_page_level_ads: true
-});
-</script>
-            <div class="footer-plugins">
-              
+
     
-
-
-            </div>
-        </div>
-    </div>
-</footer>
-
         
     
-    <script>
-    var disqus_shortname = 'hexo-theme-hueman';
-    
-    
-    var disqus_url = 'https://woovictory.github.io/2018/12/26/OS-Thread/';
-    
-    (function() {
-    var dsq = document.createElement('script');
-    dsq.type = 'text/javascript';
-    dsq.async = true;
-    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
-    </script>
 
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <img id="about-card-picture" src="/assets/images/Victory.jpeg" alt="Author&#39;s picture"/>
+        
+            <h4 id="about-card-name">VictoryWoo</h4>
+        
+            <div id="about-card-bio"><p>기록을 통해 사람들과 공유하는 것을 좋아합니다.</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>Android Developer</p>
 
-
-
-    
-        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
-    
-    
-        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
-    
-    
-
-
-
-<!-- Custom Scripts -->
-<script src="/js/main.js"></script>
-
+            </div>
+        
+        
     </div>
-</body>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/cover-v1.2.0.jpg');"></div>
+        <!--SCRIPTS-->
+<script src="/assets/js/jquery.js"></script>
+<script src="/assets/js/jquery.fancybox.js"></script>
+<script src="/assets/js/thumbs.js"></script>
+<script src="/assets/js/tranquilpeak.js"></script>
+<!--SCRIPTS END-->
+
+
+    
+
+
+
+
+    </body>
 </html>

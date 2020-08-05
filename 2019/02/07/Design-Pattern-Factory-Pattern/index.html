@@ -1,197 +1,299 @@
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
+    
 <head>
-    <meta charset="utf-8" />
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="VictoryWoo">
+    <title>18일차 [디자인 패턴] 팩토리 패턴 - VictoryWoo</title>
+    <meta name="author" content="VictoryWoo">
     
-
     
-    <title>18일차 [디자인 패턴] 팩토리 패턴 | VictoryWoo</title>
     
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    
-        <meta name="keywords" content="Factory Pattern" />
-    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg"},"articleBody":"신입 개발자를 위한 Repository를 만들었습니다. 공부한 내용을 정리 중이니 도움이 되신다면 와서 Star를 눌러주시면 감사하겠습니다.\n안드로이드에서 Fragment를 생성할 때 클래스의 인스턴스 즉, 객체를 만드는 상황에서 new를 통해서 바로 생성하지 않고 newInstatnce()라는 메소드를 통해서 만든다. 이와 관련된 이유는 이전 포스팅을 참고하도록 하고 이런 방식을 팩토리 메소드?를 사용한다고 한다. 이것을 보고 팩토리 패턴에 대해 찾아보기로 하였다.\n팩토리 패턴(Factory Pattern)\n\n모든 팩토리 패턴에서는 객체 생성을 캡슐화한다.\n팩토리 메소드 패턴과 추상 팩토리 패턴이 존재한다.\n팩토리 메소드 패턴 : 객체를 생성하기 위한 인터페이스를 정의하는데, 어떤 클래스의 인스턴스를 만들지는 서브 클래스에서 결정한다.\n추상 팩토리 패턴 : 인터페이스를 이용하여 서로 연관된, 또는 의존하는 객체를 구상 클래스를 지정하지 않고도 생성할 수 있다. 추상 팩토리 패턴에는 팩토리 메소드 패턴이 포함될 수 있다.\n디자인 원칙 중 '추상화된 것에 의존하도록 만들어라. 구상 클래스에 의존하지 않도록 만든다.'에 기인한 패턴이다.\n\n팩토리 패턴의 핵심은 클래스의 인스턴스를 만드는 것을 서브클래스에서 결정하도록 한다는 것이다. 즉, new 키워드를 사용하는 부분을 서브클래스에 위임함으로서 객체 생성을 캡슐화하고 구상 클래스에 대한 의존성이 줄어든다는 이점을 얻을 수 있다.\n특히 구상 클래스에 대한 의존성이 줄어드는 것은 의존성 뒤집기 원칙(Dependency Inversion Principle:DI)에 기인하는데, DI는 자바 진영에서 널리 쓰이고 있는 Spring 프레임워크의 핵심 개념 중 하나이다. 싱글톤 패턴과 더불어 가장 유명하고 널리 쓰이는 디자인 패턴 중 하나라고 할 수 있다.\n팩토리 메소드 패턴\n위에서 언급했듯이, 객체를 생성하기 위한 인터페이스를 정의하는데, 어떤 클래스의 인스턴스를 만들지는 서브 클래스에서 결정하도록 하는 것이다. 팩토리 메소드 패턴은 팩토리 메소드는 객체를 생성해서 반환하는 것을 말한다. 즉, 결과값이 객체인 것이다.\n이점은 뭘까?\n클래스의 변경사항이 생겼을 때 얼마나 다른 클래스에게도 영향을 줄 것인가가 결합도이다. 팩토리 메소드 패턴은 직저버 사용하는 객체를 생성하지 않고 팩토리 메소드 클래스를 통해 객체를 대신 새애성하고 그 객체를 반환 받아 사용하기 때문에 효율적인 코드 제어를 할 수 있을 뿐더러 결합도를 낮춰 유지보수가 용이하다.\n예시\n아이언맨 수트에 빗대어 예제를 설명하려고 한다. 아이언맨의 각 수트들은 각각의 고유한 기능들을 가지고 있기 때문에 특정 상황에 맞춰서 토니 스타크가 착용하는 수트도 달라지게 된다.(너무 간지…ㅎ) 우주 탐사를 할 때에는 스페이스 아머, 심해 탐사 시에는 하이드로 아머, 그리고 시네마틱 유니버스에서 나왔던 헐크버스터 등을 예로 들 수 있다.\n위와 같이 특정 상황을 입력으로 보고 입력에 따라 다른 수트 클래스를 만들어야 하는 상황을 코드로 표현하면 아래와 같다.(사실 코드로 표현하지 않아도 된다. 하지만, 나는 컴공이니까…!)\n123456789101112131415Suit suit = null;switch(type)&#123;    case(\"space\"):        suit = new SpaceSuit();        break;    case(\"hydro\"):        suit = new HydroSuit();        break;    case(\"stealth\"):        suit = new StealthSuit();        break;    default:        suit = new CombatSuit();&#125;\n이제 각 상황에 맞게 수트를 생성할 수 있게 되었고, 아이언맨도 활약을 할 수 있게 되었다. 하지만, 위와 같이 코드를 작성하게 되면 변경이나 확장할 요소가 생길 시 매번 코드를 추가, 제거해주어야 한다는 문제가 발생한다. 이로 인해 아이언맨도 활약할 시간이 지체된다.\n위의 문제는 객체 인스턴스를 생성하는(new 키워드를 사용하는) 부분을 별도의 인터페이스로 분리하면 해결할 수 있다. 이렇게 생성자를 별도의 인터페이스로 분리하여 객체를 만들어내는 공장(factory)으로 이용하는 것이 팩토리 메소드 패턴이다.\n\n이제 위 코드에서 인스턴스를 생성하는 부분을 인터페이스로 분리해보자.\n\n\nUML\n\n각가의 suit 클래스들은 Suit 추상 클래스를 상속받아 getName() 메소드를 구현하고 SuiitFactory 추상 클래스를 상속받은 TypeSuitFactory에서는 type별로 수트 인스턴스를 생성하도록 하는 createSuit 메소드를 구현하도록 한다.\n\n\nSuit 추상 클래스\n\n1234// Suit 추상 클래스public abstract class Suit&#123;    public abstract String getName();&#125;\n\nSuit 추상 클래스를 구현한 각각의 수트 클래스들\n\n1234567891011121314151617181920212223242526272829303132333435// SpaceSuitpublic class SpaceSuit extends Suit&#123;    @Override    public String getName()&#123;        return \"SpaceSuit\";    &#125;&#125;// HydroSuitpublic class HydroSuit extends Suit&#123;    @Override    public String getName()&#123;        return \"HydroSuit\";    &#125;&#125;// StealthSuitpublic class StealthSuit extends Suit&#123;    @Override    public String getName()&#123;        return \"StealthSuit\";    &#125;&#125;// CombatSuitpublic class CombatSuit extends Suit&#123;    @Override    public String getName()&#123;        return \"CombatSuit\";    &#125;&#125;\n\nSuit 팩토리 추상 클래스\n\n123public abstract class SuitFactory&#123;    public abstract Suit createSuit(String type);&#125;\n\nSuit 팩토리 추상 클래스를 구현한 Suit 팩토리 구현 클래스\n\n12345678910111213141516171819202122public class TypeSuitFactory extends SuiFactory&#123;    @Override    public createSuit(String type)&#123;        Suit suit = null;        switch(type)&#123;            case(\"space\"):                suit = new SpaceSuit();                break;            case(\"hydro\"):                suit = new HydroSuit();                break;            case(\"stealth\"):                suit = new StealthSuit();                break;            default:                suit = new CombatSuit();        &#125;        return suit;    &#125;&#125;\n\nTest를 해보자.\n\n123456789101112131415161718public static void main(String[] args)&#123;    TypeSuitFactory typeSuitFactory = new TypeSuitFactory();    Suit suit1 = typeSuitFactory.createSuit(\"stealth\");    Suit suit2 = typeSuitFactory.createSuit(\"space\");    Suit suit1 = typeSuitFactory.createSuit(\"\");    System.out.println(suit1.getName());    System.out.println(suit2.getName());    System.out.println(suit3.getName());&#125;/*결과StealthSuitSpaceSuitCombatSuit*/\n인스턴스 생성을 서브 클래스로 위임한 결과이다. 최종 메인 메소드에서는 new 키워드를 사용하여 인스턴스를 생성한 부분이 없는 것을 확인할 수 있다. 이를 통해 메인 프로그램에서는 어떤 객체가 생성되었는지 신경 쓸 필요 없이 반환된 객체만 사용하면 되고 슈트 클래스에서 변경이 발생해도 메인 프로그램이 변경되는 것은 최소화할 수 있다.\n추상 팩토리 패턴\n다음은 추상 팩토리 패턴에 관한 예시이다. 위의 정의에서 추상 팩토리 패턴은 인터페이스를 이용하여 서로 연관된, 또는 의존하는 객체를 구상 클래스를 지정하지 않고도 생성할 수 있다고했다. 즉, 연관된 서브 클래스를 그룹화할 수 있고 이것은 이 그룹을 자유롭게 교체할 수 있는 패턴이라고 할 수 있다.\n\nUML\nSuitAbstractFactory 인터페이스를 작성하고 이를 상속받아 각 슈트를 생성하는 팩토리 클래스를 구성한다. 그리고 SuitFactory에서는 이 팩토를 파라미터로 받아 최종적으로 생성된 슈트 객체를 반환하게 된다.\n\n추상 팩토리 인터페이스\n\n1234public interface SuitAbstractFactory&#123;    // Suit는 위에서 정의한 추상 클래스    public Suit CreateSuit();&#125;\n\nSuit 팩토리 클래스\n\n123456789101112131415161718192021222324252627public class CombatFactory implements SuitAbstractFactory&#123;    @Override    public Suit createSuit()&#123;        return new CombatSuit();    &#125;&#125;// Spacepublic class SpaceFactory implements SuitAbstractFactory&#123;    @Override    public Suit createSuit()&#123;        return new SpaceSuit();    &#125;&#125;// Stealthpublic class StealthFactory implements SuitAbstractFactory&#123;    @Override    public Suit createSuit()&#123;        return new StealthSuit();    &#125;&#125;// 생략\n\n팩토리 클래스를 파라미터로 받는 구현 클래스\n\n12345public class SuitFactory&#123;    public static Suit getSuit(SuitAbstractFactory suitAbstractFactory)&#123;        return suitAbstractFactory.createSuit();    &#125;&#125;\n\nMain에서 구현\n\n12345678910111213141516public static void main(String[] args)&#123;    Suit suit1 = SuitFactory.getSuit(new CombatFactory());    Suit suit2 = SuitFactory.getSuit(new SpaceFactory());    Suit suit3 = SuitFactory.getSuit(new StealthFactory());    System.out.println(suit1.getName());    System.out.println(suit2.getName());    System.out.println(suit3.getName());&#125;/*결과CombatSuitSpaceSuitStealthSuit*/\n위 결과 코드와 같이 슈트별 팩토리 클래스를 파라미터로 넘겨 각 슈트 객체를 반환 받아 사용할 수 있다. 이렇게 되면 팩토리 클래스 교체만으로 조금 더 유연하게 기능의 수정, 확장에 대처할 수 있게 된다. 코드 상으로는 if-else 구문을 제거하여 조금 더 깔끔하게 코드를 구성할 수 있다.\n나의 이해\nCombatFactory는 SuitAbstractFactory 인터페이스를 구현하고 있다. 각 수트 Factory 클래스는 전부 SuitAbstractFactory 인터페이스를 구현하고 있는 셈이다. 결국 부모는 SuitAbstractFactory가 되고, 자식은  각 Suit Factory들이 된다.\nSuitFactory.getSuit() 문장을 보면 getSuit() 함수의 파라미터로 SuitAbstractFactory 타입의 클래스를 넘길 수 있다. 하지만, 잘 생각해보면 SuitAbstractFactory를 구현한 자식 클래스도 넘길 수 있다. 코드처럼 new CombatFactory()를 넘기면 부모 클래스를 구현한 자식인 CombatFactory는 부모 타입으로 전달될 수 있다. 그리고 createSuit() 메소드를 호출하게 되는데 이는 파라미터로 전달받은 객체의 createSuit() 메소드를 호출하게 된다. 우리가 파라미터로 전달받은 객체는 CombatFactory이다. 그러므로 CombarFactory의 createSuit() 메소드를 호출하고 new CombatSuit()를 통해 객체를 생성하게 된다. 결국 CombatSuit 클래스의 객체를 얻을 수 있으며 getName() 함수를 통해 확인하면 CombatSuit가 출력되는 걸 확인할 수 있다.\n참고 사이트\n\n팩토리 메소드 패턴(Factory Method Pattern)\n디자인패턴:팩토리 패턴(FACTORY PATTERN)\n[Design_Pattern] 팩토리 메서드 패턴(Factory Method Pattern)\n\n","dateCreated":"2019-02-07T11:41:13+09:00","dateModified":"2020-05-12T20:30:06+09:00","datePublished":"2019-02-07T11:41:13+09:00","description":"","headline":"18일차 [디자인 패턴] 팩토리 패턴","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://woovictory.github.io/2019/02/07/Design-Pattern-Factory-Pattern/"},"publisher":{"@type":"Organization","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg","logo":{"@type":"ImageObject","url":"Victory.jpeg"}},"url":"https://woovictory.github.io/2019/02/07/Design-Pattern-Factory-Pattern/","keywords":"Factory Pattern"}</script>
     <meta name="description" content="신입 개발자를 위한 Repository를 만들었습니다. 공부한 내용을 정리 중이니 도움이 되신다면 와서 Star를 눌러주시면 감사하겠습니다. 안드로이드에서 Fragment를 생성할 때 클래스의 인스턴스 즉, 객체를 만드는 상황에서 new를 통해서 바로 생성하지 않고 newInstatnce()라는 메소드를 통해서 만든다. 이와 관련된 이유는 이전 포스팅을 참">
 <meta name="keywords" content="Factory Pattern">
-<meta property="og:type" content="article">
+<meta property="og:type" content="blog">
 <meta property="og:title" content="18일차 [디자인 패턴] 팩토리 패턴">
 <meta property="og:url" content="https://woovictory.github.io/2019/02/07/Design-Pattern-Factory-Pattern/index.html">
 <meta property="og:site_name" content="VictoryWoo">
 <meta property="og:description" content="신입 개발자를 위한 Repository를 만들었습니다. 공부한 내용을 정리 중이니 도움이 되신다면 와서 Star를 눌러주시면 감사하겠습니다. 안드로이드에서 Fragment를 생성할 때 클래스의 인스턴스 즉, 객체를 만드는 상황에서 new를 통해서 바로 생성하지 않고 newInstatnce()라는 메소드를 통해서 만든다. 이와 관련된 이유는 이전 포스팅을 참">
 <meta property="og:locale" content="en">
 <meta property="og:image" content="https://woovictory.github.io/img/FactoryMethodPattern.png">
+<meta property="og:image" content="https://woovictory.github.io/img/AbstractFactoryPattern.png">
 <meta property="og:updated_time" content="2020-05-12T11:30:06.784Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="18일차 [디자인 패턴] 팩토리 패턴">
 <meta name="twitter:description" content="신입 개발자를 위한 Repository를 만들었습니다. 공부한 내용을 정리 중이니 도움이 되신다면 와서 Star를 눌러주시면 감사하겠습니다. 안드로이드에서 Fragment를 생성할 때 클래스의 인스턴스 즉, 객체를 만드는 상황에서 new를 통해서 바로 생성하지 않고 newInstatnce()라는 메소드를 통해서 만든다. 이와 관련된 이유는 이전 포스팅을 참">
 <meta name="twitter:image" content="https://woovictory.github.io/img/FactoryMethodPattern.png">
     
-
+    
+        
+    
+    
+        <meta property="og:image" content="https://woovictory.github.io/assets/images/Victory.jpeg"/>
+    
+    
+    
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/all.css">
+    <link rel="stylesheet" href="/assets/css/jquery.fancybox.css">
+    <link rel="stylesheet" href="/assets/css/thumbs.css">
+    <link rel="stylesheet" href="/assets/css/tranquilpeak.css">
+    <!--STYLES END-->
     
 
     
-        <link rel="icon" href="/css/images/victorywoo.png" />
-    
 
-    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/libs/titillium-web/styles.css">
-    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
-
-    <link rel="stylesheet" type="text/css" href="">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/theeluwin/NotoSansKR-Hestia@master/stylesheets/NotoSansKR-Hestia.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/earlyaccess/nanumgothiccoding.css">
     
+        
     
-    <link rel="stylesheet" href="/css/style.css">
-
-    <script src="/libs/jquery/3.3.1/jquery.min.js"></script>
-    
-    
-        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
-    
-    
-        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
-    
-    
-        <script type="text/javascript">
-(function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-125410253-1', 'auto');
-ga('send', 'pageview');
-
-</script>
-    
-    
-
-
 </head>
 
-<body>
-    <div id="wrap">
-        <header id="header">
-    <div id="header-outer" class="outer">
-        <div class="container">
-            <div class="container-inner">
-                <div id="header-title">
-                    <h1 class="logo-wrap">
-                        <a href="/" class="logo"></a>
-                    </h1>
-                    
-                        <h2 class="subtitle-wrap">
-                            <p class="subtitle">VictoryWoo&#39;s Blog</p>
-                        </h2>
-                    
-                </div>
-                <div id="header-inner" class="nav-container">
-                    <a id="main-nav-toggle" class="nav-icon fa fa-bars"></a>
-                    <div class="nav-container-inner">
-                        <ul id="main-nav">
-                            
-                                <li class="main-nav-list-item" >
-                                    <a class="main-nav-list-link" href="/">Home</a>
-                                </li>
-                            
-                                <li class="main-nav-list-item" >
-                                    <a class="main-nav-list-link" href="/about/index.html">About</a>
-                                </li>
-                            
-                        </ul>
-                        <nav id="sub-nav">
-                            <div id="search-form-wrap">
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
 
-    <form class="search-form">
-        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
-        <button type="submit" class="search-form-submit"></button>
-    </form>
-    <div class="ins-search">
-    <div class="ins-search-mask"></div>
-    <div class="ins-search-container">
-        <div class="ins-input-wrapper">
-            <input type="text" class="ins-search-input" placeholder="Type something..." />
-            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
-        </div>
-        <div class="ins-section-wrapper">
-            <div class="ins-section-container"></div>
-        </div>
-    </div>
-</div>
-<script>
-(function (window) {
-    var INSIGHT_CONFIG = {
-        TRANSLATION: {
-            POSTS: 'Posts',
-            PAGES: 'Pages',
-            CATEGORIES: 'Categories',
-            TAGS: 'Tags',
-            UNTITLED: '(Untitled)',
-        },
-        ROOT_URL: '/',
-        CONTENT_URL: '/content.json',
-    };
-    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
-})(window);
-</script>
-<script src="/js/insight.js"></script>
 
-</div>
-                        </nav>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</header>
-        <div class="container">
-            <div class="main-body container-inner">
-                <div class="main-body-inner">
-                    <section id="main">
-                        <div class="main-body-header">
-    <h1 class="header">
     
-    <a class="page-title-link" href="/categories/Design-Pattern/">Design Pattern</a>
-    </h1>
-</div>
-
-                        <div class="main-body-content">
-                            
-                            <article id="post-Design-Pattern-Factory-Pattern" class="article article-single article-type-post" itemscope itemprop="blogPost">
-    <div class="article-inner">
         
-            <header class="article-header">
-                
-    
-        <h1 class="article-title" itemprop="name">
-        18일차 [디자인 패턴] 팩토리 패턴
-        </h1>
+            
+        
     
 
-            </header>
-        
-        
-            <div class="article-meta">
-                
-    <div class="article-date">
-        <a href="/2019/02/07/Design-Pattern-Factory-Pattern/" class="article-date">
-            <time datetime="2019-02-07T02:41:13.000Z" itemprop="datePublished">2019-02-07</time>
+<header id="header" data-behavior="4">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a
+            class="header-title-link"
+            href="/ "
+            aria-label=""
+        >
+            VictoryWoo
         </a>
     </div>
+    
+        
+            <a
+                class="header-right-picture "
+                href="#about"
+                aria-label="Open the link: /#about"
+            >
+        
+        
+            <img class="header-picture" src="/assets/images/Victory.jpeg" alt="Author&#39;s picture"/>
+        
+        </a>
+    
+</header>
 
-		
+            <!-- Define author's picture -->
 
+
+
+        
+    
+
+<nav id="sidebar" data-behavior="4">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a
+                    href="/#about"
+                    aria-label="Read more about the author"
+                >
+                    <img class="sidebar-profile-picture" src="/assets/images/Victory.jpeg" alt="Author&#39;s picture"/>
+                </a>
+                <h4 class="sidebar-profile-name">VictoryWoo</h4>
                 
-    <div class="article-tag">
-        <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/Factory-Pattern/">Factory Pattern</a>
-    </div>
-
+                    <h5 class="sidebar-profile-bio"><p>기록을 통해 사람들과 공유하는 것을 좋아합니다.</p>
+</h5>
+                
             </div>
         
         
-        <div class="article-entry" itemprop="articleBody">
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/"
+                            
+                            rel="noopener"
+                            title="Home"
+                        >
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-categories"
+                            
+                            rel="noopener"
+                            title="Categories"
+                        >
+                        <i class="sidebar-button-icon fa fa-bookmark" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Categories</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-tags"
+                            
+                            rel="noopener"
+                            title="Tags"
+                        >
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Tags</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link open-algolia-search"
+                            href="#search"
+                            
+                            rel="noopener"
+                            title="Search"
+                        >
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Search</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="#about"
+                            
+                            rel="noopener"
+                            title="About"
+                        >
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://github.com/WooVictory"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="GitHub"
+                        >
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://www.facebook.com/WooVictory"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Facebook"
+                        >
+                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Facebook</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://www.linkedin.com/profile/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="LinkedIn"
+                        >
+                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">LinkedIn</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/jhsw0375@gmail.com"
+                            
+                            rel="noopener"
+                            title="Mail"
+                        >
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="4"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            18일차 [디자인 패턴] 팩토리 패턴
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2019-02-07T11:41:13+09:00">
+	
+		    Feb 07, 2019
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/Design-Pattern/">Design Pattern</a>
+
+
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
             <p>신입 개발자를 위한 <a href="https://github.com/WooVictory/Ready-For-Tech-Interview" target="_blank" rel="noopener">Repository</a>를 만들었습니다. 공부한 내용을 정리 중이니 도움이 되신다면 와서 Star를 눌러주시면 감사하겠습니다.</p>
 <p>안드로이드에서 <strong>Fragment</strong>를 생성할 때 클래스의 인스턴스 즉, 객체를 만드는 상황에서 new를 통해서 바로 생성하지 않고 newInstatnce()라는 메소드를 통해서 만든다. 이와 관련된 이유는 이전 포스팅을 참고하도록 하고 이런 방식을 팩토리 메소드?를 사용한다고 한다. 이것을 보고 팩토리 패턴에 대해 찾아보기로 하였다.</p>
 <h2 id="팩토리-패턴factory-pattern">팩토리 패턴(Factory Pattern)</h2>
@@ -275,313 +377,331 @@ ga('send', 'pageview');
 <li><a href="https://limkydev.tistory.com/83?category=957882" target="_blank" rel="noopener">[Design_Pattern] 팩토리 메서드 패턴(Factory Method Pattern)</a></li>
 </ul>
 
-        </div>
-        
-        <footer class="article-footer">
-            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({
-     google_ad_client: "ca-pub-9725307592233286",
-     enable_page_level_ads: true
-});
-</script>
             
 
 
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">TAGGED IN</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/Factory-Pattern/">Factory Pattern</a>
 
-    <a data-url="https://woovictory.github.io/2019/02/07/Design-Pattern-Factory-Pattern/" data-id="ckd6xgt1p00yp51pq4q04c5wk" class="article-share-link"><i class="fa fa-share"></i>Share</a>
-<script>
-    (function ($) {
-        $('body').on('click', function() {
-            $('.article-share-box.on').removeClass('on');
-        }).on('click', '.article-share-link', function(e) {
-            e.stopPropagation();
+            </div>
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2019/02/07/Java-Why-is-needed-primitive-type/"
+                    data-tooltip="18일차 [자바] Primitive Type"
+                    aria-label="PREVIOUS: 18일차 [자바] Primitive Type"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2019/02/06/Android-Why-is-Need-default-constructor-of-fragment/"
+                    data-tooltip="17일차 [안드로이드] 프래그먼트에 대해"
+                    aria-label="NEXT: 17일차 [안드로이드] 프래그먼트에 대해"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="Share this post"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://woovictory.github.io/2019/02/07/Design-Pattern-Factory-Pattern/"
+                    title="Share on Facebook"
+                    aria-label="Share on Facebook"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://woovictory.github.io/2019/02/07/Design-Pattern-Factory-Pattern/"
+                    title="Share on Twitter"
+                    aria-label="Share on Twitter"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://woovictory.github.io/2019/02/07/Design-Pattern-Factory-Pattern/"
+                    title="Share on Google+"
+                    aria-label="Share on Google+"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
 
-            var $this = $(this),
-                url = $this.attr('data-url'),
-                encodedUrl = encodeURIComponent(url),
-                id = 'article-share-box-' + $this.attr('data-id'),
-                offset = $this.offset(),
-                box;
 
-            if ($('#' + id).length) {
-                box = $('#' + id);
-
-                if (box.hasClass('on')){
-                    box.removeClass('on');
-                    return;
-                }
-            } else {
-                var html = [
-                    '<div id="' + id + '" class="article-share-box">',
-                        '<input class="article-share-input" value="' + url + '">',
-                        '<div class="article-share-links">',
-                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
-                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
-                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
-                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
-                        '</div>',
-                    '</div>'
-                ].join('');
-
-              box = $(html);
-
-              $('body').append(box);
-            }
-
-            $('.article-share-box.on').hide();
-
-            box.css({
-                top: offset.top + 25,
-                left: offset.left
-            }).addClass('on');
-
-        }).on('click', '.article-share-box', function (e) {
-            e.stopPropagation();
-        }).on('click', '.article-share-box-input', function () {
-            $(this).select();
-        }).on('click', '.article-share-box-link', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-
-            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
-        });
-    })(jQuery);
-</script>
-
-        </footer>
+        
+        
+            
+        
     </div>
 </article>
 
-    <section id="comments">
-    
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2020 VictoryWoo. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2019/02/07/Java-Why-is-needed-primitive-type/"
+                    data-tooltip="18일차 [자바] Primitive Type"
+                    aria-label="PREVIOUS: 18일차 [자바] Primitive Type"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2019/02/06/Android-Why-is-Need-default-constructor-of-fragment/"
+                    data-tooltip="17일차 [안드로이드] 프래그먼트에 대해"
+                    aria-label="NEXT: 17일차 [안드로이드] 프래그먼트에 대해"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="Share this post"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
         
-    <div id="disqus_thread">
-        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-    </div>
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://woovictory.github.io/2019/02/07/Design-Pattern-Factory-Pattern/"
+                    title="Share on Facebook"
+                    aria-label="Share on Facebook"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://woovictory.github.io/2019/02/07/Design-Pattern-Factory-Pattern/"
+                    title="Share on Twitter"
+                    aria-label="Share on Twitter"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://woovictory.github.io/2019/02/07/Design-Pattern-Factory-Pattern/"
+                    title="Share on Google+"
+                    aria-label="Share on Google+"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
 
-    
-    </section>
 
-
-
-                        </div>
-                    </section>
-                    <aside id="sidebar">
-    <a class="sidebar-toggle" title="Expand Sidebar"><i class="toggle icon"></i></a>
-    <div class="sidebar-top">
-        <p>follow:</p>
-        <ul class="social-links">
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
             
                 
-                <li>
-                    <a class="social-tooltip" title="facebook" href="https://www.facebook.com/WooVictory" target="_blank" rel="noopener">
-                        <i class="icon fa fa-facebook"></i>
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://woovictory.github.io/2019/02/07/Design-Pattern-Factory-Pattern/"
+                        aria-label="Share on Facebook"
+                    >
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Share on Facebook</span>
                     </a>
                 </li>
-                
             
                 
-                <li>
-                    <a class="social-tooltip" title="github" href="https://github.com/WooVictory" target="_blank" rel="noopener">
-                        <i class="icon fa fa-github"></i>
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://twitter.com/intent/tweet?text=https://woovictory.github.io/2019/02/07/Design-Pattern-Factory-Pattern/"
+                        aria-label="Share on Twitter"
+                    >
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Share on Twitter</span>
                     </a>
                 </li>
-                
             
                 
-                <li>
-                    <a class="social-tooltip" title="linkedin" href="https://www.linkedin.com/in/seungwoo-lee-590844177" target="_blank" rel="noopener">
-                        <i class="icon fa fa-linkedin"></i>
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://plus.google.com/share?url=https://woovictory.github.io/2019/02/07/Design-Pattern-Factory-Pattern/"
+                        aria-label="Share on Google+"
+                    >
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>Share on Google+</span>
                     </a>
                 </li>
-                
             
         </ul>
     </div>
-    
-        
-<nav id="article-nav">
-    
-        <a href="/2019/02/07/Java-Why-is-needed-primitive-type/" id="article-nav-newer" class="article-nav-link-wrap">
-        <strong class="article-nav-caption">newer</strong>
-        <p class="article-nav-title">
-        
-            18일차 [자바] Primitive Type
-        
-        </p>
-        <i class="icon fa fa-chevron-right" id="icon-chevron-right"></i>
-    </a>
-    
-    
-        <a href="/2019/02/06/Android-Why-is-Need-default-constructor-of-fragment/" id="article-nav-older" class="article-nav-link-wrap">
-        <strong class="article-nav-caption">older</strong>
-        <p class="article-nav-title">17일차 [안드로이드] 프래그먼트에 대해</p>
-        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
-        </a>
-    
-</nav>
-
-    
-    <div class="widgets-container">
-        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({
-     google_ad_client: "ca-pub-9725307592233286",
-     enable_page_level_ads: true
-});
-</script>
-        
-            
-                
-    <div class="widget-wrap widget-list">
-        <h3 class="widget-title">categories</h3>
-        <div class="widget">
-            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Android/">Android</a><span class="category-list-count">79</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Book/">Book</a><span class="category-list-count">4</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Book/CleanCode/">CleanCode</a><span class="category-list-count">4</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Design-Pattern/">Design Pattern</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ETC/">ETC</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Git/">Git</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Inno-SOPT/">Inno_SOPT</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">39</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Kotlin/">Kotlin</a><span class="category-list-count">17</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Node-js/">Node.js</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Operation-System/">Operation System</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/RxJava/">RxJava</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/">algorithm</a><span class="category-list-count">51</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/BOJ/">BOJ</a><span class="category-list-count">49</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/Programmers/">Programmers</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/개발-상식/">개발 상식</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/네트워크/">네트워크</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/데이터베이스/">데이터베이스</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/삼성-기출/">삼성 기출</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/알고리즘/">알고리즘</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/자료구조/">자료구조</a><span class="category-list-count">10</span></li></ul>
-        </div>
-    </div>
 
 
             
-                
-    <div class="widget-wrap">
-        <h3 class="widget-title">recents</h3>
-        <div class="widget">
-            <ul id="recent-post" class="no-thumbnail">
-                
-                    <li>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/ETC/">ETC</a></p>
-                            <p class="item-title"><a href="/2020/07/29/Memo-Privacy/" class="title">[Memo] 개인정보 처리 방침</a></p>
-                            <p class="item-date"><time datetime="2020-07-29T05:11:19.000Z" itemprop="datePublished">2020-07-29</time></p>
-                        </div>
-                    </li>
-                
-                    <li>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/Book/">Book</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/Book/CleanCode/">CleanCode</a></p>
-                            <p class="item-title"><a href="/2020/07/21/CleanCode4/" class="title">[CleanCode] 4장. 주석</a></p>
-                            <p class="item-date"><time datetime="2020-07-21T14:40:14.000Z" itemprop="datePublished">2020-07-21</time></p>
-                        </div>
-                    </li>
-                
-                    <li>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/Android/">Android</a></p>
-                            <p class="item-title"><a href="/2020/07/08/Android-SingleLiveEventToEventWrapper/" class="title">[Android] MVVM UI Event Wrapper</a></p>
-                            <p class="item-date"><time datetime="2020-07-08T01:34:10.000Z" itemprop="datePublished">2020-07-08</time></p>
-                        </div>
-                    </li>
-                
-                    <li>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/Kotlin/">Kotlin</a></p>
-                            <p class="item-title"><a href="/2020/07/07/Kotlin-Coroutine-1/" class="title">[Kotlin] Coroutine 이해하기</a></p>
-                            <p class="item-date"><time datetime="2020-07-07T02:05:54.000Z" itemprop="datePublished">2020-07-07</time></p>
-                        </div>
-                    </li>
-                
-                    <li>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/Book/">Book</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/Book/CleanCode/">CleanCode</a></p>
-                            <p class="item-title"><a href="/2020/07/06/CleanCode-3/" class="title">[CleanCode] 3장. 함수</a></p>
-                            <p class="item-date"><time datetime="2020-07-06T07:57:43.000Z" itemprop="datePublished">2020-07-06</time></p>
-                        </div>
-                    </li>
-                
-            </ul>
         </div>
-    </div>
-
-            
         
-    </div>
-    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({
-     google_ad_client: "ca-pub-9725307592233286",
-     enable_page_level_ads: true
-});
-</script>
-</aside>
 
-                </div>
-            </div>
-        </div>
-        <footer id="footer">
-    <div class="container">
-        <div class="container-inner">
-            <a id="back-to-top" href="javascript:;"><i class="icon fa fa-angle-up"></i></a>
-            <div class="credit">
-                <h1 class="logo-wrap">
-                    <a href="/" class="logo"></a>
-                </h1>
-                <p>&copy; 2020 VictoryWoo</p>
-                <p>Powered by <a href="//hexo.io/" target="_blank">Hexo</a>. Theme by <a href="//github.com/ppoffice" target="_blank">PPOffice</a></p>
-            </div>
-            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({
-     google_ad_client: "ca-pub-9725307592233286",
-     enable_page_level_ads: true
-});
-</script>
-            <div class="footer-plugins">
-              
+
     
-
-
-            </div>
-        </div>
-    </div>
-</footer>
-
         
     
-    <script>
-    var disqus_shortname = 'hexo-theme-hueman';
-    
-    
-    var disqus_url = 'https://woovictory.github.io/2019/02/07/Design-Pattern-Factory-Pattern/';
-    
-    (function() {
-    var dsq = document.createElement('script');
-    dsq.type = 'text/javascript';
-    dsq.async = true;
-    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
-    </script>
 
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <img id="about-card-picture" src="/assets/images/Victory.jpeg" alt="Author&#39;s picture"/>
+        
+            <h4 id="about-card-name">VictoryWoo</h4>
+        
+            <div id="about-card-bio"><p>기록을 통해 사람들과 공유하는 것을 좋아합니다.</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>Android Developer</p>
 
-
-
-    
-        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
-    
-    
-        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
-    
-    
-
-
-
-<!-- Custom Scripts -->
-<script src="/js/main.js"></script>
-
+            </div>
+        
+        
     </div>
-</body>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/cover-v1.2.0.jpg');"></div>
+        <!--SCRIPTS-->
+<script src="/assets/js/jquery.js"></script>
+<script src="/assets/js/jquery.fancybox.js"></script>
+<script src="/assets/js/thumbs.js"></script>
+<script src="/assets/js/tranquilpeak.js"></script>
+<!--SCRIPTS END-->
+
+
+    
+
+
+
+
+    </body>
 </html>

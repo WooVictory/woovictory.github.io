@@ -1,197 +1,309 @@
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
+    
 <head>
-    <meta charset="utf-8" />
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="VictoryWoo">
+    <title>[네트워크] 흐름/혼잡/오류 제어 기법 - VictoryWoo</title>
+    <meta name="author" content="VictoryWoo">
     
-
     
-    <title>[네트워크] 흐름/혼잡/오류 제어 기법 | VictoryWoo</title>
     
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    
-        <meta name="keywords" content="Data Structure,자료구조,흐름 제어,혼잡 제어,오류 제어" />
-    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg"},"articleBody":"TCP의 가장 큰 특징은 신뢰성이다. 이러한 신뢰성을 구성해 주는 방법인 흐름 제어, 혼잡 제어, 오류 제어에 대해 알아보도록 하자.\n흐름 제어\n송신(호스트) &lt;&gt; 수신(호스트)\n흐름 제어는 수신측과 송신측의 데이터 처리 속도 차이를 해결하기 위한 기법이다.\n만약 송신측의 전송량이 수신측의 처리량보다 많은 경우, 전송된 패킷은 수신측의 큐를 넘어서 손실될 문제가 발생할 수 있기 때문에 송신측의 패킷 전송량을 제어하게 된다.\n흐름 제어 방법\n\n정지-대기(Stop and Wait)\n\n\n\n매번 전송한 패킷에 대해 응답을 받아야만 그 다음 패킷을 전송할 수 있다.\n구조가 간단한 대신, 하나를 주고 하나를 받기 때문에 비효율적이다.\n\n\n슬라이딩 윈도우(Sliding Window)\n\n수신측에서 설정한 윈도우 크기만큼 송신측에서 확인 응답 없이 세그먼트를 전송할 수 있게 하여 데이터 흐름을 동적으로 조절하는 기법이다.\n이처럼 슬라이딩 윈도우 기법을 통하여 송신 버퍼의 범위는 수신 측의 여유 버퍼 공간을 반영하여 동적으로 바뀜으로써 흐름제어를 수행한다.\n\n윈도우는 전송, 수신 스테이션 양쪽에서 만들어진 버퍼(Buffer)의 크기이다.\n윈도우의 크기 = (가장 최근 ACK로 응답한 프레임의 수) - (이전에 ACK 프레임을 보낸 프레임의 수)\n슬라이딩 윈도우 기법은 Stop and Wait 기법의 비효율성을 개선한 기법이다.\nACK 프레임을 수신하지 않더라도 여러 개의 프레임을 연속적으로 전송할 수 있다.\n\n\n위와 같은 구조에서 데이터 0과 1을 전송했다고 가정하면 슬라이딩 윈도우의 구조는 아래와 같이 변한다. 윈도우의 크기는 전송한 데이터 프레임만큼 왼쪽 경계가 줄어들게 된다.\n\n이때 수신측에서 ACK라는 프레임을 받게 된다면 전송측은 0과 1 데이터를 정상적으로 받았음을 알게 되고, 전송측은 ACK 프레임에 따른 프레임의 수만큼 오른쪽으로 경계가 확장된다.\n\n\n조금 더 자세한 설명\n\n# 전송측 윈도우\n\n# 수신측 윈도우\n\n혼잡 제어\n송신(호스트) &lt;&gt; 라우터(네트워크)\n혼잡 제어는 송신측의 데이터 전달과 네트워크의 데이터처리 속도 차이를 해결하기 위한 기법이다.\n송신측의 데이터는 지역망이나 인터넷으로 연결된 대형 네트워크를 통해 전달된다. 하지만 이러한 네트워크 상의 라우터가 항상 한가로운 상황은 아니다. 만약, 한 라우터에게 데이터가 몰릴 경우 다시 말해 혼잡할 경우, 라우터는 자신에게 온 데이터를 모두 처리할 수 없다.\n그렇게 되면 호스트들은 또 다시 재전송을 하게 되고 결국 혼잡을 가중시켜 오버플로우나 데이터 손실을 발생시킨다. 따라서, 이러한 네트워크의 혼잡을 피하기 위해 송신측에서는 보내는 데이터의 전송 속도를 강제로 줄이게 된다.\n혼잡 제어 방법\n\nAIMD\n\nAIMD(Additive Increase / Multiplicative Decrease)라고 불리며, 합 증가 / 곱 감소라고 부른다.\n처음에 패킷을 하나씩 보내고 이것이 문제없이 도착하면 window 크기(단위 시간내에 보내는 패킷의 수)를 1씩 증가시켜 가면서 전송하는 방법이다. 만일 패킷 전송을 실패하거나 일정한 시간을 넘으면 패킷 전송 속도를 절반으로 줄이게 된다.\n이 방식은 공평한 방식이다. 이 방식을 사용하는 여러 호스트가 한 네트워크를 공유하고 있으면 나중에 진입하는 쪽이 처음에는 불리하지만 시간이 흐르면 평형 상태로 수렴하게 되는 특징이 있다.\n문제점은 초기에 네트워크의 높은 대역폭을 사용하지 못하며 오랜 시간이 걸리게 되고 네트워크가 혼잡해지는 상황을 미리 감지하지는 못한다. 즉, 네트워크가 혼잡해지고 나서야 대역폭을 줄이는 방식이다.\n이러한 문제점들을 해결하기 위한 방법은 다음부터 소개될 것이다.\n\n슬로우 스타트(Slow Start)\n\nAIMD 방식은 네트워크의 수용량 주변에서는 효율적으로 작동하지만 처음에 전송 속도를 올리는 데 걸리는 시간이 너무 길다는 단점이 있다.\nSlow Start 방식은 AIMD 방식과 마찬가지로 패킷을 하나씩 보내는 것부터 시작하고 이 방식은 패킷이 문제없이 도착하면 각각의 ACK 패킷마다 Window Size를 1씩 늘린다. 즉, 한 주기가 지나면 Window size가 2배가 된다.\n따라서 전송 속도는 AIMD와는 다르게 지수 함수꼴로 증가하게 된다. 대신 혼잡 현상이 발생하면 Window Size를 1로 떨어뜨리게 된다.\n처음에는 네트워크의 수용량을 예상할 수 있는 정보가 없지만 한번 혼잡 현상이 발생하고 나면 네트워크의 수용량을 어느 정도 예상할 수 있으므로 혼잡 현상이 발생하였던 Window Size의 절반까지는 이전처럼 지수 함수 꼴로 Window Size를 증가시키고 그 이후부터는 완만하게 1씩 증가시키는 방식이다.\n\n초기 혼잡 Window Size 1로 전송 = 전송 호스트는 하나의 패킷만 전송\n수신 호스트로부터 수신응답을 수신하면 윈도우의 크기를 2로 하여 전송\n수신 호스트로부터 수신응답을 수신하면 윈도우의 크기를 4로 하여 전송\n수신 호스트로부터 수신응답을 수신하면 윈도위의 크기를 8로 하여 전송\n\n\n\n미리 정해진 임계 값(threshold)에 도달할 때까지 윈도우의 크기를 2배씩 증가시킨다.\nSlow Start란 이름을 사용하지만, 매 전송마다 두 배씩 증가하기 때문에 전송되어지는 데이터의 크기는 지수 함수적으로 증가한다.\n전송되어지는 데이터의 크기가 임계 값에 도달하면 혼잡 회피 단계로 넘어간다.\n\n\n혼잡 회피(Congestion Avoidance)\n\n윈도우의 크기가 임계 값에 도달한 이후에 데이터의 손실이 발생할 확률이 높아지게 된다. 이는 데이터를 전송함에 있어서 조심하는 단계이다.\n전송한 데이터에 대한 ACK를 받으면 윈도우의 크기를 1씩 증가시킨다.\n전송하는 데이터의 증가를 왕복시간 동안에 하나씩만 증가시킨다.\n\n수신 호스트로부터 일정 시간 동안까지 ACK를 수신하지 못하는 경우\n\n\n타임아웃의 발생\n네트워크에 혼잡이 발생했다고 인식\n-&gt; 윈도우의 크기를 즉, 세그먼트의 수를 1로 줄임\n-&gt; 동시에 임계 값을 패킷 손실이 발생하였을 때의 윈도우 크기의 반으로 줄임\n\n\n빠른 회복(Fast Recovery)\n\n빠른 회복은 Congestion이 발생했을 때 Window size를 1로 줄이지 않고 반으로 줄이고 선형 증가시키는 방법이다. 이는 AIMD의 AI 즉, Additive Increase 하는 방법이다.\nFast Recovery를 적용하면 혼잡 상황을 한 번 겪고 나서부터는 순수한 AIMD 방식으로 동작하게 된다.\n\n빠른 재전송(Fast Retransmission)\n\n3개의 연속된 중복 ACK를 수신하는 경우에 패킷의 손실로 간주하여 타임아웃이 발생하기 전에 해당 패킷을 재전송한다. 그리고 이러한 현상이 일어난 것은 약간의 혼잡이 발생한 것으로 간주하여 Window Size를 반으로 줄인다.\n\nTCP Reno\n\nN개의 중복 ACK 발생 시 ssthresh(slow start threshold)값을 Congestion Window(cwnd) 사이즈의 반으로 줄여 빠른 복구(Fast Recovery)를 수행하여 선형적 증가를 하게 되며, TCP Time Out에 이르면 Slow Start를 시작한다.\n\nTCP Tahoe\n\nN개의 중복 ACK 발생 시 바로 Slow Start를 시작한다.\nTCP Tahoe와 TCP Reno는 ssthresh(slow start threshold) 값까지 지수적 증가(Slow-Start)를 하게 되고 ssthresh를 넘어서면 선형적 증가(Additive Increase)를 하는 것까지는 동일하다. 차이가 생기는 기준은 N개의 중복 ACK가 발생할 경우이다.\n오류 제어\n오류 제어 기법은 오류 검출(Error detection)과 재전송(retransmission)을 포함한다.\nARQ(Automatic Repeat Request) 기법을 사용하여 프레임이 손상되었거나 손실되었을 경우 재전송을 통해 오류를 복구한다. ARQ 기법은 흐름 제어 기법과 관련되어 있는데 stop and wait은 stop and wait ARQ로, Sliding Window는 GBn(Go-Back-n) ARQ 또는 SR(Selective-Reject) ARQ 형태로 구혀한다.\n오류 제어 방법\n\nARQ : 신뢰성 있는 데이터 전달을 위해 재전송을 기반으로 한 에러 제어 방식\n\n\nStop and Wait ARQ\n\n전송측은 수신측에서 보내준 ACK를 받을 때까지 프레임의 복사본을 유지한다.\n식별을 위해 데이터 프레임과 ACK 프레임은 각각 0,1 번호를 부여한다.\n수신측이 데이터를 받지 못했을 경우, NAK를 송신측에게 보내고\nNAK를 받은 송신측은 데이터를 재전송한다.\n만약 데이터나 ACK가 분실되었을 경우 일정 간격의 시간을 두고 타임아웃이 되면 송신측은 데이터를 재전송한다.\n\n\nGo-Back-n ARQ(GBn ARQ)\n\n전송된 프렘이이 손상되거나 분실될 경우, 확인된 마지막 프레임 이후로 모두 재전송하는 기법이다.\n슬라이딩 윈도우는 연속적인 프레임 전송 기법으로 전송 스테이션은 전송된 모든 프레임의 복사본을 가지고 있어야 하며, ACK와 NAK 모두 각각 구별을 해야한다.\n\nACK : 다음 프레임을 전송\nNAK : 손상된 프레임 자체 번호를 반환\n\n재전송 되는 경우는 다음과 같다.\n# 1. NAK 프레임을 받았을 경우\n만약 수신측으로 0부터 5까지의 데이터를 보내었다고 가정한다. 수신측에서 데이터를 받았음을 확인하는 ACK 프레임을 중간 중간 받게 되며, ACK 프레임을 확인한 전송측은 계속해서 데이터를 전송한다.\n그러나 만약 수신측에서 데이터 오류 프레임2가 잘못 되었다는 것을 발견하고 NAK 2를 전송측에 보낸다. NAK 2를 받은 전송측은 데이터 프레임2가 잘못 되었다는 것을 알고 데이터를 재전송한다.\nGBn ARQ의 특징은 바로 이 데이터를 재전송하는 부분이다. GBn ARQ는 NAK(n)을 받아 데이터를 재전송하게 되면, n 데이터만을 재전송하는 것이 아니라 n 데이터 이후의 데이터를 모두 재전송한다.\n# 2. 전송 데이터 프레임의 분실\nGBn ARQ의 특징은 확인된 데이터 이후의 모든 데이터 재전송과 수신측의 폐기이다. 수신측에서 데이터 1을 받았는데 갑자기 다음에 데이터 3을 받게 된다면 수신측에서는 데이터 2를 못받았으므로 데이터 3을 폐기하고 NAK 2를 전송측에 보낸다.\nNAK 2를 받은 전송측은 위의 1의 경우에서와 같이 NAK 2 데이터부터 모두 재전송을 실시하며 수신측은 기존 받았던 데이터 중 NAK(n)으로 보내었던 대상 데이터 이후의 데이터를 모두 폐기하고 재전송 받는다.\n# 3. 지정된 타임아웃 내의 ACK 프레임 분실(Lost ACK)\n전송 스테이션은 분실된 ACK를 다루기 위해 타이머를 가지고 있다. 전송측에서는 이 타이머의 타임 아웃동안 ACK 데이터를 받지 못했을 경우, 마지막 ACK부터 재전송한다.\n\n위의 그림은 송신측이 데이터 3을 보내고 수신측은 데이터 3을 받았지만 오류가 발생했을 경우이다. 이 경우에 송신측은 연속적으로 데이터를 보내지만 수신측은 데이터 3에서 오류가 발생했으므로 NAK 3을 송신측으로 보낸다.\n수신측은 데이터 3 이후로 온 데이터 프레임을 모두 폐기하며 송신측은 데이터 3부터 재전송하게 된다.\n\n위의 그림은 송신측에서 데이터 2를 보내는 도중에 분실된 경우이다. 이 경우 수신측은 데이터 0, 1은 맞게 받았지만 2를 받지 않고 3을 받게 되어 받은 데이터를 폐기하고 NAK 2를 송신측에게 보낸다.\n그럼 송신측은 NAK 2를 받고 데이터 2부터 송신측은 수신측으로 데이터를 재전송하게 된다.\n\n전송측은 NAK 프레임을 받았을 경우, NAK 프레임 번호부터 다시 재전송한다.\n수신측은 원하는 프레임이 아닐 경우 모두 폐기 처리한다.\n타임아웃(ACK 분실)일 경우, 마지막 ACK된 데이터부터 재전송한다.\n\n\nSelective-Reject(SR) ARQ\n\nGBn ARQ의 재전송되는 프레임 이후의 모든 프레임을 재전송하는 단점을 개선한 방법이다. SR ARQ는 손상된, 분실된 프레임만 재전송한다.\n그렇기 때문에 별도의 데이터 재정렬을 수행해야 하며, 별도의 버퍼를 필요로 한다.\nGBn ARQ 기법과 SR ARQ 기법의 비교\n\n\n참고\n\nTCP Tahoe와 TCP Reno\nTCP/IP 혼잡제어\n흐름 제어와 혼잡 제어\n\n","dateCreated":"2018-12-28T19:19:04+09:00","dateModified":"2020-05-13T00:08:07+09:00","datePublished":"2018-12-28T19:19:04+09:00","description":"","headline":"[네트워크] 흐름/혼잡/오류 제어 기법","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://woovictory.github.io/2018/12/28/Network-Erro-Flow-Control/"},"publisher":{"@type":"Organization","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg","logo":{"@type":"ImageObject","url":"Victory.jpeg"}},"url":"https://woovictory.github.io/2018/12/28/Network-Erro-Flow-Control/","keywords":"Data Structure, 자료구조, 흐름 제어, 혼잡 제어, 오류 제어"}</script>
     <meta name="description" content="TCP의 가장 큰 특징은 신뢰성이다. 이러한 신뢰성을 구성해 주는 방법인 흐름 제어, 혼잡 제어, 오류 제어에 대해 알아보도록 하자. 흐름 제어 송신(호스트) &amp;lt;&amp;gt; 수신(호스트) 흐름 제어는 수신측과 송신측의 데이터 처리 속도 차이를 해결하기 위한 기법이다. 만약 송신측의 전송량이 수신측의 처리량보다 많은 경우, 전송된 패킷은 수신측의 큐를 넘어">
 <meta name="keywords" content="Data Structure,자료구조,흐름 제어,혼잡 제어,오류 제어">
-<meta property="og:type" content="article">
+<meta property="og:type" content="blog">
 <meta property="og:title" content="[네트워크] 흐름&#x2F;혼잡&#x2F;오류 제어 기법">
 <meta property="og:url" content="https://woovictory.github.io/2018/12/28/Network-Erro-Flow-Control/index.html">
 <meta property="og:site_name" content="VictoryWoo">
 <meta property="og:description" content="TCP의 가장 큰 특징은 신뢰성이다. 이러한 신뢰성을 구성해 주는 방법인 흐름 제어, 혼잡 제어, 오류 제어에 대해 알아보도록 하자. 흐름 제어 송신(호스트) &amp;lt;&amp;gt; 수신(호스트) 흐름 제어는 수신측과 송신측의 데이터 처리 속도 차이를 해결하기 위한 기법이다. 만약 송신측의 전송량이 수신측의 처리량보다 많은 경우, 전송된 패킷은 수신측의 큐를 넘어">
 <meta property="og:locale" content="en">
 <meta property="og:image" content="https://woovictory.github.io/img/stop_and_wait.png">
+<meta property="og:image" content="https://woovictory.github.io/img/error_flow_control_2.png">
+<meta property="og:image" content="https://woovictory.github.io/img/error_flow_control_3.png">
+<meta property="og:image" content="https://woovictory.github.io/img/error_flow_control_4.png">
+<meta property="og:image" content="https://woovictory.github.io/img/transfer_window.png">
+<meta property="og:image" content="https://woovictory.github.io/img/receive_window.png">
+<meta property="og:image" content="https://woovictory.github.io/img/error_flow_control_10.png">
+<meta property="og:image" content="https://woovictory.github.io/img/stop_and_wait_arq.png">
+<meta property="og:image" content="https://woovictory.github.io/img/error_flow_control_6.png">
+<meta property="og:image" content="https://woovictory.github.io/img/error_flow_control_7.png">
+<meta property="og:image" content="https://woovictory.github.io/img/error_flow_control_8.png">
+<meta property="og:image" content="https://woovictory.github.io/img/error_flow_control_9.png">
 <meta property="og:updated_time" content="2020-05-12T15:08:07.225Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="[네트워크] 흐름&#x2F;혼잡&#x2F;오류 제어 기법">
 <meta name="twitter:description" content="TCP의 가장 큰 특징은 신뢰성이다. 이러한 신뢰성을 구성해 주는 방법인 흐름 제어, 혼잡 제어, 오류 제어에 대해 알아보도록 하자. 흐름 제어 송신(호스트) &amp;lt;&amp;gt; 수신(호스트) 흐름 제어는 수신측과 송신측의 데이터 처리 속도 차이를 해결하기 위한 기법이다. 만약 송신측의 전송량이 수신측의 처리량보다 많은 경우, 전송된 패킷은 수신측의 큐를 넘어">
 <meta name="twitter:image" content="https://woovictory.github.io/img/stop_and_wait.png">
     
-
+    
+        
+    
+    
+        <meta property="og:image" content="https://woovictory.github.io/assets/images/Victory.jpeg"/>
+    
+    
+    
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/all.css">
+    <link rel="stylesheet" href="/assets/css/jquery.fancybox.css">
+    <link rel="stylesheet" href="/assets/css/thumbs.css">
+    <link rel="stylesheet" href="/assets/css/tranquilpeak.css">
+    <!--STYLES END-->
     
 
     
-        <link rel="icon" href="/css/images/victorywoo.png" />
-    
 
-    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/libs/titillium-web/styles.css">
-    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
-
-    <link rel="stylesheet" type="text/css" href="">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/theeluwin/NotoSansKR-Hestia@master/stylesheets/NotoSansKR-Hestia.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/earlyaccess/nanumgothiccoding.css">
     
+        
     
-    <link rel="stylesheet" href="/css/style.css">
-
-    <script src="/libs/jquery/3.3.1/jquery.min.js"></script>
-    
-    
-        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
-    
-    
-        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
-    
-    
-        <script type="text/javascript">
-(function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-125410253-1', 'auto');
-ga('send', 'pageview');
-
-</script>
-    
-    
-
-
 </head>
 
-<body>
-    <div id="wrap">
-        <header id="header">
-    <div id="header-outer" class="outer">
-        <div class="container">
-            <div class="container-inner">
-                <div id="header-title">
-                    <h1 class="logo-wrap">
-                        <a href="/" class="logo"></a>
-                    </h1>
-                    
-                        <h2 class="subtitle-wrap">
-                            <p class="subtitle">VictoryWoo&#39;s Blog</p>
-                        </h2>
-                    
-                </div>
-                <div id="header-inner" class="nav-container">
-                    <a id="main-nav-toggle" class="nav-icon fa fa-bars"></a>
-                    <div class="nav-container-inner">
-                        <ul id="main-nav">
-                            
-                                <li class="main-nav-list-item" >
-                                    <a class="main-nav-list-link" href="/">Home</a>
-                                </li>
-                            
-                                <li class="main-nav-list-item" >
-                                    <a class="main-nav-list-link" href="/about/index.html">About</a>
-                                </li>
-                            
-                        </ul>
-                        <nav id="sub-nav">
-                            <div id="search-form-wrap">
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
 
-    <form class="search-form">
-        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
-        <button type="submit" class="search-form-submit"></button>
-    </form>
-    <div class="ins-search">
-    <div class="ins-search-mask"></div>
-    <div class="ins-search-container">
-        <div class="ins-input-wrapper">
-            <input type="text" class="ins-search-input" placeholder="Type something..." />
-            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
-        </div>
-        <div class="ins-section-wrapper">
-            <div class="ins-section-container"></div>
-        </div>
-    </div>
-</div>
-<script>
-(function (window) {
-    var INSIGHT_CONFIG = {
-        TRANSLATION: {
-            POSTS: 'Posts',
-            PAGES: 'Pages',
-            CATEGORIES: 'Categories',
-            TAGS: 'Tags',
-            UNTITLED: '(Untitled)',
-        },
-        ROOT_URL: '/',
-        CONTENT_URL: '/content.json',
-    };
-    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
-})(window);
-</script>
-<script src="/js/insight.js"></script>
 
-</div>
-                        </nav>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</header>
-        <div class="container">
-            <div class="main-body container-inner">
-                <div class="main-body-inner">
-                    <section id="main">
-                        <div class="main-body-header">
-    <h1 class="header">
     
-    <a class="page-title-link" href="/categories/네트워크/">네트워크</a>
-    </h1>
-</div>
-
-                        <div class="main-body-content">
-                            
-                            <article id="post-Network-Erro-Flow-Control" class="article article-single article-type-post" itemscope itemprop="blogPost">
-    <div class="article-inner">
         
-            <header class="article-header">
-                
-    
-        <h1 class="article-title" itemprop="name">
-        [네트워크] 흐름/혼잡/오류 제어 기법
-        </h1>
+            
+        
     
 
-            </header>
-        
-        
-            <div class="article-meta">
-                
-    <div class="article-date">
-        <a href="/2018/12/28/Network-Erro-Flow-Control/" class="article-date">
-            <time datetime="2018-12-28T10:19:04.000Z" itemprop="datePublished">2018-12-28</time>
+<header id="header" data-behavior="4">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a
+            class="header-title-link"
+            href="/ "
+            aria-label=""
+        >
+            VictoryWoo
         </a>
     </div>
+    
+        
+            <a
+                class="header-right-picture "
+                href="#about"
+                aria-label="Open the link: /#about"
+            >
+        
+        
+            <img class="header-picture" src="/assets/images/Victory.jpeg" alt="Author&#39;s picture"/>
+        
+        </a>
+    
+</header>
 
-		
+            <!-- Define author's picture -->
 
+
+
+        
+    
+
+<nav id="sidebar" data-behavior="4">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a
+                    href="/#about"
+                    aria-label="Read more about the author"
+                >
+                    <img class="sidebar-profile-picture" src="/assets/images/Victory.jpeg" alt="Author&#39;s picture"/>
+                </a>
+                <h4 class="sidebar-profile-name">VictoryWoo</h4>
                 
-    <div class="article-tag">
-        <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/Data-Structure/">Data Structure</a>, <a class="tag-link" href="/tags/오류-제어/">오류 제어</a>, <a class="tag-link" href="/tags/자료구조/">자료구조</a>, <a class="tag-link" href="/tags/혼잡-제어/">혼잡 제어</a>, <a class="tag-link" href="/tags/흐름-제어/">흐름 제어</a>
-    </div>
-
+                    <h5 class="sidebar-profile-bio"><p>기록을 통해 사람들과 공유하는 것을 좋아합니다.</p>
+</h5>
+                
             </div>
         
         
-        <div class="article-entry" itemprop="articleBody">
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/"
+                            
+                            rel="noopener"
+                            title="Home"
+                        >
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-categories"
+                            
+                            rel="noopener"
+                            title="Categories"
+                        >
+                        <i class="sidebar-button-icon fa fa-bookmark" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Categories</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-tags"
+                            
+                            rel="noopener"
+                            title="Tags"
+                        >
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Tags</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link open-algolia-search"
+                            href="#search"
+                            
+                            rel="noopener"
+                            title="Search"
+                        >
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Search</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="#about"
+                            
+                            rel="noopener"
+                            title="About"
+                        >
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://github.com/WooVictory"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="GitHub"
+                        >
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://www.facebook.com/WooVictory"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Facebook"
+                        >
+                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Facebook</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://www.linkedin.com/profile/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="LinkedIn"
+                        >
+                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">LinkedIn</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/jhsw0375@gmail.com"
+                            
+                            rel="noopener"
+                            title="Mail"
+                        >
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="4"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            [네트워크] 흐름/혼잡/오류 제어 기법
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2018-12-28T19:19:04+09:00">
+	
+		    Dec 28, 2018
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/네트워크/">네트워크</a>
+
+
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
             <p>TCP의 가장 큰 특징은 <strong>신뢰성</strong>이다. 이러한 신뢰성을 구성해 주는 방법인 <strong>흐름 제어, 혼잡 제어, 오류 제어</strong>에 대해 알아보도록 하자.</p>
 <h2 id="흐름-제어">흐름 제어</h2>
 <p>송신(호스트) &lt;&gt; 수신(호스트)</p>
@@ -356,313 +468,331 @@ NAK를 받은 송신측은 데이터를 재전송한다.</p>
 <li><a href="http://jsonsang2.tistory.com/17" target="_blank" rel="noopener">흐름 제어와 혼잡 제어</a></li>
 </ul>
 
-        </div>
-        
-        <footer class="article-footer">
-            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({
-     google_ad_client: "ca-pub-9725307592233286",
-     enable_page_level_ads: true
-});
-</script>
             
 
 
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">TAGGED IN</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/Data-Structure/">Data Structure</a> <a class="tag tag--primary tag--small t-link" href="/tags/오류-제어/">오류 제어</a> <a class="tag tag--primary tag--small t-link" href="/tags/자료구조/">자료구조</a> <a class="tag tag--primary tag--small t-link" href="/tags/혼잡-제어/">혼잡 제어</a> <a class="tag tag--primary tag--small t-link" href="/tags/흐름-제어/">흐름 제어</a>
 
-    <a data-url="https://woovictory.github.io/2018/12/28/Network-Erro-Flow-Control/" data-id="ckd6xgt2d00zz51pqgbbwvof4" class="article-share-link"><i class="fa fa-share"></i>Share</a>
-<script>
-    (function ($) {
-        $('body').on('click', function() {
-            $('.article-share-box.on').removeClass('on');
-        }).on('click', '.article-share-link', function(e) {
-            e.stopPropagation();
+            </div>
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2018/12/28/Network-Diff-Of-HTTP-HTTPS/"
+                    data-tooltip="[네트워크] HTTP와 HTTPS"
+                    aria-label="PREVIOUS: [네트워크] HTTP와 HTTPS"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2018/12/28/Network-Packet-Switching-Method/"
+                    data-tooltip="[네트워크] 가상회선 패킷 교환 vs 데이터그램 패킷 교환"
+                    aria-label="NEXT: [네트워크] 가상회선 패킷 교환 vs 데이터그램 패킷 교환"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="Share this post"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://woovictory.github.io/2018/12/28/Network-Erro-Flow-Control/"
+                    title="Share on Facebook"
+                    aria-label="Share on Facebook"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://woovictory.github.io/2018/12/28/Network-Erro-Flow-Control/"
+                    title="Share on Twitter"
+                    aria-label="Share on Twitter"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://woovictory.github.io/2018/12/28/Network-Erro-Flow-Control/"
+                    title="Share on Google+"
+                    aria-label="Share on Google+"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
 
-            var $this = $(this),
-                url = $this.attr('data-url'),
-                encodedUrl = encodeURIComponent(url),
-                id = 'article-share-box-' + $this.attr('data-id'),
-                offset = $this.offset(),
-                box;
 
-            if ($('#' + id).length) {
-                box = $('#' + id);
-
-                if (box.hasClass('on')){
-                    box.removeClass('on');
-                    return;
-                }
-            } else {
-                var html = [
-                    '<div id="' + id + '" class="article-share-box">',
-                        '<input class="article-share-input" value="' + url + '">',
-                        '<div class="article-share-links">',
-                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
-                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
-                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
-                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
-                        '</div>',
-                    '</div>'
-                ].join('');
-
-              box = $(html);
-
-              $('body').append(box);
-            }
-
-            $('.article-share-box.on').hide();
-
-            box.css({
-                top: offset.top + 25,
-                left: offset.left
-            }).addClass('on');
-
-        }).on('click', '.article-share-box', function (e) {
-            e.stopPropagation();
-        }).on('click', '.article-share-box-input', function () {
-            $(this).select();
-        }).on('click', '.article-share-box-link', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-
-            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
-        });
-    })(jQuery);
-</script>
-
-        </footer>
+        
+        
+            
+        
     </div>
 </article>
 
-    <section id="comments">
-    
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2020 VictoryWoo. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2018/12/28/Network-Diff-Of-HTTP-HTTPS/"
+                    data-tooltip="[네트워크] HTTP와 HTTPS"
+                    aria-label="PREVIOUS: [네트워크] HTTP와 HTTPS"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2018/12/28/Network-Packet-Switching-Method/"
+                    data-tooltip="[네트워크] 가상회선 패킷 교환 vs 데이터그램 패킷 교환"
+                    aria-label="NEXT: [네트워크] 가상회선 패킷 교환 vs 데이터그램 패킷 교환"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="Share this post"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
         
-    <div id="disqus_thread">
-        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-    </div>
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://woovictory.github.io/2018/12/28/Network-Erro-Flow-Control/"
+                    title="Share on Facebook"
+                    aria-label="Share on Facebook"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://woovictory.github.io/2018/12/28/Network-Erro-Flow-Control/"
+                    title="Share on Twitter"
+                    aria-label="Share on Twitter"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://woovictory.github.io/2018/12/28/Network-Erro-Flow-Control/"
+                    title="Share on Google+"
+                    aria-label="Share on Google+"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
 
-    
-    </section>
 
-
-
-                        </div>
-                    </section>
-                    <aside id="sidebar">
-    <a class="sidebar-toggle" title="Expand Sidebar"><i class="toggle icon"></i></a>
-    <div class="sidebar-top">
-        <p>follow:</p>
-        <ul class="social-links">
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
             
                 
-                <li>
-                    <a class="social-tooltip" title="facebook" href="https://www.facebook.com/WooVictory" target="_blank" rel="noopener">
-                        <i class="icon fa fa-facebook"></i>
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://woovictory.github.io/2018/12/28/Network-Erro-Flow-Control/"
+                        aria-label="Share on Facebook"
+                    >
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Share on Facebook</span>
                     </a>
                 </li>
-                
             
                 
-                <li>
-                    <a class="social-tooltip" title="github" href="https://github.com/WooVictory" target="_blank" rel="noopener">
-                        <i class="icon fa fa-github"></i>
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://twitter.com/intent/tweet?text=https://woovictory.github.io/2018/12/28/Network-Erro-Flow-Control/"
+                        aria-label="Share on Twitter"
+                    >
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Share on Twitter</span>
                     </a>
                 </li>
-                
             
                 
-                <li>
-                    <a class="social-tooltip" title="linkedin" href="https://www.linkedin.com/in/seungwoo-lee-590844177" target="_blank" rel="noopener">
-                        <i class="icon fa fa-linkedin"></i>
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://plus.google.com/share?url=https://woovictory.github.io/2018/12/28/Network-Erro-Flow-Control/"
+                        aria-label="Share on Google+"
+                    >
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>Share on Google+</span>
                     </a>
                 </li>
-                
             
         </ul>
     </div>
-    
-        
-<nav id="article-nav">
-    
-        <a href="/2018/12/28/Network-Diff-Of-HTTP-HTTPS/" id="article-nav-newer" class="article-nav-link-wrap">
-        <strong class="article-nav-caption">newer</strong>
-        <p class="article-nav-title">
-        
-            [네트워크] HTTP와 HTTPS
-        
-        </p>
-        <i class="icon fa fa-chevron-right" id="icon-chevron-right"></i>
-    </a>
-    
-    
-        <a href="/2018/12/28/Network-Packet-Switching-Method/" id="article-nav-older" class="article-nav-link-wrap">
-        <strong class="article-nav-caption">older</strong>
-        <p class="article-nav-title">[네트워크] 가상회선 패킷 교환 vs 데이터그램 패킷 교환</p>
-        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
-        </a>
-    
-</nav>
-
-    
-    <div class="widgets-container">
-        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({
-     google_ad_client: "ca-pub-9725307592233286",
-     enable_page_level_ads: true
-});
-</script>
-        
-            
-                
-    <div class="widget-wrap widget-list">
-        <h3 class="widget-title">categories</h3>
-        <div class="widget">
-            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Android/">Android</a><span class="category-list-count">79</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Book/">Book</a><span class="category-list-count">4</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Book/CleanCode/">CleanCode</a><span class="category-list-count">4</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Design-Pattern/">Design Pattern</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ETC/">ETC</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Git/">Git</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Inno-SOPT/">Inno_SOPT</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">39</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Kotlin/">Kotlin</a><span class="category-list-count">17</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Node-js/">Node.js</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Operation-System/">Operation System</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/RxJava/">RxJava</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/">algorithm</a><span class="category-list-count">51</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/BOJ/">BOJ</a><span class="category-list-count">49</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/Programmers/">Programmers</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/개발-상식/">개발 상식</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/네트워크/">네트워크</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/데이터베이스/">데이터베이스</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/삼성-기출/">삼성 기출</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/알고리즘/">알고리즘</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/자료구조/">자료구조</a><span class="category-list-count">10</span></li></ul>
-        </div>
-    </div>
 
 
             
-                
-    <div class="widget-wrap">
-        <h3 class="widget-title">recents</h3>
-        <div class="widget">
-            <ul id="recent-post" class="no-thumbnail">
-                
-                    <li>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/ETC/">ETC</a></p>
-                            <p class="item-title"><a href="/2020/07/29/Memo-Privacy/" class="title">[Memo] 개인정보 처리 방침</a></p>
-                            <p class="item-date"><time datetime="2020-07-29T05:11:19.000Z" itemprop="datePublished">2020-07-29</time></p>
-                        </div>
-                    </li>
-                
-                    <li>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/Book/">Book</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/Book/CleanCode/">CleanCode</a></p>
-                            <p class="item-title"><a href="/2020/07/21/CleanCode4/" class="title">[CleanCode] 4장. 주석</a></p>
-                            <p class="item-date"><time datetime="2020-07-21T14:40:14.000Z" itemprop="datePublished">2020-07-21</time></p>
-                        </div>
-                    </li>
-                
-                    <li>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/Android/">Android</a></p>
-                            <p class="item-title"><a href="/2020/07/08/Android-SingleLiveEventToEventWrapper/" class="title">[Android] MVVM UI Event Wrapper</a></p>
-                            <p class="item-date"><time datetime="2020-07-08T01:34:10.000Z" itemprop="datePublished">2020-07-08</time></p>
-                        </div>
-                    </li>
-                
-                    <li>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/Kotlin/">Kotlin</a></p>
-                            <p class="item-title"><a href="/2020/07/07/Kotlin-Coroutine-1/" class="title">[Kotlin] Coroutine 이해하기</a></p>
-                            <p class="item-date"><time datetime="2020-07-07T02:05:54.000Z" itemprop="datePublished">2020-07-07</time></p>
-                        </div>
-                    </li>
-                
-                    <li>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/Book/">Book</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/Book/CleanCode/">CleanCode</a></p>
-                            <p class="item-title"><a href="/2020/07/06/CleanCode-3/" class="title">[CleanCode] 3장. 함수</a></p>
-                            <p class="item-date"><time datetime="2020-07-06T07:57:43.000Z" itemprop="datePublished">2020-07-06</time></p>
-                        </div>
-                    </li>
-                
-            </ul>
         </div>
-    </div>
-
-            
         
-    </div>
-    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({
-     google_ad_client: "ca-pub-9725307592233286",
-     enable_page_level_ads: true
-});
-</script>
-</aside>
 
-                </div>
-            </div>
-        </div>
-        <footer id="footer">
-    <div class="container">
-        <div class="container-inner">
-            <a id="back-to-top" href="javascript:;"><i class="icon fa fa-angle-up"></i></a>
-            <div class="credit">
-                <h1 class="logo-wrap">
-                    <a href="/" class="logo"></a>
-                </h1>
-                <p>&copy; 2020 VictoryWoo</p>
-                <p>Powered by <a href="//hexo.io/" target="_blank">Hexo</a>. Theme by <a href="//github.com/ppoffice" target="_blank">PPOffice</a></p>
-            </div>
-            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({
-     google_ad_client: "ca-pub-9725307592233286",
-     enable_page_level_ads: true
-});
-</script>
-            <div class="footer-plugins">
-              
+
     
-
-
-            </div>
-        </div>
-    </div>
-</footer>
-
         
     
-    <script>
-    var disqus_shortname = 'hexo-theme-hueman';
-    
-    
-    var disqus_url = 'https://woovictory.github.io/2018/12/28/Network-Erro-Flow-Control/';
-    
-    (function() {
-    var dsq = document.createElement('script');
-    dsq.type = 'text/javascript';
-    dsq.async = true;
-    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
-    </script>
 
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <img id="about-card-picture" src="/assets/images/Victory.jpeg" alt="Author&#39;s picture"/>
+        
+            <h4 id="about-card-name">VictoryWoo</h4>
+        
+            <div id="about-card-bio"><p>기록을 통해 사람들과 공유하는 것을 좋아합니다.</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>Android Developer</p>
 
-
-
-    
-        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
-    
-    
-        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
-    
-    
-
-
-
-<!-- Custom Scripts -->
-<script src="/js/main.js"></script>
-
+            </div>
+        
+        
     </div>
-</body>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/cover-v1.2.0.jpg');"></div>
+        <!--SCRIPTS-->
+<script src="/assets/js/jquery.js"></script>
+<script src="/assets/js/jquery.fancybox.js"></script>
+<script src="/assets/js/thumbs.js"></script>
+<script src="/assets/js/tranquilpeak.js"></script>
+<!--SCRIPTS END-->
+
+
+    
+
+
+
+
+    </body>
 </html>

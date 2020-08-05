@@ -1,20 +1,20 @@
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
+    
 <head>
-    <meta charset="utf-8" />
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="VictoryWoo">
+    <title>[커니의 Kotlin] Chap1.2 - VictoryWoo</title>
+    <meta name="author" content="VictoryWoo">
     
-
     
-    <title>[커니의 Kotlin] Chap1.2 | VictoryWoo</title>
     
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    
-        <meta name="keywords" content="Android,Kotlin,커니의 Kotlin" />
-    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg"},"articleBody":"1부에 이어서 작성…\n# 특징들\n생성자\n\n생성자 부분은 자바와 비교했을 때 조금 다른 면이 있다.\n다음은 기본 생성자의 정의이다.\n\ninit 블록을 사용해 기본 생성자를 대체한다.\n\n\n생성자에 인자가 필요한 경우 인자처럼 받을 수 있다.\n\n이를 주 생성자라고 부른다.\n\n\n\n12345678910111213class Test&#123;        init&#123;        // 기본 생성자에서 수행할 작업.    &#125;&#125;class Test(a : Int)&#123;        init&#123;        println(\"$a\")    &#125;&#125;\n\n생성자의 인자를 통해 클래스 내부의 프로퍼티에 값을 할당할 수 있다.\n생성자의 인자를 통해 프로퍼티 선언을 대신한다. 따라서 추가로 프로퍼티 선언이 필요 없다.\n\n1class Test(val a: Int, val b: Char)\n\n생성자의 인자에서 프로퍼티 선언이 함께 이루어지고, 값 할당 또한 생성자 호출과 동시에 수행되므로 짧은 코드를 확인할 수 있다.\n주 생성자 외에 다른 형태의 생성자가 필요한 경우 constructor 키워드를 사용해 선언할 수 있다.\n\n123456789class Test(val a: Int, val b: Char)&#123;    // a 값만 인자로 받는 추가 생성자.    // 기본 생성자를 반드시 호출해야 한다.    constructor(a: Int) : this(a,0)        // 두 인자의 값을 모두 0으로 지정하는 생성자.    constructor() : this(0,0)&#125;\n\n이처럼 추가 생성자를 정의하는 경우 주 생성자를 반드시 호출해야 한다.(상속과 this를 사용해서!)\n추가 생성자에서는 인자와 프로퍼티를 함께 선언할 수 없다. 따라서 프로퍼티 선언이 필요한 경우 주 생성자에서 이를 처리해야 한다.\n생성자 앞에 접근 제한자를 붙여 가시성을 변경할 수 있다.\n\n123456class Test private constructor(val a: Int, val b: Char)&#123;    private constructor(a: Int) : this(a,0)    constructor(): this(0,0)&#125;\n생성자는 중요한 개념이므로 추후 더 추가할 예정.\n함수\n\n메소드를 함수로 표현한다.\nvoid -&gt; Unit이며 반환 값이 없음을 의미한다.\n또한, 반환 값이 없는 함수는 Unit을 생략할 수 있다.\n\n123456789class Test&#123;    fun foo(): Unit&#123;        // Unit 생략 가능.    &#125;    fun bar(): Int&#123;        return 1    &#125;&#125;\n상속 및 인터페이스 구현\n\n클래스의 상속과 인터페이스 구현을 구분하지 않고 콜론(:)으로 통일한다.\n클래스를 상속받는 경우 반드시 부모 클래스의 생성자를 호출해야 하며, 부모 클래스의 생성자는 super 키워드를 사용해 호출한다.\n\n12345678910111213141516171819class MyView : View&#123;    constructor(context: Context) : super(context)&#123;    &#125;    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)&#123;        // 뷰 초기화    &#125;    // 생성자가 여럿일 경우 this 키워드를 사용해 자기 자신의 생성자를 호출할 수 있다.    constructor(context: Context) : this(context,null)&#123;    &#125;    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)&#123;        // 뷰 초기화    &#125;&#125;\n\n오버라이드 시 어노테이션을 사용하지 않고 override 키워드를 사용한다.\nopen 키워드를 사용해 클래스 혹은 함수의 상속 여부를 결정할 수 있다.\n\nopen 키워드가 있으면 상속 가능.\nopen 키워드가 없으면 상속 불가능(Java의 final과 비슷)\n\n\n\nthis\n\n해당 키워드를 사용한 클래스 자신을 지칭할 때 사용한다.\n해당 위치에서 가장 가까운 범위의 클래스를 의미한다. 따라서 클래스 내에서 다른 클래스나 인터페이스의 객체를 동적으로 생성하여 사용하는 경우 키워드를 사용하는 위치에 따라 this가 의미하는 클래스가 달라질 수 있다.\n따라서 this@{클래스이름} 처럼 명확하게 표시해준다.\n\n동반객체\n\n동반 객체(companion object)를 사용하면 클래스 내 모든 멤버에 접근할 수 있으면서 인스턴스 생성 없이 호출할 수 있는 함수를 작성할 수 있다.\n어디서든 접근이 가능하다.\n즉, 자바의 static 메소드, static 멤버와 같은 역할을 한다고 볼 수 있다.\n왜냐하면 코틀린은 클래스 내에 정적 필드나 정적 함수를 둘 수 없다. 그러한 개념이 없기 때문이다. 대신에 클래스별로 하나씩 클래스의 인스턴스 생성 없이 사용할 수 있는 오브젝트를 정의할 수 있는데, 이를 동반 객체라고 한다.\n\n싱글톤\n\n단 하나의 인스턴스만 생성되도록 제약을 둔 패턴으로 코틀린에서 object를 사용해 간편하게 선언할 수 있다.\n\n12345678910object Singleton&#123;    val a = \"a\"    fun aa()&#123;        println(\"aa call!\")    &#125;&#125;val aValue = Singleton.aSingleton.aa()\n코틀린에서의 특징만 살펴보도록 하겠다. 다 정리하기에는 시간이 오래 걸릴 듯 싶어서이다…\n시간이 생긴다면 정리하지 않은 특징도 추구하도록 하겠다. :)\nis 연산자\n\n자료형을 확인하기 위해 사용한다.\n자바의 instanceOf 연산자와 동일한 기능을 한다.\n특정 타입이 아닌 경우를 확인하기 위해서는 !is로 확인하면 된다.\n\n12345678fun Test(obj : Any)&#123;    if(obj is Int)&#123;    &#125;else if(obj is Float)&#123;    &#125;    ...&#125;\nas 연산자\n\n특정 변수를 원하는 자료형으로 변환하기 위한 연산자이다.\n\n123fun porcessNumber(number: Number)&#123;    val foo : Int = number as Int&#125;\n스마트 캐스트\n\n자료형 추론이 가능할 경우 캐스팅 없이 해당하는 자료형으로 객체를 사용할 수 있도록 하는 기능이다.\n값을 검사하는 시점과 사용하는 시점 사이에 값이 변하지 않았다는 것이 보장되는 경우에만 지원된다. 따라서 언제든지 값이 변할수 있는 var는 스마트 캐스트가 지원되지 않는다.\n\n범위\n\n특정 범위를 순회하거나 해당 범위 내에 특정 항목이 포함되어 있는지 확인할 때 사용한다.\n… 연산자를 사용.\n\n123456// 0부터 10까지, 시작과 끝을 포함하는 범위를 정의한다.val myRange : IntRange = 0..10for(i in myRange)&#123;    println(i)&#125;\n\n인덱스 순환을 위한 범위를 생성할 때는 until 함수를 사용하면 된다.\n가장 마지막 값을 포함하지 않는다.\n범위 내에 특정 항목이 있는지 확인할 때는 in 연산자를 사용한다.\n\n12345678910// 0&lt;=N&lt;10val myRagne : IntRange = 0 until 10// 0&lt;=N&lt;=10val myRange2 : IntRange = 0..10// 5가 myRange2 내에 포함되어 있는지 확인.val foo : Boolean = 5 in myRange2 // true 반환// 5가 myRange 내에 포함되지 않는지 확인.val bar : Boolean = 5 !in myRange // false 반환\n\ndownTo() 함수를 이용해 항목들의 순서가 반대로 정렬된 범위를 생성한다.\n시작과 끝을 포함한다.\n기본적으로 1씩 감소 시킨다.\nstep() 함수를 사용하여 감소/증가 폭을 변경할 수 있다.\n\n123456789for(i in 5 downTo 1)&#123;    print(i)&#125;// 결과 : 54321for(i in 5 downTo 1 step 2)&#123; // 2씩 감소시킨다.    print(i)&#125;// 결과 : 531\n예외\n\n사용법은 자바와 동일하다. 하지만, 코틀린에서는 값을 반환할 수 있다.\nchecked exception(뭐지? 검색해보자.)을 따로 검사하지 않는다. 즉, 대부분의 예외를 try-catch문으로 감싸 처리해야 했던 자바와 달리 코틀린에서는 이를 선택적으로 사용할 수 있다.\n\n123456789fun readFromJson(fileName : String) : String&#123;    // IOException을 발생시킬 수 있는 코드    ...&#125;fun process()&#123;    // try-catch문을 사용하지 않아도 된다.    val json : String = readFromJson(\"foo.json\")&#125;\n# 널안정성\n코틀린은 컴파일 단계에서 발생하는 널 포인터 예외가 발생할 문제를 해결하기위해 모든 타입에 명시적으로 널 허용 여부를 함께 표기한다.\n코틀린의 중요한 특징 중 하나라고 생각한다.\n널 허용 여부 표기\n\n널 값을 가질 수 있도록 하려면 명시적으로 타입 뒤에 ? 를 붙여주어야 한다.\n널 값을 허용하지 않는 변수를 초기화하지 않거나, null을 대입하면 컴파일 오류를 발생시킨다.\n함수의 파라미터나 반환 값에도 동일하게 적용된다.\n\n12345val a : String? = nullval b : String = \"b\"val name : String // 오류 : 값이 초기화 되지 않음.val address : String = null // 오류 : null을 허용하지 않는 변수에 null 대입 불가.\n엘비스(?:) 연산자\n\n널 값을 허용하지 않는 값 혹은 변수에 널 값을 반환할 수 있는 함수의 결과를 대입해야 하는 경우 엘비스 연산자를 이용해 편리하게 처리할 수 있다.\n널 값을 대신하는 방법으로 ?:를 사용한다.\n널 여부를 확인하는 작업을 별도로 하지 않아도 되므로 자바에 비해서 간편하게 함수의 로직을 작성할 수 있다.\n값 반환 대신 예외를 발생시킬 수도 있다.\n\n123foo ?: bar// foo가 null이 아닐 경우에는 foo를 반환// foo가 null일 경우에는 bar를 반환\n안전한 호출(?.) 연산자\n\n널 값 확인을 위해 자바에서 if문으로 검사하던 것을 간편화 할 수 있다.\n간단한 로직의 경우 상관이 없지만 복잡해질수록 if문의 향연이 펼쳐질 수 있다.\n안전한 호출 연산자를 사용하여 널 값 확인과 값 접근/함수 호출을 한 번에 할 수 있다.\n이 연산자를 사용하는 객체가 널 값이 아닌 경우에만 연산자 뒤의 문장을 수행한다. 널 값일 경우에는 뒤의 문장을 수행하지 않고 null 값을 반환한다.\n따라서 널 값인 객체의 프로퍼티를 참조하거나 함수를 호출하는 일을 방지할 수 있다.\n\n12345// bar가 null이 아닐 경우에만 해당 값인 baz를 대입. 그렇지 않은 경우 null을 foo에 대입val foo = bar?.baz// foo가 null이 아닐 경우에만 bar() 함수 호출.foo?.bar()\nas? 연산자\n\n자바에서 지원되지 않는 자료형으로 변환을 시도할 가능성이 있는 부분을 try-catch 블록으로 감싸서 처리한다.\n코틀린에서는 as? 연산자를 사용해 간편하게 해결할 수 있다.\n자료형 변환이 실패할 경우 예외를 발생시키는 대신 널 값을 반환한다.\n\n12345val foo : String = \"foo\"// 자료형 변환에 실패하므로 bar로 null 값이 할당된다.// 따라서 bar는 Int?를 통해 널 값을 허용하도록 선언한다.val bar : Int? = foo as? Int\n\n엘비스 연산자를 사용해 변환에 실패했을 때의 기본값을 지정할 수 있다.\n변환된 값을 받은 자료형의 널 허용 여부를 수정할 필요가 없으므로 유연하게 대처할 수 있다.\n\n12// 자료형 변환에 실패하는 경우 기본 값을 0으로 지정.val bar : Int = foo as? Int ?: 0\n널 값이 아님을 명시하기 : 비 널 값 보증\n\n널 값을 포함할 수 있는 타입을 널 값을 포함하지 않는 타입으로 변환하여 사용할 수 있다.\n보증하려는 항목 뒤에 !!을 붙여 사용한다.\n비 널 값 보증을 사용했지만 실제로 객체나 값에 널 값이 들어가 있을 경우 널 포인ㅌ 예외가 발생하므로 유의해서 사용해야 한다.\n\n12345678// 값 foo는 널 값을 포함할 수 있는 타입.val foo : Foo? = ...// 값 foo는 널 값을 포함하지 않음을 보증.val nonNullFoo : Foo = foo!!// 값 foo가 널 값이 아님을 보장하면서 bar() 함수 호출.foo!!.bar()\n비 널 값 보증 사용 주의\n비 널 값 보증은 아래처럼 중첩해서 사용하는 것을 권장하지 않는다.\ncontact.address와 address.line2 중 하나라도 널 값이라면 널 포인터 예외가 발생한다.\n하지만 에러 로그에서 라인만 알 수 있을 뿐, 어느 요소로 예외가 발생했는지 알 수 없다.\n따라서 비 널 값 보증은 중첩되는 호출 단계보다는 하나의 호출 단계에만 사용할 것을 권장한다.\n1234val contact : Contact = ...// address와 line2 모두 널 값이 아님을 보장.val line : String = contact.address!!.line2!!\nlateinit 키워드\n\n초기화 없이 변수만 선언할 수 있다. (var에만 사용할 수 있다.)\n즉, 초기화를 나중에 한다는 의미이다.\n초기화를 하지 않은 채로 사용하려고 하면 널 포인터 예외가 발생하기 때문에 초기화 작업을 반드시 해야 한다.\n초기화가 되었는지 확인하는 방법이 있다.\n\n12345678910class MainActivity: Activity()&#123;    lateinit var api : Api    fun process()&#123;        // lateinit 키워드를 사용한 변수가 초기화 되었는지 확인한다.        if (::api.isInitialized) &#123;             ...         &#125;    &#125;&#125;\n주의!\n코틀린에서는 값을 반환하는 구문들이 있다.\nfor, while, when, try-catch, if 등등이 있다.\n이러한 구문들이 값을 반환한다는 특징을 알고 코드를 더 편리하게 짤 수 있으므로 알아두면 좋을 것 같다.\n","dateCreated":"2019-05-03T20:47:16+09:00","dateModified":"2020-05-13T00:19:06+09:00","datePublished":"2019-05-03T20:47:16+09:00","description":"","headline":"[커니의 Kotlin] Chap1.2","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://woovictory.github.io/2019/05/03/kotlin-chap1-2/"},"publisher":{"@type":"Organization","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg","logo":{"@type":"ImageObject","url":"Victory.jpeg"}},"url":"https://woovictory.github.io/2019/05/03/kotlin-chap1-2/","keywords":"Android, Kotlin, 커니의 Kotlin"}</script>
     <meta name="description" content="1부에 이어서 작성… # 특징들 생성자  생성자 부분은 자바와 비교했을 때 조금 다른 면이 있다. 다음은 기본 생성자의 정의이다.  init 블록을 사용해 기본 생성자를 대체한다.   생성자에 인자가 필요한 경우 인자처럼 받을 수 있다.  이를 주 생성자라고 부른다.    12345678910111213class Test&amp;#123;        init&amp;#">
 <meta name="keywords" content="Android,Kotlin,커니의 Kotlin">
-<meta property="og:type" content="article">
+<meta property="og:type" content="blog">
 <meta property="og:title" content="[커니의 Kotlin] Chap1.2">
 <meta property="og:url" content="https://woovictory.github.io/2019/05/03/kotlin-chap1-2/index.html">
 <meta property="og:site_name" content="VictoryWoo">
@@ -25,171 +25,272 @@
 <meta name="twitter:title" content="[커니의 Kotlin] Chap1.2">
 <meta name="twitter:description" content="1부에 이어서 작성… # 특징들 생성자  생성자 부분은 자바와 비교했을 때 조금 다른 면이 있다. 다음은 기본 생성자의 정의이다.  init 블록을 사용해 기본 생성자를 대체한다.   생성자에 인자가 필요한 경우 인자처럼 받을 수 있다.  이를 주 생성자라고 부른다.    12345678910111213class Test&amp;#123;        init&amp;#">
     
-
+    
+        
+    
+    
+        <meta property="og:image" content="https://woovictory.github.io/assets/images/Victory.jpeg"/>
+    
+    
+    
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/all.css">
+    <link rel="stylesheet" href="/assets/css/jquery.fancybox.css">
+    <link rel="stylesheet" href="/assets/css/thumbs.css">
+    <link rel="stylesheet" href="/assets/css/tranquilpeak.css">
+    <!--STYLES END-->
     
 
     
-        <link rel="icon" href="/css/images/victorywoo.png" />
-    
 
-    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/libs/titillium-web/styles.css">
-    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
-
-    <link rel="stylesheet" type="text/css" href="">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/theeluwin/NotoSansKR-Hestia@master/stylesheets/NotoSansKR-Hestia.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/earlyaccess/nanumgothiccoding.css">
     
+        
     
-    <link rel="stylesheet" href="/css/style.css">
-
-    <script src="/libs/jquery/3.3.1/jquery.min.js"></script>
-    
-    
-        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
-    
-    
-        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
-    
-    
-        <script type="text/javascript">
-(function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-125410253-1', 'auto');
-ga('send', 'pageview');
-
-</script>
-    
-    
-
-
 </head>
 
-<body>
-    <div id="wrap">
-        <header id="header">
-    <div id="header-outer" class="outer">
-        <div class="container">
-            <div class="container-inner">
-                <div id="header-title">
-                    <h1 class="logo-wrap">
-                        <a href="/" class="logo"></a>
-                    </h1>
-                    
-                        <h2 class="subtitle-wrap">
-                            <p class="subtitle">VictoryWoo&#39;s Blog</p>
-                        </h2>
-                    
-                </div>
-                <div id="header-inner" class="nav-container">
-                    <a id="main-nav-toggle" class="nav-icon fa fa-bars"></a>
-                    <div class="nav-container-inner">
-                        <ul id="main-nav">
-                            
-                                <li class="main-nav-list-item" >
-                                    <a class="main-nav-list-link" href="/">Home</a>
-                                </li>
-                            
-                                <li class="main-nav-list-item" >
-                                    <a class="main-nav-list-link" href="/about/index.html">About</a>
-                                </li>
-                            
-                        </ul>
-                        <nav id="sub-nav">
-                            <div id="search-form-wrap">
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
 
-    <form class="search-form">
-        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
-        <button type="submit" class="search-form-submit"></button>
-    </form>
-    <div class="ins-search">
-    <div class="ins-search-mask"></div>
-    <div class="ins-search-container">
-        <div class="ins-input-wrapper">
-            <input type="text" class="ins-search-input" placeholder="Type something..." />
-            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
-        </div>
-        <div class="ins-section-wrapper">
-            <div class="ins-section-container"></div>
-        </div>
-    </div>
-</div>
-<script>
-(function (window) {
-    var INSIGHT_CONFIG = {
-        TRANSLATION: {
-            POSTS: 'Posts',
-            PAGES: 'Pages',
-            CATEGORIES: 'Categories',
-            TAGS: 'Tags',
-            UNTITLED: '(Untitled)',
-        },
-        ROOT_URL: '/',
-        CONTENT_URL: '/content.json',
-    };
-    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
-})(window);
-</script>
-<script src="/js/insight.js"></script>
 
-</div>
-                        </nav>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</header>
-        <div class="container">
-            <div class="main-body container-inner">
-                <div class="main-body-inner">
-                    <section id="main">
-                        <div class="main-body-header">
-    <h1 class="header">
     
-    <a class="page-title-link" href="/categories/Kotlin/">Kotlin</a>
-    </h1>
-</div>
-
-                        <div class="main-body-content">
-                            
-                            <article id="post-kotlin-chap1-2" class="article article-single article-type-post" itemscope itemprop="blogPost">
-    <div class="article-inner">
         
-            <header class="article-header">
-                
-    
-        <h1 class="article-title" itemprop="name">
-        [커니의 Kotlin] Chap1.2
-        </h1>
+            
+        
     
 
-            </header>
-        
-        
-            <div class="article-meta">
-                
-    <div class="article-date">
-        <a href="/2019/05/03/kotlin-chap1-2/" class="article-date">
-            <time datetime="2019-05-03T11:47:16.000Z" itemprop="datePublished">2019-05-03</time>
+<header id="header" data-behavior="4">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a
+            class="header-title-link"
+            href="/ "
+            aria-label=""
+        >
+            VictoryWoo
         </a>
     </div>
+    
+        
+            <a
+                class="header-right-picture "
+                href="#about"
+                aria-label="Open the link: /#about"
+            >
+        
+        
+            <img class="header-picture" src="/assets/images/Victory.jpeg" alt="Author&#39;s picture"/>
+        
+        </a>
+    
+</header>
 
-		
+            <!-- Define author's picture -->
 
+
+
+        
+    
+
+<nav id="sidebar" data-behavior="4">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a
+                    href="/#about"
+                    aria-label="Read more about the author"
+                >
+                    <img class="sidebar-profile-picture" src="/assets/images/Victory.jpeg" alt="Author&#39;s picture"/>
+                </a>
+                <h4 class="sidebar-profile-name">VictoryWoo</h4>
                 
-    <div class="article-tag">
-        <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/Android/">Android</a>, <a class="tag-link" href="/tags/Kotlin/">Kotlin</a>, <a class="tag-link" href="/tags/커니의-Kotlin/">커니의 Kotlin</a>
-    </div>
-
+                    <h5 class="sidebar-profile-bio"><p>기록을 통해 사람들과 공유하는 것을 좋아합니다.</p>
+</h5>
+                
             </div>
         
         
-        <div class="article-entry" itemprop="articleBody">
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/"
+                            
+                            rel="noopener"
+                            title="Home"
+                        >
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-categories"
+                            
+                            rel="noopener"
+                            title="Categories"
+                        >
+                        <i class="sidebar-button-icon fa fa-bookmark" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Categories</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-tags"
+                            
+                            rel="noopener"
+                            title="Tags"
+                        >
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Tags</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link open-algolia-search"
+                            href="#search"
+                            
+                            rel="noopener"
+                            title="Search"
+                        >
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Search</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="#about"
+                            
+                            rel="noopener"
+                            title="About"
+                        >
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://github.com/WooVictory"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="GitHub"
+                        >
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://www.facebook.com/WooVictory"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Facebook"
+                        >
+                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Facebook</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://www.linkedin.com/profile/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="LinkedIn"
+                        >
+                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">LinkedIn</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/jhsw0375@gmail.com"
+                            
+                            rel="noopener"
+                            title="Mail"
+                        >
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="4"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            [커니의 Kotlin] Chap1.2
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2019-05-03T20:47:16+09:00">
+	
+		    May 03, 2019
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/Kotlin/">Kotlin</a>
+
+
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
             <p>1부에 이어서 작성…</p>
 <h2 id="특징들"># 특징들</h2>
 <p><strong>생성자</strong></p>
@@ -373,313 +474,331 @@ contact.address와 address.line2 중 하나라도 널 값이라면 널 포인터
 for, while, when, try-catch, if 등등이 있다.<br>
 이러한 구문들이 값을 반환한다는 특징을 알고 코드를 더 편리하게 짤 수 있으므로 알아두면 좋을 것 같다.</p>
 
-        </div>
-        
-        <footer class="article-footer">
-            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({
-     google_ad_client: "ca-pub-9725307592233286",
-     enable_page_level_ads: true
-});
-</script>
             
 
 
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">TAGGED IN</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/Android/">Android</a> <a class="tag tag--primary tag--small t-link" href="/tags/Kotlin/">Kotlin</a> <a class="tag tag--primary tag--small t-link" href="/tags/커니의-Kotlin/">커니의 Kotlin</a>
 
-    <a data-url="https://woovictory.github.io/2019/05/03/kotlin-chap1-2/" data-id="ckd6xgt3s012o51pqdzsc9tzn" class="article-share-link"><i class="fa fa-share"></i>Share</a>
-<script>
-    (function ($) {
-        $('body').on('click', function() {
-            $('.article-share-box.on').removeClass('on');
-        }).on('click', '.article-share-link', function(e) {
-            e.stopPropagation();
+            </div>
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2019/05/07/kotlin-chap2/"
+                    data-tooltip="[커니의 Kotlin] Chap2"
+                    aria-label="PREVIOUS: [커니의 Kotlin] Chap2"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2019/05/02/What-is-ViewModel/"
+                    data-tooltip="[안드로이드] ViewModel"
+                    aria-label="NEXT: [안드로이드] ViewModel"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="Share this post"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://woovictory.github.io/2019/05/03/kotlin-chap1-2/"
+                    title="Share on Facebook"
+                    aria-label="Share on Facebook"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://woovictory.github.io/2019/05/03/kotlin-chap1-2/"
+                    title="Share on Twitter"
+                    aria-label="Share on Twitter"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://woovictory.github.io/2019/05/03/kotlin-chap1-2/"
+                    title="Share on Google+"
+                    aria-label="Share on Google+"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
 
-            var $this = $(this),
-                url = $this.attr('data-url'),
-                encodedUrl = encodeURIComponent(url),
-                id = 'article-share-box-' + $this.attr('data-id'),
-                offset = $this.offset(),
-                box;
 
-            if ($('#' + id).length) {
-                box = $('#' + id);
-
-                if (box.hasClass('on')){
-                    box.removeClass('on');
-                    return;
-                }
-            } else {
-                var html = [
-                    '<div id="' + id + '" class="article-share-box">',
-                        '<input class="article-share-input" value="' + url + '">',
-                        '<div class="article-share-links">',
-                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
-                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
-                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
-                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
-                        '</div>',
-                    '</div>'
-                ].join('');
-
-              box = $(html);
-
-              $('body').append(box);
-            }
-
-            $('.article-share-box.on').hide();
-
-            box.css({
-                top: offset.top + 25,
-                left: offset.left
-            }).addClass('on');
-
-        }).on('click', '.article-share-box', function (e) {
-            e.stopPropagation();
-        }).on('click', '.article-share-box-input', function () {
-            $(this).select();
-        }).on('click', '.article-share-box-link', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-
-            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
-        });
-    })(jQuery);
-</script>
-
-        </footer>
+        
+        
+            
+        
     </div>
 </article>
 
-    <section id="comments">
-    
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2020 VictoryWoo. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2019/05/07/kotlin-chap2/"
+                    data-tooltip="[커니의 Kotlin] Chap2"
+                    aria-label="PREVIOUS: [커니의 Kotlin] Chap2"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2019/05/02/What-is-ViewModel/"
+                    data-tooltip="[안드로이드] ViewModel"
+                    aria-label="NEXT: [안드로이드] ViewModel"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="Share this post"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
         
-    <div id="disqus_thread">
-        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-    </div>
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://woovictory.github.io/2019/05/03/kotlin-chap1-2/"
+                    title="Share on Facebook"
+                    aria-label="Share on Facebook"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://woovictory.github.io/2019/05/03/kotlin-chap1-2/"
+                    title="Share on Twitter"
+                    aria-label="Share on Twitter"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://woovictory.github.io/2019/05/03/kotlin-chap1-2/"
+                    title="Share on Google+"
+                    aria-label="Share on Google+"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
 
-    
-    </section>
 
-
-
-                        </div>
-                    </section>
-                    <aside id="sidebar">
-    <a class="sidebar-toggle" title="Expand Sidebar"><i class="toggle icon"></i></a>
-    <div class="sidebar-top">
-        <p>follow:</p>
-        <ul class="social-links">
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
             
                 
-                <li>
-                    <a class="social-tooltip" title="facebook" href="https://www.facebook.com/WooVictory" target="_blank" rel="noopener">
-                        <i class="icon fa fa-facebook"></i>
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://woovictory.github.io/2019/05/03/kotlin-chap1-2/"
+                        aria-label="Share on Facebook"
+                    >
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Share on Facebook</span>
                     </a>
                 </li>
-                
             
                 
-                <li>
-                    <a class="social-tooltip" title="github" href="https://github.com/WooVictory" target="_blank" rel="noopener">
-                        <i class="icon fa fa-github"></i>
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://twitter.com/intent/tweet?text=https://woovictory.github.io/2019/05/03/kotlin-chap1-2/"
+                        aria-label="Share on Twitter"
+                    >
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Share on Twitter</span>
                     </a>
                 </li>
-                
             
                 
-                <li>
-                    <a class="social-tooltip" title="linkedin" href="https://www.linkedin.com/in/seungwoo-lee-590844177" target="_blank" rel="noopener">
-                        <i class="icon fa fa-linkedin"></i>
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://plus.google.com/share?url=https://woovictory.github.io/2019/05/03/kotlin-chap1-2/"
+                        aria-label="Share on Google+"
+                    >
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>Share on Google+</span>
                     </a>
                 </li>
-                
             
         </ul>
     </div>
-    
-        
-<nav id="article-nav">
-    
-        <a href="/2019/05/07/kotlin-chap2/" id="article-nav-newer" class="article-nav-link-wrap">
-        <strong class="article-nav-caption">newer</strong>
-        <p class="article-nav-title">
-        
-            [커니의 Kotlin] Chap2
-        
-        </p>
-        <i class="icon fa fa-chevron-right" id="icon-chevron-right"></i>
-    </a>
-    
-    
-        <a href="/2019/05/02/What-is-ViewModel/" id="article-nav-older" class="article-nav-link-wrap">
-        <strong class="article-nav-caption">older</strong>
-        <p class="article-nav-title">[안드로이드] ViewModel</p>
-        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
-        </a>
-    
-</nav>
-
-    
-    <div class="widgets-container">
-        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({
-     google_ad_client: "ca-pub-9725307592233286",
-     enable_page_level_ads: true
-});
-</script>
-        
-            
-                
-    <div class="widget-wrap widget-list">
-        <h3 class="widget-title">categories</h3>
-        <div class="widget">
-            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Android/">Android</a><span class="category-list-count">79</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Book/">Book</a><span class="category-list-count">4</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Book/CleanCode/">CleanCode</a><span class="category-list-count">4</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Design-Pattern/">Design Pattern</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ETC/">ETC</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Git/">Git</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Inno-SOPT/">Inno_SOPT</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">39</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Kotlin/">Kotlin</a><span class="category-list-count">17</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Node-js/">Node.js</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Operation-System/">Operation System</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/RxJava/">RxJava</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/">algorithm</a><span class="category-list-count">51</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/BOJ/">BOJ</a><span class="category-list-count">49</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/Programmers/">Programmers</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/개발-상식/">개발 상식</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/네트워크/">네트워크</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/데이터베이스/">데이터베이스</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/삼성-기출/">삼성 기출</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/알고리즘/">알고리즘</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/자료구조/">자료구조</a><span class="category-list-count">10</span></li></ul>
-        </div>
-    </div>
 
 
             
-                
-    <div class="widget-wrap">
-        <h3 class="widget-title">recents</h3>
-        <div class="widget">
-            <ul id="recent-post" class="no-thumbnail">
-                
-                    <li>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/ETC/">ETC</a></p>
-                            <p class="item-title"><a href="/2020/07/29/Memo-Privacy/" class="title">[Memo] 개인정보 처리 방침</a></p>
-                            <p class="item-date"><time datetime="2020-07-29T05:11:19.000Z" itemprop="datePublished">2020-07-29</time></p>
-                        </div>
-                    </li>
-                
-                    <li>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/Book/">Book</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/Book/CleanCode/">CleanCode</a></p>
-                            <p class="item-title"><a href="/2020/07/21/CleanCode4/" class="title">[CleanCode] 4장. 주석</a></p>
-                            <p class="item-date"><time datetime="2020-07-21T14:40:14.000Z" itemprop="datePublished">2020-07-21</time></p>
-                        </div>
-                    </li>
-                
-                    <li>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/Android/">Android</a></p>
-                            <p class="item-title"><a href="/2020/07/08/Android-SingleLiveEventToEventWrapper/" class="title">[Android] MVVM UI Event Wrapper</a></p>
-                            <p class="item-date"><time datetime="2020-07-08T01:34:10.000Z" itemprop="datePublished">2020-07-08</time></p>
-                        </div>
-                    </li>
-                
-                    <li>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/Kotlin/">Kotlin</a></p>
-                            <p class="item-title"><a href="/2020/07/07/Kotlin-Coroutine-1/" class="title">[Kotlin] Coroutine 이해하기</a></p>
-                            <p class="item-date"><time datetime="2020-07-07T02:05:54.000Z" itemprop="datePublished">2020-07-07</time></p>
-                        </div>
-                    </li>
-                
-                    <li>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/Book/">Book</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/Book/CleanCode/">CleanCode</a></p>
-                            <p class="item-title"><a href="/2020/07/06/CleanCode-3/" class="title">[CleanCode] 3장. 함수</a></p>
-                            <p class="item-date"><time datetime="2020-07-06T07:57:43.000Z" itemprop="datePublished">2020-07-06</time></p>
-                        </div>
-                    </li>
-                
-            </ul>
         </div>
-    </div>
-
-            
         
-    </div>
-    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({
-     google_ad_client: "ca-pub-9725307592233286",
-     enable_page_level_ads: true
-});
-</script>
-</aside>
 
-                </div>
-            </div>
-        </div>
-        <footer id="footer">
-    <div class="container">
-        <div class="container-inner">
-            <a id="back-to-top" href="javascript:;"><i class="icon fa fa-angle-up"></i></a>
-            <div class="credit">
-                <h1 class="logo-wrap">
-                    <a href="/" class="logo"></a>
-                </h1>
-                <p>&copy; 2020 VictoryWoo</p>
-                <p>Powered by <a href="//hexo.io/" target="_blank">Hexo</a>. Theme by <a href="//github.com/ppoffice" target="_blank">PPOffice</a></p>
-            </div>
-            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({
-     google_ad_client: "ca-pub-9725307592233286",
-     enable_page_level_ads: true
-});
-</script>
-            <div class="footer-plugins">
-              
+
     
-
-
-            </div>
-        </div>
-    </div>
-</footer>
-
         
     
-    <script>
-    var disqus_shortname = 'hexo-theme-hueman';
-    
-    
-    var disqus_url = 'https://woovictory.github.io/2019/05/03/kotlin-chap1-2/';
-    
-    (function() {
-    var dsq = document.createElement('script');
-    dsq.type = 'text/javascript';
-    dsq.async = true;
-    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
-    </script>
 
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <img id="about-card-picture" src="/assets/images/Victory.jpeg" alt="Author&#39;s picture"/>
+        
+            <h4 id="about-card-name">VictoryWoo</h4>
+        
+            <div id="about-card-bio"><p>기록을 통해 사람들과 공유하는 것을 좋아합니다.</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>Android Developer</p>
 
-
-
-    
-        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
-    
-    
-        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
-    
-    
-
-
-
-<!-- Custom Scripts -->
-<script src="/js/main.js"></script>
-
+            </div>
+        
+        
     </div>
-</body>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/cover-v1.2.0.jpg');"></div>
+        <!--SCRIPTS-->
+<script src="/assets/js/jquery.js"></script>
+<script src="/assets/js/jquery.fancybox.js"></script>
+<script src="/assets/js/thumbs.js"></script>
+<script src="/assets/js/tranquilpeak.js"></script>
+<!--SCRIPTS END-->
+
+
+    
+
+
+
+
+    </body>
 </html>

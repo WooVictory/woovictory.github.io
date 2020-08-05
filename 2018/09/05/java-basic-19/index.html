@@ -1,197 +1,300 @@
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
+    
 <head>
-    <meta charset="utf-8" />
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="VictoryWoo">
+    <title>[Java] 19. java.time - VictoryWoo</title>
+    <meta name="author" content="VictoryWoo">
     
-
     
-    <title>[Java] 19. java.time | VictoryWoo</title>
     
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    
-        <meta name="keywords" content="Java" />
-    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg"},"articleBody":"자바에서의 날짜 및 시간 처리\n\nJDK 1.0에서는 Date 클래스를 사용하여 날짜에 관한 처리를 수행했습니다. 하지만 Date 클래스는 현재 대부분의 메소드가 사용을 권장하지 않고(deprecated)있습니다.\nJDK 1.1부터 새롭게 제공된 Calendar 클래스는 날짜와 시간에 대한 정보를 손쉽게 얻을 수 있었습니다. 하지만 Calendar 클래스는 다음과 같은 문제점을 가지고 있습니다.\n\nCalendar 인스턴스는 불변 객체(immutable object)가 아니라서 값이 수정될 수 있습니다.\n윤초(leap second)와 같은 특별한 상황을 고려하지 않습니다.\nCalendar 클래스에서는 월(month)을 나타낼 때 1월부터 12월을 0부터 11까지로 표현해야 하는 불편함이 있습니다.\n\n따라서 많은 개발자들은 Calendar 클래스뿐만 아니라 더 나은 성능의 Joda-Time이라는 라이브러리를 함께 사용해 왔습니다.\n버전에서는 이러한 Joda-Time 라이브러리를 발전시킨 새로운 날짜와 시간 API인 java.time 패키지를 제공합니다. java.time 패키지는 위와 같은 문제점을 모두 해결했으며, 다양한 기능을 지원하는 다수의 하위 패키지를 포함하고 있습니다.\njava.time 패키지\nJava SE 8부터 제공되는 java.time 패키지에는 자바에서 날짜와 시간을 다루는 데 사용되는 필수 클래스들이 포함되어 있습니다. 또한, 다음과 같은 다양한 기능을 하는 하위 패키지를 포함하고 있습니다.\n\njava.time.chrono : ISO-8601에 정의된 표준 달력 이외의 달력 시스템을 사용할 때 필요한 클래스들\njava.time.format : 날짜와 시간에 대한 데이터를 구문 분석하고 형식화하는데 사용되는 클래스들\njava.time.temporal : 날짜와 시간에 대한 데이터를 연산하는 데 사용되는 보조 클래스들\njava.time.zone : 타임 존(time-zone)과 관련된 클래스들\n\njava.time 패키지는 기존에 사용되는 Calendar 클래스의 단점을 보완하였습니다. 따라서 해당 패키지에 속하는 모든 클래스의 인스턴스는 불변 객체(immutable object)로 생성됩니다. 따라서, 값을 수정할 수 없습니다.\n즉, java.time 패키지에 포함되는 클래스의 메소드들은 모두 새로운 객체를 생성하여 반환하고 있습니다.\njava.time 패키지의 구성 클래스\n기존의 Calendar 클래스는 날짜와 시간을 한 번에 표현했지만, java.time 패키지에서는 별도로 구분하여 처리합니다. LocalData 클래스는 날짜를 표현할 때 사용하며, LocalTime 클래스는 시간을 표현할 때 사용합니다.\n또한, 기존의 Caledar 클래스처럼 날짜와 시간을 한 번에 표현하고 싶을 때는 LocalDateTime 클래스를 사용합니다.\nZonedDateTime 클래스는 특정 타임 존(time-zone)에 해당하는 날짜와 시간을 다루는 데 사용합니다. 또한, 기존의 Date 클래스와 비슷한 용도로 사용되는 Instant 클래스가 있습니다. Instant 클래스는 특정 시점의 날짜와 시간을 나노초(nanosecond) 단위로 표현하는 타임스탬프(time-stamp)를 다루는 데 사용됩니다.\nPeriod 클래스(단어가 의미하듯이 '기간’이라는 뜻을 가지고 있음)는 두 날짜 사이의 차이를 표현하는 데 사용되며, Duration 클래스는 두 시각 사이의 차이를 표현하는 데 사용됩니다.\nLocalDate와 LocalTime\n\nLocalData 클래스는 날짜를 표현하는 데 사용되며, LocalTime 클래스는 시간을 표현하는 데 사용됩니다. java.time 패키지에 포함된 대부분의 클래스들은 이 두 클래스를 확장한 것이 많으므로, 우선 이 두 클래스를 먼저 이해하고 알고 있어야 합니다. :)\n날짜와 시간 객체의 생성\nLocalData와 LocalTime 클래스는 객체를 생성하기 위해 now()와 of() 메소드라는 클래스 메소드를 제공합니다.\nnow() 메소드는 현재 날짜와 시간을 이용하여 새로운 객체를 생성하여 반환합니다. 하지만 of() 메소드는 전달된 인수를 가지고 특정 날짜와 시간을 표현하는 새로운 객체를 생성하여 반환합니다.\n12345678910111213141516171819package com.company;import java.time.LocalDate;import java.time.LocalTime;public class streamExam &#123;    public static void main(String[] args) &#123;        LocalDate today = LocalDate.now(); // 현재 날짜 기준으로 생성        LocalTime present = LocalTime.now();        System.out.println(today+\" 와 \"+present);        LocalDate birthday = LocalDate.of(1994,06,27);        LocalTime birthTime = LocalTime.of(02,00,00,11);        System.out.println(birthday+\", \"+birthTime);    &#125;&#125;// 결과2018-09-05 와 21:22:06.6401994-06-27, 02:00:00.000000011\n\nof() 메소드는 위의 예제에서 사용된 메소드 시그니처 이외에도 다양한 형태로 오버로딩되어 제공됩니다.\n\n날짜와 시간 객체에 접근하기\nLocalDate와 LocalTime 클래스는 특정 필드의 값을 가져오기 위해서 다음과 같이 다양한 getter 메소드를 제공합니다.\n\n\n\n메소드\n설명\n\n\n\n\nint get(TemporalField field) long getLong(TemporalField field)\n해당 날짜 객체의 명시된 필드의 값을 int형이나 long형으로 반환함.\n\n\nint getYear()\n해당 날짜 객체의 연도(YEAR) 필드의 값을 반환함.\n\n\nMonth getMonth()\n해당 날짜 객체의 월(MONTH_OF_YEAR) 필드의 값을 Month 열거체를 이용하여 반환함.(즉, SEPTEMBER과 같은 형식으로 반환)\n\n\nint getMonthValue()\n해당 날짜 객체의 월(MONTH_OF_YEAR) 필드의 값을 반환함. (숫자로 1~12까지를 반환함.)\n\n\nint getDayOfMonth()\n해당 날짜 객체의 일(DAY_OF_MONTH) 필드의 값을 반환함. (숫자로 1~31까지를 반환함.)\n\n\nint getDayOfYear()\n해당 날짜 객체의 일(DAY_OF_YEAR) 필드의 값을 반환함. (숫자로 1~365까지를 반환함.[윤년이면 366])\n\n\nDayOfWeek getDayOfWeek()\n해당 날짜 객체의 요일(DAY_OF_WEEK) 필드의 값을 DayOfWeek 열거체를 이용하여 반환함.\n\n\n\n기존의 Calendar 클래스에서는 1월을 0으로 표현하여 월의 범위가 0~11이었으며, 요일은 일요일부터 1로 표현했습니다.\n하지만 java.time 패키지에서 1월을 1로 표현하여 월의 범위가 1~12가 되었으며, 요일은 월요일부터 1로 표현하도록 변경되었습니다.\n\nCalendar 클래스와 java.time 패키지의 클래스를 같이 사용할 때에는 특히 위와 같은 차이점에 주의해야 합니다.\n\n12345678910111213141516171819202122import java.time.LocalDate;import java.time.temporal.ChronoField;public class streamExam &#123;    public static void main(String[] args) &#123;        LocalDate today = LocalDate.now();        // 현재 날짜 기준으로 생성                System.out.println(\"올해는 \"+today.getYear()+\"년입니다.\");        System.out.println(\"이번달은 \"+today.getMonthValue()+\"월입니다.\");        System.out.println(\"오늘은\"+today.getDayOfWeek()+\"입니다.\");        System.out.println(\"오늘은 1년 중 \"+today.get(ChronoField.DAY_OF_YEAR)+\"일째 날입니다.\");    &#125;&#125;//결과올해는 2018년입니다.이번달은 9월입니다.오늘은WEDNESDAY입니다.오늘은 1년 중 248일째 날입니다.\nLocalTime 클래스에서 제공하는 대표적인 getter 메소드는 다음과 같습니다.\n\n\n\n메소드\n설명\n\n\n\n\nint get(TemporalField field) long getLong(TemporalField field)\n해당 시간 객체의 명시된 필드의 값을 int형이나 long형으로 반환함.\n\n\nint getHour()\n해당 시간 객체의 시(HOUR_OF_DAY) 필드의 값을 반환함.\n\n\nint getMinute()\n해당 시간 객체의 분(MINUTE_OF_HOUR) 필드의 값을 반환함.\n\n\nint getSecond()\n해당 시간 객체의 초(SECOND_OF_MINUTE) 필드의 값을 반환함.\n\n\nint getNano()\n해당 시간 객체의 나노초(NANO_OF_SECOND) 필드의 값을 반환함.\n\n\n\n123456789101112import java.time.LocalTime;public class streamExam &#123;    public static void main(String[] args) &#123;        LocalTime present = LocalTime.now();        System.out.println(\"현재 시각은 \" + present.getHour() + \"시 \" + present.getMinute() + \"분입니다.\");    &#125;&#125;//결과현재 시각은 0시 18분입니다.\n\nLocalDate와 LocalTime 클래스는 모두 현재 시간을 기준으로 하기 때문에 이 글을 보고 참고하시는 분들은 저와 다른 결과를 볼 수 있습니다. 다른 것이 당연한 것이니 당황해 하지 마시길…ㅎㅎ\n\nTemporalField 인터페이스\nTemporalField 인터페이스는 월(month-of-year)과 시(hour-of-day)와 같이 날짜와 시간과 관련된 필드를 정의해 놓은 인터페이스입니다. 이 인터페이스를 구현하여 날짜와 시간을 나타낼 때 사용하는 열거체가 바로 ChronoField입니다.\njava.time 패키지를 구성하는 클래스의 메소드에서는 이 열거체를 이용하여 날짜와 시간을 처리하고 있스빈다.\nChronoField 열거체에 정의된 대표적인 열거체 상수는 다음 표와 같습니다.\n\n123456789101112131415161718192021222324import java.time.LocalTime;import java.time.temporal.ChronoField;public class streamExam &#123;    public static void main(String[] args) &#123;        LocalTime present = LocalTime.of(13, 13, 13);        String ampm;        System.out.println(present.get(ChronoField.AMPM_OF_DAY));        // 0 : 오전, 1 : 오후        if (present.get(ChronoField.AMPM_OF_DAY) == 0) &#123;            ampm = \"오전\";        &#125; else &#123;            ampm = \"오후\";        &#125;        System.out.println(\"지금은 \" + ampm + \" \" + present.get(ChronoField.HOUR_OF_AMPM) + \"시입니다.\");    &#125;&#125;// 결과1지금은 오후 1시입니다.\n위의 결과에서 보듯이 'present.get(ChronoField.AMPM_OF_DAY)'는 오전은 0을 오후는 1을 반환하고 있습니다.\n날짜와 시간 객체의 필드값 변경\nLocalDate와 LocalTime 클래스는 날짜와 시간 객체에 접근하여 특정 필드의 값을 변경하기 위해서 with() 메소드를 사용합니다. with() 메소드를 사용하면 값이 변경될 필드를 사용자가 직접 명시할 수 있습니다.\n또한, 특정 필드의 값을 변경하기 위해 미리 정의되어 제공되는 다양한 with() 메소드를 사용할 수도 있습니다.\nLocalDate 클래스에서 제공하는 with() 메소드는 다음과 같습니다.\n\nLocalTime 클래스에서 제공하는 with() 메소드는 다음과 같습니다.\n\n1234567891011121314151617181920212223242526272829303132package com.company;import java.time.LocalDate;import java.time.LocalTime;public class streamExam &#123;    public static void main(String[] args) &#123;        LocalDate today = LocalDate.now();        System.out.println(\"올해는 \"+today.getYear()+\"년입니다.\");        LocalDate otherDay = today.withYear(1994); // 새로운 객체를 반환        System.out.println(\"올해는 \"+otherDay.getYear()+\"년입니다.\");        System.out.println();        LocalTime present = LocalTime.now();        System.out.println(\"현재 시각은 \"+present.getHour()+\"시 입니다.\");        LocalTime otherTime = present.withHour(16); // 새로운 객체를 반환        System.out.println(\"현재 시각은 \"+otherTime.getHour()+\"시 입니다.\");    &#125;&#125;//결과올해는 2018년입니다.올해는 1994년입니다.현재 시각은 0시 입니다.현재 시각은 16시 입니다.\nwith() 메소드 이외에도 특정 필드의 값을 더하거나 뺄 수 있는 다양한 plus()와 minus() 메소드도 제공됩니다.\n1234567891011121314151617181920212223package com.company;import java.time.LocalTime;import java.time.temporal.ChronoField;import java.time.temporal.ChronoUnit;public class streamExam &#123;    public static void main(String[] args) &#123;        LocalTime present = LocalTime.now();        System.out.println(\"현재 시각은 \" + present.get(ChronoField.HOUR_OF_DAY) + \"시입니다.\");        LocalTime otherTime = present.plus(2, ChronoUnit.HOURS);        System.out.println(\"바뀐 시간은 \" + otherTime.getHour() + \"시입니다.\");        LocalTime anotherTime = present.minus(6, ChronoUnit.HOURS);        System.out.println(\"바뀐 시간은 \" + anotherTime.getHour() + \"시입니다.\");    &#125;&#125;//결과현재 시각은 1시입니다.바뀐 시간은 3시입니다.바뀐 시간은 19시입니다.\n날짜와 시간 객체의 비교\nLocalDate와 LocalTime 클래스에도 객체를 비교할 수 있는 compareTo() 메소드가 오버라이딩 되어 있습니다. 하지만 더욱 편리하게 날짜와 시간 객체를 서로 비교할 수 있도록 다음과 같은 메소드를 제공합니다.\n\nisEqual() 메소드 : equals() 메소드와는 달리 오직 날짜만을 비교함.(LocalDate 클래스에서만 제공)\nisBefore() 메소드 : 두 개의 날짜와 시간 객체를 비교하여 현재 객체가 명시된 객체보다 앞선 시간인지를 비교함.\nisAfter() 메소드 : 두 개의 날짜와 시간 객체를 비교하여 현재 객체가 명시된 객체보다 늦은 시간인지를 비교함.\n\n1234567891011121314151617181920212223242526import java.time.LocalDate;public class streamExam &#123;    public static void main(String[] args) &#123;        LocalDate today = LocalDate.now();        LocalDate otherDay = LocalDate.of(1994, 06, 27);        LocalDate otherDay2 = LocalDate.of(1994, 06, 27);        System.out.println(today.compareTo(otherDay));        // today와 otherDay의 year 간의 차이를 반환        System.out.println(today.isBefore(otherDay));        System.out.println(today.isAfter(otherDay));        System.out.println(today.isEqual(otherDay));        System.out.println();        System.out.println(otherDay.isEqual(otherDay2));    &#125;&#125;// 결과24falsetruefalsetrue\n","dateCreated":"2018-09-05T20:36:36+09:00","dateModified":"2020-04-22T16:47:45+09:00","datePublished":"2018-09-05T20:36:36+09:00","description":"","headline":"[Java] 19. java.time","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://woovictory.github.io/2018/09/05/java-basic-19/"},"publisher":{"@type":"Organization","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg","logo":{"@type":"ImageObject","url":"Victory.jpeg"}},"url":"https://woovictory.github.io/2018/09/05/java-basic-19/","keywords":"Java"}</script>
     <meta name="description" content="자바에서의 날짜 및 시간 처리  JDK 1.0에서는 Date 클래스를 사용하여 날짜에 관한 처리를 수행했습니다. 하지만 Date 클래스는 현재 대부분의 메소드가 사용을 권장하지 않고(deprecated)있습니다. JDK 1.1부터 새롭게 제공된 Calendar 클래스는 날짜와 시간에 대한 정보를 손쉽게 얻을 수 있었습니다. 하지만 Calendar 클래스는">
 <meta name="keywords" content="Java">
-<meta property="og:type" content="article">
+<meta property="og:type" content="blog">
 <meta property="og:title" content="[Java] 19. java.time">
 <meta property="og:url" content="https://woovictory.github.io/2018/09/05/java-basic-19/index.html">
 <meta property="og:site_name" content="VictoryWoo">
 <meta property="og:description" content="자바에서의 날짜 및 시간 처리  JDK 1.0에서는 Date 클래스를 사용하여 날짜에 관한 처리를 수행했습니다. 하지만 Date 클래스는 현재 대부분의 메소드가 사용을 권장하지 않고(deprecated)있습니다. JDK 1.1부터 새롭게 제공된 Calendar 클래스는 날짜와 시간에 대한 정보를 손쉽게 얻을 수 있었습니다. 하지만 Calendar 클래스는">
 <meta property="og:locale" content="en">
 <meta property="og:image" content="https://woovictory.github.io/img/chronoField.png">
+<meta property="og:image" content="https://woovictory.github.io/img/localdate.png">
+<meta property="og:image" content="https://woovictory.github.io/img/localtime.png">
 <meta property="og:updated_time" content="2020-04-22T07:47:45.864Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="[Java] 19. java.time">
 <meta name="twitter:description" content="자바에서의 날짜 및 시간 처리  JDK 1.0에서는 Date 클래스를 사용하여 날짜에 관한 처리를 수행했습니다. 하지만 Date 클래스는 현재 대부분의 메소드가 사용을 권장하지 않고(deprecated)있습니다. JDK 1.1부터 새롭게 제공된 Calendar 클래스는 날짜와 시간에 대한 정보를 손쉽게 얻을 수 있었습니다. 하지만 Calendar 클래스는">
 <meta name="twitter:image" content="https://woovictory.github.io/img/chronoField.png">
     
-
+    
+        
+    
+    
+        <meta property="og:image" content="https://woovictory.github.io/assets/images/Victory.jpeg"/>
+    
+    
+    
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/all.css">
+    <link rel="stylesheet" href="/assets/css/jquery.fancybox.css">
+    <link rel="stylesheet" href="/assets/css/thumbs.css">
+    <link rel="stylesheet" href="/assets/css/tranquilpeak.css">
+    <!--STYLES END-->
     
 
     
-        <link rel="icon" href="/css/images/victorywoo.png" />
-    
 
-    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/libs/titillium-web/styles.css">
-    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
-
-    <link rel="stylesheet" type="text/css" href="">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/theeluwin/NotoSansKR-Hestia@master/stylesheets/NotoSansKR-Hestia.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/earlyaccess/nanumgothiccoding.css">
     
+        
     
-    <link rel="stylesheet" href="/css/style.css">
-
-    <script src="/libs/jquery/3.3.1/jquery.min.js"></script>
-    
-    
-        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
-    
-    
-        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
-    
-    
-        <script type="text/javascript">
-(function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-125410253-1', 'auto');
-ga('send', 'pageview');
-
-</script>
-    
-    
-
-
 </head>
 
-<body>
-    <div id="wrap">
-        <header id="header">
-    <div id="header-outer" class="outer">
-        <div class="container">
-            <div class="container-inner">
-                <div id="header-title">
-                    <h1 class="logo-wrap">
-                        <a href="/" class="logo"></a>
-                    </h1>
-                    
-                        <h2 class="subtitle-wrap">
-                            <p class="subtitle">VictoryWoo&#39;s Blog</p>
-                        </h2>
-                    
-                </div>
-                <div id="header-inner" class="nav-container">
-                    <a id="main-nav-toggle" class="nav-icon fa fa-bars"></a>
-                    <div class="nav-container-inner">
-                        <ul id="main-nav">
-                            
-                                <li class="main-nav-list-item" >
-                                    <a class="main-nav-list-link" href="/">Home</a>
-                                </li>
-                            
-                                <li class="main-nav-list-item" >
-                                    <a class="main-nav-list-link" href="/about/index.html">About</a>
-                                </li>
-                            
-                        </ul>
-                        <nav id="sub-nav">
-                            <div id="search-form-wrap">
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
 
-    <form class="search-form">
-        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
-        <button type="submit" class="search-form-submit"></button>
-    </form>
-    <div class="ins-search">
-    <div class="ins-search-mask"></div>
-    <div class="ins-search-container">
-        <div class="ins-input-wrapper">
-            <input type="text" class="ins-search-input" placeholder="Type something..." />
-            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
-        </div>
-        <div class="ins-section-wrapper">
-            <div class="ins-section-container"></div>
-        </div>
-    </div>
-</div>
-<script>
-(function (window) {
-    var INSIGHT_CONFIG = {
-        TRANSLATION: {
-            POSTS: 'Posts',
-            PAGES: 'Pages',
-            CATEGORIES: 'Categories',
-            TAGS: 'Tags',
-            UNTITLED: '(Untitled)',
-        },
-        ROOT_URL: '/',
-        CONTENT_URL: '/content.json',
-    };
-    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
-})(window);
-</script>
-<script src="/js/insight.js"></script>
 
-</div>
-                        </nav>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</header>
-        <div class="container">
-            <div class="main-body container-inner">
-                <div class="main-body-inner">
-                    <section id="main">
-                        <div class="main-body-header">
-    <h1 class="header">
     
-    <a class="page-title-link" href="/categories/Java/">Java</a>
-    </h1>
-</div>
-
-                        <div class="main-body-content">
-                            
-                            <article id="post-java-basic-19" class="article article-single article-type-post" itemscope itemprop="blogPost">
-    <div class="article-inner">
         
-            <header class="article-header">
-                
-    
-        <h1 class="article-title" itemprop="name">
-        [Java] 19. java.time
-        </h1>
+            
+        
     
 
-            </header>
-        
-        
-            <div class="article-meta">
-                
-    <div class="article-date">
-        <a href="/2018/09/05/java-basic-19/" class="article-date">
-            <time datetime="2018-09-05T11:36:36.000Z" itemprop="datePublished">2018-09-05</time>
+<header id="header" data-behavior="4">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a
+            class="header-title-link"
+            href="/ "
+            aria-label=""
+        >
+            VictoryWoo
         </a>
     </div>
+    
+        
+            <a
+                class="header-right-picture "
+                href="#about"
+                aria-label="Open the link: /#about"
+            >
+        
+        
+            <img class="header-picture" src="/assets/images/Victory.jpeg" alt="Author&#39;s picture"/>
+        
+        </a>
+    
+</header>
 
-		
+            <!-- Define author's picture -->
 
+
+
+        
+    
+
+<nav id="sidebar" data-behavior="4">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a
+                    href="/#about"
+                    aria-label="Read more about the author"
+                >
+                    <img class="sidebar-profile-picture" src="/assets/images/Victory.jpeg" alt="Author&#39;s picture"/>
+                </a>
+                <h4 class="sidebar-profile-name">VictoryWoo</h4>
                 
-    <div class="article-tag">
-        <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/Java/">Java</a>
-    </div>
-
+                    <h5 class="sidebar-profile-bio"><p>기록을 통해 사람들과 공유하는 것을 좋아합니다.</p>
+</h5>
+                
             </div>
         
         
-        <div class="article-entry" itemprop="articleBody">
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/"
+                            
+                            rel="noopener"
+                            title="Home"
+                        >
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-categories"
+                            
+                            rel="noopener"
+                            title="Categories"
+                        >
+                        <i class="sidebar-button-icon fa fa-bookmark" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Categories</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-tags"
+                            
+                            rel="noopener"
+                            title="Tags"
+                        >
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Tags</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link open-algolia-search"
+                            href="#search"
+                            
+                            rel="noopener"
+                            title="Search"
+                        >
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Search</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="#about"
+                            
+                            rel="noopener"
+                            title="About"
+                        >
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://github.com/WooVictory"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="GitHub"
+                        >
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://www.facebook.com/WooVictory"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Facebook"
+                        >
+                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Facebook</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://www.linkedin.com/profile/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="LinkedIn"
+                        >
+                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">LinkedIn</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/jhsw0375@gmail.com"
+                            
+                            rel="noopener"
+                            title="Mail"
+                        >
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="4"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            [Java] 19. java.time
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2018-09-05T20:36:36+09:00">
+	
+		    Sep 05, 2018
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/Java/">Java</a>
+
+
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
             <h1 id="자바에서의-날짜-및-시간-처리">자바에서의 날짜 및 시간 처리</h1>
 <hr>
 <p>JDK 1.0에서는 Date 클래스를 사용하여 날짜에 관한 처리를 수행했습니다. 하지만 Date 클래스는 현재 대부분의 메소드가 사용을 권장하지 않고(<code>deprecated</code>)있습니다.</p>
@@ -335,313 +438,331 @@ java.time 패키지를 구성하는 클래스의 메소드에서는 이 열거�
 </ol>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.time.LocalDate;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">streamExam</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        LocalDate today = LocalDate.now();</span><br><span class="line">        LocalDate otherDay = LocalDate.of(<span class="number">1994</span>, <span class="number">06</span>, <span class="number">27</span>);</span><br><span class="line">        LocalDate otherDay2 = LocalDate.of(<span class="number">1994</span>, <span class="number">06</span>, <span class="number">27</span>);</span><br><span class="line"></span><br><span class="line">        System.out.println(today.compareTo(otherDay));</span><br><span class="line">        <span class="comment">// today와 otherDay의 year 간의 차이를 반환</span></span><br><span class="line">        System.out.println(today.isBefore(otherDay));</span><br><span class="line">        System.out.println(today.isAfter(otherDay));</span><br><span class="line">        System.out.println(today.isEqual(otherDay));</span><br><span class="line"></span><br><span class="line">        System.out.println();</span><br><span class="line">        System.out.println(otherDay.isEqual(otherDay2));</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 결과</span></span><br><span class="line"><span class="number">24</span></span><br><span class="line"><span class="keyword">false</span></span><br><span class="line"><span class="keyword">true</span></span><br><span class="line"><span class="keyword">false</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">true</span></span><br></pre></td></tr></table></figure>
 
-        </div>
-        
-        <footer class="article-footer">
-            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({
-     google_ad_client: "ca-pub-9725307592233286",
-     enable_page_level_ads: true
-});
-</script>
             
 
 
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">TAGGED IN</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/Java/">Java</a>
 
-    <a data-url="https://woovictory.github.io/2018/09/05/java-basic-19/" data-id="ckd6xgt3j012a51pq6097x7db" class="article-share-link"><i class="fa fa-share"></i>Share</a>
-<script>
-    (function ($) {
-        $('body').on('click', function() {
-            $('.article-share-box.on').removeClass('on');
-        }).on('click', '.article-share-link', function(e) {
-            e.stopPropagation();
+            </div>
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2018/09/18/BOJ2346/"
+                    data-tooltip="[2346] 풍선 터뜨리기 "
+                    aria-label="PREVIOUS: [2346] 풍선 터뜨리기 "
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2018/09/04/java-basic-18/"
+                    data-tooltip="[Java] 18. 스트림API"
+                    aria-label="NEXT: [Java] 18. 스트림API"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="Share this post"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://woovictory.github.io/2018/09/05/java-basic-19/"
+                    title="Share on Facebook"
+                    aria-label="Share on Facebook"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://woovictory.github.io/2018/09/05/java-basic-19/"
+                    title="Share on Twitter"
+                    aria-label="Share on Twitter"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://woovictory.github.io/2018/09/05/java-basic-19/"
+                    title="Share on Google+"
+                    aria-label="Share on Google+"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
 
-            var $this = $(this),
-                url = $this.attr('data-url'),
-                encodedUrl = encodeURIComponent(url),
-                id = 'article-share-box-' + $this.attr('data-id'),
-                offset = $this.offset(),
-                box;
 
-            if ($('#' + id).length) {
-                box = $('#' + id);
-
-                if (box.hasClass('on')){
-                    box.removeClass('on');
-                    return;
-                }
-            } else {
-                var html = [
-                    '<div id="' + id + '" class="article-share-box">',
-                        '<input class="article-share-input" value="' + url + '">',
-                        '<div class="article-share-links">',
-                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
-                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
-                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
-                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
-                        '</div>',
-                    '</div>'
-                ].join('');
-
-              box = $(html);
-
-              $('body').append(box);
-            }
-
-            $('.article-share-box.on').hide();
-
-            box.css({
-                top: offset.top + 25,
-                left: offset.left
-            }).addClass('on');
-
-        }).on('click', '.article-share-box', function (e) {
-            e.stopPropagation();
-        }).on('click', '.article-share-box-input', function () {
-            $(this).select();
-        }).on('click', '.article-share-box-link', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-
-            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
-        });
-    })(jQuery);
-</script>
-
-        </footer>
+        
+        
+            
+        
     </div>
 </article>
 
-    <section id="comments">
-    
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2020 VictoryWoo. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2018/09/18/BOJ2346/"
+                    data-tooltip="[2346] 풍선 터뜨리기 "
+                    aria-label="PREVIOUS: [2346] 풍선 터뜨리기 "
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2018/09/04/java-basic-18/"
+                    data-tooltip="[Java] 18. 스트림API"
+                    aria-label="NEXT: [Java] 18. 스트림API"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="Share this post"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
         
-    <div id="disqus_thread">
-        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-    </div>
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://woovictory.github.io/2018/09/05/java-basic-19/"
+                    title="Share on Facebook"
+                    aria-label="Share on Facebook"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://woovictory.github.io/2018/09/05/java-basic-19/"
+                    title="Share on Twitter"
+                    aria-label="Share on Twitter"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://woovictory.github.io/2018/09/05/java-basic-19/"
+                    title="Share on Google+"
+                    aria-label="Share on Google+"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
 
-    
-    </section>
 
-
-
-                        </div>
-                    </section>
-                    <aside id="sidebar">
-    <a class="sidebar-toggle" title="Expand Sidebar"><i class="toggle icon"></i></a>
-    <div class="sidebar-top">
-        <p>follow:</p>
-        <ul class="social-links">
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
             
                 
-                <li>
-                    <a class="social-tooltip" title="facebook" href="https://www.facebook.com/WooVictory" target="_blank" rel="noopener">
-                        <i class="icon fa fa-facebook"></i>
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://woovictory.github.io/2018/09/05/java-basic-19/"
+                        aria-label="Share on Facebook"
+                    >
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Share on Facebook</span>
                     </a>
                 </li>
-                
             
                 
-                <li>
-                    <a class="social-tooltip" title="github" href="https://github.com/WooVictory" target="_blank" rel="noopener">
-                        <i class="icon fa fa-github"></i>
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://twitter.com/intent/tweet?text=https://woovictory.github.io/2018/09/05/java-basic-19/"
+                        aria-label="Share on Twitter"
+                    >
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Share on Twitter</span>
                     </a>
                 </li>
-                
             
                 
-                <li>
-                    <a class="social-tooltip" title="linkedin" href="https://www.linkedin.com/in/seungwoo-lee-590844177" target="_blank" rel="noopener">
-                        <i class="icon fa fa-linkedin"></i>
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://plus.google.com/share?url=https://woovictory.github.io/2018/09/05/java-basic-19/"
+                        aria-label="Share on Google+"
+                    >
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>Share on Google+</span>
                     </a>
                 </li>
-                
             
         </ul>
     </div>
-    
-        
-<nav id="article-nav">
-    
-        <a href="/2018/09/18/BOJ2346/" id="article-nav-newer" class="article-nav-link-wrap">
-        <strong class="article-nav-caption">newer</strong>
-        <p class="article-nav-title">
-        
-            [2346] 풍선 터뜨리기 
-        
-        </p>
-        <i class="icon fa fa-chevron-right" id="icon-chevron-right"></i>
-    </a>
-    
-    
-        <a href="/2018/09/04/java-basic-18/" id="article-nav-older" class="article-nav-link-wrap">
-        <strong class="article-nav-caption">older</strong>
-        <p class="article-nav-title">[Java] 18. 스트림API</p>
-        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
-        </a>
-    
-</nav>
-
-    
-    <div class="widgets-container">
-        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({
-     google_ad_client: "ca-pub-9725307592233286",
-     enable_page_level_ads: true
-});
-</script>
-        
-            
-                
-    <div class="widget-wrap widget-list">
-        <h3 class="widget-title">categories</h3>
-        <div class="widget">
-            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Android/">Android</a><span class="category-list-count">79</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Book/">Book</a><span class="category-list-count">4</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Book/CleanCode/">CleanCode</a><span class="category-list-count">4</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Design-Pattern/">Design Pattern</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ETC/">ETC</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Git/">Git</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Inno-SOPT/">Inno_SOPT</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">39</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Kotlin/">Kotlin</a><span class="category-list-count">17</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Node-js/">Node.js</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Operation-System/">Operation System</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/RxJava/">RxJava</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/">algorithm</a><span class="category-list-count">51</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/BOJ/">BOJ</a><span class="category-list-count">49</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/Programmers/">Programmers</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/개발-상식/">개발 상식</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/네트워크/">네트워크</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/데이터베이스/">데이터베이스</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/삼성-기출/">삼성 기출</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/알고리즘/">알고리즘</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/자료구조/">자료구조</a><span class="category-list-count">10</span></li></ul>
-        </div>
-    </div>
 
 
             
-                
-    <div class="widget-wrap">
-        <h3 class="widget-title">recents</h3>
-        <div class="widget">
-            <ul id="recent-post" class="no-thumbnail">
-                
-                    <li>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/ETC/">ETC</a></p>
-                            <p class="item-title"><a href="/2020/07/29/Memo-Privacy/" class="title">[Memo] 개인정보 처리 방침</a></p>
-                            <p class="item-date"><time datetime="2020-07-29T05:11:19.000Z" itemprop="datePublished">2020-07-29</time></p>
-                        </div>
-                    </li>
-                
-                    <li>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/Book/">Book</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/Book/CleanCode/">CleanCode</a></p>
-                            <p class="item-title"><a href="/2020/07/21/CleanCode4/" class="title">[CleanCode] 4장. 주석</a></p>
-                            <p class="item-date"><time datetime="2020-07-21T14:40:14.000Z" itemprop="datePublished">2020-07-21</time></p>
-                        </div>
-                    </li>
-                
-                    <li>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/Android/">Android</a></p>
-                            <p class="item-title"><a href="/2020/07/08/Android-SingleLiveEventToEventWrapper/" class="title">[Android] MVVM UI Event Wrapper</a></p>
-                            <p class="item-date"><time datetime="2020-07-08T01:34:10.000Z" itemprop="datePublished">2020-07-08</time></p>
-                        </div>
-                    </li>
-                
-                    <li>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/Kotlin/">Kotlin</a></p>
-                            <p class="item-title"><a href="/2020/07/07/Kotlin-Coroutine-1/" class="title">[Kotlin] Coroutine 이해하기</a></p>
-                            <p class="item-date"><time datetime="2020-07-07T02:05:54.000Z" itemprop="datePublished">2020-07-07</time></p>
-                        </div>
-                    </li>
-                
-                    <li>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/Book/">Book</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/Book/CleanCode/">CleanCode</a></p>
-                            <p class="item-title"><a href="/2020/07/06/CleanCode-3/" class="title">[CleanCode] 3장. 함수</a></p>
-                            <p class="item-date"><time datetime="2020-07-06T07:57:43.000Z" itemprop="datePublished">2020-07-06</time></p>
-                        </div>
-                    </li>
-                
-            </ul>
         </div>
-    </div>
-
-            
         
-    </div>
-    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({
-     google_ad_client: "ca-pub-9725307592233286",
-     enable_page_level_ads: true
-});
-</script>
-</aside>
 
-                </div>
-            </div>
-        </div>
-        <footer id="footer">
-    <div class="container">
-        <div class="container-inner">
-            <a id="back-to-top" href="javascript:;"><i class="icon fa fa-angle-up"></i></a>
-            <div class="credit">
-                <h1 class="logo-wrap">
-                    <a href="/" class="logo"></a>
-                </h1>
-                <p>&copy; 2020 VictoryWoo</p>
-                <p>Powered by <a href="//hexo.io/" target="_blank">Hexo</a>. Theme by <a href="//github.com/ppoffice" target="_blank">PPOffice</a></p>
-            </div>
-            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({
-     google_ad_client: "ca-pub-9725307592233286",
-     enable_page_level_ads: true
-});
-</script>
-            <div class="footer-plugins">
-              
+
     
-
-
-            </div>
-        </div>
-    </div>
-</footer>
-
         
     
-    <script>
-    var disqus_shortname = 'hexo-theme-hueman';
-    
-    
-    var disqus_url = 'https://woovictory.github.io/2018/09/05/java-basic-19/';
-    
-    (function() {
-    var dsq = document.createElement('script');
-    dsq.type = 'text/javascript';
-    dsq.async = true;
-    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
-    </script>
 
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <img id="about-card-picture" src="/assets/images/Victory.jpeg" alt="Author&#39;s picture"/>
+        
+            <h4 id="about-card-name">VictoryWoo</h4>
+        
+            <div id="about-card-bio"><p>기록을 통해 사람들과 공유하는 것을 좋아합니다.</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>Android Developer</p>
 
-
-
-    
-        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
-    
-    
-        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
-    
-    
-
-
-
-<!-- Custom Scripts -->
-<script src="/js/main.js"></script>
-
+            </div>
+        
+        
     </div>
-</body>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/cover-v1.2.0.jpg');"></div>
+        <!--SCRIPTS-->
+<script src="/assets/js/jquery.js"></script>
+<script src="/assets/js/jquery.fancybox.js"></script>
+<script src="/assets/js/thumbs.js"></script>
+<script src="/assets/js/tranquilpeak.js"></script>
+<!--SCRIPTS END-->
+
+
+    
+
+
+
+
+    </body>
 </html>

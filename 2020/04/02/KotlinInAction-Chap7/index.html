@@ -1,20 +1,20 @@
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
+    
 <head>
-    <meta charset="utf-8" />
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="VictoryWoo">
+    <title>[Kotlin in Action] Chap7. 연산자 오버로딩과 기타 관례 - VictoryWoo</title>
+    <meta name="author" content="VictoryWoo">
     
-
     
-    <title>[Kotlin in Action] Chap7. 연산자 오버로딩과 기타 관례 | VictoryWoo</title>
     
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    
-        <meta name="keywords" content="Android,Kotlin,코틀린,프로그래밍 언어,Kotlin in Action" />
-    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg"},"articleBody":"목차\n\n연산자 오버로딩\n관례 : 여러 연산을 지원하기 위해 특별한 이름이 붙은 메소드\n위임 프로퍼티\n\nOverViews\n어떤 클래스 안에 pluse라는 이름의 특별한 메소드를 정의하면 그 클래스의 인스턴스에 대해 + 연산자를 사용할 수 있다. 이런 식으로 어떤 언어 기능과 미리 정해진 이름의 함수를 연결해주는 기법 -&gt; 관례\n언어 기능을 타입에 의존하는 자바와 달리 코틀린은 함수 이름을 통한 관례에 의존한다.\n이 관례를 채택한 이유는 기존 자바 클래스를 코틀린 언어에 적용하기 위함이다. 기존 자바 클래스가 구현하는 인터페이스는 이미 고정되어 있다. 그래서 코틀린 쪽에서 자바 클래스가 새로운 인터페이스를 구현하도록 할 수 없다.\n반면, 확장 함수를 사용하면 기존 클래스에 새로운 메소드를 추가할 수 있다. 따라서 기존 자바 클래스에 대해 확장 함수를 구현하면서 관례에 따라 이름을 붙이면 기존 자바 코드를 바꾸지 않아도 새로운 기능을 부여할 수 있다.\n이번 장에서는 Point라는 클래스를 예제로 사용할 것이다. 코드는 아래와 같다.\n1data class Point(val x: Int, val y: Int)\n7.1 산술 연산자 오버로딩\n자바는 원시 타입에 대해서만 산술 연산자를 정의할 수 있고, 추가적으로 String에 대해 + 연산자 사용이 가능하다.\n하지만 다른 클래스에서도 유용한 경우가 있을 수 있다.\nEx) BigInteger 클래스의 add를 호출하기 보다는 +연산을 사용하는 편이 낫다.\n어떻게 하는지 알아보자.\n7.1.1 이항 산술 연산 오버로딩\n123456789101112131415161718data class Point(val x: Int, val y: Int) &#123;    operator fun plus(other: Point): Point &#123;        return Point(x + other.x, y + other.y)    &#125;&#125;class PointTest &#123;    @Test    fun `포인트 테스트`() &#123;        val p = Point(10, 20)        val p2 = Point(30, 40)        println(p + p2) // p.plus(p2) 로 컴파일된다.    &#125;&#125;// ResultPoint(x=40, y=60)\n\n연산자를 오버로딩 하는 함수 앞에 operator 키워드가 있어야 한다. 이를 통해 이 함수가 관례를 따르는 함수임을 명확하게 알 수 있다.\noperator 없이 관례에서 사용하는 함수 이름을 쓰면 &quot;operator modifier is required … &quot; 오류를 접하게 된다.\n즉, plus 처럼 미리 정해진 이름의 함수를 operator 키워드를 통해 선언하면 +와 연결되어 + 호출로 연산을 수행할 수 있다.\n\n연산자를 확장 함수로 정의할 수도 있다.\n123operator fun Point.plus(other: Point): Point&#123;  return Point(x+other.x, y+other.y)&#125;\n\n코틀린에서는 프로그래머가 직접 연산자를 만들어 사용할 수 없고, 언어에서 미리 정해둔 연산자만 오버로딩할 수 있으며, 관례에 따르기 위해 클래스에서 정의해야 하는 이름이 연산자별로 정해져 있다.\n\n\n\n\n식\n함수 이름\n\n\n\n\na*b\ntimes\n\n\na/b\ndiv\n\n\na%b\nmod(1.1부터 rem)\n\n\na+b\nplus\n\n\na-b\nminus\n\n\n\n\n\n\n\n\n직접 정의한 함수를 통해 구현하더라도 연산자 우선순위는 언제나 표준 숫자 타입에 대한 연산자 우선순위와 같다.\n연산자를 정의할 때, 두 피연산자는(연산자 함수의 두 파라미터) 같은 타입일 필요는 없다.\nEx) 어떤 점을 비율에 따라 확대 및 축소하는 연산자를 정의하면 아래와 같다.\n\n12345678910111213operator fun Point.times(scale: Double): Point &#123;    return Point((x * scale).toInt(), (y * scale).toInt())&#125;@Testfun `포인트 times 테스트`() &#123;  val p = Point(10, 20)  println(p.times(1.5))  println(p * 1.5)&#125;// ResultPoint(x=15, y=30)Point(x=15, y=30)\n\n코틀린 연산자는 자동으로 교환 법칙을 지원하지 않는다.\n따라서 p * 1.5 가 된다고 해서 1.5 * p 가 되지는 않는다. 역을 지원하기 위해서는 마찬가지로 역의 식에 대응하는 연산자 함수를 정의해야 한다.\n또한, 연산자 함수의 반환 타입이 두 피연산자 중 하나와 일치하지 않아도 된다.\n일반 함수와 마찬가지로 operator 함수도 오버로딩 가능하다. 따라서 이름은 같지만 파라미터 타입이 서로 다른 연산자 함수를 여럿 만들 수 있다.\n대신 operator 함수는 파라미터의 개수는 1개밖에 정의하지 못한다. 이항 연산이기 때문!\n\n\n비트 연산자에 대해 특별한 연산자 함수를 사용하지 않는다.\n\n코틀린은 표준 숫자 타입에 대해 비트 연산자를 정의하지 않는다. 따라서 커스텀 타입에서 비트 연산자를 정의할 수도 없다.\n대신, 중위 연산자 표기법을 지원하는 일반 함수를 사용해 비트 연산을 수행한다.\n7.1.2 복합 대입 연산자 오버로딩\n12345var point = Point(1,2)point +=Point(3,4)println(point)// ResultPoint(x=4, y=6)\n\n+=, -= 등의 연산자를 복합 대입 연산자라 부른다.\npoint +=Point(3,4) 식은 point = point + Point(3,4) 라고 쓴 식과 동일하다. 물론, 변경 가능한 경우에만 복합 대입 연산자를 사용할 수 있다.\n+= 연산은 객체에 대한 참조를 다른 참조로 바꿔치기 한다.\n\npoint = point + Point(3,4)의 실행을 살펴보자. point의 plus는 새로운 객체를 반환한다.\npoint + Point(3,4)는 두 점의 좌표 각각 더한 값을 좌표로 갖는 새로운 Point 객체를 반환한다. 그 후 대입이 이뤄지면 point 변수는 새로운 Point 객체를 가리키게 된다.\n\n\n코틀린 표준 라이브러리는 MutableCollection에 대해 plusAssign을 정의하며, 아래와 같다. 이는 원래 객체의 내부 상태를 변경한다.\n\n123operator fun &lt;T&gt; MutableCollection&lt;T&gt;.plusAssign(element: T)&#123;  this.add(element)&#125;\n\n+=를 plus와 plusAssign 양쪽으로 컴파일 할 수 있다. 어떤 클래스가 이 두 함수를 모두 정의하고 둘 다 +=에 사용 가능한 경우 컴파일러는 오류를 보여준다.\n일반 연산자를 이용해 해결하거나 var를 val로 바꿔서 plusAssign 적용을 불가능하게 할 수도 있다.\n하지만, 일반적으로 새로운 클래스를 일관성 있게 설계하는 게 가장 좋다. plus와 plusAssign을 동시에 정의하는 것을 피해야 한다.\n코틀린은 컬렉션에 대해 두 가지 접근 방법을 제공한다.\n+, -는 항상 새로운 컬렉션을 반환한다.\n+=, -= 연산자는 항상 변경 가능한 컬렉션에 작용해 메모리에 있는 객체 상태를 변화시킨다.\n또한, 읽기 전용 컬렉션에서 +=, 0-는 변경을 적용한 복사본을 반환한다.\n이런 연산자의 피연산자로 개별 원소를 사용하거나 원소 타입이 일치하는 다른 컬렉션을 사용할 수 있다.\n\n123456789val list = arrayListOf(1,2)list +=3 // 변경 가능한 컬렉션 list에 대해 +=을 통해 객체 상태를 변경.val newList = list + listOf(4,5) // 두 리스트를 +로 합쳐 새로운 리스트를 반환.println(list)println(newList)// Result[1,2,3][1,2,3,4,5]\n7.1.3 단항 연산자 오버로딩\n123456789101112operator fun Point.unaryMinus(): Point &#123;    return Point(-x, -y)&#125;@Testfun `단항 연산자 테스트`() &#123;  val p = Point(10, 20)  println(-p)&#125;// ResultPoint(x=-10, y=-20)\n\n이항 연산자의 오버로딩과 마찬가지로 미리 정해진 이름의 함수를 멤버나 확장 함수로 선언하면서 operator를 표시하면 된다.\n단항 연산자를 오버로딩하기 위해 사용하는 함수는 인자를 취하지 않는다.\n\n[오버로딩할 수 있는 단항 산술 연산자]\n\n\n\n식\n함수 이름\n\n\n\n\n+a\nunaryPlus\n\n\n-a\nunaryMinus\n\n\n!a\nnot\n\n\n++a, a++\ninc\n\n\n–a, a–\ndec\n\n\n\n\n\n\n\nEx)\n1234567891011121314operator fun BigDecimal.inc() = this + BigDecimal.ONE@Testfun `증가 연산자 테스트`()&#123;  var bd= BigDecimal.ZERO  println(bd++) // 0  println(bd) // 1  println(++bd) // 2&#125;// Result012\n\n후위 ++ 연산은 bd 값을 반환한 후, bd의 값을 증가시킨다.\n전휘 ++ 연산은 그 반대로 동작한다.\n전위와 후위 연산을 처리하기 위해 별다른 처리를 해주지 않아도 제대로 동작한다.\n\n7.2 비교 연산자 오버로딩\nequals, compareTo를 호출해야 하는 자바와 달리 코틀린에서는 == 비교 연산자를 직접 사용함으로써 코드가 간결하며 이해하기 쉬운 장점이 있다.\n7.2.1 동등성 연산자 : equals\n\n!= 연산자도 equals로 컴파일된다. 이는 비교 결과를 뒤집은 값을 결과값으로 사용한다.\n==와 !=는 내부에서 인자가 널인지 검사하므로 다른 연산과 달리 널이 될 수 있는 값에도 적용할 수 있다. 아래 코드를 보자.\n\n123a == b// 위의 식은 아래처럼 컴파일 된다.a?.equals(b) ?: (b == null)\n\na가 널인지 판단해서 널이 아닌 경우에만 a.equals(b)를 호출한다.\n만약 a가 널이라면 b도 널인 경우에만 결과가 true가 된다.\nPoint는 data class이므로 컴파일러가 자동으로 equals를 생성해준다. 구현한다면 아래와 같을 것이다.\n\n12345678class Point(val x: Int, val y: Int)&#123;  override equals(obj: Any?): Boolean&#123;    if(this === obj) return true    if(obj !is Point) return false        return x == obj.x &amp;&amp; y == obj.y  &#125;&#125;\n\n===(식별자 비교 연산자)를 사용해 equals의 파라미터가 수신 객체와 같은지 확인한다.\n===는 자바의 == 연산자와 같다. 따라서 ===는 자신의 두 핀연산자가 서로 같은 객체를 가리키는지(원시 타입인 경우 두 값이 같은지) 비교한다.\n===를 사용해 자기 자신과의 비교를 최적화하는 경우가 많으며, ===는 오버로딩할 수 없다.\nAny의 equals에는 operator가 붙어있지만 그 메소드를 오버라이드하는 하위 클래스의 메소드 앞에는 operator를 붙이지 않아도 자동으로 상위 클래스의 operator 지정이 적용된다. 또한, Any에서 상속받은 equals가 확장 함수보다 우선순위가 높기 때문에 equals를 확장 함수로 정의할 수 없다.\n\n7.2.2 순서 연산자 : compareTo\n\n자바에서 정렬이나 최댓값, 최솟값 등 값을 비교하는 알고리즘에 사용할 클래스는 Comparable 인터페이스를 구현한다.\n코틀린도 똑같은 Comparable 인터페이스를 지원한다. 게다가 코틀린은 Comparable 인터페이스 안에 있는 compareTo 메소드를 호출하는 관례를 제공한다.\n따라서 비교 연산자 (&lt;, &gt;, &lt;=, &gt;=)는 compareTo 호출로 컴파일 된다.\n반환값은 Int이다. 다른 비교 연산자도 동일한 방식으로 동작한다.\n\n1234567a &gt;= b// 위의 코드는 아래로 컴파일된다.a.compareTo(b) &gt;= 0println(\"abc\" &lt; \"bac\")// Resulttrue\n7.3 컬렉션과 범위에 대해 쓸 수 있는 관례\n7.3.1 인덱스로 원소에 접근 : get, set\n\n배열, 리스트, 맵에 접근할 때 []를 통해서 접근이 가능하다.\n[]는 원소를 읽는 연산일 때는 get 연산자 메소드로 변환되고, 원소를 쓰는 연산은 set 연산자 메소드로 변환된다.\n\n1234567891011121314operator fun Point.get(index: Int): Int &#123;    return when (index) &#123;        0 -&gt; x        1 -&gt; y        else -&gt; throw IndexOutOfBoundsException(\"Invalid coordinate $index\")    &#125;&#125;@Testfun `get 테스트`()&#123;  val p = Point(10,20)  println(p[1]) // p[1] -&gt; p.get(1) 호출로 변환된다.&#125;// Result20\n\nget 연산자를 정의한다.\nget 메소드의 파라미터로 Int가 아닌 타입도 사용할 수 있다. 맵의 경우는 키 타입이 될 수도 있다.\n여러 파라미터를 사용하는 get을 정의할 수도 있다.\n\n12345operator fun get(rowIndex: Int, colIndex:Int)&#123;  ...&#125;// matrix[row, col]로 호출한다.\n\n인덱스에 해당하는 컬렉션 원소를 쓰고 싶을 때는 set 함수를 정의하면 된다.\n\n123456789101112131415161718192021data class MutablePoint(    var x: Int,    var y: Int)operator fun MutablePoint.set(index: Int, value: Int) &#123;    when (index) &#123;        0 -&gt; x = value        1 -&gt; y = value        else -&gt; throw IndexOutOfBoundsException(\"Invalid coordinate $index\")    &#125;&#125;@Testfun `set 테스트`()&#123;  val p = MutablePoint(10,20)  p[0] = 30 // p[0] = 30 -&gt; p.set(30)  p[1] = 60 // p[1] = 60 -&gt; p.set(60)  println(p)&#125;// ResultMutablePoint(x=30, y=60)\n7.3.2 in 관례\n\n객체가 컬렉션에 들어있는지 검사한다.\nin 연산자와 대응하는 함수는 contains이다.\n\n12345678910111213141516data class Rectangle(val upperLeft: Point, val lowerRight: Point)operator fun Rectangle.contains(p: Point): Boolean &#123;    return p.x in upperLeft.x until lowerRight.x &amp;&amp;            p.y in upperLeft.y until lowerRight.y&#125;@Testfun `in 테스트`() &#123;  val rect = Rectangle(Point(10, 20), Point(50, 50))  println(Point(10, 30) in rect) // a in rect -&gt; rect.contains(a)  println(Point(10, 50) in rect)&#125;// Resulttruefalse\n\n범위를 만들고 x, y 좌표가 그 범위 안에 있는지 검사한다.\nuntil 함수를 사용해 열린 범위를 만든다.\n열린 범위 : 끝 값을 포함하지 않는 범위를 말한다.\n\nEx) 10…20 식을 사용해 일반적인 (닫힌) 범위를 만들면 10 이상 20 이하인 범위가 생긴다.(20을 포함.)\nEx) 1o until 20으로 만드는 열린 범위는 10 이상 19이하인 범위며, 20은 범위 안에 포함되지 않는다.\n\n\n\n7.3.3 rangeTo 관례\n\n1…10 : 1부터 10까지 모든 수가 들어있는 범위를 가리킨다.\n… 연산자는 rangeTo 함수를 간략하게 표현하는 방법이다.\n따라서 … 는 rangeTo로 컴파일된다.\n범위를 반환하며, 아무 클래스에나 정의할 수 있다.\nrangeTo 연산자는 다른 산술 연산자보다 우선순위가 낮다. 하지만 혼동을 피하기 위해 괄호로 감싸주는 것이 더 좋다.\n또한, 범위 연산자는 우선 순위가 낮아서 범위의 메소드를 호출하려면 범위를 괄호로 둘러싸야 한다.\n\n123456789101112val n = 9println(0 .. (n + 1))0..10// 아래 식은 컴파일할 수 없다.0..n.forEach&#123;&#125;// 아래 코드처럼 범위의 메소드를 호출하려면 범위를 괄호로 둘러싸면 된다.(0..n).forEach&#123;  ...&#125;\n\n추가적으로 코틀린에서는 모든 Comparable 객체에 대해 적용 가능한 rangeTo 함수를 제공한다. rangeTo는 ClosedRange 객체를 반환한다.\n\n1operator fun &lt;T: Comparable&lt;T&gt;&gt; T.rangeTo(that: T): ClosedRange&lt;T&gt;\n7.3.4 for 루프를 위한 iterator 관례\n\n2장에서 살펴봤듯이 코틀린의 for 루프는 범위 검사와 똑같이 in 연산자를 사용한다.\n하지만 의미는 다르다.\n아래 코드는 list.iterator()를 호출해서 이터레이터를 얻은 다음, 자바와 마찬가지로 그 이터레이터에 대해 hasNext, next 호출을 반복하는 식으로 변환된다.\n\n123for (x in list)&#123;  ...&#125;\n\n이 또한 관례이므로 iterator 메소드를 확장 함수로 정의할 수 있다. 이런 성질로 인해 자바 문자열에 대한 for 루프가 가능하다.\n코틀린은 String의 상위 클래스인 CharSequence에 대한 iterator 확장 함수를 제공한다. 따라서 아래와 같은 구문이 가능하다.\n\n12345operator fun CharSequence.iterator(): CharIteratorfor(c in \"abc\")&#123;  ...&#125;\n\n클래스 안에 직접 iterator를 구현한 예이다.\n\n1234567891011121314151617operator fun ClosedRange&lt;LocalDate&gt;.iterator(): Iterator&lt;LocalDate&gt; =        object : Iterator&lt;LocalDate&gt; &#123;            var current = start            override fun hasNext() =                current &lt;= endInclusive            override fun next() = current.apply &#123;                current = plusDays(1)            &#125;        &#125;fun main(args: Array&lt;String&gt;) &#123;    val newYear = LocalDate.ofYearDay(2017, 1)    val daysOff = newYear.minusDays(1)..newYear    for (dayOff in daysOff) &#123; println(dayOff) &#125;&#125;\n\n앞에서 rangeTo 함수가 ClosedRange 인스턴스를 반환한다. 코드에서 ClosedRange&lt; LocaDate &gt; 에 대한 확장 함수 Iterator를 정의했기 때문에 LocalDate의 범위 객체를 for 루프에서 사용할 수 있다.\n\n7.4 구조 분해 선언과 component 함수\n\n구조 분해를 사용하면 복합적인 값을 분해해서 여러 다른 변수를 한꺼번에 초기화할 수 있다.\n구조 분해 선언은 일반 변수 선언과 비슷하다. 다만, = 좌변에 여러 변수를 괄호로 묶었다는 점이 다르다.\n\n 1234567val p = Point(10,20)val (x,y) = pprintln(x)println(y)// Result1020\n\n내부에서 구조 분해 선언은 관레를 사용한다. 구조 분해 선언의 각 변수를 초기화하기 위해 componentN이라는 함수를 호출한다.\n\n1234val (a,b) = p// 위의 구조 분해 선언은 아래의 componentN() 함수 호출로 변환된다.val a = p.component1()val b = p.component2()\n\n\ndata class의 주 생성자에 있는 프로퍼티에 대해서는 컴파일러가 자동으로 componentN 함수를 만들어준다.\n\n\n일반 클래스에서는 아래와 같이 구현한다.\n\n\n1234class Point(val x: Int, val y: Int)&#123;  operator fun component1() = x  operator fun component2() = y&#125;\n\n또한, 구조 분해 선언은 함수에서 여러 값을 반환할 때 유용하다.\n여러 값을 반환해야 하는 함수가 있다면 반환해야 하는 모든 값이 들어갈 holder 역할의 데이터 클래스를 정의하고 함수의 반환 타입을 그 데이터 클래스로 바꾼다. 구조 분해 선언 구문을 사용해 이 함수가 반환하는 값을 쉽게 풀어 여러 변수에 넣을 수 있다.\n\n1234567891011121314151617data class NameComponents(val name: String,                          val extension: String)fun splitFilename(fullName: String): NameComponents &#123;    val result = fullName.split('.', limit = 2)    return NameComponents(result[0], result[1])&#125;fun main(args: Array&lt;String&gt;) &#123;    val (name, ext) = splitFilename(\"example.kt\")  \t// 구조 분해 선언 구문을 사용해 데이터 클래스를 푼다.    println(name)    println(ext)&#125;// Resultexamplekt\n\n코틀린은 맨 앞의 다섯 원소에 대한 componentN 함수를 제공한다. 따라서 컬렉션의 크기가 5보다 작아도 1~5까지접근이 가능하다. 하지만, IndexOutOfBoundsException이 발생한다.\n여섯 개 이상의 변수를 사용하는 구조 분해를 컬렉션에 대해 적용하면 컴파일 오류가 발생한다.\n\n7.4.1 구조 분해 선언과 루프\n\n변수 선언이 들어갈 수 있는 장소라면 어디든 구조 분해 선언을 사용할 수 있다.\n맵의 원소에 대해 이터레이션할 때, 구조 분해 선언이 유용하다.\n\n1234567891011fun print(map: Map&lt;String, String))&#123;  for((key, value) in map)&#123;    println(\"$key -&gt; $value\")  &#125;&#125;val map = mapOf(\"Oracle\" to \"Java\", \"JetBrains\" to \"Kotlin\")print(map)//ResultOracle -&gt; JavaJetBrains -&gt; Kotlin\n\n객체를 이터이션하는 관례, 구조 분해 선언 2가지 관례를 사용한다.\n코틀린의 맵은 확장 함수로 iterator가 들어있다. 그 iterator는 맵 원소에 대한 이터레이터를 반환한다. 따라서 자바와 달리 코틀린에서는 맵을 직접 이터레이션할 수 있다.\n\n7.5 프로퍼티 접근자 로직 재활용 : 위임 프로퍼티\n\n위임이란 객체가 직접 작업을 수행하지 않고 다른 도우미 객체가 그 작업을 처리하게 맡기는 디자인 패턴.\n작업을 처리하는 객체를 위임 객체(delegate)라고 한다.\n\n7.5.1 위임 프로퍼티\n1234class Foo&#123;  val p : Type by Delegate()  // by 키워드는 프로퍼티와 위임 객체를 연결한다.&#125;\n\np 프로퍼티는 접근자 로직을 다른 객체에게 위임한다. 여기서는 Delegate 클래스의 인스턴스를 위임 객체로 사용한다.\nby 뒤에 있는 식을 계산해서 위임에 쓰일 객체를 얻는다.\n\n123456class Foo&#123;  private val delegate = Delegate()  val p: Type  set(value: Type) = delegate.setValue(..., value)  get() = delegate.getValue(...)&#125;\n\n위의 코드처럼 컴파일러는 숨겨진 도우미 프로퍼티를 만들고 그 프로퍼티를 위임 객체의 인스턴스로 초기화한다.\np 프로퍼티는 바로 그 위임 객체에게 자신의 작업을 위임한다.\nDelegate 클래스를 단순화하면 다음과 같다.\n\n1234567891011class Delegate&#123;  operator fun getValue(...)&#123;    ...    // getter를 구현하는 로직을 담는다.  &#125;    operator fun setValue(...)&#123;    ...    // setter를 구현하는 로직을 담는다.  &#125;&#125;\n123val foo = Foo()val oldValue = foo.p // 1foo.p = newValue // 2\n\n1번과 같은 프로퍼티 호출은 내부에서 delegate.getValue()을 호출한다.\n2번처럼 프로퍼티 값을 변경하는 문장은 내부에서 delegate.setValue(…, newValue)를 호출한다.\n\n7.5.2 by lazy()를 사용한 프로퍼티 초기화 지연\n\n지연 초기화는 객체의 일부분을 초기화하지 않고 남겨뒀다가 실제로 그 부분의 값이 필요할 경우, 초기화할 때 흔히 쓰이는 패턴이다.\n초기화 과정에 자원을 많이 사용하거나 객체를 사용할 때마다 꼭 초기화하지 않아도 되는 프로퍼티에 대해 지연 초기화 패턴을 사용할 수 있다.\n\n123456789101112131415161718192021222324class Email &#123; /*...*/ &#125;fun loadEmails(person: Person): List&lt;Email&gt; &#123;    println(\"Load emails for $&#123;person.name&#125;\")    return listOf(/*...*/)&#125;class Person(val name: String) &#123;    private var _emails: List&lt;Email&gt;? = null  \t// 데이터를 저장하고 emails의 위임 객체 역할을 하는 _emails 프로퍼티.    val emails: List&lt;Email&gt;       get() &#123;           if (_emails == null) &#123;               _emails = loadEmails(this) // 최초 접근 시 이메일을 가져온다.           &#125;           return _emails!! // 저장해둔 데이터가 있으면 그 데이터를 반환한다.       &#125;&#125;fun main(args: Array&lt;String&gt;) &#123;    val p = Person(\"Alice\")    p.emails // 최초로 emails를 읽을 때 단 한번만 이메일을 가져온다.    p.emails&#125;\n\n뒷받침하는 프로퍼티라는 기법을 사용한다.\n_emails 프로퍼티는 값을 저장하고, emails 프로퍼티는 _emails 프로퍼티에 대한 읽기 연산을 제공한다. _emails는 Nullable 하고, emails는 널이 될 수 없는 타입이므로 프로퍼티 2개를 사용해야 한다. 이런 기법은 자주 사용된다.\n이와 같은 방법은 성가시며, 스레드 안전하지 않아서 언제나 제대로 동작한다고 말할 수 없다.\n대신 위임 프로퍼티를 사용해보자.\n\n123456789class Person(val name: String)&#123;  val emails by lazy &#123; loadEmails(this) &#125;&#125;fun main(args: Array&lt;String&gt;) &#123;    val p = Person(\"Alice\")    p.emails    p.emails&#125;\n\nlazy 함수는 코틀린 관례에 맞는 시그니처의 getValue() 메소드가 들어있는 객체를 반환한다. 따라서 lazy와 by 키워드와 함께 사용해 위임 프로퍼티를 만들 수 있다.\nlazy 함수의 인자는 값을 초기화할 때 호출할 람다다. 그리고 lazy 함수는 기본적으로 스레드 안전하다. 추가적으로 필요에 따라 동기화에 사용할 락을 lazy 함수에 전달할 수도 있고, 다중 스레드 환경에서 사용하지 않을 프로퍼티를 위해 lazy 함수가 동기화를 하지 못하게 막을 수도 있다.\n\n7.5.3  위임 프로퍼티 사용\n\n위임 프로퍼티를 사용해서 변경을 통지해주는 부분의 코드를 작성해 처음부터 리팩토링 해나가는 과정을 보여주고 있습니다.\n설명하기 보다는 직접 읽어보는 것이 좋을 것 같아서 정리하지 않았으니 양해 바랍니다 😁\n\n7.5.4 위임 프로퍼티 컴파일 규칙\n12345class C&#123;  var prop : Type by MyDelegate()&#125;val c = C()\n\n컴파일러는 MyDelegate 클래스의 인스턴스를 감춰진 프로퍼티에 저장하며 그 감춰진 프로퍼티는  라는 이름으로 부른다. 또한, 컴파일러는 프로퍼티를 표현하기 위해 KProperty 타입의 객체를 사용한다. 이 객체를 라고 부른다.\n컴파일러는 다음의 코드를 생성한다.\n\n1234567class C&#123;  private val &lt;delegate&gt; = MyDelegate()  var prop : Type  get() = &lt;delegate&gt;.getValue(this, &lt;property&gt;)  set(value: Type) = &lt;delegate&gt;.setValue(this, &lt;property&gt;, value)&#125;// this는 C 클래스를 가리킨다.\n\n컴파일러는 모든 프로퍼티 접근자 안에 getValue, setValue 호출 코드를 생성해준다.\n이 매커니즘은 상당히 단순하지만, 상당히 흥미로운 활용법이 많다고 한다.\n프로퍼티 값이 저장될 장소를 바꿀 수도 있고(맵, 데이터베이스 테이블, 사용자 세션의 쿠키 등) 프로퍼티를 읽거나 쓸 때 벌어질 일을 변경할 수도 있다.(값 검증, 변경 통지 등) 이 모두를 간결한 코드로 달성할 수 있다.\n아직까지 위임 프로퍼티를 사용해 본 경험은 없다. 그래서 이 내용이 와닿지 않지만, 저런 식으로 사용하면 확실히 간결하게 코드를 작성할 수 있고 여러 일을 수행하는 객체가 있다면 Delegate 패턴을 사용해 역할을 어느 정도 위임해 분리할 수 있지 않을까란 생각을 해봤다.\n아래의 링크가 Delegate 패턴에 대해 설명하고 있으니 참고하면 좋을 것 같습니다.\n\nDelegate 패턴\n[Java][정리] 위임(delegation)과 구현/포함(Composite) 개념\n\n\n\n7.5.5 프로퍼티 값을 맵에 저장\n\n자신의 프로퍼티를 동적으로 정의할 수 있는 객체를 만들 때, 위임 프로퍼티를 활용하는 경우가 자주 있다. 그런 객체를 확장 가능한 객체(expando object)라고한다.\n\n123456789101112131415161718192021222324class Person &#123;  \t// 추가 정보    private val _attributes = hashMapOf&lt;String, String&gt;()    fun setAttribute(attrName: String, value: String) &#123;        _attributes[attrName] = value    &#125;  \t// 필수 정보    val name: String        get() = _attributes[\"name\"]!!  \t// 수동으로 맵에서 정보를 꺼낸다.&#125;fun main(args: Array&lt;String&gt;) &#123;    val p = Person()    val data = mapOf(\"name\" to \"Dmitry\", \"company\" to \"JetBrains\")    for ((attrName, value) in data)       p.setAttribute(attrName, value)      println(p.name)&#125;// ResultDmitry\n\n위의 코드를 위임 프로퍼티를 활용하여 변경할 수 있다. by 키워드 뒤에 맵을 직접 넣으면 된다.\n\n1234567891011121314151617class Person &#123;    private val _attributes = hashMapOf&lt;String, String&gt;()    fun setAttribute(attrName: String, value: String) &#123;        _attributes[attrName] = value    &#125;    val name: String by _attributes&#125;fun main(args: Array&lt;String&gt;) &#123;    val p = Person()    val data = mapOf(\"name\" to \"Dmitry\", \"company\" to \"JetBrains\")    for ((attrName, value) in data)       p.setAttribute(attrName, value)    println(p.name)&#125;\n\n이와 같은 코드가 동작하는 이유는 표준 라이브러리가 Map과 MutableMap 인터페이스에 대해 getValue, setValue 확장 함수를 제공하기 때문이다.\ngetValue에서 맵에 프로퍼티 값을 저장할 때는 자동으로 프로퍼티 이름을 키로 활용한다.\np.name -&gt; _attributes.getValue(p, prop)라는 호출을 대신한다.\n이는 다시 _attributes.getValue(p, prop) -&gt; _attributes[prop.name]을 통해 구현된다.\n\n참고\n\nKotlin In Action\n\n","dateCreated":"2020-04-02T15:52:56+09:00","dateModified":"2020-05-13T00:17:39+09:00","datePublished":"2020-04-02T15:52:56+09:00","description":"","headline":"[Kotlin in Action] Chap7. 연산자 오버로딩과 기타 관례","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://woovictory.github.io/2020/04/02/KotlinInAction-Chap7/"},"publisher":{"@type":"Organization","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg","logo":{"@type":"ImageObject","url":"Victory.jpeg"}},"url":"https://woovictory.github.io/2020/04/02/KotlinInAction-Chap7/","keywords":"Android, Kotlin, 코틀린, 프로그래밍 언어, Kotlin in Action"}</script>
     <meta name="description" content="목차  연산자 오버로딩 관례 : 여러 연산을 지원하기 위해 특별한 이름이 붙은 메소드 위임 프로퍼티  OverViews 어떤 클래스 안에 pluse라는 이름의 특별한 메소드를 정의하면 그 클래스의 인스턴스에 대해 + 연산자를 사용할 수 있다. 이런 식으로 어떤 언어 기능과 미리 정해진 이름의 함수를 연결해주는 기법 -&amp;gt; 관례 언어 기능을 타입에 의존하">
 <meta name="keywords" content="Android,Kotlin,코틀린,프로그래밍 언어,Kotlin in Action">
-<meta property="og:type" content="article">
+<meta property="og:type" content="blog">
 <meta property="og:title" content="[Kotlin in Action] Chap7. 연산자 오버로딩과 기타 관례">
 <meta property="og:url" content="https://woovictory.github.io/2020/04/02/KotlinInAction-Chap7/index.html">
 <meta property="og:site_name" content="VictoryWoo">
@@ -25,171 +25,272 @@
 <meta name="twitter:title" content="[Kotlin in Action] Chap7. 연산자 오버로딩과 기타 관례">
 <meta name="twitter:description" content="목차  연산자 오버로딩 관례 : 여러 연산을 지원하기 위해 특별한 이름이 붙은 메소드 위임 프로퍼티  OverViews 어떤 클래스 안에 pluse라는 이름의 특별한 메소드를 정의하면 그 클래스의 인스턴스에 대해 + 연산자를 사용할 수 있다. 이런 식으로 어떤 언어 기능과 미리 정해진 이름의 함수를 연결해주는 기법 -&amp;gt; 관례 언어 기능을 타입에 의존하">
     
-
+    
+        
+    
+    
+        <meta property="og:image" content="https://woovictory.github.io/assets/images/Victory.jpeg"/>
+    
+    
+    
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/all.css">
+    <link rel="stylesheet" href="/assets/css/jquery.fancybox.css">
+    <link rel="stylesheet" href="/assets/css/thumbs.css">
+    <link rel="stylesheet" href="/assets/css/tranquilpeak.css">
+    <!--STYLES END-->
     
 
     
-        <link rel="icon" href="/css/images/victorywoo.png" />
-    
 
-    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/libs/titillium-web/styles.css">
-    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
-
-    <link rel="stylesheet" type="text/css" href="">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/theeluwin/NotoSansKR-Hestia@master/stylesheets/NotoSansKR-Hestia.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/earlyaccess/nanumgothiccoding.css">
     
+        
     
-    <link rel="stylesheet" href="/css/style.css">
-
-    <script src="/libs/jquery/3.3.1/jquery.min.js"></script>
-    
-    
-        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
-    
-    
-        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
-    
-    
-        <script type="text/javascript">
-(function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-125410253-1', 'auto');
-ga('send', 'pageview');
-
-</script>
-    
-    
-
-
 </head>
 
-<body>
-    <div id="wrap">
-        <header id="header">
-    <div id="header-outer" class="outer">
-        <div class="container">
-            <div class="container-inner">
-                <div id="header-title">
-                    <h1 class="logo-wrap">
-                        <a href="/" class="logo"></a>
-                    </h1>
-                    
-                        <h2 class="subtitle-wrap">
-                            <p class="subtitle">VictoryWoo&#39;s Blog</p>
-                        </h2>
-                    
-                </div>
-                <div id="header-inner" class="nav-container">
-                    <a id="main-nav-toggle" class="nav-icon fa fa-bars"></a>
-                    <div class="nav-container-inner">
-                        <ul id="main-nav">
-                            
-                                <li class="main-nav-list-item" >
-                                    <a class="main-nav-list-link" href="/">Home</a>
-                                </li>
-                            
-                                <li class="main-nav-list-item" >
-                                    <a class="main-nav-list-link" href="/about/index.html">About</a>
-                                </li>
-                            
-                        </ul>
-                        <nav id="sub-nav">
-                            <div id="search-form-wrap">
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
 
-    <form class="search-form">
-        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
-        <button type="submit" class="search-form-submit"></button>
-    </form>
-    <div class="ins-search">
-    <div class="ins-search-mask"></div>
-    <div class="ins-search-container">
-        <div class="ins-input-wrapper">
-            <input type="text" class="ins-search-input" placeholder="Type something..." />
-            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
-        </div>
-        <div class="ins-section-wrapper">
-            <div class="ins-section-container"></div>
-        </div>
-    </div>
-</div>
-<script>
-(function (window) {
-    var INSIGHT_CONFIG = {
-        TRANSLATION: {
-            POSTS: 'Posts',
-            PAGES: 'Pages',
-            CATEGORIES: 'Categories',
-            TAGS: 'Tags',
-            UNTITLED: '(Untitled)',
-        },
-        ROOT_URL: '/',
-        CONTENT_URL: '/content.json',
-    };
-    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
-})(window);
-</script>
-<script src="/js/insight.js"></script>
 
-</div>
-                        </nav>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</header>
-        <div class="container">
-            <div class="main-body container-inner">
-                <div class="main-body-inner">
-                    <section id="main">
-                        <div class="main-body-header">
-    <h1 class="header">
     
-    <a class="page-title-link" href="/categories/Kotlin/">Kotlin</a>
-    </h1>
-</div>
-
-                        <div class="main-body-content">
-                            
-                            <article id="post-KotlinInAction-Chap7" class="article article-single article-type-post" itemscope itemprop="blogPost">
-    <div class="article-inner">
         
-            <header class="article-header">
-                
-    
-        <h1 class="article-title" itemprop="name">
-        [Kotlin in Action] Chap7. 연산자 오버로딩과 기타 관례
-        </h1>
+            
+        
     
 
-            </header>
-        
-        
-            <div class="article-meta">
-                
-    <div class="article-date">
-        <a href="/2020/04/02/KotlinInAction-Chap7/" class="article-date">
-            <time datetime="2020-04-02T06:52:56.000Z" itemprop="datePublished">2020-04-02</time>
+<header id="header" data-behavior="4">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a
+            class="header-title-link"
+            href="/ "
+            aria-label=""
+        >
+            VictoryWoo
         </a>
     </div>
+    
+        
+            <a
+                class="header-right-picture "
+                href="#about"
+                aria-label="Open the link: /#about"
+            >
+        
+        
+            <img class="header-picture" src="/assets/images/Victory.jpeg" alt="Author&#39;s picture"/>
+        
+        </a>
+    
+</header>
 
-		
+            <!-- Define author's picture -->
 
+
+
+        
+    
+
+<nav id="sidebar" data-behavior="4">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a
+                    href="/#about"
+                    aria-label="Read more about the author"
+                >
+                    <img class="sidebar-profile-picture" src="/assets/images/Victory.jpeg" alt="Author&#39;s picture"/>
+                </a>
+                <h4 class="sidebar-profile-name">VictoryWoo</h4>
                 
-    <div class="article-tag">
-        <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/Android/">Android</a>, <a class="tag-link" href="/tags/Kotlin/">Kotlin</a>, <a class="tag-link" href="/tags/Kotlin-in-Action/">Kotlin in Action</a>, <a class="tag-link" href="/tags/코틀린/">코틀린</a>, <a class="tag-link" href="/tags/프로그래밍-언어/">프로그래밍 언어</a>
-    </div>
-
+                    <h5 class="sidebar-profile-bio"><p>기록을 통해 사람들과 공유하는 것을 좋아합니다.</p>
+</h5>
+                
             </div>
         
         
-        <div class="article-entry" itemprop="articleBody">
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/"
+                            
+                            rel="noopener"
+                            title="Home"
+                        >
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-categories"
+                            
+                            rel="noopener"
+                            title="Categories"
+                        >
+                        <i class="sidebar-button-icon fa fa-bookmark" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Categories</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-tags"
+                            
+                            rel="noopener"
+                            title="Tags"
+                        >
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Tags</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link open-algolia-search"
+                            href="#search"
+                            
+                            rel="noopener"
+                            title="Search"
+                        >
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Search</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="#about"
+                            
+                            rel="noopener"
+                            title="About"
+                        >
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://github.com/WooVictory"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="GitHub"
+                        >
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://www.facebook.com/WooVictory"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Facebook"
+                        >
+                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Facebook</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://www.linkedin.com/profile/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="LinkedIn"
+                        >
+                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">LinkedIn</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/jhsw0375@gmail.com"
+                            
+                            rel="noopener"
+                            title="Mail"
+                        >
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="4"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            [Kotlin in Action] Chap7. 연산자 오버로딩과 기타 관례
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2020-04-02T15:52:56+09:00">
+	
+		    Apr 02, 2020
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/Kotlin/">Kotlin</a>
+
+
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
             <h2 id="목차">목차</h2>
 <ul>
 <li>연산자 오버로딩</li>
@@ -561,313 +662,331 @@ ga('send', 'pageview');
 <li><a href="http://www.yes24.com/Product/Goods/55148593" target="_blank" rel="noopener">Kotlin In Action</a></li>
 </ul>
 
-        </div>
-        
-        <footer class="article-footer">
-            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({
-     google_ad_client: "ca-pub-9725307592233286",
-     enable_page_level_ads: true
-});
-</script>
             
 
 
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">TAGGED IN</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/Android/">Android</a> <a class="tag tag--primary tag--small t-link" href="/tags/Kotlin/">Kotlin</a> <a class="tag tag--primary tag--small t-link" href="/tags/Kotlin-in-Action/">Kotlin in Action</a> <a class="tag tag--primary tag--small t-link" href="/tags/코틀린/">코틀린</a> <a class="tag tag--primary tag--small t-link" href="/tags/프로그래밍-언어/">프로그래밍 언어</a>
 
-    <a data-url="https://woovictory.github.io/2020/04/02/KotlinInAction-Chap7/" data-id="ckd6xgt8v01bn51pqin3hwo9p" class="article-share-link"><i class="fa fa-share"></i>Share</a>
-<script>
-    (function ($) {
-        $('body').on('click', function() {
-            $('.article-share-box.on').removeClass('on');
-        }).on('click', '.article-share-link', function(e) {
-            e.stopPropagation();
+            </div>
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2020/04/03/Java-contains-and-startsWith-diff/"
+                    data-tooltip="[Java] contains, startsWith 차이점"
+                    aria-label="PREVIOUS: [Java] contains, startsWith 차이점"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2020/04/02/KotlinInAction-Chap6/"
+                    data-tooltip="[Kotlin in Action] Chap6. 코틀린 타입 시스템"
+                    aria-label="NEXT: [Kotlin in Action] Chap6. 코틀린 타입 시스템"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="Share this post"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://woovictory.github.io/2020/04/02/KotlinInAction-Chap7/"
+                    title="Share on Facebook"
+                    aria-label="Share on Facebook"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://woovictory.github.io/2020/04/02/KotlinInAction-Chap7/"
+                    title="Share on Twitter"
+                    aria-label="Share on Twitter"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://woovictory.github.io/2020/04/02/KotlinInAction-Chap7/"
+                    title="Share on Google+"
+                    aria-label="Share on Google+"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
 
-            var $this = $(this),
-                url = $this.attr('data-url'),
-                encodedUrl = encodeURIComponent(url),
-                id = 'article-share-box-' + $this.attr('data-id'),
-                offset = $this.offset(),
-                box;
 
-            if ($('#' + id).length) {
-                box = $('#' + id);
-
-                if (box.hasClass('on')){
-                    box.removeClass('on');
-                    return;
-                }
-            } else {
-                var html = [
-                    '<div id="' + id + '" class="article-share-box">',
-                        '<input class="article-share-input" value="' + url + '">',
-                        '<div class="article-share-links">',
-                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
-                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
-                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
-                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
-                        '</div>',
-                    '</div>'
-                ].join('');
-
-              box = $(html);
-
-              $('body').append(box);
-            }
-
-            $('.article-share-box.on').hide();
-
-            box.css({
-                top: offset.top + 25,
-                left: offset.left
-            }).addClass('on');
-
-        }).on('click', '.article-share-box', function (e) {
-            e.stopPropagation();
-        }).on('click', '.article-share-box-input', function () {
-            $(this).select();
-        }).on('click', '.article-share-box-link', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-
-            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
-        });
-    })(jQuery);
-</script>
-
-        </footer>
+        
+        
+            
+        
     </div>
 </article>
 
-    <section id="comments">
-    
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2020 VictoryWoo. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2020/04/03/Java-contains-and-startsWith-diff/"
+                    data-tooltip="[Java] contains, startsWith 차이점"
+                    aria-label="PREVIOUS: [Java] contains, startsWith 차이점"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2020/04/02/KotlinInAction-Chap6/"
+                    data-tooltip="[Kotlin in Action] Chap6. 코틀린 타입 시스템"
+                    aria-label="NEXT: [Kotlin in Action] Chap6. 코틀린 타입 시스템"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="Share this post"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
         
-    <div id="disqus_thread">
-        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-    </div>
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://woovictory.github.io/2020/04/02/KotlinInAction-Chap7/"
+                    title="Share on Facebook"
+                    aria-label="Share on Facebook"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://woovictory.github.io/2020/04/02/KotlinInAction-Chap7/"
+                    title="Share on Twitter"
+                    aria-label="Share on Twitter"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://woovictory.github.io/2020/04/02/KotlinInAction-Chap7/"
+                    title="Share on Google+"
+                    aria-label="Share on Google+"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
 
-    
-    </section>
 
-
-
-                        </div>
-                    </section>
-                    <aside id="sidebar">
-    <a class="sidebar-toggle" title="Expand Sidebar"><i class="toggle icon"></i></a>
-    <div class="sidebar-top">
-        <p>follow:</p>
-        <ul class="social-links">
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
             
                 
-                <li>
-                    <a class="social-tooltip" title="facebook" href="https://www.facebook.com/WooVictory" target="_blank" rel="noopener">
-                        <i class="icon fa fa-facebook"></i>
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://woovictory.github.io/2020/04/02/KotlinInAction-Chap7/"
+                        aria-label="Share on Facebook"
+                    >
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Share on Facebook</span>
                     </a>
                 </li>
-                
             
                 
-                <li>
-                    <a class="social-tooltip" title="github" href="https://github.com/WooVictory" target="_blank" rel="noopener">
-                        <i class="icon fa fa-github"></i>
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://twitter.com/intent/tweet?text=https://woovictory.github.io/2020/04/02/KotlinInAction-Chap7/"
+                        aria-label="Share on Twitter"
+                    >
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Share on Twitter</span>
                     </a>
                 </li>
-                
             
                 
-                <li>
-                    <a class="social-tooltip" title="linkedin" href="https://www.linkedin.com/in/seungwoo-lee-590844177" target="_blank" rel="noopener">
-                        <i class="icon fa fa-linkedin"></i>
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://plus.google.com/share?url=https://woovictory.github.io/2020/04/02/KotlinInAction-Chap7/"
+                        aria-label="Share on Google+"
+                    >
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>Share on Google+</span>
                     </a>
                 </li>
-                
             
         </ul>
     </div>
-    
-        
-<nav id="article-nav">
-    
-        <a href="/2020/04/03/Java-contains-and-startsWith-diff/" id="article-nav-newer" class="article-nav-link-wrap">
-        <strong class="article-nav-caption">newer</strong>
-        <p class="article-nav-title">
-        
-            [Java] contains, startsWith 차이점
-        
-        </p>
-        <i class="icon fa fa-chevron-right" id="icon-chevron-right"></i>
-    </a>
-    
-    
-        <a href="/2020/04/02/KotlinInAction-Chap6/" id="article-nav-older" class="article-nav-link-wrap">
-        <strong class="article-nav-caption">older</strong>
-        <p class="article-nav-title">[Kotlin in Action] Chap6. 코틀린 타입 시스템</p>
-        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
-        </a>
-    
-</nav>
-
-    
-    <div class="widgets-container">
-        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({
-     google_ad_client: "ca-pub-9725307592233286",
-     enable_page_level_ads: true
-});
-</script>
-        
-            
-                
-    <div class="widget-wrap widget-list">
-        <h3 class="widget-title">categories</h3>
-        <div class="widget">
-            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Android/">Android</a><span class="category-list-count">79</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Book/">Book</a><span class="category-list-count">4</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Book/CleanCode/">CleanCode</a><span class="category-list-count">4</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Design-Pattern/">Design Pattern</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ETC/">ETC</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Git/">Git</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Inno-SOPT/">Inno_SOPT</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">39</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Kotlin/">Kotlin</a><span class="category-list-count">17</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Node-js/">Node.js</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Operation-System/">Operation System</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/RxJava/">RxJava</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/">algorithm</a><span class="category-list-count">51</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/BOJ/">BOJ</a><span class="category-list-count">49</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/Programmers/">Programmers</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/개발-상식/">개발 상식</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/네트워크/">네트워크</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/데이터베이스/">데이터베이스</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/삼성-기출/">삼성 기출</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/알고리즘/">알고리즘</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/자료구조/">자료구조</a><span class="category-list-count">10</span></li></ul>
-        </div>
-    </div>
 
 
             
-                
-    <div class="widget-wrap">
-        <h3 class="widget-title">recents</h3>
-        <div class="widget">
-            <ul id="recent-post" class="no-thumbnail">
-                
-                    <li>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/ETC/">ETC</a></p>
-                            <p class="item-title"><a href="/2020/07/29/Memo-Privacy/" class="title">[Memo] 개인정보 처리 방침</a></p>
-                            <p class="item-date"><time datetime="2020-07-29T05:11:19.000Z" itemprop="datePublished">2020-07-29</time></p>
-                        </div>
-                    </li>
-                
-                    <li>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/Book/">Book</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/Book/CleanCode/">CleanCode</a></p>
-                            <p class="item-title"><a href="/2020/07/21/CleanCode4/" class="title">[CleanCode] 4장. 주석</a></p>
-                            <p class="item-date"><time datetime="2020-07-21T14:40:14.000Z" itemprop="datePublished">2020-07-21</time></p>
-                        </div>
-                    </li>
-                
-                    <li>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/Android/">Android</a></p>
-                            <p class="item-title"><a href="/2020/07/08/Android-SingleLiveEventToEventWrapper/" class="title">[Android] MVVM UI Event Wrapper</a></p>
-                            <p class="item-date"><time datetime="2020-07-08T01:34:10.000Z" itemprop="datePublished">2020-07-08</time></p>
-                        </div>
-                    </li>
-                
-                    <li>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/Kotlin/">Kotlin</a></p>
-                            <p class="item-title"><a href="/2020/07/07/Kotlin-Coroutine-1/" class="title">[Kotlin] Coroutine 이해하기</a></p>
-                            <p class="item-date"><time datetime="2020-07-07T02:05:54.000Z" itemprop="datePublished">2020-07-07</time></p>
-                        </div>
-                    </li>
-                
-                    <li>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/Book/">Book</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/Book/CleanCode/">CleanCode</a></p>
-                            <p class="item-title"><a href="/2020/07/06/CleanCode-3/" class="title">[CleanCode] 3장. 함수</a></p>
-                            <p class="item-date"><time datetime="2020-07-06T07:57:43.000Z" itemprop="datePublished">2020-07-06</time></p>
-                        </div>
-                    </li>
-                
-            </ul>
         </div>
-    </div>
-
-            
         
-    </div>
-    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({
-     google_ad_client: "ca-pub-9725307592233286",
-     enable_page_level_ads: true
-});
-</script>
-</aside>
 
-                </div>
-            </div>
-        </div>
-        <footer id="footer">
-    <div class="container">
-        <div class="container-inner">
-            <a id="back-to-top" href="javascript:;"><i class="icon fa fa-angle-up"></i></a>
-            <div class="credit">
-                <h1 class="logo-wrap">
-                    <a href="/" class="logo"></a>
-                </h1>
-                <p>&copy; 2020 VictoryWoo</p>
-                <p>Powered by <a href="//hexo.io/" target="_blank">Hexo</a>. Theme by <a href="//github.com/ppoffice" target="_blank">PPOffice</a></p>
-            </div>
-            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({
-     google_ad_client: "ca-pub-9725307592233286",
-     enable_page_level_ads: true
-});
-</script>
-            <div class="footer-plugins">
-              
+
     
-
-
-            </div>
-        </div>
-    </div>
-</footer>
-
         
     
-    <script>
-    var disqus_shortname = 'hexo-theme-hueman';
-    
-    
-    var disqus_url = 'https://woovictory.github.io/2020/04/02/KotlinInAction-Chap7/';
-    
-    (function() {
-    var dsq = document.createElement('script');
-    dsq.type = 'text/javascript';
-    dsq.async = true;
-    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
-    </script>
 
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <img id="about-card-picture" src="/assets/images/Victory.jpeg" alt="Author&#39;s picture"/>
+        
+            <h4 id="about-card-name">VictoryWoo</h4>
+        
+            <div id="about-card-bio"><p>기록을 통해 사람들과 공유하는 것을 좋아합니다.</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>Android Developer</p>
 
-
-
-    
-        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
-    
-    
-        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
-    
-    
-
-
-
-<!-- Custom Scripts -->
-<script src="/js/main.js"></script>
-
+            </div>
+        
+        
     </div>
-</body>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/cover-v1.2.0.jpg');"></div>
+        <!--SCRIPTS-->
+<script src="/assets/js/jquery.js"></script>
+<script src="/assets/js/jquery.fancybox.js"></script>
+<script src="/assets/js/thumbs.js"></script>
+<script src="/assets/js/tranquilpeak.js"></script>
+<!--SCRIPTS END-->
+
+
+    
+
+
+
+
+    </body>
 </html>

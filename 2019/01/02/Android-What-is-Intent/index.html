@@ -1,197 +1,299 @@
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
+    
 <head>
-    <meta charset="utf-8" />
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="VictoryWoo">
+    <title>[안드로이드] 인텐트 - VictoryWoo</title>
+    <meta name="author" content="VictoryWoo">
     
-
     
-    <title>[안드로이드] 인텐트 | VictoryWoo</title>
     
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    
-        <meta name="keywords" content="Android,Basic,인텐트,Intent" />
-    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg"},"articleBody":"Intent란?\n안드로이드 어플리케이션을 구성하는 4가지 기본 요소에는 Activity, Service, Broadcast Receiver, Content Provider가 있다. 인텐트는 이러한 어플리케이션 구성요소 즉, 컴포넌트간에 작업 수행을 위한 정보를 전달하는 역할을 한다.\n인텐트를 가장 손쉽게 사용한 예로는 액티비티간 화면 전환을 들 수 있다. 즉 인텐트는 컴포넌트 A가 컴포넌트 B를 호출할 때 필요한 정보를 담고 있으며, 이 정보에는 호출되는 컴포넌트 B의 이름이 명시적으로 표시되기도 하고, 속성들이 암시적으로 표시되기도 한다.\n또한 호출된 컴포넌트 B가 호출한 컴포넌트 A로 어떠한 결과를 전달할 때도 인텐트가 사용된다. 어떠한 컴포넌트를 호출하느냐에 따라서 사용되는 대표적인 메소드는 다음과 같은 것들이 존재한다.\n\nstartActivity() : 새로운 액티비티 화면을 띄울 때 사용\nstartService(), bindService() : 서비스와 관련된 메소드\nbroadcastIntent() : 브로드캐스팅을 수행할 때\n\n인텐트의 기본 구성 요소로는 액션(Action)과 데이터(Data)가 존재한다. 액션은 수행할 기능이며, 데이터는 액션이 수행될 대상 데이터을 의미한다.\n12// 예를 들어 아래의 코드가 있다고 하자.var intent = Intent(Intent.ACTION_DIAL, Uri.parse(data))\n액션은 ACTION_DIAL 즉, 전화 다이얼을 걸라는 액션이며,\ndata 값을 uri로 파싱한 Uri.pars(data)라는 것은 액션이 수행할 data 즉 전화번호일 것이다.\n&quot;요약하면 Uri로 파싱한 전화번호 data를 대상으로 전화다이얼을 걸어라&quot;라는 뜻이고 이 뜻을 인텐트에 담아 안드로이드 시스템에게 전달하면 되는 것이다.\n인텐트 동작 순서\n\nComponenet가 ActivityManager에게 다른 컴포넌트의 실행을 요청\nActivityManager는 패키지 정보를 가지고 있는 PacakageManager에게 컴포넌트 정보 요청\n유요한 컴포넌트임을 확인하면 컴포넌트를 실행\n여기서 실행을 요청할 때 컴포넌트의 정보가 Intent이다.\nIntent는 IPC 통신을 위한 직렬화 객체로 Parcelable을 통해 직렬화 되어 있다.\n즉, 이 객체는 다른 프로세스로 전달하기 위한 데이터 그 자체이다.\n활성화 될 컴포넌트 정보 + 활성화 될 컴포넌트에게 전달할 데이터\nactivity의 경우 startActivity()\nservice의 경우 startService()\nBroadcast Recevier의 경우 sendBroadcast()\n외부 패키지에서 접근하려면  이어야 한다.\n\nIntent의 종류\n안드로이드의 4대 컴포넌트가 상호 통신을 위해 사용하는 인텐트는 크게 두가지로 나뉜다.\n\n명시적 인텐트\n\n인텐트에 클래스 객체네 컴포넌트 이름을 지정하여 호출될 대상을 확실히 알 수 있는 경우에 사용하는 것을 명시적 인텐트라고 한다. 주로 애플리케이션 내부에서 사용한다.\n간단하게 현재 액티비티에서 SecondActivity로 화면 전환을 하는 코드는 아래와 같다.\n123456789101112class MainActivity : AppCompatActivity() &#123;    override fun onCreate(savedInstanceState: Bundle?) &#123;        super.onCreate(savedInstanceState)        setContentView(R.layout.activity_main)        button.setOnClickListener&#123;            // 주의해서 볼 코드            var intent = Intent(this@MainActivity, SecondActivity::class.java)            startActivity(intent)        &#125;    &#125;&#125;\n새로운 인텐트 객체인 intent를 생성하면서 this@MainActivity 즉, getContext와 같은 현재 액티비티 정보가 담겨있는 정보와 SecondActivity 즉, 호출할 컴포넌트를 파라미터로 넘겨준다. 그리고 startActivity()에 인텐트 객체인 intent를 파라미터로 넘겨주면 새로운 화면인 SecondActivity가 실행된다. startActivity()는 새로 띄우는 액티비티로부터 받는 응답을 처리할 필요가 없을 때 간단하게 사용된다.\n이에 반해 **startActivityForResult()**의 경우 새로 띄운 액티비티로부터 받는 응답을 처리할 경우에 사용된다.\n\n암시적 인텐트\n\n인텐트의 액션과 데이터를 지정하긴 했지만, 호출할 대상이 달라질 수 있는 경우에는 암시적 인텐트를 사용한다. 즉 설치된 애플리케이션들에 대한 정보를 알고 있는 안드로이드 시스템이 인텐트를 이용해 요청한 정보를 처리할 수 있는 적절한 컴포넌트를 찾아본 다음 사용자에게 그 대상과 처리 결과를 보여주는 과정을 거치게 된다.\n특정 컴포넌트에서 암시적 인텐트를 받기 위해서는 매니페스트 파일에서  요소와 함께 어플리케이션 컴포넌트 각각에 대해서 하나 이상의 인텐트 필터를 선언해야 한다. 각각의 컴포넌트는 action, data, category를 기반으로 해서 자신이 받길 원하는 인텐트의 유형을 명시해야 한다.\n안드로이드 시스템은 전달되는 암시적 인텐트가 매니페스트에 존재하는 인텐트 필터 중의 하나와 매칭되는 경우 해당 컴포넌트로 암시적 인텐트를 전달해준다.\n암시적 인텐트를 사용하는 대표적인 경우로 문서 편집기를 예로 들 수 있다. 카카오톡으로 친구가 자신의 자소서를 봐달라며 PDF 파일을 첨부했다. 우리는 그 PDF를 클릭하여 열기를 하면 해당 안드로이드 폰에 PDF를 편집하거나 보여줄 수 있는 많은 애플리케이션들이 서로 자기가 그 PDF 파일을 보여줄 수 있다고 손을 든다.\n그러면 안드로이드 시스템에서는 ‘PDF를 열 수 있는 앱들이 이렇게 많은데 어떤거 선택할래?’ 라고 애플리케이션을 선택할 수 있는 위젯을 띄워준다. 이런 일련의 과정을 가능하게 하는 녀석이 암시적 인텐트이다.\n\n그럼 왜 암시적 인텐트를 사용할까??\n\n위의 예에서 우리는 친구의 자소서 PDF 파일을 열려고 한다. 여기서 PDF 파일을 열기 위해 이미 많은 PDF 리더 앱들이 존재한다. 그런데 굳이 우리가 PDF 리더를 만드는 것은 현실적으로 좋은 방법이 아니다. 따라서 이미 기존에 어떤 기능들을 지원하는 앱들이 있는 경우에 암시적 인텐트를 사용해서 그 앱들을 사용하면 되는 것이다.\n1234567// 네이버 페이지var intent = Intent(Intent.ACTION_VIEW, Uri.parse(\"http://m.naver.com\"))startActivity(intent)// 전화 걸기var intent = Intent(Intent.ACTION_VIEW, Uri.parse(\"tel:010-0000-0000\"))startActivity(intent)\n위와 같이 암시적 인텐트는 보통 액션(Action)과 데이터(data)라는 속성으로 구성되어 있다. 이 두 가지 속성 말고도 Category, Type, Component, Extras라는 속성을 가진다. 여기서 Component라는 속성을 지정할 경우 컴포넌트 클래스 이름을 명시적으로 지정하게 되는데 이 경우가 명시적 인텐트에 속하게 된다.\n결국 암시적 인텐트는 Component 속성을 제외한 나머지 속성들로 구성되며, 이러한 속성들에 부합하는 컴포넌트가 실행된다.[호출할 대상들이 달라질 수 있다.]\n안드로이드 폰에서 위의 코드 중 네이버에 접속하는 코드를 실행한 결과 화면은 아래와 같다.\n\n이와 같이 암시적 인텐트는 그 속성에 부합하는 컴포넌트가 여러 개 있을 때 선택할 수 있도록 해준다.\nIntent Flag\n안드로이드 애플리케이션 개발을 하다가 Activity에 대해 중복을 방지하거나 다른 상황에 대처할 때 Flag에 대해 잘 관리를 한다면 Activity에 대한 이해를 할 수 있고 관리 또한 용이하게 할 수 있다.\n\n안드로이드 태스크란?(Android Task, Activity Stack)\n\nTask는 애플리케이션에서 실행되는 액티비티를 보관하고 관리하며 Stack 형태의 연속된 Activity들로 이루어진다.\nLIFO(Last In First Out) 즉, 후입 선출 형태로 나중에 적재된 액티비티일수록 가장 먼저 사용된다.\n만약 1-&gt;2-&gt;3 페이지 순으로 액티비티를 이동했을 때 실행 순서대로 Task에 push 했다가 back 버튼을 누르면 3-&gt;2-&gt;1 페이지 순으로 Task에서 pop 시켜 돌아간다.\n서로 다른 애플리케이션 간의 이동에도 Task를 이용해 사용자 경험(UX)를 유지시켜준다.\n최초 적재 액티비티는 Root Activity라고도 하며 애플리에키션 런처로부터 시작된다.\n마지막으로 적재되는 액티비티는 Top Activity라고 하며 현재 화면에 활성화 되어 있는 액티비티를 말한다.\nTask 내에는 서로 다른 애플리케이션의 액티비티들이 포함될 수 있어 애플리케이션에 경계 없이 하나의 애플리케이션인 것처럼 보이게 해준다.\nTask의 Stack내에 존재하는 액티비티들은 모두 묶여서 background와 foreground로 함께 이동한다.\n홈버튼 클릭 : task interrupt -&gt; background\n홈버튼 롱클릭 : recent task -&gt; foreground\nFlag를 사용하여 Task 내의 액티비티의 흐름을 제어할 수 있다.\n\n어피니티란?(Android Affinity)\n\n애플리케이션 내의 액티비티들은 하나의 어피니티(affinity : 친화력)을 가지고 있다.\nAndroidManifest 파일에서  요소의 taskAffinity 속성을 사용해 개별 affinity가 지정 가능하다.\nFLAG_ACTIVITY_NEW_TASK 플래그를 가진 인텐트 객체로부터 호출된 allowTaskReparenting 속성을 true로 가지고 있는 액티비티에 한해 affinity가 동작한다.\n위 조건이 만족한 상황에서 시작된 액티비티는 자신과 동일한 어피니티를 갖는 태스크가 있을 경우 해당 태스크로 이동한다.\n즉, [b] 어피니티를 가진 A 액티비티가 호출되어 해당 테스크에 속해있을 때 [b] 어피니티를 가진 태스크가 호출되면 A 액티비티는 [b] 어피니티를 가진 태스크로 이동한다.\n어피니티에 의해 테스크가 이동된 후에 back 버튼으로 반환시 원래 해당하던 테스크로 돌아간다.\n하나의 애플리케이션내에서 하나 이상의 기능을 갖는 애플리케이션이 존재할 경우 각 액티비티별로 다른 어피니티를 지정해 관리할 수 있다.\n\nFlag를 사용하는 방법은 AndroidManifest 파일에서 사용하는 방법과 Intent 코드로 사용하는 방법이 있다.\n\nAndroidManifest에서 사용하기\n\n안드로이드의 launchMode 속성을 사용하여 적용할 수 있다. 원하는 액티비티에 속성을 추가하여 적용하면 된다. launchMode에서 사용 가능한 속성은 다음과 같이 4가지만 가능하다.\n\nstandard : 스택 중 어느 곳에나 위치 가능하며 여러 개의 인스턴스가 생성 가능하다.\nsingleTop : 스택 중 어느 곳에나 위치 가능하며 여러 개의 인스턴스가 생성 가능하고 호출한 activity와 현재 최상위 activity가(top activity) 동일한 경우 최상위 activity가 재사용된다.(기존 최상위 activity는 pop)\nsingleTask : 루트 액티비티로만 존재하며 하나의 인스턴스만 생성 가능하다. (타 task에서 동일 activity 사용 불가) 다른 액티비티 실행시 동일 Task 내에서 실행이 가능하다.\nsingleInstance : 루트 액티비티로만 존재하며 하나의 인스턴스만 생성 가능하고 태스크 내에 해당 액티비티 하나만 속할 수 있어 다른 액티비티를 실행시키면 새로운 Task가 생성되어 (FLAG_ACTIVITY_NEW_TASK와 동일) 그 Task 내에 포함된다.\n\n\n소스 코드에서 플래그를 사용하고 싶을 때는 Intent에 addFlags(), setFlags() 메소드를 사용한다.\n\n\nFLAG_ACTIVITY_NEW_TASK : 동일 affinity의 task가 있으면 그곳에 실행되고 아니면 새로운 task를 실행한다.[실행은 액티비티를 만들어 테스크에 넣는 것을 의미]\nFLAG_ACTIVITY_SINGLE_TOP :  호출되는 액티비티가 최상위에 존재할 경우에는 해당 액티비티를 다시 생성하지 않고 존재하던 액티비티를 재사용한다. [실행시 재사용 액티비티의 실행은 onPause(), onNewIntent(), onResume() 순으로 호출된다.]\n\n[B]를 single top 설정 : [A][B] 상태에서 [B] 호출 시 =&gt; [A][재사용된 B]\n[A]를 single top 설정 : [B][A] 상태에서 [B] 호출 시 =&gt; [B][A][B]\n\n\nFLAG_ACTIVITY_NO_HISTORY : 해당 액티비티는 재활성화시(back 키를 눌러 다시 활성화될 때) pop된다.\n\n[B]를 no history 설정 : [A][B][A] 상태에서 back 키 사용시 [A]가 pop되고 [B] 역시 no history에 의해 pop =&gt; [A] 만 남음.\n\n\nFLAG_ACTIVITY_REORDER_TO_FRONT : activity 호출 시 이미 같은 activity가 task 내에 있으면 같은 activity는 pop시키고 해당 activity가 push 된다.\n\n[A]를 reorder to front 설정 : [A][B] 상태에서 [A] 호출 시 같은 activity인 [A]가 pop되고 =&gt; [B][A]\n\n\nFLAG_ACTIVITY_CLEAR_TOP : 해당 task에 있는 모든 activity를 pop시키고 해당 activity가 root activity로 task에 push된다.\n\n[A]를 clear top 설정 : [A][B] 상태에서 [A] 호출시 모두 pop되고 =&gt; [A]\n단, 해당 플래그는 액티비티를 모두 onDestroy()시킨 후 새롭게 onCreate()시키기 때문에 [A]를 유지하려면 FLAG_ACTIVITY_SINGLE_TOP 플래그와 함께 사용하면 된다.\n\n\n추가적인 플래그는 아래의 안드로이드 개발자 문서를 참고하자.\n추가 정보\n\nClear Task\n\nTask를 오랫동안 사용하지 않고 방치해두면 시스템은 Root Activity를 제외한 모든 액티비티를 Clear 시킨다.\n이러한 동작은 Activity의 속성을 수정하여 제어할 수 있다.\n\n\nalwaysRetainTaskState\nTask의 Root Activity에 true로 설정되어 있다면 상단에 언급되었던 동작은 발생하지 않으며 Task는 오랜 시간 이후에도 Stack에 있는 모든 Activity를 유지한다.\n\n\nclearTaskOnLaunch\n이 속성이 true로 설정되어 있으면 alwaysRetainTaskState과 정반대로 사용자가 Task를 떠났다가 다시 돌아올 때마다 항상 Stack은 Root Activity로 정리된다.\n\n\nfinishOnTaskLaunch\n이 속성은 clearTaskOnLaunch와 유사하지만 전체 Task가 아닌 단일 Activity에서 동작한다. 그리고 그것은 Root Activity를 포함한 어떤 Activity가 사라지는 원인이 될 수도 있다. true로 설정되어 있을 때, Activity는 현재 Sessing 동안 Task의 일부만 유지한다. 만일 사용자가 해당 Task를 벗어났다가 다시 돌아오면 더 이상 존재하지 않는다.\n\n참고\n\n인텐트 (intent 명시적, 암시적)\n인텐트란 무엇인가?\n내가 누군지 말해줘! - 인텐트 필터\n안드로이드/Android 태스크란? (Task, Activity Stack) 어피니티란? (Android Affinity) 플래그란? (Android Flag)\n안드로이드 Intent Flag 정리(Activity 관리)\n\n","dateCreated":"2019-01-02T17:28:41+09:00","dateModified":"2020-03-01T19:26:25+09:00","datePublished":"2019-01-02T17:28:41+09:00","description":"","headline":"[안드로이드] 인텐트","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://woovictory.github.io/2019/01/02/Android-What-is-Intent/"},"publisher":{"@type":"Organization","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg","logo":{"@type":"ImageObject","url":"Victory.jpeg"}},"url":"https://woovictory.github.io/2019/01/02/Android-What-is-Intent/","keywords":"Android, Basic, 인텐트, Intent"}</script>
     <meta name="description" content="Intent란? 안드로이드 어플리케이션을 구성하는 4가지 기본 요소에는 Activity, Service, Broadcast Receiver, Content Provider가 있다. 인텐트는 이러한 어플리케이션 구성요소 즉, 컴포넌트간에 작업 수행을 위한 정보를 전달하는 역할을 한다. 인텐트를 가장 손쉽게 사용한 예로는 액티비티간 화면 전환을 들 수 있다.">
 <meta name="keywords" content="Android,Basic,인텐트,Intent">
-<meta property="og:type" content="article">
+<meta property="og:type" content="blog">
 <meta property="og:title" content="[안드로이드] 인텐트">
 <meta property="og:url" content="https://woovictory.github.io/2019/01/02/Android-What-is-Intent/index.html">
 <meta property="og:site_name" content="VictoryWoo">
 <meta property="og:description" content="Intent란? 안드로이드 어플리케이션을 구성하는 4가지 기본 요소에는 Activity, Service, Broadcast Receiver, Content Provider가 있다. 인텐트는 이러한 어플리케이션 구성요소 즉, 컴포넌트간에 작업 수행을 위한 정보를 전달하는 역할을 한다. 인텐트를 가장 손쉽게 사용한 예로는 액티비티간 화면 전환을 들 수 있다.">
 <meta property="og:locale" content="en">
 <meta property="og:image" content="https://woovictory.github.io/img/android_intent.png">
+<meta property="og:image" content="https://woovictory.github.io/img/android_task.png">
 <meta property="og:updated_time" content="2020-03-01T10:26:25.105Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="[안드로이드] 인텐트">
 <meta name="twitter:description" content="Intent란? 안드로이드 어플리케이션을 구성하는 4가지 기본 요소에는 Activity, Service, Broadcast Receiver, Content Provider가 있다. 인텐트는 이러한 어플리케이션 구성요소 즉, 컴포넌트간에 작업 수행을 위한 정보를 전달하는 역할을 한다. 인텐트를 가장 손쉽게 사용한 예로는 액티비티간 화면 전환을 들 수 있다.">
 <meta name="twitter:image" content="https://woovictory.github.io/img/android_intent.png">
     
-
+    
+        
+    
+    
+        <meta property="og:image" content="https://woovictory.github.io/assets/images/Victory.jpeg"/>
+    
+    
+    
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/all.css">
+    <link rel="stylesheet" href="/assets/css/jquery.fancybox.css">
+    <link rel="stylesheet" href="/assets/css/thumbs.css">
+    <link rel="stylesheet" href="/assets/css/tranquilpeak.css">
+    <!--STYLES END-->
     
 
     
-        <link rel="icon" href="/css/images/victorywoo.png" />
-    
 
-    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/libs/titillium-web/styles.css">
-    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
-
-    <link rel="stylesheet" type="text/css" href="">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/theeluwin/NotoSansKR-Hestia@master/stylesheets/NotoSansKR-Hestia.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/earlyaccess/nanumgothiccoding.css">
     
+        
     
-    <link rel="stylesheet" href="/css/style.css">
-
-    <script src="/libs/jquery/3.3.1/jquery.min.js"></script>
-    
-    
-        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
-    
-    
-        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
-    
-    
-        <script type="text/javascript">
-(function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-125410253-1', 'auto');
-ga('send', 'pageview');
-
-</script>
-    
-    
-
-
 </head>
 
-<body>
-    <div id="wrap">
-        <header id="header">
-    <div id="header-outer" class="outer">
-        <div class="container">
-            <div class="container-inner">
-                <div id="header-title">
-                    <h1 class="logo-wrap">
-                        <a href="/" class="logo"></a>
-                    </h1>
-                    
-                        <h2 class="subtitle-wrap">
-                            <p class="subtitle">VictoryWoo&#39;s Blog</p>
-                        </h2>
-                    
-                </div>
-                <div id="header-inner" class="nav-container">
-                    <a id="main-nav-toggle" class="nav-icon fa fa-bars"></a>
-                    <div class="nav-container-inner">
-                        <ul id="main-nav">
-                            
-                                <li class="main-nav-list-item" >
-                                    <a class="main-nav-list-link" href="/">Home</a>
-                                </li>
-                            
-                                <li class="main-nav-list-item" >
-                                    <a class="main-nav-list-link" href="/about/index.html">About</a>
-                                </li>
-                            
-                        </ul>
-                        <nav id="sub-nav">
-                            <div id="search-form-wrap">
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
 
-    <form class="search-form">
-        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
-        <button type="submit" class="search-form-submit"></button>
-    </form>
-    <div class="ins-search">
-    <div class="ins-search-mask"></div>
-    <div class="ins-search-container">
-        <div class="ins-input-wrapper">
-            <input type="text" class="ins-search-input" placeholder="Type something..." />
-            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
-        </div>
-        <div class="ins-section-wrapper">
-            <div class="ins-section-container"></div>
-        </div>
-    </div>
-</div>
-<script>
-(function (window) {
-    var INSIGHT_CONFIG = {
-        TRANSLATION: {
-            POSTS: 'Posts',
-            PAGES: 'Pages',
-            CATEGORIES: 'Categories',
-            TAGS: 'Tags',
-            UNTITLED: '(Untitled)',
-        },
-        ROOT_URL: '/',
-        CONTENT_URL: '/content.json',
-    };
-    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
-})(window);
-</script>
-<script src="/js/insight.js"></script>
 
-</div>
-                        </nav>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</header>
-        <div class="container">
-            <div class="main-body container-inner">
-                <div class="main-body-inner">
-                    <section id="main">
-                        <div class="main-body-header">
-    <h1 class="header">
     
-    <a class="page-title-link" href="/categories/Android/">Android</a>
-    </h1>
-</div>
-
-                        <div class="main-body-content">
-                            
-                            <article id="post-Android-What-is-Intent" class="article article-single article-type-post" itemscope itemprop="blogPost">
-    <div class="article-inner">
         
-            <header class="article-header">
-                
-    
-        <h1 class="article-title" itemprop="name">
-        [안드로이드] 인텐트
-        </h1>
+            
+        
     
 
-            </header>
-        
-        
-            <div class="article-meta">
-                
-    <div class="article-date">
-        <a href="/2019/01/02/Android-What-is-Intent/" class="article-date">
-            <time datetime="2019-01-02T08:28:41.000Z" itemprop="datePublished">2019-01-02</time>
+<header id="header" data-behavior="4">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a
+            class="header-title-link"
+            href="/ "
+            aria-label=""
+        >
+            VictoryWoo
         </a>
     </div>
+    
+        
+            <a
+                class="header-right-picture "
+                href="#about"
+                aria-label="Open the link: /#about"
+            >
+        
+        
+            <img class="header-picture" src="/assets/images/Victory.jpeg" alt="Author&#39;s picture"/>
+        
+        </a>
+    
+</header>
 
-		
+            <!-- Define author's picture -->
 
+
+
+        
+    
+
+<nav id="sidebar" data-behavior="4">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a
+                    href="/#about"
+                    aria-label="Read more about the author"
+                >
+                    <img class="sidebar-profile-picture" src="/assets/images/Victory.jpeg" alt="Author&#39;s picture"/>
+                </a>
+                <h4 class="sidebar-profile-name">VictoryWoo</h4>
                 
-    <div class="article-tag">
-        <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/Android/">Android</a>, <a class="tag-link" href="/tags/Basic/">Basic</a>, <a class="tag-link" href="/tags/Intent/">Intent</a>, <a class="tag-link" href="/tags/인텐트/">인텐트</a>
-    </div>
-
+                    <h5 class="sidebar-profile-bio"><p>기록을 통해 사람들과 공유하는 것을 좋아합니다.</p>
+</h5>
+                
             </div>
         
         
-        <div class="article-entry" itemprop="articleBody">
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/"
+                            
+                            rel="noopener"
+                            title="Home"
+                        >
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-categories"
+                            
+                            rel="noopener"
+                            title="Categories"
+                        >
+                        <i class="sidebar-button-icon fa fa-bookmark" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Categories</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-tags"
+                            
+                            rel="noopener"
+                            title="Tags"
+                        >
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Tags</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link open-algolia-search"
+                            href="#search"
+                            
+                            rel="noopener"
+                            title="Search"
+                        >
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Search</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="#about"
+                            
+                            rel="noopener"
+                            title="About"
+                        >
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://github.com/WooVictory"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="GitHub"
+                        >
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://www.facebook.com/WooVictory"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Facebook"
+                        >
+                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Facebook</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://www.linkedin.com/profile/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="LinkedIn"
+                        >
+                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">LinkedIn</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/jhsw0375@gmail.com"
+                            
+                            rel="noopener"
+                            title="Mail"
+                        >
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="4"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            [안드로이드] 인텐트
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2019-01-02T17:28:41+09:00">
+	
+		    Jan 02, 2019
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/Android/">Android</a>
+
+
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
             <h2 id="intent란">Intent란?</h2>
 <p>안드로이드 어플리케이션을 구성하는 4가지 기본 요소에는 <strong>Activity, Service, Broadcast Receiver, Content Provider</strong>가 있다. <code>인텐트</code>는 이러한 어플리케이션 구성요소 즉, 컴포넌트간에 작업 수행을 위한 정보를 전달하는 역할을 한다.</p>
 <p>인텐트를 가장 손쉽게 사용한 예로는 액티비티간 화면 전환을 들 수 있다. 즉 인텐트는 컴포넌트 A가 컴포넌트 B를 호출할 때 필요한 정보를 담고 있으며, 이 정보에는 호출되는 컴포넌트 B의 이름이 <strong>명시적</strong>으로 표시되기도 하고, 속성들이 <strong>암시적</strong>으로 표시되기도 한다.</p>
@@ -342,313 +444,331 @@ Task의 Root Activity에 true로 설정되어 있다면 상단에 언급되었�
 <li><a href="http://kylblog.tistory.com/21" target="_blank" rel="noopener">안드로이드 Intent Flag 정리(Activity 관리)</a></li>
 </ul>
 
-        </div>
-        
-        <footer class="article-footer">
-            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({
-     google_ad_client: "ca-pub-9725307592233286",
-     enable_page_level_ads: true
-});
-</script>
             
 
 
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">TAGGED IN</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/Android/">Android</a> <a class="tag tag--primary tag--small t-link" href="/tags/Basic/">Basic</a> <a class="tag tag--primary tag--small t-link" href="/tags/Intent/">Intent</a> <a class="tag tag--primary tag--small t-link" href="/tags/인텐트/">인텐트</a>
 
-    <a data-url="https://woovictory.github.io/2019/01/02/Android-What-is-Intent/" data-id="ckd6xgt1800xz51pqcqqmarxd" class="article-share-link"><i class="fa fa-share"></i>Share</a>
-<script>
-    (function ($) {
-        $('body').on('click', function() {
-            $('.article-share-box.on').removeClass('on');
-        }).on('click', '.article-share-link', function(e) {
-            e.stopPropagation();
+            </div>
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2019/01/02/Android-Permission-MarshMellow/"
+                    data-tooltip="[안드로이드] 런타임 퍼미션"
+                    aria-label="PREVIOUS: [안드로이드] 런타임 퍼미션"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2019/01/02/Android-What-Is-Fragment/"
+                    data-tooltip="[안드로이드] Fragment"
+                    aria-label="NEXT: [안드로이드] Fragment"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="Share this post"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://woovictory.github.io/2019/01/02/Android-What-is-Intent/"
+                    title="Share on Facebook"
+                    aria-label="Share on Facebook"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://woovictory.github.io/2019/01/02/Android-What-is-Intent/"
+                    title="Share on Twitter"
+                    aria-label="Share on Twitter"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://woovictory.github.io/2019/01/02/Android-What-is-Intent/"
+                    title="Share on Google+"
+                    aria-label="Share on Google+"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
 
-            var $this = $(this),
-                url = $this.attr('data-url'),
-                encodedUrl = encodeURIComponent(url),
-                id = 'article-share-box-' + $this.attr('data-id'),
-                offset = $this.offset(),
-                box;
 
-            if ($('#' + id).length) {
-                box = $('#' + id);
-
-                if (box.hasClass('on')){
-                    box.removeClass('on');
-                    return;
-                }
-            } else {
-                var html = [
-                    '<div id="' + id + '" class="article-share-box">',
-                        '<input class="article-share-input" value="' + url + '">',
-                        '<div class="article-share-links">',
-                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
-                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
-                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
-                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
-                        '</div>',
-                    '</div>'
-                ].join('');
-
-              box = $(html);
-
-              $('body').append(box);
-            }
-
-            $('.article-share-box.on').hide();
-
-            box.css({
-                top: offset.top + 25,
-                left: offset.left
-            }).addClass('on');
-
-        }).on('click', '.article-share-box', function (e) {
-            e.stopPropagation();
-        }).on('click', '.article-share-box-input', function () {
-            $(this).select();
-        }).on('click', '.article-share-box-link', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-
-            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
-        });
-    })(jQuery);
-</script>
-
-        </footer>
+        
+        
+            
+        
     </div>
 </article>
 
-    <section id="comments">
-    
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2020 VictoryWoo. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2019/01/02/Android-Permission-MarshMellow/"
+                    data-tooltip="[안드로이드] 런타임 퍼미션"
+                    aria-label="PREVIOUS: [안드로이드] 런타임 퍼미션"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2019/01/02/Android-What-Is-Fragment/"
+                    data-tooltip="[안드로이드] Fragment"
+                    aria-label="NEXT: [안드로이드] Fragment"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="Share this post"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
         
-    <div id="disqus_thread">
-        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-    </div>
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://woovictory.github.io/2019/01/02/Android-What-is-Intent/"
+                    title="Share on Facebook"
+                    aria-label="Share on Facebook"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://woovictory.github.io/2019/01/02/Android-What-is-Intent/"
+                    title="Share on Twitter"
+                    aria-label="Share on Twitter"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://woovictory.github.io/2019/01/02/Android-What-is-Intent/"
+                    title="Share on Google+"
+                    aria-label="Share on Google+"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
 
-    
-    </section>
 
-
-
-                        </div>
-                    </section>
-                    <aside id="sidebar">
-    <a class="sidebar-toggle" title="Expand Sidebar"><i class="toggle icon"></i></a>
-    <div class="sidebar-top">
-        <p>follow:</p>
-        <ul class="social-links">
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
             
                 
-                <li>
-                    <a class="social-tooltip" title="facebook" href="https://www.facebook.com/WooVictory" target="_blank" rel="noopener">
-                        <i class="icon fa fa-facebook"></i>
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://woovictory.github.io/2019/01/02/Android-What-is-Intent/"
+                        aria-label="Share on Facebook"
+                    >
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Share on Facebook</span>
                     </a>
                 </li>
-                
             
                 
-                <li>
-                    <a class="social-tooltip" title="github" href="https://github.com/WooVictory" target="_blank" rel="noopener">
-                        <i class="icon fa fa-github"></i>
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://twitter.com/intent/tweet?text=https://woovictory.github.io/2019/01/02/Android-What-is-Intent/"
+                        aria-label="Share on Twitter"
+                    >
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Share on Twitter</span>
                     </a>
                 </li>
-                
             
                 
-                <li>
-                    <a class="social-tooltip" title="linkedin" href="https://www.linkedin.com/in/seungwoo-lee-590844177" target="_blank" rel="noopener">
-                        <i class="icon fa fa-linkedin"></i>
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://plus.google.com/share?url=https://woovictory.github.io/2019/01/02/Android-What-is-Intent/"
+                        aria-label="Share on Google+"
+                    >
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>Share on Google+</span>
                     </a>
                 </li>
-                
             
         </ul>
     </div>
-    
-        
-<nav id="article-nav">
-    
-        <a href="/2019/01/02/Android-Permission-MarshMellow/" id="article-nav-newer" class="article-nav-link-wrap">
-        <strong class="article-nav-caption">newer</strong>
-        <p class="article-nav-title">
-        
-            [안드로이드] 런타임 퍼미션
-        
-        </p>
-        <i class="icon fa fa-chevron-right" id="icon-chevron-right"></i>
-    </a>
-    
-    
-        <a href="/2019/01/02/Android-What-Is-Fragment/" id="article-nav-older" class="article-nav-link-wrap">
-        <strong class="article-nav-caption">older</strong>
-        <p class="article-nav-title">[안드로이드] Fragment</p>
-        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
-        </a>
-    
-</nav>
-
-    
-    <div class="widgets-container">
-        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({
-     google_ad_client: "ca-pub-9725307592233286",
-     enable_page_level_ads: true
-});
-</script>
-        
-            
-                
-    <div class="widget-wrap widget-list">
-        <h3 class="widget-title">categories</h3>
-        <div class="widget">
-            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Android/">Android</a><span class="category-list-count">79</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Book/">Book</a><span class="category-list-count">4</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Book/CleanCode/">CleanCode</a><span class="category-list-count">4</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Design-Pattern/">Design Pattern</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ETC/">ETC</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Git/">Git</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Inno-SOPT/">Inno_SOPT</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">39</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Kotlin/">Kotlin</a><span class="category-list-count">17</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Node-js/">Node.js</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Operation-System/">Operation System</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/RxJava/">RxJava</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/">algorithm</a><span class="category-list-count">51</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/BOJ/">BOJ</a><span class="category-list-count">49</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/Programmers/">Programmers</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/개발-상식/">개발 상식</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/네트워크/">네트워크</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/데이터베이스/">데이터베이스</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/삼성-기출/">삼성 기출</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/알고리즘/">알고리즘</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/자료구조/">자료구조</a><span class="category-list-count">10</span></li></ul>
-        </div>
-    </div>
 
 
             
-                
-    <div class="widget-wrap">
-        <h3 class="widget-title">recents</h3>
-        <div class="widget">
-            <ul id="recent-post" class="no-thumbnail">
-                
-                    <li>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/ETC/">ETC</a></p>
-                            <p class="item-title"><a href="/2020/07/29/Memo-Privacy/" class="title">[Memo] 개인정보 처리 방침</a></p>
-                            <p class="item-date"><time datetime="2020-07-29T05:11:19.000Z" itemprop="datePublished">2020-07-29</time></p>
-                        </div>
-                    </li>
-                
-                    <li>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/Book/">Book</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/Book/CleanCode/">CleanCode</a></p>
-                            <p class="item-title"><a href="/2020/07/21/CleanCode4/" class="title">[CleanCode] 4장. 주석</a></p>
-                            <p class="item-date"><time datetime="2020-07-21T14:40:14.000Z" itemprop="datePublished">2020-07-21</time></p>
-                        </div>
-                    </li>
-                
-                    <li>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/Android/">Android</a></p>
-                            <p class="item-title"><a href="/2020/07/08/Android-SingleLiveEventToEventWrapper/" class="title">[Android] MVVM UI Event Wrapper</a></p>
-                            <p class="item-date"><time datetime="2020-07-08T01:34:10.000Z" itemprop="datePublished">2020-07-08</time></p>
-                        </div>
-                    </li>
-                
-                    <li>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/Kotlin/">Kotlin</a></p>
-                            <p class="item-title"><a href="/2020/07/07/Kotlin-Coroutine-1/" class="title">[Kotlin] Coroutine 이해하기</a></p>
-                            <p class="item-date"><time datetime="2020-07-07T02:05:54.000Z" itemprop="datePublished">2020-07-07</time></p>
-                        </div>
-                    </li>
-                
-                    <li>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/Book/">Book</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/Book/CleanCode/">CleanCode</a></p>
-                            <p class="item-title"><a href="/2020/07/06/CleanCode-3/" class="title">[CleanCode] 3장. 함수</a></p>
-                            <p class="item-date"><time datetime="2020-07-06T07:57:43.000Z" itemprop="datePublished">2020-07-06</time></p>
-                        </div>
-                    </li>
-                
-            </ul>
         </div>
-    </div>
-
-            
         
-    </div>
-    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({
-     google_ad_client: "ca-pub-9725307592233286",
-     enable_page_level_ads: true
-});
-</script>
-</aside>
 
-                </div>
-            </div>
-        </div>
-        <footer id="footer">
-    <div class="container">
-        <div class="container-inner">
-            <a id="back-to-top" href="javascript:;"><i class="icon fa fa-angle-up"></i></a>
-            <div class="credit">
-                <h1 class="logo-wrap">
-                    <a href="/" class="logo"></a>
-                </h1>
-                <p>&copy; 2020 VictoryWoo</p>
-                <p>Powered by <a href="//hexo.io/" target="_blank">Hexo</a>. Theme by <a href="//github.com/ppoffice" target="_blank">PPOffice</a></p>
-            </div>
-            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({
-     google_ad_client: "ca-pub-9725307592233286",
-     enable_page_level_ads: true
-});
-</script>
-            <div class="footer-plugins">
-              
+
     
-
-
-            </div>
-        </div>
-    </div>
-</footer>
-
         
     
-    <script>
-    var disqus_shortname = 'hexo-theme-hueman';
-    
-    
-    var disqus_url = 'https://woovictory.github.io/2019/01/02/Android-What-is-Intent/';
-    
-    (function() {
-    var dsq = document.createElement('script');
-    dsq.type = 'text/javascript';
-    dsq.async = true;
-    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
-    </script>
 
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <img id="about-card-picture" src="/assets/images/Victory.jpeg" alt="Author&#39;s picture"/>
+        
+            <h4 id="about-card-name">VictoryWoo</h4>
+        
+            <div id="about-card-bio"><p>기록을 통해 사람들과 공유하는 것을 좋아합니다.</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>Android Developer</p>
 
-
-
-    
-        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
-    
-    
-        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
-    
-    
-
-
-
-<!-- Custom Scripts -->
-<script src="/js/main.js"></script>
-
+            </div>
+        
+        
     </div>
-</body>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/cover-v1.2.0.jpg');"></div>
+        <!--SCRIPTS-->
+<script src="/assets/js/jquery.js"></script>
+<script src="/assets/js/jquery.fancybox.js"></script>
+<script src="/assets/js/thumbs.js"></script>
+<script src="/assets/js/tranquilpeak.js"></script>
+<!--SCRIPTS END-->
+
+
+    
+
+
+
+
+    </body>
 </html>

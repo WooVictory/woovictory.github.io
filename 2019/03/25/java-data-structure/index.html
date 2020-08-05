@@ -1,20 +1,20 @@
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
+    
 <head>
-    <meta charset="utf-8" />
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="VictoryWoo">
+    <title>[Java] 기초 - VictoryWoo</title>
+    <meta name="author" content="VictoryWoo">
     
-
     
-    <title>[Java] 기초 | VictoryWoo</title>
     
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    
-        <meta name="keywords" content="Java" />
-    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg"},"articleBody":"자바를 사용해 알고리즘을 풀 때 유용하게 사용되는 것들을 정리합니다.\n# 입력\n자바에서 입력을 받는 방법은 아래와 같이 두 가지가 존재합니다.\n\nScanner 클래스 사용\nBufferedReader 객체 사용\n\n# Scanner\n\n가장 간단하게 입력 받을 수 있는 방법.\nBufferedReader보다 나중에 등장했다.\n\n123456789101112131415161718192021   // Scanner 객체 생성Scanner sc = new Scanner(System.in);   // 숫자를 입력.int number = sc.nextInt();    // 공백을 포함시키지 않고 입력을 받는다.String word1 = sc.next();    // 공백을 포함해서 입력을 받는다.String word2 = sc.nextLine();    // 문자열을 입력받아서 문자열의 첫번째 문자에 접근할 수 있다.char ch = sc.next().charAt(0);    String str = \"Hello\";str.charAt(0); // 'H' str.charAt(1); // 'e'str.charAt(2); // 'l'str.charAt(3); // 'l'str.charAt(4); // 'o'\n\nstr.charAt() : charAt()을 이용해서str 문자열에 존재하는 문자에 접근할 수 있습니다. () 안에는 인덱스를 이용해서 접근합니다.\n\n\ncharAt() : index를 사용해 문자열에서 문자 하나에 접근할 수 있다.\n문자열 입력\n\nsc.next() : 문자열에 개행문자나, 공백이 존재하면 무시하고 문자열만 입력받는다.\nsc.nextLine() : 문자열에 공백이 존재하면 포함시켜서 그대로 입력받습니다. 한 줄 단위로 입력받기 때문에 개행문자도 한 줄로 인식합니다.\n\n\n\n장점\nScanenr는 사용하기 편리하다.\n세분화 시켜서 데이터를 입력 받을 수 있다는 점입니다.\n\nsc.nextInt() : Int형 데이터를 입력받습니다.\nsc.nextDouble() : Double형 데이터를 입력받습니다.\nsc.nextBoolean() : Boolean형 데이터를 입력받습니다.\nsc.next() :  String형 데이터를 입력받지만, 공백을 포함한 문자열에서 공백은 포함하지 않고, 공백 전까지만 입력받습니다.\nsc.nextLine() : String형 데이터를 입력받지만, 공백을 포함한 문자열에서 공백을 포함해서 입력받습니다.\n\n단점\nBuffredReader보다 속도가 느리다는 단점이 존재한다.\n# BufferedReader\n\nScanner보다 속도가 훨씬 빠르다.\n사용법이 Scanner보다 선언할 게 많다.\n\n123// BufferedReader 객체 선언BufferedReader br = new BufferedReader(new InputStreamReader(System.in));int number = Integer.parseInt(br.readLine());\nBufferedReader br = new BufferedReader(new InputStreamReader(System.in));\nreadLine()는 데이터를 읽어오는 함수이고, String 리턴 값을 가진다.\nInputStreamReader는 입력을 character 단위로 읽어 들인다. 키보드로 입력하는 글자 한개에 해당된다고 할 수 있습니다. 하지만 한 글자가 아닌 줄 단위의 문자열을 입력으로 받으려면 불편하다. 어떻게 해야 할까??\n정답은 BufferedReader이다.\nBufferedReader는 InputStreamReader에 버퍼링 기능을 추가한 것으로 데이터를 사용자가 요청할 때마다 매번 읽어오기 보다는 일정량 사이즈로 한번에 읽어온 후 Buffer에 보관합니다. 그리고 사용자가 요구할 때 버퍼에서 읽어오게 합니다. 결국 BufferedReader를 이용하면 속도를 향상시키고 시간의 부하를 줄일 수 있게 됩니다.\nStringTokenizer\n\nScanner의 경우 nextInt()는 입력하면 자동으로 공백 다음의 숫자를 받는다.\n입력받은 String에서 구분자를 통해서 구분하기 위해서 사용한다.\n기본 설정은 공백을 기준으로 문자열을 나눈다.\nsplit() 함수와 비슷하다.\nnextTokne() 함수를 사용해 입력 값을 공백으로 구분하여 순서대로 호출할 수 있다.\n\nScanner의 경우 그냥 nextInt를 입력하면 알아서 공백 다음 숫자를 받기 때문에 어려움 없이 사용할 수 있지만, 이 부분에서도 BufferedReader를 사용할 경우에는 조금 다른 방식을 취해야합니다. StringTokenizer를 이용하는 방식입니다. 이름과 같이 String을 특정 구분자값을 통해 분리하는 함수입니다. 기본적으로는 공백을 기준으로 문자열을 가릅니다. split()함수와 비슷하다고 생각하면 됩니다.\n사용법은 어렵지 않다. 아래와 같다.\n12345BufferedReader br = new BufferedReader(new InputStreamReader(System.in));StringTokenizer st = new StringTokenizer(br.readLine());int test = Integer.parseInt(st.nextToken());int number = Integer.parseInt(st.nextToken());\n# 결론\nScanner\n\n버퍼 크기 : 1024 chars\n입력하는 데이터 타입에 따라 다르게 입력받을 수 있다.\n동기화되지 않는다.\n예외를 숨긴다.\n\nBufferedReader\n\n버퍼 크기 : 8192 chars\n문자열을 읽고 원하는 타입으로 바꾸기 위해 형 변환을 진행한다.\n동기화가 된다.\n예외 발생시 IOException 처리를 던진다.\n큰 파일을 읽을 때는 버퍼 크기가 크므로 BufferedReader이 좋습니다.\n\n동기화라는 것에 대해서 조금 살펴보았습니다. 이 부분은 운영체제(즉, OS) 분야에서 다루는 내용이지만, 꼭 알아야 하는 내용이기도 합니다. 저는 아직 OS 공부를 하지 않았지만, 공부하면서 찾아본 내용과 예전 학교 수업시간에 들었던 내용을 떠올리면서 정리했습니다.\nBufferedReader는 멀티 쓰레드에 안전하고, Scanner는 안전하지 않다. 라는 말이 있습니다. 그것이 위에서의 3번의 경우입니다.\n멀티 쓰레드의 경우 여러 쓰레드가 같은 프로세스 내의 자원을 공유하기 때문에 서로의 작업에 영향을 줄 수 있습니다. 예를 들어, A 쓰레드가 작업 중입니다. 그러던 중 B 쓰레드에게 넘깁니다. B 쓰레드에서 공유 데이터를 변경하고 A 쓰레드에 다시 제어권을 넘긴다면 예기치 않은 결과가 나올 수 있습니다. 제대로 된 처리를 위해서는 A 쓰레드가 작업이 끝날 때까지 다른 쓰레드가 영향을 주지 않아야 합니다.\n그리하여 멀티 쓰레드를 활용하는 소켓 예제에서는 대부분 BufferedReader를 많이 사용한다고 합니다.\n# Pair\n\n두 자료형 T1과 T2를 묶어서 사용할 수 있도록 해주는 역할을 합니다.\n같은 자료형 뿐만 아니라 서로 다른 자료형 T1과 T2를 묶어서 사용할 수 있도록 해주는 역할을 합니다.\n즉, 두 객체를 하나의 객체로 취급할 수 있도록 묶어주는 클래스입니다.\n\n# 구현\n항상 두 개를 묶어서 사용하고, 첫 번째 자료는 first, 두 번째 자료는 second로 접근할 수 있습니다. C++ 언어에서는 STL이라는 Standard Template Library를 이용해서 사용할 수 있지만, 자바에서는 제공되지 않아서 직접 구현해서 사용해야 하는 것으로 알고 있습니다.\n자바는 기본적으로 반환 결과를 2개 이상 제공하지 않습니다. 그래서 2개 이상의 결과를 반환 받기 위해서는 객체나 배열의 형태를 보이게 됩니다. C++에서는 pair가 존재하지만, 자바에서는 없는 것으로 알고 있습니다.\n여러가지 자료를 찾아보다가 밑에 코드를 찾았습니다.\n12345678910111213class Pair&lt;L,R&gt; &#123;      final L left;      final R right;      public Pair(L left, R right) &#123;        this.left = left;        this.right = right;      &#125;      static &lt;L,R&gt; Pair&lt;L,R&gt; of(L left, R right)&#123;          return new Pair&lt;L,R&gt;(left, right);      &#125;&#125;\n# Tuple\n\nTuple이란 여러 개의 자료형을 묶을 수 있는 클래스입니다.\ntuple은 pair와 같지만 두 개가 아니라 여러 개를 묶을 수 있습니다.\n.first, .second, .third …가 아니고 get을 이용해서 인덱스로 접근해야 합니다.\n\n구현\n자바에서는 pair와 tuple이 존재하지 않기 때문에 구현해서 사용해야 합니다.\n1234567891011121314151617181920public class Tuple&lt;X,Y&gt;&#123;   private X x;   private Y y;   public Tuple(X x, Y y)&#123;      this.x = x;      this.y = y;   &#125;   public X getX()&#123; // get을 이용해서 접근      return x;   &#125;   public Y getY()&#123; // get을 이용해서 접근      return y;   &#125;   public void setX(X x)&#123; // set을 이용해서 값을 설정      this.x = x;   &#125;   public void setY(Y y)&#123; // set을 이용해서 값을 설정      this.y = y;   &#125;&#125;\n# BigInteger\nJava에서 정수를 계산할 때, byte,short,int,long등의 기본 데이터 타입의 범위를 초과하는 경우가 있습니다. 이런 경우에, BigInteger Class를 사용하는 방법이 있습니다.\n기본 자료형 크기 이상의 정수가 필요하다면 BigInteger Class를 사용할 수 있습니다.\nBigInteger Class는 숫자의 크기에 제한 없이 무한대의 정수를 저장할 수 있습니다.\nmath 클래스에 포함되어 있습니다.\n\n즉, 범위는 무한대\n\n객체 생성 방법\n12BigInteger a = new BigInteger(\"100000\");BigInteger b = new BigInteger(\"1000\");\n연산\n1234567891011System.out.println(\"a+b = \" + a.add(b)); // 더하기System.out.println(\"a-b = \" + a.subtract(b)); // 빼기System.out.println(\"a*b = \" + a.multiply(b)); // 곱하기System.out.println(\"a/b = \" + a.divide(b)); // 나누기(몫)System.out.println(\"a%b = \" + a.remainder(b)); // 나머지System.out.println(\"gcd(a,b) = \" + a.gcd(b)); //a와 b의 최대공약수System.out.println(\"ZERO = \" + BigInteger.ZERO); // 0System.out.println(\"ONE = \" + BigInteger.ONE); // 1System.out.println(\"TEN = \" + BigInteger.TEN); // 10System.out.println(\"a^10 = \" + a.pow(10)); // a 제곱\n비교\n\ncompareTo - int type의 변수를 사용\n\n1234567891011BigInteger a = sc.nextBigInteger(); // 무한대의 정수를 입력받을 수 있다.BigInteger b = sc.nextBigInteger(); // 무한대의 정수를 입력받을 수 있다. int c = a.compareTo(b);if (c &lt; 0) &#123; // a가 b보다 작을 경우    System.out.println(\"&lt;\");&#125; else if (c == 0) &#123; // a와 b가 같은 경우    System.out.println(\"==\");&#125; else &#123; // a가 b보다 클 경우    System.out.println(\"&gt;\");&#125;System.out.println(\"compareTo = \" + c);\n\nequals - boolean type의 변수를 사용\n\n1234567boolean e = a.equals(b);if(e)&#123;\tSystem.out.println(\"==\");&#125; else&#123;\tSystem.out.println(\"!=\");&#125;System.out.println(\"equals = \" + e);\n주의할 점\nQ. 생성자의 매개변수를 문자형으로 전달해야 하는 이유는?\nA. 숫자형으로 표현할 수 있는 범위를 벗어났기 때문에 문자형으로 표현하는 것입니다.\n# BigDecimal\nBigDecimal은 무한한 크기의 부동 소수점 숫자 즉, 실수를 다루기 위해 사용됩니다.\n이유는 컴퓨터의 특성으로 인해서 float이나 double은 실수 연산시 정확한 결과가 나오지 않기 때문입니다.\n하지만, BigDecimal을 사용하면 계산은 번거롭지만 정확한 결과를 얻을 수 있습니다.\nBigInteger와 유사한 방식으로 숫자를 다룹니다.\n12345678910111213BigDecimal b1 = new BigDecimal(\"0.3\");BigDecimal b2 = new BigDecimal(\"0.4\");System.out.println(b1.add(BigDecimal.valueOf(0.5)));System.out.println(b1.multiply(b2));System.out.println(b1.divide(b2, BigDecimal.ROUND_UP));System.out.println(b1.divide(b2, 5, BigDecimal.ROUND_UP));Scanner sc = new Scanner(System.in);BigDecimal a = sc.nextBigDecimal();int b = sc.nextInt();\t\tSystem.out.println(a.pow(b).toPlainString());\nBigDecimal의 자주 사용되는 메소드\n123456789101112131415float floatValue() //값을 float형으로 반환double doubleValue() //값을 double형으로 반환BigInteger toBigInteger() //값을 BigInteger로 반환 (소수점 아래는 날아감)BigDecimal add(BigDecimal augend) //덧셈 + 연산BigDecimal subtract(BigDecimal subtrahend) //뺄셈 - 연산BigDecimal multiply(BigDecimal multiplicand) //곱셈 * 연산BigDecimal divide(BigDecimal divisor) //나눗셈 / 연산BigDecimal remainder(BigDecimal divisor) //나머지 % 연산\n일반 실수형을 계산할 때는 아래와 같은 오차가 발생합니다.\n123456789101112131415double d1 = 1.0;double d2 = 0.1;for(int i=0; i&lt;5; ++i)&#123;  d1 += d2;  System.out.println(d1);&#125; 결과 : 1.11.20000000000000021.30000000000000031.40000000000000041.5000000000000004\nBigDecimal의 생성자는 여러가지가 있지만, 가장 정확한 계산을 위해서는 문자열을 인자로 하는 생성자를 이용해야 합니다. 실수형 인자를 사용하면 정확한 계산의 의미가 없어집니다.\n1234567891011121314151617double d1 = 1.0;double d2 = 0.1;  BigDecimal bd1 = new BigDecimal(String.valueOf(d1));BigDecimal bd2 = new BigDecimal(String.valueOf(d2)); for(int i=0; i&lt;5; ++i)&#123;  bd1 = bd1.add(bd2);  System.out.println(bd1.toString());&#125; 결과 :1.11.21.31.41.5\n그리고 BigDecimal의 값을 출력하려면 setScale(scale, roundingMode)로 단위 및 라운딩 모드를 설정하거나 toString() 또는 toPlainString() 메소드를 사용한다. toString() 메소드는 과학적 표기를 사용할 수 있지만, toPlainString() 메소드는 그렇지 않습니다.\n\n과학적 표기란? 0.1^10의 과학적 표기는 1E-10 그렇지 않은 일반 표기는 0.0000000001\n\n# BufferedWriter\n\n일반적으로 출력할 때 System.out.prinlnt() 사용\n테스크 케이스가 작을 때는 속도 차이가 미미하다. 하지만 테스트 케이스가 매우 커지면 속도 차이가 확연하다고 한다.\n언제 사용하고 언제 사용하지 않을까?\n\n출력이 많은 경우 : BuffredWriter 사용.\n출력이 적은 경우 : System.out.println() 사용.\n\n\nbw(BuffredWriter 객체)의 사용이 끝나면 flush()나 close() 함수를 이용해 객체를 반환해줘야 한다. 반환하지 않으면 출력이 제대로 이뤄지지 않을 수도 있다.\n\n1234BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));bw.writer(\"Hello \\b\");bw.flush();bw.close();\n# EOF\n\n\n알고리즘 문제를 풀다 보면 EOF 문제에 대해 봉착하는 경우가 있습니다.\nEOF(End Of File) : 파일 끝을 의미하며, 데이터 소스로부터 더 이상 읽을 데이터가 없음을 나타냅니다.\n\n알고리즘 문제를 풀다보면 입력 부분의 기준이 없는 문제를 본 적이 있을 것입니다. 자바에서는 입력 클래스가 Scanner,BufferedReader 2가지로 구성됩니다.\n# Scanner 클래스의 EOF 처리 방법\n12345678Scanner sc = new Scanner(System.in);while(sc.hasNextLine())&#123;\tsc.nextLine();&#125;while(sc.hasNextInt())&#123;\tsc.nextInt();&#125;\n# BufferedReader의 EOF 처리 방법\n1234567BufferedReader br = new BufferedReader(new InputStreamReader(System.in);String input = \"\";while((input = br.readLine()) != null) &#123;\t//......&#125;\n# 배열\n12345int[] array1 = new int[10];int[] array2;array2 = Arrays.copyOf(array1,10);Arrays.sort(array1);\n\nArrays.copyOf(array1,10) : arrya1을 길이 10으로 해서 똑같이 복사하는 함수입니다.\nArrays.sort(array1) :  array1을 정렬해주는 함수입니다. 자바 컬렉션 프레임워크 중의 하나로 볼 수 있습니다.\n\n# 입력 속도 비교\n\nScanner와 BufferedReader의 입력 받는 속도를 비교해본다.\n1. Scanner를 이용해 100만까지의 데이터를 입력받는다.\n123456789101112131415161718import java.util.Scanner;public class inputExam &#123;    public static void main(String[] args) &#123;        Scanner sc = new Scanner(System.in);        int t;        sc.nextLine();        long st1 = System.currentTimeMillis();        for(int i=0;i&lt;1000000;i++)&#123;            t= sc.nextInt();        &#125;        System.out.println(\"소요 시간 : \"+(System.currentTimeMillis() - st1)+\"ms\");        sc.close();    &#125;&#125;// 결과소요시간 : 2441ms\n\n소요 시간 : 2.5초\n빠른 것 같지만 실제 알고리즘 문제에서 수의 범위는 천만~1억에 이르는 경우도 종종 있다.\n다른 연산도 있기 때문에 빠른 속도라고는 할 수 없다.\n\n2. BufferedReader를 이용해 100만까지의 데이터를 입력받는다.\n123456789101112131415161718import java.util.Scanner;public class inputExam &#123;    public static void main(String[] args) &#123;        BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));        bf.readLine();        int t;        long st2 = System.currentTimeMillis();        for(int i=0;i&lt;1000000;i++)&#123;            t = Integer.parseInt(bf.readLine());        &#125;        System.out.println(\"소요 시간 : \"+(System.currentTimeMillis() - st2)+\"ms\");            &#125;&#125;// 결과소요 시간 : 4ms\n\n소요 시간 : 0.4초\n한 줄을 통째로 입력 받는 방식이기 때문에 1 2 3 4 … 과 같이 한 줄로 입력이 들어올 때 Scanner에 비해 훨씬 성능이 높다.\n문제를 풀 때 코드의 문제가 없는데 시간 초과가 난다면 문제의 범위를 다시 확인해보고 입력 방식을 알맞게 바꾸면 해결할 수 있을 것이다.\n\n# BufferedReader 추가 이야기!\n12345BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));String s = bf.readLine(); // 1int a = bf.read(); // 2int b = Integer.parseInt(bf.readLine()); // 3\n\n1번 : 입력받을 값이 String일 때\n2번 : 입력받을 값이 int일 때\n3번 : int 값 + enter 까지 입력받을 때\n\n알고리즘 사이트에서 대부분의 데이터 입력은 한줄씩 띄워진 상태로 입력이 들어옵니다. 따라서 int b를 입력받은 방법처럼 일단 스트링으로 개행문자(엔터)까지 포함해 통째로 받아온 다음 형 변환을 통해 저장합니다.\n또한 new BufferedReader(new InputStreamReader(System.in),1024); 이렇게 버퍼 사이즈를 직접 지정할 수도 있는데, 아무것도 지정하지 않을 시 디폴트 사이즈 버퍼를 갖습니다. 어지간한 문제는 디폴트 사이즈로 충분하다고 하네요… ㅎㅎ;\n","dateCreated":"2019-03-25T12:27:02+09:00","dateModified":"2020-04-22T16:47:20+09:00","datePublished":"2019-03-25T12:27:02+09:00","description":"","headline":"[Java] 기초","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://woovictory.github.io/2019/03/25/java-data-structure/"},"publisher":{"@type":"Organization","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg","logo":{"@type":"ImageObject","url":"Victory.jpeg"}},"url":"https://woovictory.github.io/2019/03/25/java-data-structure/","keywords":"Java"}</script>
     <meta name="description" content="자바를 사용해 알고리즘을 풀 때 유용하게 사용되는 것들을 정리합니다. # 입력 자바에서 입력을 받는 방법은 아래와 같이 두 가지가 존재합니다.  Scanner 클래스 사용 BufferedReader 객체 사용  # Scanner  가장 간단하게 입력 받을 수 있는 방법. BufferedReader보다 나중에 등장했다.  12345678910111213141">
 <meta name="keywords" content="Java">
-<meta property="og:type" content="article">
+<meta property="og:type" content="blog">
 <meta property="og:title" content="[Java] 기초">
 <meta property="og:url" content="https://woovictory.github.io/2019/03/25/java-data-structure/index.html">
 <meta property="og:site_name" content="VictoryWoo">
@@ -25,171 +25,272 @@
 <meta name="twitter:title" content="[Java] 기초">
 <meta name="twitter:description" content="자바를 사용해 알고리즘을 풀 때 유용하게 사용되는 것들을 정리합니다. # 입력 자바에서 입력을 받는 방법은 아래와 같이 두 가지가 존재합니다.  Scanner 클래스 사용 BufferedReader 객체 사용  # Scanner  가장 간단하게 입력 받을 수 있는 방법. BufferedReader보다 나중에 등장했다.  12345678910111213141">
     
-
+    
+        
+    
+    
+        <meta property="og:image" content="https://woovictory.github.io/assets/images/Victory.jpeg"/>
+    
+    
+    
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/all.css">
+    <link rel="stylesheet" href="/assets/css/jquery.fancybox.css">
+    <link rel="stylesheet" href="/assets/css/thumbs.css">
+    <link rel="stylesheet" href="/assets/css/tranquilpeak.css">
+    <!--STYLES END-->
     
 
     
-        <link rel="icon" href="/css/images/victorywoo.png" />
-    
 
-    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/libs/titillium-web/styles.css">
-    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
-
-    <link rel="stylesheet" type="text/css" href="">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/theeluwin/NotoSansKR-Hestia@master/stylesheets/NotoSansKR-Hestia.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/earlyaccess/nanumgothiccoding.css">
     
+        
     
-    <link rel="stylesheet" href="/css/style.css">
-
-    <script src="/libs/jquery/3.3.1/jquery.min.js"></script>
-    
-    
-        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
-    
-    
-        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
-    
-    
-        <script type="text/javascript">
-(function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-125410253-1', 'auto');
-ga('send', 'pageview');
-
-</script>
-    
-    
-
-
 </head>
 
-<body>
-    <div id="wrap">
-        <header id="header">
-    <div id="header-outer" class="outer">
-        <div class="container">
-            <div class="container-inner">
-                <div id="header-title">
-                    <h1 class="logo-wrap">
-                        <a href="/" class="logo"></a>
-                    </h1>
-                    
-                        <h2 class="subtitle-wrap">
-                            <p class="subtitle">VictoryWoo&#39;s Blog</p>
-                        </h2>
-                    
-                </div>
-                <div id="header-inner" class="nav-container">
-                    <a id="main-nav-toggle" class="nav-icon fa fa-bars"></a>
-                    <div class="nav-container-inner">
-                        <ul id="main-nav">
-                            
-                                <li class="main-nav-list-item" >
-                                    <a class="main-nav-list-link" href="/">Home</a>
-                                </li>
-                            
-                                <li class="main-nav-list-item" >
-                                    <a class="main-nav-list-link" href="/about/index.html">About</a>
-                                </li>
-                            
-                        </ul>
-                        <nav id="sub-nav">
-                            <div id="search-form-wrap">
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
 
-    <form class="search-form">
-        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
-        <button type="submit" class="search-form-submit"></button>
-    </form>
-    <div class="ins-search">
-    <div class="ins-search-mask"></div>
-    <div class="ins-search-container">
-        <div class="ins-input-wrapper">
-            <input type="text" class="ins-search-input" placeholder="Type something..." />
-            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
-        </div>
-        <div class="ins-section-wrapper">
-            <div class="ins-section-container"></div>
-        </div>
-    </div>
-</div>
-<script>
-(function (window) {
-    var INSIGHT_CONFIG = {
-        TRANSLATION: {
-            POSTS: 'Posts',
-            PAGES: 'Pages',
-            CATEGORIES: 'Categories',
-            TAGS: 'Tags',
-            UNTITLED: '(Untitled)',
-        },
-        ROOT_URL: '/',
-        CONTENT_URL: '/content.json',
-    };
-    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
-})(window);
-</script>
-<script src="/js/insight.js"></script>
 
-</div>
-                        </nav>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</header>
-        <div class="container">
-            <div class="main-body container-inner">
-                <div class="main-body-inner">
-                    <section id="main">
-                        <div class="main-body-header">
-    <h1 class="header">
     
-    <a class="page-title-link" href="/categories/Java/">Java</a>
-    </h1>
-</div>
-
-                        <div class="main-body-content">
-                            
-                            <article id="post-java-data-structure" class="article article-single article-type-post" itemscope itemprop="blogPost">
-    <div class="article-inner">
         
-            <header class="article-header">
-                
-    
-        <h1 class="article-title" itemprop="name">
-        [Java] 기초
-        </h1>
+            
+        
     
 
-            </header>
-        
-        
-            <div class="article-meta">
-                
-    <div class="article-date">
-        <a href="/2019/03/25/java-data-structure/" class="article-date">
-            <time datetime="2019-03-25T03:27:02.000Z" itemprop="datePublished">2019-03-25</time>
+<header id="header" data-behavior="4">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a
+            class="header-title-link"
+            href="/ "
+            aria-label=""
+        >
+            VictoryWoo
         </a>
     </div>
+    
+        
+            <a
+                class="header-right-picture "
+                href="#about"
+                aria-label="Open the link: /#about"
+            >
+        
+        
+            <img class="header-picture" src="/assets/images/Victory.jpeg" alt="Author&#39;s picture"/>
+        
+        </a>
+    
+</header>
 
-		
+            <!-- Define author's picture -->
 
+
+
+        
+    
+
+<nav id="sidebar" data-behavior="4">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a
+                    href="/#about"
+                    aria-label="Read more about the author"
+                >
+                    <img class="sidebar-profile-picture" src="/assets/images/Victory.jpeg" alt="Author&#39;s picture"/>
+                </a>
+                <h4 class="sidebar-profile-name">VictoryWoo</h4>
                 
-    <div class="article-tag">
-        <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/Java/">Java</a>
-    </div>
-
+                    <h5 class="sidebar-profile-bio"><p>기록을 통해 사람들과 공유하는 것을 좋아합니다.</p>
+</h5>
+                
             </div>
         
         
-        <div class="article-entry" itemprop="articleBody">
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/"
+                            
+                            rel="noopener"
+                            title="Home"
+                        >
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-categories"
+                            
+                            rel="noopener"
+                            title="Categories"
+                        >
+                        <i class="sidebar-button-icon fa fa-bookmark" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Categories</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-tags"
+                            
+                            rel="noopener"
+                            title="Tags"
+                        >
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Tags</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link open-algolia-search"
+                            href="#search"
+                            
+                            rel="noopener"
+                            title="Search"
+                        >
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Search</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="#about"
+                            
+                            rel="noopener"
+                            title="About"
+                        >
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://github.com/WooVictory"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="GitHub"
+                        >
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://www.facebook.com/WooVictory"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Facebook"
+                        >
+                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Facebook</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://www.linkedin.com/profile/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="LinkedIn"
+                        >
+                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">LinkedIn</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/jhsw0375@gmail.com"
+                            
+                            rel="noopener"
+                            title="Mail"
+                        >
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="4"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            [Java] 기초
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2019-03-25T12:27:02+09:00">
+	
+		    Mar 25, 2019
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/Java/">Java</a>
+
+
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
             <p>자바를 사용해 알고리즘을 풀 때 유용하게 사용되는 것들을 정리합니다.</p>
 <h1 id="입력"># 입력</h1>
 <p>자바에서 입력을 받는 방법은 아래와 같이 두 가지가 존재합니다.</p>
@@ -386,313 +487,331 @@ A. 숫자형으로 표현할 수 있는 범위를 벗어났기 때문에 문자�
 <p>알고리즘 사이트에서 대부분의 데이터 입력은 한줄씩 띄워진 상태로 입력이 들어옵니다. 따라서 <strong>int b</strong>를 입력받은 방법처럼 일단 스트링으로 개행문자(엔터)까지 포함해 통째로 받아온 다음 형 변환을 통해 저장합니다.</p>
 <p>또한 new BufferedReader(new InputStreamReader(<a href="http://System.in" target="_blank" rel="noopener">System.in</a>),1024); 이렇게 버퍼 사이즈를 직접 지정할 수도 있는데, 아무것도 지정하지 않을 시 디폴트 사이즈 버퍼를 갖습니다. 어지간한 문제는 디폴트 사이즈로 충분하다고 하네요… ㅎㅎ;</p>
 
-        </div>
-        
-        <footer class="article-footer">
-            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({
-     google_ad_client: "ca-pub-9725307592233286",
-     enable_page_level_ads: true
-});
-</script>
             
 
 
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">TAGGED IN</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/Java/">Java</a>
 
-    <a data-url="https://woovictory.github.io/2019/03/25/java-data-structure/" data-id="ckd6xgt7n019u51pqrf7vcwpl" class="article-share-link"><i class="fa fa-share"></i>Share</a>
-<script>
-    (function ($) {
-        $('body').on('click', function() {
-            $('.article-share-box.on').removeClass('on');
-        }).on('click', '.article-share-link', function(e) {
-            e.stopPropagation();
+            </div>
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2019/03/26/Java-Diff-Array-ArrayList/"
+                    data-tooltip="[Java] Array VS ArrayList"
+                    aria-label="PREVIOUS: [Java] Array VS ArrayList"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2019/03/24/Algo-Get-the-Prime/"
+                    data-tooltip="[소수 구하기] 에라토스테네스의 체"
+                    aria-label="NEXT: [소수 구하기] 에라토스테네스의 체"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="Share this post"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://woovictory.github.io/2019/03/25/java-data-structure/"
+                    title="Share on Facebook"
+                    aria-label="Share on Facebook"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://woovictory.github.io/2019/03/25/java-data-structure/"
+                    title="Share on Twitter"
+                    aria-label="Share on Twitter"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://woovictory.github.io/2019/03/25/java-data-structure/"
+                    title="Share on Google+"
+                    aria-label="Share on Google+"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
 
-            var $this = $(this),
-                url = $this.attr('data-url'),
-                encodedUrl = encodeURIComponent(url),
-                id = 'article-share-box-' + $this.attr('data-id'),
-                offset = $this.offset(),
-                box;
 
-            if ($('#' + id).length) {
-                box = $('#' + id);
-
-                if (box.hasClass('on')){
-                    box.removeClass('on');
-                    return;
-                }
-            } else {
-                var html = [
-                    '<div id="' + id + '" class="article-share-box">',
-                        '<input class="article-share-input" value="' + url + '">',
-                        '<div class="article-share-links">',
-                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
-                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
-                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
-                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
-                        '</div>',
-                    '</div>'
-                ].join('');
-
-              box = $(html);
-
-              $('body').append(box);
-            }
-
-            $('.article-share-box.on').hide();
-
-            box.css({
-                top: offset.top + 25,
-                left: offset.left
-            }).addClass('on');
-
-        }).on('click', '.article-share-box', function (e) {
-            e.stopPropagation();
-        }).on('click', '.article-share-box-input', function () {
-            $(this).select();
-        }).on('click', '.article-share-box-link', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-
-            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
-        });
-    })(jQuery);
-</script>
-
-        </footer>
+        
+        
+            
+        
     </div>
 </article>
 
-    <section id="comments">
-    
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2020 VictoryWoo. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2019/03/26/Java-Diff-Array-ArrayList/"
+                    data-tooltip="[Java] Array VS ArrayList"
+                    aria-label="PREVIOUS: [Java] Array VS ArrayList"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2019/03/24/Algo-Get-the-Prime/"
+                    data-tooltip="[소수 구하기] 에라토스테네스의 체"
+                    aria-label="NEXT: [소수 구하기] 에라토스테네스의 체"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="Share this post"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
         
-    <div id="disqus_thread">
-        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-    </div>
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://woovictory.github.io/2019/03/25/java-data-structure/"
+                    title="Share on Facebook"
+                    aria-label="Share on Facebook"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://woovictory.github.io/2019/03/25/java-data-structure/"
+                    title="Share on Twitter"
+                    aria-label="Share on Twitter"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://woovictory.github.io/2019/03/25/java-data-structure/"
+                    title="Share on Google+"
+                    aria-label="Share on Google+"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
 
-    
-    </section>
 
-
-
-                        </div>
-                    </section>
-                    <aside id="sidebar">
-    <a class="sidebar-toggle" title="Expand Sidebar"><i class="toggle icon"></i></a>
-    <div class="sidebar-top">
-        <p>follow:</p>
-        <ul class="social-links">
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
             
                 
-                <li>
-                    <a class="social-tooltip" title="facebook" href="https://www.facebook.com/WooVictory" target="_blank" rel="noopener">
-                        <i class="icon fa fa-facebook"></i>
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://woovictory.github.io/2019/03/25/java-data-structure/"
+                        aria-label="Share on Facebook"
+                    >
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Share on Facebook</span>
                     </a>
                 </li>
-                
             
                 
-                <li>
-                    <a class="social-tooltip" title="github" href="https://github.com/WooVictory" target="_blank" rel="noopener">
-                        <i class="icon fa fa-github"></i>
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://twitter.com/intent/tweet?text=https://woovictory.github.io/2019/03/25/java-data-structure/"
+                        aria-label="Share on Twitter"
+                    >
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Share on Twitter</span>
                     </a>
                 </li>
-                
             
                 
-                <li>
-                    <a class="social-tooltip" title="linkedin" href="https://www.linkedin.com/in/seungwoo-lee-590844177" target="_blank" rel="noopener">
-                        <i class="icon fa fa-linkedin"></i>
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://plus.google.com/share?url=https://woovictory.github.io/2019/03/25/java-data-structure/"
+                        aria-label="Share on Google+"
+                    >
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>Share on Google+</span>
                     </a>
                 </li>
-                
             
         </ul>
     </div>
-    
-        
-<nav id="article-nav">
-    
-        <a href="/2019/03/26/Java-Diff-Array-ArrayList/" id="article-nav-newer" class="article-nav-link-wrap">
-        <strong class="article-nav-caption">newer</strong>
-        <p class="article-nav-title">
-        
-            [Java] Array VS ArrayList
-        
-        </p>
-        <i class="icon fa fa-chevron-right" id="icon-chevron-right"></i>
-    </a>
-    
-    
-        <a href="/2019/03/24/Algo-Get-the-Prime/" id="article-nav-older" class="article-nav-link-wrap">
-        <strong class="article-nav-caption">older</strong>
-        <p class="article-nav-title">[소수 구하기] 에라토스테네스의 체</p>
-        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
-        </a>
-    
-</nav>
-
-    
-    <div class="widgets-container">
-        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({
-     google_ad_client: "ca-pub-9725307592233286",
-     enable_page_level_ads: true
-});
-</script>
-        
-            
-                
-    <div class="widget-wrap widget-list">
-        <h3 class="widget-title">categories</h3>
-        <div class="widget">
-            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Android/">Android</a><span class="category-list-count">79</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Book/">Book</a><span class="category-list-count">4</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Book/CleanCode/">CleanCode</a><span class="category-list-count">4</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Design-Pattern/">Design Pattern</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ETC/">ETC</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Git/">Git</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Inno-SOPT/">Inno_SOPT</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">39</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Kotlin/">Kotlin</a><span class="category-list-count">17</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Node-js/">Node.js</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Operation-System/">Operation System</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/RxJava/">RxJava</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/">algorithm</a><span class="category-list-count">51</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/BOJ/">BOJ</a><span class="category-list-count">49</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/Programmers/">Programmers</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/개발-상식/">개발 상식</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/네트워크/">네트워크</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/데이터베이스/">데이터베이스</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/삼성-기출/">삼성 기출</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/알고리즘/">알고리즘</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/자료구조/">자료구조</a><span class="category-list-count">10</span></li></ul>
-        </div>
-    </div>
 
 
             
-                
-    <div class="widget-wrap">
-        <h3 class="widget-title">recents</h3>
-        <div class="widget">
-            <ul id="recent-post" class="no-thumbnail">
-                
-                    <li>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/ETC/">ETC</a></p>
-                            <p class="item-title"><a href="/2020/07/29/Memo-Privacy/" class="title">[Memo] 개인정보 처리 방침</a></p>
-                            <p class="item-date"><time datetime="2020-07-29T05:11:19.000Z" itemprop="datePublished">2020-07-29</time></p>
-                        </div>
-                    </li>
-                
-                    <li>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/Book/">Book</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/Book/CleanCode/">CleanCode</a></p>
-                            <p class="item-title"><a href="/2020/07/21/CleanCode4/" class="title">[CleanCode] 4장. 주석</a></p>
-                            <p class="item-date"><time datetime="2020-07-21T14:40:14.000Z" itemprop="datePublished">2020-07-21</time></p>
-                        </div>
-                    </li>
-                
-                    <li>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/Android/">Android</a></p>
-                            <p class="item-title"><a href="/2020/07/08/Android-SingleLiveEventToEventWrapper/" class="title">[Android] MVVM UI Event Wrapper</a></p>
-                            <p class="item-date"><time datetime="2020-07-08T01:34:10.000Z" itemprop="datePublished">2020-07-08</time></p>
-                        </div>
-                    </li>
-                
-                    <li>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/Kotlin/">Kotlin</a></p>
-                            <p class="item-title"><a href="/2020/07/07/Kotlin-Coroutine-1/" class="title">[Kotlin] Coroutine 이해하기</a></p>
-                            <p class="item-date"><time datetime="2020-07-07T02:05:54.000Z" itemprop="datePublished">2020-07-07</time></p>
-                        </div>
-                    </li>
-                
-                    <li>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/Book/">Book</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/Book/CleanCode/">CleanCode</a></p>
-                            <p class="item-title"><a href="/2020/07/06/CleanCode-3/" class="title">[CleanCode] 3장. 함수</a></p>
-                            <p class="item-date"><time datetime="2020-07-06T07:57:43.000Z" itemprop="datePublished">2020-07-06</time></p>
-                        </div>
-                    </li>
-                
-            </ul>
         </div>
-    </div>
-
-            
         
-    </div>
-    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({
-     google_ad_client: "ca-pub-9725307592233286",
-     enable_page_level_ads: true
-});
-</script>
-</aside>
 
-                </div>
-            </div>
-        </div>
-        <footer id="footer">
-    <div class="container">
-        <div class="container-inner">
-            <a id="back-to-top" href="javascript:;"><i class="icon fa fa-angle-up"></i></a>
-            <div class="credit">
-                <h1 class="logo-wrap">
-                    <a href="/" class="logo"></a>
-                </h1>
-                <p>&copy; 2020 VictoryWoo</p>
-                <p>Powered by <a href="//hexo.io/" target="_blank">Hexo</a>. Theme by <a href="//github.com/ppoffice" target="_blank">PPOffice</a></p>
-            </div>
-            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({
-     google_ad_client: "ca-pub-9725307592233286",
-     enable_page_level_ads: true
-});
-</script>
-            <div class="footer-plugins">
-              
+
     
-
-
-            </div>
-        </div>
-    </div>
-</footer>
-
         
     
-    <script>
-    var disqus_shortname = 'hexo-theme-hueman';
-    
-    
-    var disqus_url = 'https://woovictory.github.io/2019/03/25/java-data-structure/';
-    
-    (function() {
-    var dsq = document.createElement('script');
-    dsq.type = 'text/javascript';
-    dsq.async = true;
-    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
-    </script>
 
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <img id="about-card-picture" src="/assets/images/Victory.jpeg" alt="Author&#39;s picture"/>
+        
+            <h4 id="about-card-name">VictoryWoo</h4>
+        
+            <div id="about-card-bio"><p>기록을 통해 사람들과 공유하는 것을 좋아합니다.</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>Android Developer</p>
 
-
-
-    
-        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
-    
-    
-        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
-    
-    
-
-
-
-<!-- Custom Scripts -->
-<script src="/js/main.js"></script>
-
+            </div>
+        
+        
     </div>
-</body>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/cover-v1.2.0.jpg');"></div>
+        <!--SCRIPTS-->
+<script src="/assets/js/jquery.js"></script>
+<script src="/assets/js/jquery.fancybox.js"></script>
+<script src="/assets/js/thumbs.js"></script>
+<script src="/assets/js/tranquilpeak.js"></script>
+<!--SCRIPTS END-->
+
+
+    
+
+
+
+
+    </body>
 </html>

@@ -1,197 +1,304 @@
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
+    
 <head>
-    <meta charset="utf-8" />
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="VictoryWoo">
+    <title>[안드로이드] Image Loading Library - VictoryWoo</title>
+    <meta name="author" content="VictoryWoo">
     
-
     
-    <title>[안드로이드] Image Loading Library | VictoryWoo</title>
     
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    
-        <meta name="keywords" content="Android,Glide,Picasso" />
-    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg"},"articleBody":"앱을 만들면서 ImageView에 사진을 띄우고자 하는 경우가 많았다.\n\n안드로이드 앱 안의 drawable 폴더의 리소스를 보여주는 경우\n안드로이드 디바이스 안에 저장되어 있는 사진을 보여주는 경우(갤러리 혹은 기타 내부 사진)\n이미지 URL을 로드해서 보여주는 경우\n\n위의 1,2번 같은 경우는 안드로이드 기기 내부의 리소스를 불러오는 작업이므로 예외사항도 적고 실제 구현도 복잡하지 않다. 하지만 3번과 같은 경우는 http 클라이언트나 서버 통신을 이용해 ImageView에 보여주어야 하는 경우이다. 나는 이 같은 경우에서 Glide라는 라이브러리를 사용했는데, 사용할 때는 사용법이 쉬웠지만, 내부 동작이나 원리가 무엇인지 몰랐다.\n그래서 Glide의 내부 동작 및 원리를 공부하고 이와 비슷한 Picasso와의 비교도 해보겠다.\n기본 사용방법\n기본적인 사용방법은 Picasso, Glide가 거의 똑같은 방식이다.\nPicasso\n1Picasso.with(context).load(\"https://cdn.vox-cdn.com/thumbor/97LMDBshI0KBwq2N0_NnP5_0QSE=/0x0:2040x1360/1520x1013/filters:focal(857x517:1183x843):format(webp)/cdn.vox-cdn.com/uploads/chorus_image/image/57358643/jbareham_170504_1691_0020.0.0.jpg\").into(imageView)\nGlide\n1Glide.with(context).load(\"https://cdn.vox-cdn.com/thumbor/97LMDBshI0KBwq2N0_NnP5_0QSE=/0x0:2040x1360/1520x1013/filters:focal(857x517:1183x843):format(webp)/cdn.vox-cdn.com/uploads/chorus_image/image/57358643/jbareham_170504_1691_0020.0.0.jpg\").into(imageView)\n다만, with() 함수에서 Picasso는 Context만을 지원하는 반면에 Glide는 Context 뿐만 아니라 다른 객체들도 사용할 수 있다. 즉, Picasso에 비해서 Glide의 with() 함수가 더 많은 인자를 받아서 사용할 수 있어서 많은 곳에서 사용할 수 있다는 장점이 있다.\n\nPicasso\n\n\nGlide\n기본 Bitmap 포맷\n1920x1080의 이미지를 768x432 크기의 ImageView에서 각각 로드한 경우 보여지는 이미지는 아래와 같다. 그림을 잘 보면 Glide의 이미지 화질이 Picasso보다 좋지 않음을 확인할 수 있다.\n\n이유는 Picasso는 Bitmap 포맷은 ARGB_8888로 사용하고 Glide는 Bitmap 포맷을 RGB_565를 사용한다. RGB_565는 ARGB_8888에 비해서 화질은 떨어지지만 메모리의 용량을 50% 적게 사용한다는 이점을 가지고 있다.\n아래 그림은 Picasso와 Glide의 메모리 사용량을 비교한 그래프이다. (8MB 정도는 기본적으로 애플리케이션에서 사용하는 메모리 사용량이고 그 이상이 각각 이미지로딩 라이브러리에서 사용하는 메모리 사용량이다.)\n\n만약 메모리 용량보다 이미지의 화질이 더 중요하다고 생각한다면 Picasso를 사용하거나 Glide의 Bitmap 포맷을 ARGB_8888로 변경하여 사용할 수 있다.\n이는 GlideModule을 상속받는 클래스를 하나 지정해서 기본 포맷을 ARGB_8888로 설정하고 이 GlideModule을 매니페스트에 등록시켜주면 된다.\nCustomGlideModule.java\n123456789101112131415public class SelphoneGlideModule implements GlideModule&#123;   @Override   public void applyOptions(Context context, GlideBuilder builder) &#123;       // 포맷을 ARGB_8888로 변경       builder.setDecodeFormat(DecodeFormat.PREFER_ARGB_8888);         &#125;   @Override    public void registerComponents(Context context, Glide glide) &#123;        glide.register(SelphoneImage.class, InputStream.class, new SelphoneGlideUrlLoader.Factory());    &#125;&#125;\nAndroidManifest.xml\n1234&lt;!-- Glide모듈을 Custom하게 변경 --&gt;&lt;meta-data    android:name=\"kr.co.selphone.library.glide.SelphoneGlideModule\"    android:value=\"GlideModule\" /&gt;\n만약 Glide의 기본 Bitmap 포맷을 ARGB_8888로 변경했다면 Glide는 이전에 비해 2배 정도 더 많은 메모리를 사용하는 것을 확인할 수 있다. 이제는 같은 Bitmap 포맷을 사용하는데도 Picasso가 Glide보다 훨씬 많은 메모리 사용량을 보이고 있다.[왜 그럴까…?]\n\n그 이유는 Glide와 Picasso의 캐시 정책이 다르기 때문이다. Picasso는 1920x1080 크기의 원본 이미지를 메모리로 가져와서 GPU에서 실시간으로 리사이징해서 768x432의 ImageView에 할당한다.\n하지만 Glide는 바로 768x432크기로 이미지를 메모리로 가져와서 ImageView에 할당시키기 때문에 메모리 사용량이 적은 것이다.\n만약, Picasso에서도 Glide와 같은 방식을 취하고 싶다면 resize() 함수를 이용하면 된다.\n12345Picasso    .with(context)    .load(\"https://cdn.vox-cdn.com/thumbor/97LMDBshI0KBwq2N0_NnP5_0QSE=/0x0:2040x1360/1520x1013/filters:focal(857x517:1183x843):format(webp)/cdn.vox-cdn.com/uploads/chorus_image/image/57358643/jbareham_170504_1691_0020.0.0.jpg\")    .resize(768,432)    .into(imageView)\nImageView의 크기를 매번 적어주기 번거롭거나 알아오기 귀찮다면 fit() 함수를 사용하면 같은 효과를 볼 수 있다.\n12345Picasso    .with(context)    .load(\"https://cdn.vox-cdn.com/thumbor/97LMDBshI0KBwq2N0_NnP5_0QSE=/0x0:2040x1360/1520x1013/filters:focal(857x517:1183x843):format(webp)/cdn.vox-cdn.com/uploads/chorus_image/image/57358643/jbareham_170504_1691_0020.0.0.jpg\")    .fit()    .into(imageView)\n위 방법을 사용할 경우 Picasso, Glide 모두 같은 메모리 사용량을 보일 것이다.\n\n이미지 캐시\n그 전에 캐싱은 명령어들과 데이터들을 기억장치 또는 캐시를 저장하는 디스크에 일시적으로 저장하는 기술을 말한다.\n이미지를 캐시하는 방식에서도 기본적인 정책은 Glide와 Picasso가 다르다. 위의 예시처럼 1920x1080 이미지를 768x432 크기의 ImageView에 로드하는 경우 Glide는 768x432 크기의 이미를 캐시하는 반면, Picasso는 1920x1080의 원본 이미지를 캐시하게 된다.\n\n만약 1920x1080 이미지를 다시 384x216 크기의 ImageVIew로 로드한다고 할 경우 Picasso는 이미 원본 이미지를 캐시해서 그대로 가지고 있지만 Glide는 또 하나의 384x216 크기의 이미지 파일을 캐시하게 된다.\nGlide는 같은 이미지를 다른 크기의 ImageView에 로드한다는 이유로 2번의 이미지 다운로드와 리사이징 작업이 필요하게 된다.(내 생각에는 비효율적이라고 생각한다.)\n만약 Glide에서 원본 크기의 이미지를 캐시하도록 설정하고 싶은 경우 아래와 같이 캐시 정책을 추가해주면 된다.\n12345Glide    .with(context)    .load(\"https://cdn.vox-cdn.com/thumbor/97LMDBshI0KBwq2N0_NnP5_0QSE=/0x0:2040x1360/1520x1013/filters:focal(857x517:1183x843):format(webp)/cdn.vox-cdn.com/uploads/chorus_image/image/57358643/jbareham_170504_1691_0020.0.0.jpg\")    .diskCacheStrategy(DiskCacheStrategy.ALL)    .into(imageView)\n위의 정책을 적용하고 난 뒤부터는 모든 Glide를 이용하여 로드할 때 원본 이미지를 가져와서 캐시하게 된다.\nGlide는 이미지를 최대한 빨리 로드해주는데에 최적화 되어있기 때문에 이러한 정책을 기본적으로 적용하고 있다. 원본 이미지를 가져오는 정책과 이를 로드하는 속도는 반비례 관계에 있기 때문에 이미지 로딩 속도와 캐시에 관련해서는 원하는 방향에 맞게 설정해주면 좋다.\n추가 함수 사용방법 비교\nResize\n12345// Picasso.resize(300,200)// Glide.override(300,200)\nCenter Crop\n12345// Picasso.centerCrop()// Glide.centerCrop()\nPlaceHolder와 Error이미지\n1234567// Picasso.placeHolder(R.drawable.placeholder).error(R.drawable.imageNot)// Glide.placeHolder(R.drawable.placeholder).error(R.drawable.imageNot)\n한글이 포함된 URL처리\nPicasso에서는 URL에 한글이 포함되어 있으면 ANR(Application Not Responsding)을 발생하며 앱을 종료시킨다. 그러나 Gliude는 URL에 한글이 포함되어도 아무 문제가 없다.\nGlide에서만 가능한 기능\n\n\nGIF\nGlide에서는 ImageView에 GIF 파일을 로드할 수 있다. 하지만 GIF를 빈번하게 사용하면 많은 메모리 사용량을 보이기 때문에 적절하게 GIF를 사용해야 한다.\n\n\nThumbnail 기능\n용량이 큰 이미지의 경우 thumbnail() 함수를 이용하여 우선 10% 만큼만 가져와서 흐릿하게나마 먼저 보여주고 그 다음 전체 이미지를 로드해서 사용자에게 좀더 쾌적한 UI를 제공해줄 수 있다. [%는 사용자가 지정할 수 있다.]\n\n\nCustom Animation\nPicasso에서는 단순이 fade in 기능의 애니메이션만을 지원하는 반면, Glide에서는 .animate(ViewPropertyAnimation.Animator)을 이용하여 여러 애니메이션을 보여줄 수 있다.\n\n\nCustom load\n기본적으로 Image Resource, URL, 휴대폰 내장 이미지를 로드하는 기능 외에도 Custom Model을 만들어서 이를 로드하는 기능도 지원하고 있다.\n\n\n더 복잡한 내용\n안드로이드에서 비트 맵 캐싱에 대한 부분은 까다롭다. 그래서 우리는 이미지의 비트맵 포맷을 편리하게 캐싱해주는 Glide를 사용한다. Glide도 비트 맵 캐싱에 관한 작업을 수행하므로 이와 관련있다.\nGlide는 디스크 캐시와 메모리 캐시를 사용한다.\n잠깐!\n이미지 로드 라이브러리 중에서 Fresco에 대해서 간단하게 알고 넘어가자.\n\nfacebook에서 공개한 이미지 라이브러리.\n널리 알려져 있는 UIL, Glide, Picasso 와 비교하여 가장 최근에 공개되었다.\n다만, 아직 최근에 공개된 라이브러라서 레퍼런스가 많지 않고 Fresco의 ImageView를 사용해야한다는 것이 단점이다.\n\n참고\n\n[안드로이드/Android]Picasso와 Glide 비교분석\n글라이드, 비트맵 캐싱 정책\n안드로이드 이미지캐시(메모리캐시, 디스크캐시)\n\n","dateCreated":"2019-01-03T15:19:02+09:00","dateModified":"2020-03-01T19:24:53+09:00","datePublished":"2019-01-03T15:19:02+09:00","description":"","headline":"[안드로이드] Image Loading Library","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://woovictory.github.io/2019/01/03/Android-ImageLoadingLibrary/"},"publisher":{"@type":"Organization","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg","logo":{"@type":"ImageObject","url":"Victory.jpeg"}},"url":"https://woovictory.github.io/2019/01/03/Android-ImageLoadingLibrary/","keywords":"Android, Glide, Picasso"}</script>
     <meta name="description" content="앱을 만들면서 ImageView에 사진을 띄우고자 하는 경우가 많았다.  안드로이드 앱 안의 drawable 폴더의 리소스를 보여주는 경우 안드로이드 디바이스 안에 저장되어 있는 사진을 보여주는 경우(갤러리 혹은 기타 내부 사진) 이미지 URL을 로드해서 보여주는 경우  위의 1,2번 같은 경우는 안드로이드 기기 내부의 리소스를 불러오는 작업이므로 예외사항">
 <meta name="keywords" content="Android,Glide,Picasso">
-<meta property="og:type" content="article">
+<meta property="og:type" content="blog">
 <meta property="og:title" content="[안드로이드] Image Loading Library">
 <meta property="og:url" content="https://woovictory.github.io/2019/01/03/Android-ImageLoadingLibrary/index.html">
 <meta property="og:site_name" content="VictoryWoo">
 <meta property="og:description" content="앱을 만들면서 ImageView에 사진을 띄우고자 하는 경우가 많았다.  안드로이드 앱 안의 drawable 폴더의 리소스를 보여주는 경우 안드로이드 디바이스 안에 저장되어 있는 사진을 보여주는 경우(갤러리 혹은 기타 내부 사진) 이미지 URL을 로드해서 보여주는 경우  위의 1,2번 같은 경우는 안드로이드 기기 내부의 리소스를 불러오는 작업이므로 예외사항">
 <meta property="og:locale" content="en">
 <meta property="og:image" content="https://woovictory.github.io/img/android_picasso.with.png">
+<meta property="og:image" content="https://woovictory.github.io/img/android_glide_with.png">
+<meta property="og:image" content="https://woovictory.github.io/img/android_diff_glide_picasso.png">
+<meta property="og:image" content="https://woovictory.github.io/img/android_image_library_memory_use_compare.png">
+<meta property="og:image" content="https://woovictory.github.io/img/android_image_library_memory_use_compare2.png">
+<meta property="og:image" content="https://woovictory.github.io/img/android_image_library_memory_use_compare3.png">
+<meta property="og:image" content="https://woovictory.github.io/img/android_diff_glide_picasso_size.png">
 <meta property="og:updated_time" content="2020-03-01T10:24:53.459Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="[안드로이드] Image Loading Library">
 <meta name="twitter:description" content="앱을 만들면서 ImageView에 사진을 띄우고자 하는 경우가 많았다.  안드로이드 앱 안의 drawable 폴더의 리소스를 보여주는 경우 안드로이드 디바이스 안에 저장되어 있는 사진을 보여주는 경우(갤러리 혹은 기타 내부 사진) 이미지 URL을 로드해서 보여주는 경우  위의 1,2번 같은 경우는 안드로이드 기기 내부의 리소스를 불러오는 작업이므로 예외사항">
 <meta name="twitter:image" content="https://woovictory.github.io/img/android_picasso.with.png">
     
-
+    
+        
+    
+    
+        <meta property="og:image" content="https://woovictory.github.io/assets/images/Victory.jpeg"/>
+    
+    
+    
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/all.css">
+    <link rel="stylesheet" href="/assets/css/jquery.fancybox.css">
+    <link rel="stylesheet" href="/assets/css/thumbs.css">
+    <link rel="stylesheet" href="/assets/css/tranquilpeak.css">
+    <!--STYLES END-->
     
 
     
-        <link rel="icon" href="/css/images/victorywoo.png" />
-    
 
-    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/libs/titillium-web/styles.css">
-    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
-
-    <link rel="stylesheet" type="text/css" href="">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/theeluwin/NotoSansKR-Hestia@master/stylesheets/NotoSansKR-Hestia.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/earlyaccess/nanumgothiccoding.css">
     
+        
     
-    <link rel="stylesheet" href="/css/style.css">
-
-    <script src="/libs/jquery/3.3.1/jquery.min.js"></script>
-    
-    
-        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
-    
-    
-        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
-    
-    
-        <script type="text/javascript">
-(function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-125410253-1', 'auto');
-ga('send', 'pageview');
-
-</script>
-    
-    
-
-
 </head>
 
-<body>
-    <div id="wrap">
-        <header id="header">
-    <div id="header-outer" class="outer">
-        <div class="container">
-            <div class="container-inner">
-                <div id="header-title">
-                    <h1 class="logo-wrap">
-                        <a href="/" class="logo"></a>
-                    </h1>
-                    
-                        <h2 class="subtitle-wrap">
-                            <p class="subtitle">VictoryWoo&#39;s Blog</p>
-                        </h2>
-                    
-                </div>
-                <div id="header-inner" class="nav-container">
-                    <a id="main-nav-toggle" class="nav-icon fa fa-bars"></a>
-                    <div class="nav-container-inner">
-                        <ul id="main-nav">
-                            
-                                <li class="main-nav-list-item" >
-                                    <a class="main-nav-list-link" href="/">Home</a>
-                                </li>
-                            
-                                <li class="main-nav-list-item" >
-                                    <a class="main-nav-list-link" href="/about/index.html">About</a>
-                                </li>
-                            
-                        </ul>
-                        <nav id="sub-nav">
-                            <div id="search-form-wrap">
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
 
-    <form class="search-form">
-        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
-        <button type="submit" class="search-form-submit"></button>
-    </form>
-    <div class="ins-search">
-    <div class="ins-search-mask"></div>
-    <div class="ins-search-container">
-        <div class="ins-input-wrapper">
-            <input type="text" class="ins-search-input" placeholder="Type something..." />
-            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
-        </div>
-        <div class="ins-section-wrapper">
-            <div class="ins-section-container"></div>
-        </div>
-    </div>
-</div>
-<script>
-(function (window) {
-    var INSIGHT_CONFIG = {
-        TRANSLATION: {
-            POSTS: 'Posts',
-            PAGES: 'Pages',
-            CATEGORIES: 'Categories',
-            TAGS: 'Tags',
-            UNTITLED: '(Untitled)',
-        },
-        ROOT_URL: '/',
-        CONTENT_URL: '/content.json',
-    };
-    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
-})(window);
-</script>
-<script src="/js/insight.js"></script>
 
-</div>
-                        </nav>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</header>
-        <div class="container">
-            <div class="main-body container-inner">
-                <div class="main-body-inner">
-                    <section id="main">
-                        <div class="main-body-header">
-    <h1 class="header">
     
-    <a class="page-title-link" href="/categories/Android/">Android</a>
-    </h1>
-</div>
-
-                        <div class="main-body-content">
-                            
-                            <article id="post-Android-ImageLoadingLibrary" class="article article-single article-type-post" itemscope itemprop="blogPost">
-    <div class="article-inner">
         
-            <header class="article-header">
-                
-    
-        <h1 class="article-title" itemprop="name">
-        [안드로이드] Image Loading Library
-        </h1>
+            
+        
     
 
-            </header>
-        
-        
-            <div class="article-meta">
-                
-    <div class="article-date">
-        <a href="/2019/01/03/Android-ImageLoadingLibrary/" class="article-date">
-            <time datetime="2019-01-03T06:19:02.000Z" itemprop="datePublished">2019-01-03</time>
+<header id="header" data-behavior="4">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a
+            class="header-title-link"
+            href="/ "
+            aria-label=""
+        >
+            VictoryWoo
         </a>
     </div>
+    
+        
+            <a
+                class="header-right-picture "
+                href="#about"
+                aria-label="Open the link: /#about"
+            >
+        
+        
+            <img class="header-picture" src="/assets/images/Victory.jpeg" alt="Author&#39;s picture"/>
+        
+        </a>
+    
+</header>
 
-		
+            <!-- Define author's picture -->
 
+
+
+        
+    
+
+<nav id="sidebar" data-behavior="4">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a
+                    href="/#about"
+                    aria-label="Read more about the author"
+                >
+                    <img class="sidebar-profile-picture" src="/assets/images/Victory.jpeg" alt="Author&#39;s picture"/>
+                </a>
+                <h4 class="sidebar-profile-name">VictoryWoo</h4>
                 
-    <div class="article-tag">
-        <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/Android/">Android</a>, <a class="tag-link" href="/tags/Glide/">Glide</a>, <a class="tag-link" href="/tags/Picasso/">Picasso</a>
-    </div>
-
+                    <h5 class="sidebar-profile-bio"><p>기록을 통해 사람들과 공유하는 것을 좋아합니다.</p>
+</h5>
+                
             </div>
         
         
-        <div class="article-entry" itemprop="articleBody">
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/"
+                            
+                            rel="noopener"
+                            title="Home"
+                        >
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-categories"
+                            
+                            rel="noopener"
+                            title="Categories"
+                        >
+                        <i class="sidebar-button-icon fa fa-bookmark" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Categories</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-tags"
+                            
+                            rel="noopener"
+                            title="Tags"
+                        >
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Tags</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link open-algolia-search"
+                            href="#search"
+                            
+                            rel="noopener"
+                            title="Search"
+                        >
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Search</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="#about"
+                            
+                            rel="noopener"
+                            title="About"
+                        >
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://github.com/WooVictory"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="GitHub"
+                        >
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://www.facebook.com/WooVictory"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Facebook"
+                        >
+                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Facebook</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://www.linkedin.com/profile/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="LinkedIn"
+                        >
+                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">LinkedIn</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/jhsw0375@gmail.com"
+                            
+                            rel="noopener"
+                            title="Mail"
+                        >
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="4"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            [안드로이드] Image Loading Library
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2019-01-03T15:19:02+09:00">
+	
+		    Jan 03, 2019
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/Android/">Android</a>
+
+
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
             <p>앱을 만들면서 ImageView에 사진을 띄우고자 하는 경우가 많았다.</p>
 <ol>
 <li>안드로이드 앱 안의 drawable 폴더의 리소스를 보여주는 경우</li>
@@ -289,313 +396,331 @@ Picasso에서는 단순이 fade in 기능의 애니메이션만을 지원하는 
 <li><a href="http://meylady.tistory.com/49" target="_blank" rel="noopener">안드로이드 이미지캐시(메모리캐시, 디스크캐시)</a></li>
 </ul>
 
-        </div>
-        
-        <footer class="article-footer">
-            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({
-     google_ad_client: "ca-pub-9725307592233286",
-     enable_page_level_ads: true
-});
-</script>
             
 
 
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">TAGGED IN</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/Android/">Android</a> <a class="tag tag--primary tag--small t-link" href="/tags/Glide/">Glide</a> <a class="tag tag--primary tag--small t-link" href="/tags/Picasso/">Picasso</a>
 
-    <a data-url="https://woovictory.github.io/2019/01/03/Android-ImageLoadingLibrary/" data-id="ckd6xgt0x00xf51pqgz6dh4h0" class="article-share-link"><i class="fa fa-share"></i>Share</a>
-<script>
-    (function ($) {
-        $('body').on('click', function() {
-            $('.article-share-box.on').removeClass('on');
-        }).on('click', '.article-share-link', function(e) {
-            e.stopPropagation();
+            </div>
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2019/01/03/Android-What-is-retrofit/"
+                    data-tooltip="[안드로이드] Retrofit"
+                    aria-label="PREVIOUS: [안드로이드] Retrofit"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2019/01/03/Android-Diff-of-DP-SP/"
+                    data-tooltip="[안드로이드] SP와 DP의 차이"
+                    aria-label="NEXT: [안드로이드] SP와 DP의 차이"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="Share this post"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://woovictory.github.io/2019/01/03/Android-ImageLoadingLibrary/"
+                    title="Share on Facebook"
+                    aria-label="Share on Facebook"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://woovictory.github.io/2019/01/03/Android-ImageLoadingLibrary/"
+                    title="Share on Twitter"
+                    aria-label="Share on Twitter"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://woovictory.github.io/2019/01/03/Android-ImageLoadingLibrary/"
+                    title="Share on Google+"
+                    aria-label="Share on Google+"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
 
-            var $this = $(this),
-                url = $this.attr('data-url'),
-                encodedUrl = encodeURIComponent(url),
-                id = 'article-share-box-' + $this.attr('data-id'),
-                offset = $this.offset(),
-                box;
 
-            if ($('#' + id).length) {
-                box = $('#' + id);
-
-                if (box.hasClass('on')){
-                    box.removeClass('on');
-                    return;
-                }
-            } else {
-                var html = [
-                    '<div id="' + id + '" class="article-share-box">',
-                        '<input class="article-share-input" value="' + url + '">',
-                        '<div class="article-share-links">',
-                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
-                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
-                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
-                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
-                        '</div>',
-                    '</div>'
-                ].join('');
-
-              box = $(html);
-
-              $('body').append(box);
-            }
-
-            $('.article-share-box.on').hide();
-
-            box.css({
-                top: offset.top + 25,
-                left: offset.left
-            }).addClass('on');
-
-        }).on('click', '.article-share-box', function (e) {
-            e.stopPropagation();
-        }).on('click', '.article-share-box-input', function () {
-            $(this).select();
-        }).on('click', '.article-share-box-link', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-
-            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
-        });
-    })(jQuery);
-</script>
-
-        </footer>
+        
+        
+            
+        
     </div>
 </article>
 
-    <section id="comments">
-    
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2020 VictoryWoo. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2019/01/03/Android-What-is-retrofit/"
+                    data-tooltip="[안드로이드] Retrofit"
+                    aria-label="PREVIOUS: [안드로이드] Retrofit"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2019/01/03/Android-Diff-of-DP-SP/"
+                    data-tooltip="[안드로이드] SP와 DP의 차이"
+                    aria-label="NEXT: [안드로이드] SP와 DP의 차이"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="Share this post"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
         
-    <div id="disqus_thread">
-        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-    </div>
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://woovictory.github.io/2019/01/03/Android-ImageLoadingLibrary/"
+                    title="Share on Facebook"
+                    aria-label="Share on Facebook"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://woovictory.github.io/2019/01/03/Android-ImageLoadingLibrary/"
+                    title="Share on Twitter"
+                    aria-label="Share on Twitter"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://woovictory.github.io/2019/01/03/Android-ImageLoadingLibrary/"
+                    title="Share on Google+"
+                    aria-label="Share on Google+"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
 
-    
-    </section>
 
-
-
-                        </div>
-                    </section>
-                    <aside id="sidebar">
-    <a class="sidebar-toggle" title="Expand Sidebar"><i class="toggle icon"></i></a>
-    <div class="sidebar-top">
-        <p>follow:</p>
-        <ul class="social-links">
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
             
                 
-                <li>
-                    <a class="social-tooltip" title="facebook" href="https://www.facebook.com/WooVictory" target="_blank" rel="noopener">
-                        <i class="icon fa fa-facebook"></i>
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://woovictory.github.io/2019/01/03/Android-ImageLoadingLibrary/"
+                        aria-label="Share on Facebook"
+                    >
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Share on Facebook</span>
                     </a>
                 </li>
-                
             
                 
-                <li>
-                    <a class="social-tooltip" title="github" href="https://github.com/WooVictory" target="_blank" rel="noopener">
-                        <i class="icon fa fa-github"></i>
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://twitter.com/intent/tweet?text=https://woovictory.github.io/2019/01/03/Android-ImageLoadingLibrary/"
+                        aria-label="Share on Twitter"
+                    >
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Share on Twitter</span>
                     </a>
                 </li>
-                
             
                 
-                <li>
-                    <a class="social-tooltip" title="linkedin" href="https://www.linkedin.com/in/seungwoo-lee-590844177" target="_blank" rel="noopener">
-                        <i class="icon fa fa-linkedin"></i>
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://plus.google.com/share?url=https://woovictory.github.io/2019/01/03/Android-ImageLoadingLibrary/"
+                        aria-label="Share on Google+"
+                    >
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>Share on Google+</span>
                     </a>
                 </li>
-                
             
         </ul>
     </div>
-    
-        
-<nav id="article-nav">
-    
-        <a href="/2019/01/03/Android-What-is-retrofit/" id="article-nav-newer" class="article-nav-link-wrap">
-        <strong class="article-nav-caption">newer</strong>
-        <p class="article-nav-title">
-        
-            [안드로이드] Retrofit
-        
-        </p>
-        <i class="icon fa fa-chevron-right" id="icon-chevron-right"></i>
-    </a>
-    
-    
-        <a href="/2019/01/03/Android-Diff-of-DP-SP/" id="article-nav-older" class="article-nav-link-wrap">
-        <strong class="article-nav-caption">older</strong>
-        <p class="article-nav-title">[안드로이드] SP와 DP의 차이</p>
-        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
-        </a>
-    
-</nav>
-
-    
-    <div class="widgets-container">
-        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({
-     google_ad_client: "ca-pub-9725307592233286",
-     enable_page_level_ads: true
-});
-</script>
-        
-            
-                
-    <div class="widget-wrap widget-list">
-        <h3 class="widget-title">categories</h3>
-        <div class="widget">
-            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Android/">Android</a><span class="category-list-count">79</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Book/">Book</a><span class="category-list-count">4</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Book/CleanCode/">CleanCode</a><span class="category-list-count">4</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Design-Pattern/">Design Pattern</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ETC/">ETC</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Git/">Git</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Inno-SOPT/">Inno_SOPT</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">39</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Kotlin/">Kotlin</a><span class="category-list-count">17</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Node-js/">Node.js</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Operation-System/">Operation System</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/RxJava/">RxJava</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/">algorithm</a><span class="category-list-count">51</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/BOJ/">BOJ</a><span class="category-list-count">49</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/Programmers/">Programmers</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/개발-상식/">개발 상식</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/네트워크/">네트워크</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/데이터베이스/">데이터베이스</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/삼성-기출/">삼성 기출</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/알고리즘/">알고리즘</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/자료구조/">자료구조</a><span class="category-list-count">10</span></li></ul>
-        </div>
-    </div>
 
 
             
-                
-    <div class="widget-wrap">
-        <h3 class="widget-title">recents</h3>
-        <div class="widget">
-            <ul id="recent-post" class="no-thumbnail">
-                
-                    <li>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/ETC/">ETC</a></p>
-                            <p class="item-title"><a href="/2020/07/29/Memo-Privacy/" class="title">[Memo] 개인정보 처리 방침</a></p>
-                            <p class="item-date"><time datetime="2020-07-29T05:11:19.000Z" itemprop="datePublished">2020-07-29</time></p>
-                        </div>
-                    </li>
-                
-                    <li>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/Book/">Book</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/Book/CleanCode/">CleanCode</a></p>
-                            <p class="item-title"><a href="/2020/07/21/CleanCode4/" class="title">[CleanCode] 4장. 주석</a></p>
-                            <p class="item-date"><time datetime="2020-07-21T14:40:14.000Z" itemprop="datePublished">2020-07-21</time></p>
-                        </div>
-                    </li>
-                
-                    <li>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/Android/">Android</a></p>
-                            <p class="item-title"><a href="/2020/07/08/Android-SingleLiveEventToEventWrapper/" class="title">[Android] MVVM UI Event Wrapper</a></p>
-                            <p class="item-date"><time datetime="2020-07-08T01:34:10.000Z" itemprop="datePublished">2020-07-08</time></p>
-                        </div>
-                    </li>
-                
-                    <li>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/Kotlin/">Kotlin</a></p>
-                            <p class="item-title"><a href="/2020/07/07/Kotlin-Coroutine-1/" class="title">[Kotlin] Coroutine 이해하기</a></p>
-                            <p class="item-date"><time datetime="2020-07-07T02:05:54.000Z" itemprop="datePublished">2020-07-07</time></p>
-                        </div>
-                    </li>
-                
-                    <li>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/Book/">Book</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/Book/CleanCode/">CleanCode</a></p>
-                            <p class="item-title"><a href="/2020/07/06/CleanCode-3/" class="title">[CleanCode] 3장. 함수</a></p>
-                            <p class="item-date"><time datetime="2020-07-06T07:57:43.000Z" itemprop="datePublished">2020-07-06</time></p>
-                        </div>
-                    </li>
-                
-            </ul>
         </div>
-    </div>
-
-            
         
-    </div>
-    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({
-     google_ad_client: "ca-pub-9725307592233286",
-     enable_page_level_ads: true
-});
-</script>
-</aside>
 
-                </div>
-            </div>
-        </div>
-        <footer id="footer">
-    <div class="container">
-        <div class="container-inner">
-            <a id="back-to-top" href="javascript:;"><i class="icon fa fa-angle-up"></i></a>
-            <div class="credit">
-                <h1 class="logo-wrap">
-                    <a href="/" class="logo"></a>
-                </h1>
-                <p>&copy; 2020 VictoryWoo</p>
-                <p>Powered by <a href="//hexo.io/" target="_blank">Hexo</a>. Theme by <a href="//github.com/ppoffice" target="_blank">PPOffice</a></p>
-            </div>
-            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({
-     google_ad_client: "ca-pub-9725307592233286",
-     enable_page_level_ads: true
-});
-</script>
-            <div class="footer-plugins">
-              
+
     
-
-
-            </div>
-        </div>
-    </div>
-</footer>
-
         
     
-    <script>
-    var disqus_shortname = 'hexo-theme-hueman';
-    
-    
-    var disqus_url = 'https://woovictory.github.io/2019/01/03/Android-ImageLoadingLibrary/';
-    
-    (function() {
-    var dsq = document.createElement('script');
-    dsq.type = 'text/javascript';
-    dsq.async = true;
-    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
-    </script>
 
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <img id="about-card-picture" src="/assets/images/Victory.jpeg" alt="Author&#39;s picture"/>
+        
+            <h4 id="about-card-name">VictoryWoo</h4>
+        
+            <div id="about-card-bio"><p>기록을 통해 사람들과 공유하는 것을 좋아합니다.</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>Android Developer</p>
 
-
-
-    
-        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
-    
-    
-        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
-    
-    
-
-
-
-<!-- Custom Scripts -->
-<script src="/js/main.js"></script>
-
+            </div>
+        
+        
     </div>
-</body>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/cover-v1.2.0.jpg');"></div>
+        <!--SCRIPTS-->
+<script src="/assets/js/jquery.js"></script>
+<script src="/assets/js/jquery.fancybox.js"></script>
+<script src="/assets/js/thumbs.js"></script>
+<script src="/assets/js/tranquilpeak.js"></script>
+<!--SCRIPTS END-->
+
+
+    
+
+
+
+
+    </body>
 </html>

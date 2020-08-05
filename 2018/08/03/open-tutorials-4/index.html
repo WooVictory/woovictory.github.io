@@ -1,197 +1,300 @@
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
+    
 <head>
-    <meta charset="utf-8" />
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="VictoryWoo">
+    <title>생활코딩 :: express - VictoryWoo</title>
+    <meta name="author" content="VictoryWoo">
     
-
     
-    <title>생활코딩 :: express | VictoryWoo</title>
     
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    
-        <meta name="keywords" content="Node.js" />
-    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg"},"articleBody":"Express\n\n\nIP : 어떠한 컴퓨터를 식별하는 식별자\nPort : 그 컴퓨터 안에 설치되어 있는 서버들 중에서 어떤 서버를 사용할 것인가에 대한 식별자\n\n우리가 웹 서버를 만든 다음에 그 웹서버를 어떤 포트가 실행시킬 것이지를, 바라보게 할 것인지를 결정해야 합니다. 컴퓨터에는 0~65535개의 포트가 있고, 우리는 이 포트 중에서 어떤 특정한 웹서버를 만든 다음에 그 웹 서버가 특정한 포트를 바라보게 하면 사용자의 요청은 그 포트를 향해서 들어오게 됩니다.\n1234567891011121314const http = require('http');const hostname = '127.0.0.1';const port = 1339;var server = http.createServer(function(req, res)&#123;\tres.writeHead(200, &#123; 'Content-Type': 'text/plain' &#125;);  \tres.end('Hello World\\n');&#125;);server.listen(port, hostname, function()&#123;\tconsole.log(`Server running at http://$&#123;hostname&#125;:$&#123;port&#125;/`);\t// 만들어진 서버를 가지고 실제로 그 포트로 사용자가 들어왔을 때, 어떤 내용을 출력할 것인가는 위에서 작성할 수 있습니다.&#125;);\n\nhttp라는 변수에 http라는 객체가 담겨있는데, 그 객체가 가지고 있는 createServer라는 함수를 호출해서 서버를 만듭니다.\ncreateServer에 의해서 서버가 만들어지고 만들어진 서버를 우리가 제어할 수 있도록 객체를 리턴합니다.\n실제로 그 포트로 사용자가 들어왔을 때 어떤 내용을 출력할 것인가는 이 함수에서 정의할 수 있습니다.\n역시나 이 함수도 익명함수를 통해 작성합니다.\n이 함수는 두 개의 인자를 받는데, req(요청과 관련된 것), res(응답과 관련된 것)\n\n\n서버가 특정 포트를 바라보게 하기 위해서 Port를 매개변수로 넘겨줍니다.\n사용자가 우리 서버로 접속할 때 여러가지 방법으로 접속할 수 있습니다. 그래서 어떤 IP를 타고 들어온 사용자를 수용할 것인가를 확인하기 위해서 hostname을 적습니다.\n시간이 좀 걸릴 수 있는 작업이기 때문에 listen이라는 메소드는 Callback으로 비동기적으로 작동합니다. 그래서 listen이 완료되었을 때 이 callback이 실행되도록 약속이 되어있는 것입니다.\n\n이것도 편한지만, 이런 것들을 우리가 훨씬 더 적은 코드로 이런 역할을 하면서도 더 많은 일을 할 수 있도록 해주는 도구들 (프레임워크)이 존재합니다. Node를 직접 사용해서 웹 애플리케이션을 구현하는 것도 좋겠지만, 손이 많이 가기 때문에 Node를 이용해서 만들어진 프레임워크를 통해서 웹 개발을 해볼 것입니다. 그것이 바로 Express라는 것입니다.\nExpress 설치\n\n\n먼저 설치를 하기 전에 해당 디렉토리를 Npm이 사용할 수 있는 프로젝트로 만들기 위해서 ‘npm init()’ 명령어를 수행합니다.\n그 다음 ‘npm install --save express’ 명령어를 통해 express를 설치합니다.\n\n\n이제 해당 프로젝트 폴더에 설치해서 Express라는 프레임워크를 사용할 수 있는 기본적인 준비는 끝났습니다.\nExpress - 간단한 웹애플리케이션 만들기\n\n\n지금 app.js 라는 파일을 만들 것입니다. 이 파일을 메인 파일이라고 합니다. 또는 메인 애플리케이션(엔트리 애플리케이션)이라고 부릅니다. 최초의 진입점이 되는 파일입니다.\napp.js라는 이름은 express에서 권장하는 메인 애플리케이션의 이름입니다.\n\n1234567891011121314151617var express = require('express');// require를 통해 express 모듈을 리턴받고 express라는 변수를 통해서 모듈을 제어할 수 있습니다.// 다음은 express라는 모듈을 통해서 application 객체를 만듭니다.var app = express();// express라는 모듈은 함수입니다. 그래서 실행하게 되면 함수는 application라는 객체를 리턴합니다.app.get('/', function(req, res)&#123;\tres.send(\"Hello Homepage\");\t&#125;)app.get('/login', function(req, res)&#123;\tres.send(\"Login please\");\t&#125;)app.listen(3000, function()&#123;\tconsole.log(\"Connected 3000 Port!\");\t&#125;)\n\nHome 화면에 접속했을 때 우리가 실행시킨 get이라는 메소드를 통해서\n사용자가 홈으로 접속하면 두 번째 인자로 전달한 callback 함수가 실행되도록 약속되어 있습니다.\n함수의 인자로 첫 번째 매개변수는 req, 두 번째 매개변수는 res가 들어온다고 약속되어 있습니다.\n함수를 이렇게 정의하면, get이라는 함수는 사용자가 Home으로 들어오고 이것이 완료되었을 때, 인자로 전달된 함수를 실행시키면서 첫 번째 매개변수의 값으로 사용자가 요청한 것과 관련된 request 객체를 전달하는 것이고 두 번째로 사용자가 요청한 정보에 대해서 응답을 할 수 있는 여러가지 방법을 담고 있는 응답에 대한 객체를 전달하도록 약속이 되어 있습니다.\n\n정리하자면, get이라는 메소드는 사용자가 어떠한 경로로 들어왔을 때, 어떠한 것이 실행이 될 것인가를 결정하는 역할을 합니다. 이러한 역할을 하는 것을 router라고 부르며 router가 하는 일을 routing이라고 합니다. 우리가 배우는 메소드 중 get, post, put, delete가 router의 역할을 하는 메소드입니다.\nRouting\n\n\n\n사용자 : 웹 브라우저를 사용해서 우리의 애플리케이션으로 접속하는 사람\n우리의 애플리케이션은 Router와 Controller라는 것으로 이루어져 있습니다.\n\n사용자가 '/'로 들어오게 되면 get('/')가 받고 이것을 두 번째 인자로 전달되었던 익명 함수를 실행시키고 &quot;Welcome to Home Page&quot;라는 정보를 사용자에게 응답해주고 있습니다.\n사용자가 '/login’으로 접속하면 저 get('/login')가 받고 두 번째 인자인 익명 함수 안에 있는 코드를 실행시켜서 사용자에게 &quot;login please&quot;라고 하는 정보를 사용자에게 응답해주고 있습니다.\n그래서 get이라고 하는 함수의 역할은 사용자의 요청과 그 요청에 대한 처리인 Controller를 중개해주는 역할을 하는 것이 라우터의 역할입니다. 이 라우터라고 하는 것은 웹 애플리케이션을 만든다라고 했을 때 가장 중요한 것 중 하나입니다.\n연결성\n\n\nJavascript와 Nodejs의 관계\n\n연결이라는 측면에서 보면 기본적으로 Node.js는 다음과 같은 기능을 제공합니다.\n \n\nFS : File을 읽고 쓰는 시스템\nHTTP : 네트워크를 통해 어떠한 일을 할 수 있는 기능\nOS : 운영체제를 제어할 수 있는 여러가지 기능\n\nNodejs가 제공하는 기본적인 기능들을 Javascript라고 하는 프로그래밍 언어의 문법에 맞게 결합해서 우리가 의도하는 바에 해당되는 프로그램을 만들어 낼 수 있습니다. 일단 한 번 프로그램을 만들면 그 프로그램은 언제든지 똑같이 실행되는, 재사용할 수 있는 애플리케이션이 됩니다.\n이것이 가능한 이유는 Nodejs가 기초적인 명령들을 제공하고 Javascript이라는 프로그래밍 언어가 노드가 제공하는 명령들을 조합해서 새로운 명령을 만들어 낼 수 있습니다. 그렇게 해서 만들어 낼 수 있는 명령어의 개수는 정말 많고 다양한 가능성을 제공합니다.\n이것과 비슷한 관계에 있는 또 다른 하나는 Module과 NPM의 관계입니다.\n\n\nModule : 우리의 프로그램 안에서 부품으로 사용될 작은 프로그램들을 말합니다. 이 세상에는 여러가지 모듈들이 만들어져 있고 그 중에는 우리가 만든 것, 우리가 만들지 않은 것이 있습니다.\n\n\nNPM : 다양한 모듈들을 NPM을 통해서 우리의 애플리케이션에 담아서 다양한 형태의 애플리케이션을 만들어 낼 수 있습니다. (ex. Express, Underscore, Jade)\n\n\nRouter : 사용자의 접속을, 사용자의 요청을 어떤 Controller에 전달해줄 것인가라고 하는 중개자의 역할을 합니다.\n\n\nController : 예를 들면, 회원을 가입할 때 사용하는 Controller, 홈페이지의 표현을 위한 Controller, 에러 화면을 만들어주는 Controller가 있습니다.\n\n\nJavaScript, NPM, Router 이러한 연결하는 녀석들에게 연결할 대상을 제공해주는 것이\nNode.js, Module, Controller 입니다.\n정적파일을 서비스하는 법\n\n\n정적인 정보 : 사람이 한 번 작성한 것이 즉, 만들어진 것이 언제나 똑같이 보이면 이것을 정적인 정보라고 합니다.\n동적인 정보 : 프로그래밍적으로 만들어진 정보를 동적인 정보라고 합니다.\n\n12345678910111213141516var express = require('express');var app = express();app.use(express.static('public'));app.get('/', function(req, res)&#123;\tres.send(\"Hello Homepage\");\t&#125;)app.get('/login', function(req, res)&#123;\tres.send(\"Login please\");\t&#125;)app.listen(3000, function()&#123;\tconsole.log(\"Connected 3000 Port!\");\t&#125;)\n정적인 파일을 서비스하고 싶다면\napp.use(express.static('public')); 이 한줄을 추가합니다.\npublic이라는 디렉토리에 우리가 정적인 파일을 갖다 놓으면 그 정적인 파일을 사용자에게 서비스 할 수 있습니다.\n웹 페이지를 표현하는 방법\n\n웹 페이지를 사용자에게 서비스 하는 방법은 두 가지가 있다.\n\n정적인 파일 전달하는 법\n\n한 번 만들어지면 언제나 똑같은 모습인 Html\npublic이라는 디렉토리에 static.html 파일을 놓습니다.\n서버를 동작시키고, localhost:3000/static.html로 접근하면 작성된 웹 페이지를 확인할 수 있습니다.\n내용을 수정하면 서버를 껐다 킬 필요 없이 내용을 바로 반영시킬 수 있습니다.\n하지만, 웹 페이지 상에서 반복적인 일들이나 추가적인 사항이 많이 생긴다면 반영하기 어렵습니다.\n그 하나의 예로는 현재 시간을 보여주는 것이라고 할 수 있습니다.\n\n\n\n자바스크립트에서는 여러 줄의 코드를 삽입하고 싶다면 \\를 붙이면 가능하지만, 코드의 가독성이 많이 떨어집니다. 자바스크립트의 새로운 표준에는 formatted text라는 기능이 추가되었습니다.\n12345678910111213141516171819202122app.get('/dynamic', function(req, res)&#123;    var time = Date();    var lis = ' ';    for(var i = 0;i&lt;5;i++)&#123;        lis = lis + '&lt;li&gt;Coding&lt;/li&gt;';    &#125;    var output = `    &lt;html&gt;    &lt;head&gt;        &lt;meta charset=\"utf-8\"&gt;    &lt;/head&gt;    &lt;body&gt;\tHello, Dynamic~~~~~\t&lt;ul&gt;\t    $&#123;lis&#125;\t&lt;/ul&gt;    $&#123;time&#125;    &lt;/body&gt;    &lt;/html&gt;`;\t    res.send(output);&#125;)\n\n동적인 파일 전달하는 법\n\n우리가 작성한 코드가 다시 실행되어야 하기 때문에 서버를 껐다가 다시 node app.js를 실행해주어야 합니다.\n내부적으로 dynamic하게 웹 코드를 작성하면 코드의 짧은 수정을 통해서 반복적인 작업의 횟수가 프로그래밍적으로 달라지기 때문에, 자바스크립트 코드에서 일부분만 수정하면 되므로 정확하게 원하는만큼 반복시킬 수 있습니다.\n\n\n\n하지만, 정적인 파일의 경우에는 요청이 들어올 때마다 node가 그것을 잡아서 던져주기 때문에, 우리가 굳이 껐다 킬 필요가 없습니다. 이로 인해서 정적인 파일을 서비스하는 것이 좀 더 코드를 짜는데는 편리합니다. 물론 동적인 파일도 자동화 시키는 방법이 있지만, 아직은 배우지 않고 다음에 배울 것 입니다.\n또는 현재 시간을 웹 페이지에 표시하고 싶다면 Date()라는 API를 사용하여 동적인 파일을 서비스하는 방법을 통해서 웹 페이지에 보여줄 수 있습니다.\n변수의 값을 Html 코드에 삽입하면 문자열로 인식하기 때문에 ${time}과 같은 방법을 써서 변수를 포함시킬 수 있도록 합니다.\n","dateCreated":"2018-08-03T13:13:32+09:00","dateModified":"2020-05-13T00:14:00+09:00","datePublished":"2018-08-03T13:13:32+09:00","description":"","headline":"생활코딩 :: express","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://woovictory.github.io/2018/08/03/open-tutorials-4/"},"publisher":{"@type":"Organization","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg","logo":{"@type":"ImageObject","url":"Victory.jpeg"}},"url":"https://woovictory.github.io/2018/08/03/open-tutorials-4/","keywords":"Node.js"}</script>
     <meta name="description" content="Express   IP : 어떠한 컴퓨터를 식별하는 식별자 Port : 그 컴퓨터 안에 설치되어 있는 서버들 중에서 어떤 서버를 사용할 것인가에 대한 식별자  우리가 웹 서버를 만든 다음에 그 웹서버를 어떤 포트가 실행시킬 것이지를, 바라보게 할 것인지를 결정해야 합니다. 컴퓨터에는 0~65535개의 포트가 있고, 우리는 이 포트 중에서 어떤 특정한 웹서버">
 <meta name="keywords" content="Node.js">
-<meta property="og:type" content="article">
+<meta property="og:type" content="blog">
 <meta property="og:title" content="생활코딩 :: express">
 <meta property="og:url" content="https://woovictory.github.io/2018/08/03/open-tutorials-4/index.html">
 <meta property="og:site_name" content="VictoryWoo">
 <meta property="og:description" content="Express   IP : 어떠한 컴퓨터를 식별하는 식별자 Port : 그 컴퓨터 안에 설치되어 있는 서버들 중에서 어떤 서버를 사용할 것인가에 대한 식별자  우리가 웹 서버를 만든 다음에 그 웹서버를 어떤 포트가 실행시킬 것이지를, 바라보게 할 것인지를 결정해야 합니다. 컴퓨터에는 0~65535개의 포트가 있고, 우리는 이 포트 중에서 어떤 특정한 웹서버">
 <meta property="og:locale" content="en">
 <meta property="og:image" content="https://woovictory.github.io/img/express.png">
+<meta property="og:image" content="https://woovictory.github.io/img/routing.png">
+<meta property="og:image" content="https://woovictory.github.io/img/nodejs1.png">
 <meta property="og:updated_time" content="2020-05-12T15:14:00.166Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="생활코딩 :: express">
 <meta name="twitter:description" content="Express   IP : 어떠한 컴퓨터를 식별하는 식별자 Port : 그 컴퓨터 안에 설치되어 있는 서버들 중에서 어떤 서버를 사용할 것인가에 대한 식별자  우리가 웹 서버를 만든 다음에 그 웹서버를 어떤 포트가 실행시킬 것이지를, 바라보게 할 것인지를 결정해야 합니다. 컴퓨터에는 0~65535개의 포트가 있고, 우리는 이 포트 중에서 어떤 특정한 웹서버">
 <meta name="twitter:image" content="https://woovictory.github.io/img/express.png">
     
-
+    
+        
+    
+    
+        <meta property="og:image" content="https://woovictory.github.io/assets/images/Victory.jpeg"/>
+    
+    
+    
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/all.css">
+    <link rel="stylesheet" href="/assets/css/jquery.fancybox.css">
+    <link rel="stylesheet" href="/assets/css/thumbs.css">
+    <link rel="stylesheet" href="/assets/css/tranquilpeak.css">
+    <!--STYLES END-->
     
 
     
-        <link rel="icon" href="/css/images/victorywoo.png" />
-    
 
-    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/libs/titillium-web/styles.css">
-    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
-
-    <link rel="stylesheet" type="text/css" href="">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/theeluwin/NotoSansKR-Hestia@master/stylesheets/NotoSansKR-Hestia.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/earlyaccess/nanumgothiccoding.css">
     
+        
     
-    <link rel="stylesheet" href="/css/style.css">
-
-    <script src="/libs/jquery/3.3.1/jquery.min.js"></script>
-    
-    
-        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
-    
-    
-        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
-    
-    
-        <script type="text/javascript">
-(function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-125410253-1', 'auto');
-ga('send', 'pageview');
-
-</script>
-    
-    
-
-
 </head>
 
-<body>
-    <div id="wrap">
-        <header id="header">
-    <div id="header-outer" class="outer">
-        <div class="container">
-            <div class="container-inner">
-                <div id="header-title">
-                    <h1 class="logo-wrap">
-                        <a href="/" class="logo"></a>
-                    </h1>
-                    
-                        <h2 class="subtitle-wrap">
-                            <p class="subtitle">VictoryWoo&#39;s Blog</p>
-                        </h2>
-                    
-                </div>
-                <div id="header-inner" class="nav-container">
-                    <a id="main-nav-toggle" class="nav-icon fa fa-bars"></a>
-                    <div class="nav-container-inner">
-                        <ul id="main-nav">
-                            
-                                <li class="main-nav-list-item" >
-                                    <a class="main-nav-list-link" href="/">Home</a>
-                                </li>
-                            
-                                <li class="main-nav-list-item" >
-                                    <a class="main-nav-list-link" href="/about/index.html">About</a>
-                                </li>
-                            
-                        </ul>
-                        <nav id="sub-nav">
-                            <div id="search-form-wrap">
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
 
-    <form class="search-form">
-        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
-        <button type="submit" class="search-form-submit"></button>
-    </form>
-    <div class="ins-search">
-    <div class="ins-search-mask"></div>
-    <div class="ins-search-container">
-        <div class="ins-input-wrapper">
-            <input type="text" class="ins-search-input" placeholder="Type something..." />
-            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
-        </div>
-        <div class="ins-section-wrapper">
-            <div class="ins-section-container"></div>
-        </div>
-    </div>
-</div>
-<script>
-(function (window) {
-    var INSIGHT_CONFIG = {
-        TRANSLATION: {
-            POSTS: 'Posts',
-            PAGES: 'Pages',
-            CATEGORIES: 'Categories',
-            TAGS: 'Tags',
-            UNTITLED: '(Untitled)',
-        },
-        ROOT_URL: '/',
-        CONTENT_URL: '/content.json',
-    };
-    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
-})(window);
-</script>
-<script src="/js/insight.js"></script>
 
-</div>
-                        </nav>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</header>
-        <div class="container">
-            <div class="main-body container-inner">
-                <div class="main-body-inner">
-                    <section id="main">
-                        <div class="main-body-header">
-    <h1 class="header">
     
-    <a class="page-title-link" href="/categories/Node-js/">Node.js</a>
-    </h1>
-</div>
-
-                        <div class="main-body-content">
-                            
-                            <article id="post-open-tutorials-4" class="article article-single article-type-post" itemscope itemprop="blogPost">
-    <div class="article-inner">
         
-            <header class="article-header">
-                
-    
-        <h1 class="article-title" itemprop="name">
-        생활코딩 :: express
-        </h1>
+            
+        
     
 
-            </header>
-        
-        
-            <div class="article-meta">
-                
-    <div class="article-date">
-        <a href="/2018/08/03/open-tutorials-4/" class="article-date">
-            <time datetime="2018-08-03T04:13:32.000Z" itemprop="datePublished">2018-08-03</time>
+<header id="header" data-behavior="4">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a
+            class="header-title-link"
+            href="/ "
+            aria-label=""
+        >
+            VictoryWoo
         </a>
     </div>
+    
+        
+            <a
+                class="header-right-picture "
+                href="#about"
+                aria-label="Open the link: /#about"
+            >
+        
+        
+            <img class="header-picture" src="/assets/images/Victory.jpeg" alt="Author&#39;s picture"/>
+        
+        </a>
+    
+</header>
 
-		
+            <!-- Define author's picture -->
 
+
+
+        
+    
+
+<nav id="sidebar" data-behavior="4">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a
+                    href="/#about"
+                    aria-label="Read more about the author"
+                >
+                    <img class="sidebar-profile-picture" src="/assets/images/Victory.jpeg" alt="Author&#39;s picture"/>
+                </a>
+                <h4 class="sidebar-profile-name">VictoryWoo</h4>
                 
-    <div class="article-tag">
-        <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/Node-js/">Node.js</a>
-    </div>
-
+                    <h5 class="sidebar-profile-bio"><p>기록을 통해 사람들과 공유하는 것을 좋아합니다.</p>
+</h5>
+                
             </div>
         
         
-        <div class="article-entry" itemprop="articleBody">
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/"
+                            
+                            rel="noopener"
+                            title="Home"
+                        >
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-categories"
+                            
+                            rel="noopener"
+                            title="Categories"
+                        >
+                        <i class="sidebar-button-icon fa fa-bookmark" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Categories</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-tags"
+                            
+                            rel="noopener"
+                            title="Tags"
+                        >
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Tags</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link open-algolia-search"
+                            href="#search"
+                            
+                            rel="noopener"
+                            title="Search"
+                        >
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Search</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="#about"
+                            
+                            rel="noopener"
+                            title="About"
+                        >
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://github.com/WooVictory"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="GitHub"
+                        >
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://www.facebook.com/WooVictory"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Facebook"
+                        >
+                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Facebook</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://www.linkedin.com/profile/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="LinkedIn"
+                        >
+                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">LinkedIn</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/jhsw0375@gmail.com"
+                            
+                            rel="noopener"
+                            title="Mail"
+                        >
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="4"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            생활코딩 :: express
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2018-08-03T13:13:32+09:00">
+	
+		    Aug 03, 2018
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/Node-js/">Node.js</a>
+
+
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
             <h1 id="express">Express</h1>
 <hr>
 <ul>
@@ -315,313 +418,331 @@ ga('send', 'pageview');
 <p>또는 현재 시간을 웹 페이지에 표시하고 싶다면 <code>Date()</code>라는 API를 사용하여 동적인 파일을 서비스하는 방법을 통해서 웹 페이지에 보여줄 수 있습니다.</p>
 <p>변수의 값을 Html 코드에 삽입하면 <strong>문자열</strong>로 인식하기 때문에 <code>${time}</code>과 같은 방법을 써서 <strong>변수</strong>를 포함시킬 수 있도록 합니다.</p>
 
-        </div>
-        
-        <footer class="article-footer">
-            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({
-     google_ad_client: "ca-pub-9725307592233286",
-     enable_page_level_ads: true
-});
-</script>
             
 
 
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">TAGGED IN</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/Node-js/">Node.js</a>
 
-    <a data-url="https://woovictory.github.io/2018/08/03/open-tutorials-4/" data-id="ckd6xgt3x012y51pqo7uliy63" class="article-share-link"><i class="fa fa-share"></i>Share</a>
-<script>
-    (function ($) {
-        $('body').on('click', function() {
-            $('.article-share-box.on').removeClass('on');
-        }).on('click', '.article-share-link', function(e) {
-            e.stopPropagation();
+            </div>
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2018/08/03/java-basic-2/"
+                    data-tooltip="[Java] 2. 연산자"
+                    aria-label="PREVIOUS: [Java] 2. 연산자"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2018/08/02/open-tutorials-3/"
+                    data-tooltip="생활코딩 :: 동기와 비동기 프로그래밍"
+                    aria-label="NEXT: 생활코딩 :: 동기와 비동기 프로그래밍"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="Share this post"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://woovictory.github.io/2018/08/03/open-tutorials-4/"
+                    title="Share on Facebook"
+                    aria-label="Share on Facebook"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://woovictory.github.io/2018/08/03/open-tutorials-4/"
+                    title="Share on Twitter"
+                    aria-label="Share on Twitter"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://woovictory.github.io/2018/08/03/open-tutorials-4/"
+                    title="Share on Google+"
+                    aria-label="Share on Google+"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
 
-            var $this = $(this),
-                url = $this.attr('data-url'),
-                encodedUrl = encodeURIComponent(url),
-                id = 'article-share-box-' + $this.attr('data-id'),
-                offset = $this.offset(),
-                box;
 
-            if ($('#' + id).length) {
-                box = $('#' + id);
-
-                if (box.hasClass('on')){
-                    box.removeClass('on');
-                    return;
-                }
-            } else {
-                var html = [
-                    '<div id="' + id + '" class="article-share-box">',
-                        '<input class="article-share-input" value="' + url + '">',
-                        '<div class="article-share-links">',
-                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
-                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
-                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
-                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
-                        '</div>',
-                    '</div>'
-                ].join('');
-
-              box = $(html);
-
-              $('body').append(box);
-            }
-
-            $('.article-share-box.on').hide();
-
-            box.css({
-                top: offset.top + 25,
-                left: offset.left
-            }).addClass('on');
-
-        }).on('click', '.article-share-box', function (e) {
-            e.stopPropagation();
-        }).on('click', '.article-share-box-input', function () {
-            $(this).select();
-        }).on('click', '.article-share-box-link', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-
-            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
-        });
-    })(jQuery);
-</script>
-
-        </footer>
+        
+        
+            
+        
     </div>
 </article>
 
-    <section id="comments">
-    
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2020 VictoryWoo. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2018/08/03/java-basic-2/"
+                    data-tooltip="[Java] 2. 연산자"
+                    aria-label="PREVIOUS: [Java] 2. 연산자"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2018/08/02/open-tutorials-3/"
+                    data-tooltip="생활코딩 :: 동기와 비동기 프로그래밍"
+                    aria-label="NEXT: 생활코딩 :: 동기와 비동기 프로그래밍"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="Share this post"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
         
-    <div id="disqus_thread">
-        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-    </div>
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://woovictory.github.io/2018/08/03/open-tutorials-4/"
+                    title="Share on Facebook"
+                    aria-label="Share on Facebook"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://woovictory.github.io/2018/08/03/open-tutorials-4/"
+                    title="Share on Twitter"
+                    aria-label="Share on Twitter"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://woovictory.github.io/2018/08/03/open-tutorials-4/"
+                    title="Share on Google+"
+                    aria-label="Share on Google+"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
 
-    
-    </section>
 
-
-
-                        </div>
-                    </section>
-                    <aside id="sidebar">
-    <a class="sidebar-toggle" title="Expand Sidebar"><i class="toggle icon"></i></a>
-    <div class="sidebar-top">
-        <p>follow:</p>
-        <ul class="social-links">
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
             
                 
-                <li>
-                    <a class="social-tooltip" title="facebook" href="https://www.facebook.com/WooVictory" target="_blank" rel="noopener">
-                        <i class="icon fa fa-facebook"></i>
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://woovictory.github.io/2018/08/03/open-tutorials-4/"
+                        aria-label="Share on Facebook"
+                    >
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Share on Facebook</span>
                     </a>
                 </li>
-                
             
                 
-                <li>
-                    <a class="social-tooltip" title="github" href="https://github.com/WooVictory" target="_blank" rel="noopener">
-                        <i class="icon fa fa-github"></i>
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://twitter.com/intent/tweet?text=https://woovictory.github.io/2018/08/03/open-tutorials-4/"
+                        aria-label="Share on Twitter"
+                    >
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Share on Twitter</span>
                     </a>
                 </li>
-                
             
                 
-                <li>
-                    <a class="social-tooltip" title="linkedin" href="https://www.linkedin.com/in/seungwoo-lee-590844177" target="_blank" rel="noopener">
-                        <i class="icon fa fa-linkedin"></i>
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://plus.google.com/share?url=https://woovictory.github.io/2018/08/03/open-tutorials-4/"
+                        aria-label="Share on Google+"
+                    >
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>Share on Google+</span>
                     </a>
                 </li>
-                
             
         </ul>
     </div>
-    
-        
-<nav id="article-nav">
-    
-        <a href="/2018/08/03/java-basic-2/" id="article-nav-newer" class="article-nav-link-wrap">
-        <strong class="article-nav-caption">newer</strong>
-        <p class="article-nav-title">
-        
-            [Java] 2. 연산자
-        
-        </p>
-        <i class="icon fa fa-chevron-right" id="icon-chevron-right"></i>
-    </a>
-    
-    
-        <a href="/2018/08/02/open-tutorials-3/" id="article-nav-older" class="article-nav-link-wrap">
-        <strong class="article-nav-caption">older</strong>
-        <p class="article-nav-title">생활코딩 :: 동기와 비동기 프로그래밍</p>
-        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
-        </a>
-    
-</nav>
-
-    
-    <div class="widgets-container">
-        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({
-     google_ad_client: "ca-pub-9725307592233286",
-     enable_page_level_ads: true
-});
-</script>
-        
-            
-                
-    <div class="widget-wrap widget-list">
-        <h3 class="widget-title">categories</h3>
-        <div class="widget">
-            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Android/">Android</a><span class="category-list-count">79</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Book/">Book</a><span class="category-list-count">4</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Book/CleanCode/">CleanCode</a><span class="category-list-count">4</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Design-Pattern/">Design Pattern</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ETC/">ETC</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Git/">Git</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Inno-SOPT/">Inno_SOPT</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">39</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Kotlin/">Kotlin</a><span class="category-list-count">17</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Node-js/">Node.js</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Operation-System/">Operation System</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/RxJava/">RxJava</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/">algorithm</a><span class="category-list-count">51</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/BOJ/">BOJ</a><span class="category-list-count">49</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/Programmers/">Programmers</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/개발-상식/">개발 상식</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/네트워크/">네트워크</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/데이터베이스/">데이터베이스</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/삼성-기출/">삼성 기출</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/알고리즘/">알고리즘</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/자료구조/">자료구조</a><span class="category-list-count">10</span></li></ul>
-        </div>
-    </div>
 
 
             
-                
-    <div class="widget-wrap">
-        <h3 class="widget-title">recents</h3>
-        <div class="widget">
-            <ul id="recent-post" class="no-thumbnail">
-                
-                    <li>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/ETC/">ETC</a></p>
-                            <p class="item-title"><a href="/2020/07/29/Memo-Privacy/" class="title">[Memo] 개인정보 처리 방침</a></p>
-                            <p class="item-date"><time datetime="2020-07-29T05:11:19.000Z" itemprop="datePublished">2020-07-29</time></p>
-                        </div>
-                    </li>
-                
-                    <li>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/Book/">Book</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/Book/CleanCode/">CleanCode</a></p>
-                            <p class="item-title"><a href="/2020/07/21/CleanCode4/" class="title">[CleanCode] 4장. 주석</a></p>
-                            <p class="item-date"><time datetime="2020-07-21T14:40:14.000Z" itemprop="datePublished">2020-07-21</time></p>
-                        </div>
-                    </li>
-                
-                    <li>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/Android/">Android</a></p>
-                            <p class="item-title"><a href="/2020/07/08/Android-SingleLiveEventToEventWrapper/" class="title">[Android] MVVM UI Event Wrapper</a></p>
-                            <p class="item-date"><time datetime="2020-07-08T01:34:10.000Z" itemprop="datePublished">2020-07-08</time></p>
-                        </div>
-                    </li>
-                
-                    <li>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/Kotlin/">Kotlin</a></p>
-                            <p class="item-title"><a href="/2020/07/07/Kotlin-Coroutine-1/" class="title">[Kotlin] Coroutine 이해하기</a></p>
-                            <p class="item-date"><time datetime="2020-07-07T02:05:54.000Z" itemprop="datePublished">2020-07-07</time></p>
-                        </div>
-                    </li>
-                
-                    <li>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/Book/">Book</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/Book/CleanCode/">CleanCode</a></p>
-                            <p class="item-title"><a href="/2020/07/06/CleanCode-3/" class="title">[CleanCode] 3장. 함수</a></p>
-                            <p class="item-date"><time datetime="2020-07-06T07:57:43.000Z" itemprop="datePublished">2020-07-06</time></p>
-                        </div>
-                    </li>
-                
-            </ul>
         </div>
-    </div>
-
-            
         
-    </div>
-    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({
-     google_ad_client: "ca-pub-9725307592233286",
-     enable_page_level_ads: true
-});
-</script>
-</aside>
 
-                </div>
-            </div>
-        </div>
-        <footer id="footer">
-    <div class="container">
-        <div class="container-inner">
-            <a id="back-to-top" href="javascript:;"><i class="icon fa fa-angle-up"></i></a>
-            <div class="credit">
-                <h1 class="logo-wrap">
-                    <a href="/" class="logo"></a>
-                </h1>
-                <p>&copy; 2020 VictoryWoo</p>
-                <p>Powered by <a href="//hexo.io/" target="_blank">Hexo</a>. Theme by <a href="//github.com/ppoffice" target="_blank">PPOffice</a></p>
-            </div>
-            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({
-     google_ad_client: "ca-pub-9725307592233286",
-     enable_page_level_ads: true
-});
-</script>
-            <div class="footer-plugins">
-              
+
     
-
-
-            </div>
-        </div>
-    </div>
-</footer>
-
         
     
-    <script>
-    var disqus_shortname = 'hexo-theme-hueman';
-    
-    
-    var disqus_url = 'https://woovictory.github.io/2018/08/03/open-tutorials-4/';
-    
-    (function() {
-    var dsq = document.createElement('script');
-    dsq.type = 'text/javascript';
-    dsq.async = true;
-    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
-    </script>
 
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <img id="about-card-picture" src="/assets/images/Victory.jpeg" alt="Author&#39;s picture"/>
+        
+            <h4 id="about-card-name">VictoryWoo</h4>
+        
+            <div id="about-card-bio"><p>기록을 통해 사람들과 공유하는 것을 좋아합니다.</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>Android Developer</p>
 
-
-
-    
-        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
-    
-    
-        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
-    
-    
-
-
-
-<!-- Custom Scripts -->
-<script src="/js/main.js"></script>
-
+            </div>
+        
+        
     </div>
-</body>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/cover-v1.2.0.jpg');"></div>
+        <!--SCRIPTS-->
+<script src="/assets/js/jquery.js"></script>
+<script src="/assets/js/jquery.fancybox.js"></script>
+<script src="/assets/js/thumbs.js"></script>
+<script src="/assets/js/tranquilpeak.js"></script>
+<!--SCRIPTS END-->
+
+
+    
+
+
+
+
+    </body>
 </html>

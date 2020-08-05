@@ -1,197 +1,299 @@
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
+    
 <head>
-    <meta charset="utf-8" />
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="VictoryWoo">
+    <title>[안드로이드] ListView vs RecyclerView - VictoryWoo</title>
+    <meta name="author" content="VictoryWoo">
     
-
     
-    <title>[안드로이드] ListView vs RecyclerView | VictoryWoo</title>
     
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    
-        <meta name="keywords" content="Android,Basic,RecyclerView,ListView" />
-    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg"},"articleBody":"신입 개발자를 위한 Repository를 만들었습니다. 공부한 내용을 정리 중이니 도움이 되신다면 와서 Star를 눌러주시면 감사하겠습니다.\n우리가 사용하는 앱 중에서 가장 많이 등장하는 것은 무엇일까?? 그 중의 하나는 바로 리스트라고 해도 과언이 아닐 것이다. 사용자에게 리스트 즉, 목록을 보여주는 것이 가장 많이 등장한다. 그렇다면 이 리스트를 구현하는 방법에는 무엇이 있을까??\nListView\nListView는 이름에서도 알 수 있듯이 리스트 즉, 목록을 구현하는데 사용된다. ListView는 안드로이드에 임베디드 되어 있는 코드로 동작하며, API level 1부터 존재했다.\n1234567891011121314151617@Overridepublic View getView(final int position, View convertView, ViewGroup parent) &#123;    Holder holder = new Holder();    View rowView = inflater.inflate(R.layout.item_list, null);    holder.tv = (TextView) rowView.findViewById(R.id.text);    holder.img = (ImageView) rowView.findViewById(R.id.image);    holder.tv.setText(result[position]);    holder.img.setImageResource(imageId[position]);    rowView.setOnClickListener(new OnClickListener() &#123;        @Override        public void onClick(View v) &#123;            // TODO Auto-generated method stub            Toast.makeText(context, \"You Clicked \" + result[position], Toast.LENGTH_LONG).show();        &#125;    &#125;);    return rowView;&#125;\n위의 형태는 가장 일반적인 ListView의 getView() 접근 방법이다. 하지만 위와 같이 동작하게 되면 getView() 즉, ListView의 재사용성이 떨어지게 된다.\n재사용이라는게 getView()는 현재 화면상에 아이템이 보일 때 호출되는 함수이다. 예를 들어, 아이템이 20개가 있고 이를 스크롤한다고 가정하면 스크롤 시에도 getView() 함수는 계속해서 호출된다.\n12Holder holder = new Holder();View rootView = inflater.inflate(R.layout.item_list, null)\n또한, 위의 코드는 별도의 null 처리가 없으므로 스크롤을 할 때마다 inflate를 통해서 View의 create가 발생하고 findViewById도 함께 호출된다. [이러한 부분들이 비효율적이다.] 리스트의 특성상 하나의 View만 있으면 이 View가 연속적으로 사용이 가능한 형태가 만들어지면 되는데 ListView는 이러한 것이 강제적이지 않아서 힘들다.\n그래서 ViewHolder의 개념이 등장하게 된다. 구글의 권장 사항이라 강제적이지는 않다. 다만 위와 같이 inflate와 findViewById를 리스트뷰에서 연속적으로 발생시키면 메모리와 성능에 악영향을 미칠 수 있다. 그래서 ViewHolder 패턴을 사용하는 것을 권장한다.\nListView에 ViewHolder 패턴을 적용한다면?\n아래는 ViewHolder 패턴을 적용한 코드이다. convertView == null일 경우에만 inflate와 findViewById가 호출되어 view가 생성된다. 그리고 rootView의 setTag를 호출하여 생성된 ViewHolder를 임시 저장해둔다.\n메모리에 문제가 없다면 최초 1회만 생성되고 이후 else 문을 통해서 getTag()를 호출하여 ViewHolder를 꺼내와서 ViewHolder에 접근이 가능한 형태가 만들어지게 된다.\n1234567891011121314151617181920212223242526272829303132@Overridepublic View getView(final int position, View convertView, ViewGroup parent) &#123;    // 최초에 convertView가 null이므로, inflate를 처리한다    if (convertView == null) &#123;        // 전역으로 생성한 rootView에 inflate        rootView = inflater.inflate(R.layout.item_list, null);        // ViewHolder을 생성        Holder holder = new Holder();        holder.tv = (TextView) rowView.findViewById(R.id.text);        holder.img = (ImageView) rowView.findViewById(R.id.image);        // setTag : holder 임시 저장        rootView.setTag(holder);    &#125; else &#123;        // rootView에 convertView를 셋팅        rootView = convertView;        // rootView에서 holder을 꺼내온다        holder = (Holder) rootView.getTag();    &#125;    holder.tv.setText(result[position]);    holder.img.setImageResource(imageId[position]);    rowView.setOnClickListener(new OnClickListener() &#123;        @Override        public void onClick(View v) &#123;            // TODO Auto-generated method stub            Toast.makeText(context, \"You Clicked \" + result[position], Toast.LENGTH_LONG).show();        &#125;    &#125;);    return rootView;&#125;\n위와 같이 구현하는 것이 ListView에 ViewHolder 패턴을 적용하는 것이라고 보면 된다. 하지만 강제적이지 않아서 구현하는 것이 귀찮은 작업이 된다.\n그리고 커스텀이 많고 하나의 리스트에 다양한 ViewHolder를 만들기가 쉽지 않다. 예를 들면 다음과 같은 경우이다.\n123사진이 포함된 ViewHolder텍스트만 있는 ViewHolder오른쪽이 스크롤 되는 ListView가 포함된 ViewHolder\n물론 우리는 ViewHolder 패턴을 이해하고 만들면 괜찮지만, 대부분의 개발자들은 귀찮을 것을 싫어한다… ㅎㅎ [내 생각^.^] 그래서 구글은 귀찮음을 해소하기 위해 RecyclerView라는 것을 만들어서 내놓았다.\nListView의 장/단점\n장점\n\nListView는 간단하게 리스트를 만드는 부분에 있어서는 장점을 가지고 있다. [ex) 텍스트만 있는 리스트]\n간단한 아이템 형태를 만드는 경우에는 빠르게 적용이 가능한 ArrayAdapter를 제공한다.\n\n단점\n\n아이템의 애니메이션 처리가 쉽지 않다.\n리스트에는 한 개 이상의 View가 필요한 경우가 있지만 커스텀으로 작업하기 쉽지 않다.\nViewHolder 패턴을 강제적으로 사용하지 않으므로 고비용의 findViewById가 매번 호출될 수 있다.\n\nRecyclerView\n롤리팝(5.0) 버전이 ListView보다 유연하고 성능이 향상된 RecyclerView와 함께 발표되었다. 기존의 ListView는 커스터마이징 하기에 힘들었고, 구조적인 문제로 성능상의 문제도 있어다.\nRecyclerView는 ListView의 문제를 해결하기 위해 개발자에게 더 다양한 형태로 커스터마이징 할 수 있도록 제공되었다. RecyclerView와 ListView의 가장 큰 차이점은 LayoutManager와 ViewHolder 패턴의 의무적인 사용, Item에 대한 뷰의 변형이나 애니메이션할 수 있는 개념이 추가된 것이다.\nCreate Lists\ncreating Lists and Cards에 정의된 List 표현이다.\n\nwidget인 RecyclerView는 LayoutManager를 통해서 View를 그리는 방법을 정의한다. RecyclerView.Adapter에서는 Data의 ViewHolder 정의에 따라서 UI가 선택되고 이를 표현하게 된다.\n\n강제적인 ViewHolder의 적용으로 View의 재사용을 가능하게 해준다.\n많은 데이터를 리스트 형태로 제공이 가능하다.\nRecyclerView.ItemAnimator을 이용하여 Item의 Animator를 이용할 수 있다.\nLayoutManager를 통해서 아이템의 배치 방법을 다양하게 적용할 수 있다.\n\n주요 클래스\n\nAdapter : 기존의 ListView에서 사용하는 Adapter와 같은 개념으로 데이터와 아이템에 대한 View 생성\nViewHolder : 재활용 View에 대한 모든 서브 뷰를 보유\nLayoutManager : 아이템 항목을 어떻게 배치하는가를 결정\nItemDecoration : 아이템 항목에서 서브뷰에 대한 처리\nItemAnimation : 아이템 항목이 추가, 삭제되거나 정렬될 때 애니메이션 처리를 할 수 있다.\n\n\nAdapter\n\n리스트뷰는 데이터가 어디서 왔느냐에 따라 BaseAdapter를 상속한 ArrayAdapter(배열로부터 데이터를 가져올 때 사용), CursorAdapter(DB로부터 데이터를 가져올 때 사용), SimpleAdapter(XMl 등으로부터 가져올 때 사용)를 구분하여 사용한다.\n하지만 RecyclerView는 Universal한 Adapter를 사용하여 데이터 소스를 처리한다. 이것은 리싸이클러뷰의 유연성을 보여준다. 다음의 3가지 인터페이스를 구현해야 한다.\n\nonCreateViewHolder(ViewGroup parent, int viewType) : 뷰 홀더를 생성하고 뷰를 붙여주는 부분이다.\nonBindViewHolder(CustomViewHolder holder, int position) : 재활용 되는 뷰가 호출하여 실행되는 메소드, 뷰 홀더를 전달하고 어댑터는 position의 데이터를 결합시킨다.\ngetItemCount() : 데이터의 개수 반환\n\ngetItemCount() -&gt; onCreateViewHolder() -&gt; onBindViewHolder() 순으로 호출된다.\n리스트뷰가 사용했던 getView() 메소드는 매번 호출되면서 null 처리를 해주는 귀찮은 작업을 해줘야했다면, onCreateViewHolder는 새롭게 생성될 때만 호출된다.\n\nViewHolder\n\n리스트뷰에서는 뷰홀더 패턴을 권장했다. UI를 수정할 때마다 부르는 findViewById()를 뷰홀더 패턴을 이용해 한번만 호출함으로써 리스트뷰의 지연을 초래하는 무거운 연산을 줄여주었다. 이 문제를 리싸이클러뷰에서는 뷰홀더 패턴을 항상 사용하도록(강제하도록) 함으로써 해결했다.\n하지만 실제로 앱의 퍼포먼스를 향상시켜주지만 최신의 디바이스는 뷰홀더 패턴을 사용하지 않은 리스트뷰나 리싸이클러뷰의 성능 차이는 미세하다.\n단지 차이점은 리싸이클러뷰는 뷰홀더 패턴이 강제되는 것일 뿐이다. 이전의 리스트뷰는 선택적이었지만 성능 차이가 너무 컸기 때문에 변화된 것으로 생각된다. 간과하기 쉬운 중요한 점은 뷰홀더 패턴을 사용한 리스트뷰와 리싸이클러뷰의 성능은 같다.\n\nLayoutManager\n\n리스트뷰는 수직 스크롤만 가능하다. 리스트뷰를 수평으로 사용할 수는 없었다. 그것을 구현하기 위한 몇가지 방법이 있지만 리스트뷰는 그렇게 동작하도록 디자인 되지 않았다고 한다.\n그러나 이제 리싸이클러뷰에서는 수직뿐만 아니라 수평 스크롤 또한 지원한다. 뿐만 아니라 더 다양한 타입의 리스트들을 지원하고, 커스텀할 수 있도록 해준다. 많은 타입의 리스트를 사용학 위해서 LayoutManager를 사용하면 된다.\n\nLayoutManager의 종류\n\n\nLinearLayoutManager\n\n\nVertical(가로) / Horizontal(세로) 형태로 아이템을 배치한다.\n\n\nGridLayoutManager\n\n\n한 줄에 1개 이상의 이미지를 표시할 수 있지만 아이템의 크기는 줄의 첫 번째 아이템의 크기에 따라서 달라질 수 있다.(고정시에는 모두 고정)\n\n\nStaggeredGridLayoutManager\n\n\n그리드 형태의 아이템에 크기를 다양하게 적용할 수 있다.\n\n\nCustom LayoutManager\n\n\n3개의 레이아웃 매니저를 상속받아 구현할 수 있다.\n\n\nItem Decoration\n\n리스트뷰에서는 XML에 파라미터를 추가함으로써 쉽게 divide할 수 있었다. 리싸이클러뷰에서는 RecyclerView.ItemDecoration 클래스를 통해 divider를 원하는 아이템에 추가할 수 있도록 되었다. 조금 복잡해졌지만 동적인 데코레이팅이 가능해졌다.\n\nItem Animator\n\nMaterial Design에 대해 조명된 이후로 리스트에서의 애니메이션을 무궁무진한 가능성을 가지게 되었다. 리스트뷰에서는 아이템의 삽입이나 삭제에 특별한 애니메이션이 없었다.\n하지만 리싸이클러뷰에서는 RecyclerView.ItemAnimator 클래스를 통해 애니메이션을 핸들링 할 수 있게 되었다. 이 클래스를 통해서 아이템의 삽입, 삭제, 이동에 대한 커스터마이징이 가능하고, 또한 DefaultItemAnimator가 제공되므로 커스터마이징이 필요 없이 사용할 수도 있다.\nnotifyItemChanged(int position), notifyItemInserted(int position), notifyItemRemoved(int position)을 ItemAnimator을 통해 특정 아이템에 대한 애니메이션을 발생시킬 수 있습니다.\n\n클릭 이벤트 처리\n\n터치 이벤트를 통해 사용자가 아이템을 클릭했는지 롱클릭 했는지를 직접처리\nRecycleView.OnItemTouchListener은 리싸이클러뷰의 터치 이벤트를 감지한다. 좀 복잡하지만 개발자에게 터치 이벤트를 인터셉트하는 제어권한을 주게 되었다.\n안드로이드 공식 문서에서는 터치 이벤트를 인터셉트함으로서 리싸이클러뷰에게 전달하기 전에 조작함으로써 유용하게 사용될 수 있다고 한다.(ListView에서 아이템을 클릭시 콜백 받을 수 있는 리스너는 RecyclerViewd에는 존재하지 않음.)\n즉, RecyclerView에는 Click 이벤트에 대한 처리를 자체적으로 할 수 없다. 그래서 onClickListener를 달아줘야 하는 문제가 발생한다.\n내가 사용하는 방법으로는 RecyclerView를 사용하는 액티비티에서 View.OnClickListener를 상속받고 그 액티비티의 Context를 RecyclerView.Adapter에서 만든 함수에게 넘긴다.\n이 함수는 액티비티에서 받은 Context(여기에 View.OnClickListener이 포함되어 있음)를 Adapter 클래스의 View.OnClickListener 타입의 변수인 ItemClick을 초기화한다.\n123fun onItemClikc(l : View.OnClickListener)&#123;    ItemClick = l&#125;\n그러면 Adapter는 ClickListener 정보를 받아서 onCreateViewHolder에서 만든 View를 리턴하기 전에 그 View에게 onClickListener를 붙여주면 된다.\n1234567override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HomeFilterViewHolder &#123;     var view = LayoutInflater         .from(parent.context).inflate(R.layout.home_course_filter_list, parent, false)     view.setOnClickListener(onItemClick)     return HomeFilterViewHolder(view) &#125;\n\nDiffUtil\n\nDiffUtil은 데이터의 변화를 감지하여 뷰를 갱신하는 클래스이다. areItemsTheSame, areContentsTheSame, getChangedPayload 등을 오버라이딩하여 데이터간 변화를 감지한다.\nRecyclerView.Adapter에서 notifyItemMoved, notifyItemRangeChanged, notifyItemRangeInserted, notifyItemRangeRemoved 등이 호출되면 DiffUtil에서 해당 범위의 데이터의 변화를 감지하고 뷰를 선택적으로 갱신함으로써 비용이 큰 notifyDataSetChanged 대신 효율적으로 사용될 수 있다.\n추가적인 DiffUtil 클래스의 메소드를 확인하고 싶다면 아래 글을 참고하자.\nabout RecyclerView\n정리\n그럼 간단하게 ListView와 RecyclerView의 차이점을 표 형식으로 정리해서 보겠다. 아래의 표는 블로그를 참고했으며 참고 링크는 아래에 적어놓았다.\n\n다음 세가지를 비교/정리\n\n\nListView\n리스트뷰에서는 BaseAdapter를 상속받은 ArrayAdapter나 CursorAdapter 등을 사용한다.\nViewHolder 패턴을 선택적으로 구현하기 때문에 구현하지 않는 경우 각각의 View를 그릴 때마다 findViewById()를 호출하기 때문에 성능 저하 문제가 발생한다.\ngetView() 메소드에서 뷰를 그릴 때마다 findViewById()를 매번 호출하여 성능이 저하된다.\n\n\nListView+ViewHolder\n리스트뷰에서 ViewHolder 패턴을 구현한다면 성능에 관해서는 RecyclerView와 비슷하지만 기존의 ListView는 뷰 커스텀 작업에 대한 유연성이 떨어진다.\n\n\nRecyclerView\n리싸이클러뷰는 ViewHolder 패턴의 사용을 강제하고 Adapter 클래스를 직접 구현하기 때문에 뷰 커스텀 작업에 대한 유연성이 ListView보다 더욱 쉽고 편하다.\n\n\n참고\n\n리사이클러 뷰 RecyclerView 정리\n[안드로이드] RecyclerView란? (RecyclerView와 ListView 차이)\n[안드로이드] RecyclerView ( ListView와 차이 )\nAndroid - ViewHolder 패턴\n\n","dateCreated":"2019-01-03T09:53:38+09:00","dateModified":"2020-05-06T11:36:28+09:00","datePublished":"2019-01-03T09:53:38+09:00","description":"","headline":"[안드로이드] ListView vs RecyclerView","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://woovictory.github.io/2019/01/03/Android-Diff-of-ListView-and-RecyclerView/"},"publisher":{"@type":"Organization","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg","logo":{"@type":"ImageObject","url":"Victory.jpeg"}},"url":"https://woovictory.github.io/2019/01/03/Android-Diff-of-ListView-and-RecyclerView/","keywords":"Android, Basic, RecyclerView, ListView"}</script>
     <meta name="description" content="신입 개발자를 위한 Repository를 만들었습니다. 공부한 내용을 정리 중이니 도움이 되신다면 와서 Star를 눌러주시면 감사하겠습니다. 우리가 사용하는 앱 중에서 가장 많이 등장하는 것은 무엇일까?? 그 중의 하나는 바로 리스트라고 해도 과언이 아닐 것이다. 사용자에게 리스트 즉, 목록을 보여주는 것이 가장 많이 등장한다. 그렇다면 이 리스트를 구현하">
 <meta name="keywords" content="Android,Basic,RecyclerView,ListView">
-<meta property="og:type" content="article">
+<meta property="og:type" content="blog">
 <meta property="og:title" content="[안드로이드] ListView vs RecyclerView">
 <meta property="og:url" content="https://woovictory.github.io/2019/01/03/Android-Diff-of-ListView-and-RecyclerView/index.html">
 <meta property="og:site_name" content="VictoryWoo">
 <meta property="og:description" content="신입 개발자를 위한 Repository를 만들었습니다. 공부한 내용을 정리 중이니 도움이 되신다면 와서 Star를 눌러주시면 감사하겠습니다. 우리가 사용하는 앱 중에서 가장 많이 등장하는 것은 무엇일까?? 그 중의 하나는 바로 리스트라고 해도 과언이 아닐 것이다. 사용자에게 리스트 즉, 목록을 보여주는 것이 가장 많이 등장한다. 그렇다면 이 리스트를 구현하">
 <meta property="og:locale" content="en">
 <meta property="og:image" content="https://woovictory.github.io/img/android_recyclerview.png">
+<meta property="og:image" content="https://woovictory.github.io/img/android_diff_listview_recyclerview.png">
 <meta property="og:updated_time" content="2020-05-06T02:36:28.980Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="[안드로이드] ListView vs RecyclerView">
 <meta name="twitter:description" content="신입 개발자를 위한 Repository를 만들었습니다. 공부한 내용을 정리 중이니 도움이 되신다면 와서 Star를 눌러주시면 감사하겠습니다. 우리가 사용하는 앱 중에서 가장 많이 등장하는 것은 무엇일까?? 그 중의 하나는 바로 리스트라고 해도 과언이 아닐 것이다. 사용자에게 리스트 즉, 목록을 보여주는 것이 가장 많이 등장한다. 그렇다면 이 리스트를 구현하">
 <meta name="twitter:image" content="https://woovictory.github.io/img/android_recyclerview.png">
     
-
+    
+        
+    
+    
+        <meta property="og:image" content="https://woovictory.github.io/assets/images/Victory.jpeg"/>
+    
+    
+    
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/all.css">
+    <link rel="stylesheet" href="/assets/css/jquery.fancybox.css">
+    <link rel="stylesheet" href="/assets/css/thumbs.css">
+    <link rel="stylesheet" href="/assets/css/tranquilpeak.css">
+    <!--STYLES END-->
     
 
     
-        <link rel="icon" href="/css/images/victorywoo.png" />
-    
 
-    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/libs/titillium-web/styles.css">
-    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
-
-    <link rel="stylesheet" type="text/css" href="">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/theeluwin/NotoSansKR-Hestia@master/stylesheets/NotoSansKR-Hestia.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/earlyaccess/nanumgothiccoding.css">
     
+        
     
-    <link rel="stylesheet" href="/css/style.css">
-
-    <script src="/libs/jquery/3.3.1/jquery.min.js"></script>
-    
-    
-        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
-    
-    
-        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
-    
-    
-        <script type="text/javascript">
-(function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-125410253-1', 'auto');
-ga('send', 'pageview');
-
-</script>
-    
-    
-
-
 </head>
 
-<body>
-    <div id="wrap">
-        <header id="header">
-    <div id="header-outer" class="outer">
-        <div class="container">
-            <div class="container-inner">
-                <div id="header-title">
-                    <h1 class="logo-wrap">
-                        <a href="/" class="logo"></a>
-                    </h1>
-                    
-                        <h2 class="subtitle-wrap">
-                            <p class="subtitle">VictoryWoo&#39;s Blog</p>
-                        </h2>
-                    
-                </div>
-                <div id="header-inner" class="nav-container">
-                    <a id="main-nav-toggle" class="nav-icon fa fa-bars"></a>
-                    <div class="nav-container-inner">
-                        <ul id="main-nav">
-                            
-                                <li class="main-nav-list-item" >
-                                    <a class="main-nav-list-link" href="/">Home</a>
-                                </li>
-                            
-                                <li class="main-nav-list-item" >
-                                    <a class="main-nav-list-link" href="/about/index.html">About</a>
-                                </li>
-                            
-                        </ul>
-                        <nav id="sub-nav">
-                            <div id="search-form-wrap">
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
 
-    <form class="search-form">
-        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
-        <button type="submit" class="search-form-submit"></button>
-    </form>
-    <div class="ins-search">
-    <div class="ins-search-mask"></div>
-    <div class="ins-search-container">
-        <div class="ins-input-wrapper">
-            <input type="text" class="ins-search-input" placeholder="Type something..." />
-            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
-        </div>
-        <div class="ins-section-wrapper">
-            <div class="ins-section-container"></div>
-        </div>
-    </div>
-</div>
-<script>
-(function (window) {
-    var INSIGHT_CONFIG = {
-        TRANSLATION: {
-            POSTS: 'Posts',
-            PAGES: 'Pages',
-            CATEGORIES: 'Categories',
-            TAGS: 'Tags',
-            UNTITLED: '(Untitled)',
-        },
-        ROOT_URL: '/',
-        CONTENT_URL: '/content.json',
-    };
-    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
-})(window);
-</script>
-<script src="/js/insight.js"></script>
 
-</div>
-                        </nav>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</header>
-        <div class="container">
-            <div class="main-body container-inner">
-                <div class="main-body-inner">
-                    <section id="main">
-                        <div class="main-body-header">
-    <h1 class="header">
     
-    <a class="page-title-link" href="/categories/Android/">Android</a>
-    </h1>
-</div>
-
-                        <div class="main-body-content">
-                            
-                            <article id="post-Android-Diff-of-ListView-and-RecyclerView" class="article article-single article-type-post" itemscope itemprop="blogPost">
-    <div class="article-inner">
         
-            <header class="article-header">
-                
-    
-        <h1 class="article-title" itemprop="name">
-        [안드로이드] ListView vs RecyclerView
-        </h1>
+            
+        
     
 
-            </header>
-        
-        
-            <div class="article-meta">
-                
-    <div class="article-date">
-        <a href="/2019/01/03/Android-Diff-of-ListView-and-RecyclerView/" class="article-date">
-            <time datetime="2019-01-03T00:53:38.000Z" itemprop="datePublished">2019-01-03</time>
+<header id="header" data-behavior="4">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a
+            class="header-title-link"
+            href="/ "
+            aria-label=""
+        >
+            VictoryWoo
         </a>
     </div>
+    
+        
+            <a
+                class="header-right-picture "
+                href="#about"
+                aria-label="Open the link: /#about"
+            >
+        
+        
+            <img class="header-picture" src="/assets/images/Victory.jpeg" alt="Author&#39;s picture"/>
+        
+        </a>
+    
+</header>
 
-		
+            <!-- Define author's picture -->
 
+
+
+        
+    
+
+<nav id="sidebar" data-behavior="4">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a
+                    href="/#about"
+                    aria-label="Read more about the author"
+                >
+                    <img class="sidebar-profile-picture" src="/assets/images/Victory.jpeg" alt="Author&#39;s picture"/>
+                </a>
+                <h4 class="sidebar-profile-name">VictoryWoo</h4>
                 
-    <div class="article-tag">
-        <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/Android/">Android</a>, <a class="tag-link" href="/tags/Basic/">Basic</a>, <a class="tag-link" href="/tags/ListView/">ListView</a>, <a class="tag-link" href="/tags/RecyclerView/">RecyclerView</a>
-    </div>
-
+                    <h5 class="sidebar-profile-bio"><p>기록을 통해 사람들과 공유하는 것을 좋아합니다.</p>
+</h5>
+                
             </div>
         
         
-        <div class="article-entry" itemprop="articleBody">
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/"
+                            
+                            rel="noopener"
+                            title="Home"
+                        >
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-categories"
+                            
+                            rel="noopener"
+                            title="Categories"
+                        >
+                        <i class="sidebar-button-icon fa fa-bookmark" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Categories</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-tags"
+                            
+                            rel="noopener"
+                            title="Tags"
+                        >
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Tags</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link open-algolia-search"
+                            href="#search"
+                            
+                            rel="noopener"
+                            title="Search"
+                        >
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Search</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="#about"
+                            
+                            rel="noopener"
+                            title="About"
+                        >
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://github.com/WooVictory"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="GitHub"
+                        >
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://www.facebook.com/WooVictory"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Facebook"
+                        >
+                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Facebook</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://www.linkedin.com/profile/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="LinkedIn"
+                        >
+                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">LinkedIn</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/jhsw0375@gmail.com"
+                            
+                            rel="noopener"
+                            title="Mail"
+                        >
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="4"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            [안드로이드] ListView vs RecyclerView
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2019-01-03T09:53:38+09:00">
+	
+		    Jan 03, 2019
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/Android/">Android</a>
+
+
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
             <p>신입 개발자를 위한 <a href="https://github.com/WooVictory/Ready-For-Tech-Interview" target="_blank" rel="noopener">Repository</a>를 만들었습니다. 공부한 내용을 정리 중이니 도움이 되신다면 와서 Star를 눌러주시면 감사하겠습니다.</p>
 <p>우리가 사용하는 앱 중에서 가장 많이 등장하는 것은 무엇일까?? 그 중의 하나는 바로 리스트라고 해도 과언이 아닐 것이다. 사용자에게 리스트 즉, 목록을 보여주는 것이 가장 많이 등장한다. 그렇다면 이 리스트를 구현하는 방법에는 무엇이 있을까??</p>
 <h2 id="listview">ListView</h2>
@@ -350,313 +452,331 @@ getView() 메소드에서 뷰를 그릴 때마다 findViewById()를 매번 호�
 <li><a href="http://virusworld.tistory.com/90" target="_blank" rel="noopener">Android - ViewHolder 패턴</a></li>
 </ul>
 
-        </div>
-        
-        <footer class="article-footer">
-            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({
-     google_ad_client: "ca-pub-9725307592233286",
-     enable_page_level_ads: true
-});
-</script>
             
 
 
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">TAGGED IN</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/Android/">Android</a> <a class="tag tag--primary tag--small t-link" href="/tags/Basic/">Basic</a> <a class="tag tag--primary tag--small t-link" href="/tags/ListView/">ListView</a> <a class="tag tag--primary tag--small t-link" href="/tags/RecyclerView/">RecyclerView</a>
 
-    <a data-url="https://woovictory.github.io/2019/01/03/Android-Diff-of-ListView-and-RecyclerView/" data-id="ckd6xgt0q00x551pq8a27izgl" class="article-share-link"><i class="fa fa-share"></i>Share</a>
-<script>
-    (function ($) {
-        $('body').on('click', function() {
-            $('.article-share-box.on').removeClass('on');
-        }).on('click', '.article-share-link', function(e) {
-            e.stopPropagation();
+            </div>
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2019/01/03/Android-Diff-of-DP-SP/"
+                    data-tooltip="[안드로이드] SP와 DP의 차이"
+                    aria-label="PREVIOUS: [안드로이드] SP와 DP의 차이"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2019/01/02/Android-SharedPreference/"
+                    data-tooltip="[안드로이드] SharedPreference"
+                    aria-label="NEXT: [안드로이드] SharedPreference"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="Share this post"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://woovictory.github.io/2019/01/03/Android-Diff-of-ListView-and-RecyclerView/"
+                    title="Share on Facebook"
+                    aria-label="Share on Facebook"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://woovictory.github.io/2019/01/03/Android-Diff-of-ListView-and-RecyclerView/"
+                    title="Share on Twitter"
+                    aria-label="Share on Twitter"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://woovictory.github.io/2019/01/03/Android-Diff-of-ListView-and-RecyclerView/"
+                    title="Share on Google+"
+                    aria-label="Share on Google+"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
 
-            var $this = $(this),
-                url = $this.attr('data-url'),
-                encodedUrl = encodeURIComponent(url),
-                id = 'article-share-box-' + $this.attr('data-id'),
-                offset = $this.offset(),
-                box;
 
-            if ($('#' + id).length) {
-                box = $('#' + id);
-
-                if (box.hasClass('on')){
-                    box.removeClass('on');
-                    return;
-                }
-            } else {
-                var html = [
-                    '<div id="' + id + '" class="article-share-box">',
-                        '<input class="article-share-input" value="' + url + '">',
-                        '<div class="article-share-links">',
-                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
-                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
-                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
-                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
-                        '</div>',
-                    '</div>'
-                ].join('');
-
-              box = $(html);
-
-              $('body').append(box);
-            }
-
-            $('.article-share-box.on').hide();
-
-            box.css({
-                top: offset.top + 25,
-                left: offset.left
-            }).addClass('on');
-
-        }).on('click', '.article-share-box', function (e) {
-            e.stopPropagation();
-        }).on('click', '.article-share-box-input', function () {
-            $(this).select();
-        }).on('click', '.article-share-box-link', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-
-            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
-        });
-    })(jQuery);
-</script>
-
-        </footer>
+        
+        
+            
+        
     </div>
 </article>
 
-    <section id="comments">
-    
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2020 VictoryWoo. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2019/01/03/Android-Diff-of-DP-SP/"
+                    data-tooltip="[안드로이드] SP와 DP의 차이"
+                    aria-label="PREVIOUS: [안드로이드] SP와 DP의 차이"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2019/01/02/Android-SharedPreference/"
+                    data-tooltip="[안드로이드] SharedPreference"
+                    aria-label="NEXT: [안드로이드] SharedPreference"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="Share this post"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
         
-    <div id="disqus_thread">
-        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-    </div>
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://woovictory.github.io/2019/01/03/Android-Diff-of-ListView-and-RecyclerView/"
+                    title="Share on Facebook"
+                    aria-label="Share on Facebook"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://woovictory.github.io/2019/01/03/Android-Diff-of-ListView-and-RecyclerView/"
+                    title="Share on Twitter"
+                    aria-label="Share on Twitter"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://woovictory.github.io/2019/01/03/Android-Diff-of-ListView-and-RecyclerView/"
+                    title="Share on Google+"
+                    aria-label="Share on Google+"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
 
-    
-    </section>
 
-
-
-                        </div>
-                    </section>
-                    <aside id="sidebar">
-    <a class="sidebar-toggle" title="Expand Sidebar"><i class="toggle icon"></i></a>
-    <div class="sidebar-top">
-        <p>follow:</p>
-        <ul class="social-links">
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
             
                 
-                <li>
-                    <a class="social-tooltip" title="facebook" href="https://www.facebook.com/WooVictory" target="_blank" rel="noopener">
-                        <i class="icon fa fa-facebook"></i>
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://woovictory.github.io/2019/01/03/Android-Diff-of-ListView-and-RecyclerView/"
+                        aria-label="Share on Facebook"
+                    >
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Share on Facebook</span>
                     </a>
                 </li>
-                
             
                 
-                <li>
-                    <a class="social-tooltip" title="github" href="https://github.com/WooVictory" target="_blank" rel="noopener">
-                        <i class="icon fa fa-github"></i>
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://twitter.com/intent/tweet?text=https://woovictory.github.io/2019/01/03/Android-Diff-of-ListView-and-RecyclerView/"
+                        aria-label="Share on Twitter"
+                    >
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Share on Twitter</span>
                     </a>
                 </li>
-                
             
                 
-                <li>
-                    <a class="social-tooltip" title="linkedin" href="https://www.linkedin.com/in/seungwoo-lee-590844177" target="_blank" rel="noopener">
-                        <i class="icon fa fa-linkedin"></i>
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://plus.google.com/share?url=https://woovictory.github.io/2019/01/03/Android-Diff-of-ListView-and-RecyclerView/"
+                        aria-label="Share on Google+"
+                    >
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>Share on Google+</span>
                     </a>
                 </li>
-                
             
         </ul>
     </div>
-    
-        
-<nav id="article-nav">
-    
-        <a href="/2019/01/03/Android-Diff-of-DP-SP/" id="article-nav-newer" class="article-nav-link-wrap">
-        <strong class="article-nav-caption">newer</strong>
-        <p class="article-nav-title">
-        
-            [안드로이드] SP와 DP의 차이
-        
-        </p>
-        <i class="icon fa fa-chevron-right" id="icon-chevron-right"></i>
-    </a>
-    
-    
-        <a href="/2019/01/02/Android-SharedPreference/" id="article-nav-older" class="article-nav-link-wrap">
-        <strong class="article-nav-caption">older</strong>
-        <p class="article-nav-title">[안드로이드] SharedPreference</p>
-        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
-        </a>
-    
-</nav>
-
-    
-    <div class="widgets-container">
-        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({
-     google_ad_client: "ca-pub-9725307592233286",
-     enable_page_level_ads: true
-});
-</script>
-        
-            
-                
-    <div class="widget-wrap widget-list">
-        <h3 class="widget-title">categories</h3>
-        <div class="widget">
-            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Android/">Android</a><span class="category-list-count">79</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Book/">Book</a><span class="category-list-count">4</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Book/CleanCode/">CleanCode</a><span class="category-list-count">4</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Design-Pattern/">Design Pattern</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ETC/">ETC</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Git/">Git</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Inno-SOPT/">Inno_SOPT</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">39</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Kotlin/">Kotlin</a><span class="category-list-count">17</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Node-js/">Node.js</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Operation-System/">Operation System</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/RxJava/">RxJava</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/">algorithm</a><span class="category-list-count">51</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/BOJ/">BOJ</a><span class="category-list-count">49</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/algorithm/Programmers/">Programmers</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/개발-상식/">개발 상식</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/네트워크/">네트워크</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/데이터베이스/">데이터베이스</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/삼성-기출/">삼성 기출</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/알고리즘/">알고리즘</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/자료구조/">자료구조</a><span class="category-list-count">10</span></li></ul>
-        </div>
-    </div>
 
 
             
-                
-    <div class="widget-wrap">
-        <h3 class="widget-title">recents</h3>
-        <div class="widget">
-            <ul id="recent-post" class="no-thumbnail">
-                
-                    <li>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/ETC/">ETC</a></p>
-                            <p class="item-title"><a href="/2020/07/29/Memo-Privacy/" class="title">[Memo] 개인정보 처리 방침</a></p>
-                            <p class="item-date"><time datetime="2020-07-29T05:11:19.000Z" itemprop="datePublished">2020-07-29</time></p>
-                        </div>
-                    </li>
-                
-                    <li>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/Book/">Book</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/Book/CleanCode/">CleanCode</a></p>
-                            <p class="item-title"><a href="/2020/07/21/CleanCode4/" class="title">[CleanCode] 4장. 주석</a></p>
-                            <p class="item-date"><time datetime="2020-07-21T14:40:14.000Z" itemprop="datePublished">2020-07-21</time></p>
-                        </div>
-                    </li>
-                
-                    <li>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/Android/">Android</a></p>
-                            <p class="item-title"><a href="/2020/07/08/Android-SingleLiveEventToEventWrapper/" class="title">[Android] MVVM UI Event Wrapper</a></p>
-                            <p class="item-date"><time datetime="2020-07-08T01:34:10.000Z" itemprop="datePublished">2020-07-08</time></p>
-                        </div>
-                    </li>
-                
-                    <li>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/Kotlin/">Kotlin</a></p>
-                            <p class="item-title"><a href="/2020/07/07/Kotlin-Coroutine-1/" class="title">[Kotlin] Coroutine 이해하기</a></p>
-                            <p class="item-date"><time datetime="2020-07-07T02:05:54.000Z" itemprop="datePublished">2020-07-07</time></p>
-                        </div>
-                    </li>
-                
-                    <li>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/Book/">Book</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/Book/CleanCode/">CleanCode</a></p>
-                            <p class="item-title"><a href="/2020/07/06/CleanCode-3/" class="title">[CleanCode] 3장. 함수</a></p>
-                            <p class="item-date"><time datetime="2020-07-06T07:57:43.000Z" itemprop="datePublished">2020-07-06</time></p>
-                        </div>
-                    </li>
-                
-            </ul>
         </div>
-    </div>
-
-            
         
-    </div>
-    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({
-     google_ad_client: "ca-pub-9725307592233286",
-     enable_page_level_ads: true
-});
-</script>
-</aside>
 
-                </div>
-            </div>
-        </div>
-        <footer id="footer">
-    <div class="container">
-        <div class="container-inner">
-            <a id="back-to-top" href="javascript:;"><i class="icon fa fa-angle-up"></i></a>
-            <div class="credit">
-                <h1 class="logo-wrap">
-                    <a href="/" class="logo"></a>
-                </h1>
-                <p>&copy; 2020 VictoryWoo</p>
-                <p>Powered by <a href="//hexo.io/" target="_blank">Hexo</a>. Theme by <a href="//github.com/ppoffice" target="_blank">PPOffice</a></p>
-            </div>
-            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({
-     google_ad_client: "ca-pub-9725307592233286",
-     enable_page_level_ads: true
-});
-</script>
-            <div class="footer-plugins">
-              
+
     
-
-
-            </div>
-        </div>
-    </div>
-</footer>
-
         
     
-    <script>
-    var disqus_shortname = 'hexo-theme-hueman';
-    
-    
-    var disqus_url = 'https://woovictory.github.io/2019/01/03/Android-Diff-of-ListView-and-RecyclerView/';
-    
-    (function() {
-    var dsq = document.createElement('script');
-    dsq.type = 'text/javascript';
-    dsq.async = true;
-    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
-    </script>
 
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <img id="about-card-picture" src="/assets/images/Victory.jpeg" alt="Author&#39;s picture"/>
+        
+            <h4 id="about-card-name">VictoryWoo</h4>
+        
+            <div id="about-card-bio"><p>기록을 통해 사람들과 공유하는 것을 좋아합니다.</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>Android Developer</p>
 
-
-
-    
-        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
-        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
-    
-    
-        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
-    
-    
-
-
-
-<!-- Custom Scripts -->
-<script src="/js/main.js"></script>
-
+            </div>
+        
+        
     </div>
-</body>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/cover-v1.2.0.jpg');"></div>
+        <!--SCRIPTS-->
+<script src="/assets/js/jquery.js"></script>
+<script src="/assets/js/jquery.fancybox.js"></script>
+<script src="/assets/js/thumbs.js"></script>
+<script src="/assets/js/tranquilpeak.js"></script>
+<!--SCRIPTS END-->
+
+
+    
+
+
+
+
+    </body>
 </html>
