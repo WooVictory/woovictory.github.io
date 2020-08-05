@@ -11,19 +11,19 @@
     
     
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg"},"articleBody":"# 코틀린의 특징\n# 클래스\n1. 데이터 클래스\n\n자료를 저장하는 클래스를 만드는 과정을 단순하게 해준다.\n자료를 구성하는 프로퍼티만 선언하면 컴파일러가 equlas(), hashcode(), toString(), copy() 함수를 자동으로 생성해준다.\n코틀린에서 ==는 자바의 equals() 메소드와 같은 동작을 한다. 즉, 값을 비교한다.\n\n12345678// 주 생성자에서 데이터 클래스에 포함되는 프로퍼티를 함께 선언한다. data class Person(val name: String, val age: Int)fun main(args: Array&lt;String&gt;)&#123;    val lee = Person(\"lee\", 26)    val park = Person(\"park\",23)    val lim = Person(\"lee\",26)&#125;\n2. 한정 클래스\n\n한정 클래스(seald class)는 enum 클래스를 확장한 개념이다.\n이를 상속하는 클래스는 한정 클래스로 정의되는 여러 종류 중 하나로 취급된다.\n한정 클래스를 상속하는 클래스는 일반적으로 클래스 내에 중첩하여 선언한다. 외부에 선언할 수도 있다.\n한정 클래스로 정의된 클래스의 종류에 따라 다른 작업을 처리해야 할 때 유용하다.\n\n123456789101112sealed class MobileApp(val os: String)&#123;    class Android(os: String, val packageName: String) : MobileApp(os)        class iOS(os: String, val bundleId: String) : MobileApp(os)&#125;fun whoAmI(app: MobileApp) = when(app)&#123;    is MobileApp.Android -&gt; println(\"$&#123;app.os&#125;\")    is MobileApp.iOS -&gt; println(\"$&#123;app.os&#125;\")    // 모든 경우를 처리했으므로 else를 쓰지 않아도 된다.&#125;\n한정 클래스에 새로운 클래스를 추가했고, 한정 클래스를 상속한 클래스의 종류에 따라 다른 동작을 처리해야 한다고 가정해보자. 새로 추가된 유형인 WindowsMobile 클래스를 처리하지 않으면 컴파일 에러가 발생하므로 새로운 유형에 대한 처리가 누락되는 것을 방지할 수 있다. 따라서 동작을 처리하는 것의 누락을 방지할 수 있다는 이점을 가지고 있다.\n3. 프로퍼티의 사용자 getter/setter\n\n프로퍼티에는 내부에 저장된 필드의 값을 가져오거나 설정할 수 있도록 getter/setter를 내부적으로 구현하고 있다. 이는 단순히 필드의 값을 반환하거나 설정하도록 구현되어 있다.\n사용자 지정 getter/setter의 구현을 원하는대로 변경할 수 있으며, 특정 객체의 값에 따른 다양한 정보를 속성 형태로 제공할 때 유용.\nget(), set(value) 사용.\n\n1234567// 나이에 따른 성인 여부를 속성 형태로 제공하는 예시.class Person(val age: Int, val name: String)&#123;        val adult : Boolean        get() = age&gt;=19    // 19세 이상이면 성인으로 간주한다.&#125;\n사용자 지정 setter를 사용하면 프로퍼티 내 필드에 설정되는 값을 제어할 수 있으나, 읽고 쓰기가 모두 가능한 프로퍼티(var)에서만 사용할 수 있다.\n1234567891011class Person(val age: Int, val name: String)&#123;        val adult : Boolean        get() = age&gt;=19    var address: String = \"\"        set(value)&#123;            field = value.subString(0..9)        &#125;    // 사용자 지정 setter를 사용해 인자로 들어온 문자열의 앞 10자리만 필드에 저장한다.&#125;\n# 함수\n1. 명명된 인자\n\n명명된 인자(named parameter)를 사용함으로써 함수를 호출할 때 매개변수의 순서와 상관없이 인자를 전달할 수 있다.\n또한, 매개변수의 수가 많아지더라도 각 인자에 어떤 값이 전달되는지 쉽게 구분할 수 있다.\n\n12345678910111213fun drawCircle(x: Int, y: Int, radius: Int)&#123;    // 생략&#125;fun main(args: Array&lt;String&gt;)&#123;    drawCircle(x = 10,y = 5,radius = 25)    // 순서를 바꿔도 명명된 인자를 통해서 순서를 바꿔도 동일하게 호출할 수 있다.    drawCircle(y = 5,x = 10,radius = 25)    // 인자 중 일부에만 사용할 수도 있다.    drawCircle(10,5,radius = 25)&#125;\n2. 매개변수\n\n함수의 매개변수에 기본값을 지정할 수 있으며, 이때 지정하는 값을 기본 매개변수라고 한다.\n유용하게 사용할 수 있다.\n\n123456789// 반지름의 기본값으로 25를 갖는다.fun drawCircle(x: Int, y: Int, radius:Int = 25)&#123;    // 생략.&#125;fun main(args:Array&lt;String&gt;)&#123;    // 반지름을 지정하지 않았으므로 원의 반지름은 기본 값인 25로 지정된다.    drawCircle(10,5)&#125;\n3. 단일 표현식 표기\n\nUnit 타입을 제외한 타입을 반환하는 함수라면 함수의 내용을 단일 표현식을 사용하여 정의할 수 있다.\n\n12345678910// 기본 형태.fun sum(a: Int, b: Int) : Int &#123;    return a+b&#125;// 단일 표현식.fun sum(a: Int, b: Int) : Int = return a+b// 반환 타입도 생략 가능.fun sum(a: Int, b: Int) = return a+b\n3. 확장 함수\n\n확장 함수를 사용하여 상속 없이 기존 클래스에 새로운 함수를 추가할 수 있다.\n확장 함수를 추가할 대상 클래스는 리시버 타입(receiver type)이라 부르며, 이 리시버 타입 뒤에 점(.)을 찍고 그 뒤에 원하는 함수의 형태를 적는 방식으로 정의한다.\n확장 함수 구현부에서는 this를 사용하여 클래스의 인스턴스에 접근할 수 있으며 이를 리시버 객체(receiver object)라 부른다.\n\n123456789101112131415161718fun main(args: Array&lt;String&gt;)&#123;    val foo = \"Foo\"    val foobar = foo.withBar()    println(foobar)&#125;// String 클래스에 withPostfix() 함수 추가.// this를 사용하여 인스턴스에 접근할 수 있다.private fun String.withPostfix(postFix: String) : String&#123;    return \"$this$postFix\"&#125;// this를 사용하여 인스턴스에 접근할 수 있으므로, 앞에서 정의한 확장 함수를 사용할 수 있다.fun String.withBar() = this.withPostfix(\"Bar\")// 결과FooBar\n\n확장 함수를 호출하는 모습이 클래스 내 정의된 함수의 경우와 똑같다 할지라도, 이는 클래스 외부에 정의하는 함수이다.\n리시버 객체에서는 클래스 내 public으로 정의된 프로퍼티나 함수에만 접근할 수 있다.\n확장 함수는 리시버 타입에 직접 추가되는 함수가 아니다. 리시버 타입과 확장 함수의 인자를 인자로 받는 새로운 함수를 만들고, 확장 함수를 호출하면 이 새로운 함수가 호출되는 형태이다.\n\n4. 연산자 오버로딩\n\n사용자 정의 타입에 한해 연산자 오버로딩을 지원한다.\n각 연산자별로 사전 정의된 함수를 재정의하는 방식으로 연산자 오버로딩을 사용할 수 있다.\noperator 키워드를 사용하며, 기존의 연산자를 재정의하는 것만 허용된다.\n연산자 재정의는 방법이 동일하기 때문에 사용자가 원하는 형태를 직접 구현하면 된다. 아래에 단항 연산자를 기준으로 예를 들어보겠다.\n\n1234567891011121314class Volume(var left: Int, var right: Int)&#123;    // 단항 연산자 '-'를 재정의한다.    operator fun unaryMinus(): Volume&#123;        this.left = -this.left        this.right = -this.right        return this    &#125;   &#125;var voulme = Volume(50,50)//  Volume 클래스 내 left, right 값이 반전되어 할당된다.var v1 = -volume\n주의할 점은 비교 연산자의 경우에는 다른 연산자와 달리 각 연산자가 모두 동일한 함수에 할당된다. 따라서 해당 함수가 반환하는 값의 크기에 따라 해당 연산자의 참, 거짓 여부를 판단한다. comparTo 함수의 반환형은 항상 Int 어야 한다.\n# 람다 표현식\n\n람다 표현식을 통해 훨씬 간편하고 직관적인 문법을 사용할 수 있다.\n특히 익명 클래스를 간결하게 표현할 때 유용하게 사용할 수 있다.\n중괄호를 사용하여 앞뒤를 묶어준다.\n\n12345// 람다 표현식을 사용한 리스너 선언.button.setOnClickListener(&#123;v: View -&gt; doSomething()&#125;)// 인자 타입 생략 가능.button.setOnClickListener(&#123;v -&gt; doSomething()&#125;)\n\n람다 표현식에서 하나의 메소드만 호출한다면 멤버 참조를 이용해 더 간략하게 표현할 수 있다.\n\n123456789fun doSomething(v: View)&#123;    // 생략.&#125;// doSomething() 함수 하나만을 호출하고 있다.button.setOnClickListener(&#123;v -&gt; doSomething(v)&#125;)// 멤버 참조를 사용해 doSomething() 함수에 바로 대입할 수 있다.button.setOnClickListener(::doSomething)\n코틀린에서는 프로퍼티도 멤버 참조를 지원한다.\n12345678910111213141516class Person(val name: String, val age: Int)&#123;    // 성인 여부를 표시하는 프로퍼티    val adult = age&gt;19&#125;fun printAdults(people: List&lt;Person&gt;)&#123;        // 필터링 조건을 람다 표현식을 사용해 대입.    people.filter(&#123;people -&gt; people.adult&#125;)        .forEach&#123; println(\"Name= $&#123;it.name&#125;) &#125;    // 멤버 참조를 사용해 adult 프로퍼티를 바로 대입한다.    people.filter(Person::adult)        .forEach&#123; println(\"Name= $&#123;it.name&#125;) &#125;&#125;\n람다 표현식의 유용한 기능\n\n함수가 단 하나의 함수 타입 매개변수를 가질 경우, 인자 대입을 위한 괄호를 생략하고 바로 람다 표현식을 사용할 수 있다.\n\n12345// setOnClickListener의 마지막 인자로 함수 타입을 대입한다.button.setOnClickListener(&#123;v -&gt; doSomething()&#125;)// 다른 인자가 없으므로, 괄호 없이 바로 외부에 람다 표현식을 사용할 수 있다.button.setOnClickListener &#123; v -&gt; doSomething() &#125;\n\n또한, 람다 표현식 내 매개변수의 개수가 하나인 경우 매개 변수 선언을 생략할 수 있으며, 참조가 필요한 경우 it을 사용할 수 있다.\n\n1button.setOnClickListener&#123; doSomething(it) &#125;\n\n여러 개의 매개 변수를 갖는 람다 표현식에서 사용하지 않는 매개변수는 이름 대신 _를 사용하여 사용하지 않는 매개변수라는 것을 명시할 수 있다.\n\n12345var dialog = AlertDialog.Builder(this)    // dialog 매개 변수를 사용하지 않아 _로 표시    .setNegativeButton(\"Cancel\") &#123;_, which -&gt; doCancel(which)&#125;    .create()\n인라인 함수\n\n람다 표현식을 사용하면, 함수를 인자로 넘길 수 있는 고차 함수(higher-order function)에 들어갈 함수형 인자를 쉽게 표현할 수 있다.\n인라인 함수를 사용하면 함수의 매개변수로 받는 함수형 인자의 본체를 해당 인자가 사용되는 부분에 그대로 대입하므로 성능 하락을 방지할 수 있다.\n\n123456789// 인자로 받은 함수를 내부에서 실행하는 함수.inline fun doSomething(body: () -&gt; Unit)&#123;    println(\"onPreExecute()\")    body()    println(\"onPostExecute()\")&#125;// 인라인 함수 호출.doSomething&#123; println(\"do Something()\") &#125;\n인라인 함수는 컴파일 과정에서 아래와 같이 변환된다.\n1234println(\"onPreExecute()\")// 인자로 전달된 함수 본체의 내용이 그대로 복사된 것을 확인할 수 있다.println(\"do Something()\")println(\"onPostExecute()\")\n# 여타 특징\n타입 별칭\n\n복잡한 구조로 구성된 타입을 간략하게 표현할 수 있다.\ntypealias를 사용한다.\n클래스나 함수와 마찬가지로 타입을 인자로 받을 수도 있으며, 함수형 타입에도 타입 별칭을 지정할 수 있다.\n\n12345678// List&lt;Person&gt;을 PeopleList라는 이름을 갖는 타입 별칭으로 선언.typealias PeopleList = List&lt;Person&gt;fun sendMessage(people: PeopleList)&#123;    people.forEach&#123;        // 메시지 전송.    &#125;&#125;\n타입 별칭을 사용해 새롭게 선언한다고 해서 이 타입에 해당하는 새로운 클래스가 생성되는 것은 아니다. 타입 별칭으로 선언된 타입은 컴파일 시점에 모두 원래 타입으로 변환되므로 실행 시점의 부하가 없다는 장점이 있다.\n분해 선언\n\n각 프로퍼티가 가진 자료의 값을 한번에 여러 개의 값(val) 혹은 변수(var)에 할당할 수 있다. 이 기능을 분해 선언이라고 부른다.\n\n123456data class Person(val age: Int, val name: Strig)val person = Person(\"Lee\",26)// 사람 객체에 포함된 필드의 값을 한번에 여러 값에 할당한다.val (ageOfPerson, nameOfPerson) = person\n분해 선언은 프로퍼티가 가진 자료의 값을 어떻게 전달할까? 이를 알아보기 위해 해당 코드가 어떻게 컴파일되는지 아래에서 알아보자.\n12val ageOfPerson: Int = person.component1()val nameOfPerson: String = person.component2()\n이처럼 분해 선언을 사용하면 내부적으로 각 값에 component1(), component2() 함수의 반환값을 할당한다. 프로퍼티의 수가 늘어나면 3,4, … 와 같이 함수 뒤의 숫자가 증가하는 형태, 즉 componentN() 형태의 함수를 추가로 사용하게 된다.\n분해 선언을 사용하려면 클래스에 프로퍼티의 수만큼 componentN() 함수가 있어야 하며, 이 함수들을 포함하고 있는 클래스에만 분해 선언을 사용할 수 있다. 아래는 분해 선언을 기본으로 제공하는 클래스들이다.\n\ndata class로 선언된 클래스\nkotlin.Pair\nkotlin.Triple\nkotlin.collections.Map.Entry\n\n특히, 맵 자료구조를 사용할 때 유용하다.\n123456789101112val cities: Map&lt;String, String&gt; = ... // 도시 정보를 저장하고 있는 맵// 맵 내 각 항목의 키와 값을 별도로 선언하여 사용한다.// 따라서 keySet()과 같은 함수가 필요없어진다.for((cityCode, name) in cities)&#123;    println(\"$cityCode = $name\")&#125;// 람다 표현식 내 매개변수에서도 분해 선언을 사용할 수 있다.cities.forEach&#123; cityCode, name -&gt;    println(\"$cityCode = $name\")&#125;\n분해 선언을 지원하는 클래스를 제외한 개발자가 작성한 클래스에서 분해 선언을 사용하고 싶다면, 해당 클래스 내에 별도로 componentN() 함수를 프로퍼티의 선언 순서 및 타입에 알맞게 추가해줘야 한다.\ncomponentN() 함수를 선언할 때는 앞에 operator를 붙여 줘야 한다.\n123456789101112131415class Person(val age: Int, val name: String)&#123;    // 첫 번째 프로퍼티의 값 반환.    operator fun component1() = this.age    // 두 번째 프로퍼티의 값 반환.    operator fun component2() = this.name&#125;val person = Person(\"lee\",26)// 분해 선언 사용.val (age,name) = person// 사용하지 않는 변수 혹은 값은 _로 표시한다.// 따라서 아래는 name 만 사용하는 경우이다.val (_, name) = person\n","dateCreated":"2019-05-07T17:15:30+09:00","dateModified":"2020-05-13T00:19:09+09:00","datePublished":"2019-05-07T17:15:30+09:00","description":"","headline":"[커니의 Kotlin] Chap2","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://woovictory.github.io/2019/05/07/kotlin-chap2/"},"publisher":{"@type":"Organization","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg","logo":{"@type":"ImageObject","url":"Victory.jpeg"}},"url":"https://woovictory.github.io/2019/05/07/kotlin-chap2/","keywords":"Android, Kotlin, 커니의 Kotlin"}</script>
-    <meta name="description" content="# 코틀린의 특징 # 클래스 1. 데이터 클래스  자료를 저장하는 클래스를 만드는 과정을 단순하게 해준다. 자료를 구성하는 프로퍼티만 선언하면 컴파일러가 equlas(), hashcode(), toString(), copy() 함수를 자동으로 생성해준다. 코틀린에서 ==는 자바의 equals() 메소드와 같은 동작을 한다. 즉, 값을 비교한다.  12345">
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg"},"articleBody":"# 코틀린의 특징\n\n# 클래스\n1. 데이터 클래스\n\n자료를 저장하는 클래스를 만드는 과정을 단순하게 해준다.\n자료를 구성하는 프로퍼티만 선언하면 컴파일러가 equlas(), hashcode(), toString(), copy() 함수를 자동으로 생성해준다.\n코틀린에서 ==는 자바의 equals() 메소드와 같은 동작을 한다. 즉, 값을 비교한다.\n\n12345678// 주 생성자에서 데이터 클래스에 포함되는 프로퍼티를 함께 선언한다. data class Person(val name: String, val age: Int)fun main(args: Array&lt;String&gt;)&#123;    val lee = Person(\"lee\", 26)    val park = Person(\"park\",23)    val lim = Person(\"lee\",26)&#125;\n2. 한정 클래스\n\n한정 클래스(seald class)는 enum 클래스를 확장한 개념이다.\n이를 상속하는 클래스는 한정 클래스로 정의되는 여러 종류 중 하나로 취급된다.\n한정 클래스를 상속하는 클래스는 일반적으로 클래스 내에 중첩하여 선언한다. 외부에 선언할 수도 있다.\n한정 클래스로 정의된 클래스의 종류에 따라 다른 작업을 처리해야 할 때 유용하다.\n\n123456789101112sealed class MobileApp(val os: String)&#123;    class Android(os: String, val packageName: String) : MobileApp(os)        class iOS(os: String, val bundleId: String) : MobileApp(os)&#125;fun whoAmI(app: MobileApp) = when(app)&#123;    is MobileApp.Android -&gt; println(\"$&#123;app.os&#125;\")    is MobileApp.iOS -&gt; println(\"$&#123;app.os&#125;\")    // 모든 경우를 처리했으므로 else를 쓰지 않아도 된다.&#125;\n한정 클래스에 새로운 클래스를 추가했고, 한정 클래스를 상속한 클래스의 종류에 따라 다른 동작을 처리해야 한다고 가정해보자. 새로 추가된 유형인 WindowsMobile 클래스를 처리하지 않으면 컴파일 에러가 발생하므로 새로운 유형에 대한 처리가 누락되는 것을 방지할 수 있다. 따라서 동작을 처리하는 것의 누락을 방지할 수 있다는 이점을 가지고 있다.\n3. 프로퍼티의 사용자 getter/setter\n\n프로퍼티에는 내부에 저장된 필드의 값을 가져오거나 설정할 수 있도록 getter/setter를 내부적으로 구현하고 있다. 이는 단순히 필드의 값을 반환하거나 설정하도록 구현되어 있다.\n사용자 지정 getter/setter의 구현을 원하는대로 변경할 수 있으며, 특정 객체의 값에 따른 다양한 정보를 속성 형태로 제공할 때 유용.\nget(), set(value) 사용.\n\n1234567// 나이에 따른 성인 여부를 속성 형태로 제공하는 예시.class Person(val age: Int, val name: String)&#123;        val adult : Boolean        get() = age&gt;=19    // 19세 이상이면 성인으로 간주한다.&#125;\n사용자 지정 setter를 사용하면 프로퍼티 내 필드에 설정되는 값을 제어할 수 있으나, 읽고 쓰기가 모두 가능한 프로퍼티(var)에서만 사용할 수 있다.\n1234567891011class Person(val age: Int, val name: String)&#123;        val adult : Boolean        get() = age&gt;=19    var address: String = \"\"        set(value)&#123;            field = value.subString(0..9)        &#125;    // 사용자 지정 setter를 사용해 인자로 들어온 문자열의 앞 10자리만 필드에 저장한다.&#125;\n# 함수\n1. 명명된 인자\n\n명명된 인자(named parameter)를 사용함으로써 함수를 호출할 때 매개변수의 순서와 상관없이 인자를 전달할 수 있다.\n또한, 매개변수의 수가 많아지더라도 각 인자에 어떤 값이 전달되는지 쉽게 구분할 수 있다.\n\n12345678910111213fun drawCircle(x: Int, y: Int, radius: Int)&#123;    // 생략&#125;fun main(args: Array&lt;String&gt;)&#123;    drawCircle(x = 10,y = 5,radius = 25)    // 순서를 바꿔도 명명된 인자를 통해서 순서를 바꿔도 동일하게 호출할 수 있다.    drawCircle(y = 5,x = 10,radius = 25)    // 인자 중 일부에만 사용할 수도 있다.    drawCircle(10,5,radius = 25)&#125;\n2. 매개변수\n\n함수의 매개변수에 기본값을 지정할 수 있으며, 이때 지정하는 값을 기본 매개변수라고 한다.\n유용하게 사용할 수 있다.\n\n123456789// 반지름의 기본값으로 25를 갖는다.fun drawCircle(x: Int, y: Int, radius:Int = 25)&#123;    // 생략.&#125;fun main(args:Array&lt;String&gt;)&#123;    // 반지름을 지정하지 않았으므로 원의 반지름은 기본 값인 25로 지정된다.    drawCircle(10,5)&#125;\n3. 단일 표현식 표기\n\nUnit 타입을 제외한 타입을 반환하는 함수라면 함수의 내용을 단일 표현식을 사용하여 정의할 수 있다.\n\n12345678910// 기본 형태.fun sum(a: Int, b: Int) : Int &#123;    return a+b&#125;// 단일 표현식.fun sum(a: Int, b: Int) : Int = return a+b// 반환 타입도 생략 가능.fun sum(a: Int, b: Int) = return a+b\n3. 확장 함수\n\n확장 함수를 사용하여 상속 없이 기존 클래스에 새로운 함수를 추가할 수 있다.\n확장 함수를 추가할 대상 클래스는 리시버 타입(receiver type)이라 부르며, 이 리시버 타입 뒤에 점(.)을 찍고 그 뒤에 원하는 함수의 형태를 적는 방식으로 정의한다.\n확장 함수 구현부에서는 this를 사용하여 클래스의 인스턴스에 접근할 수 있으며 이를 리시버 객체(receiver object)라 부른다.\n\n123456789101112131415161718fun main(args: Array&lt;String&gt;)&#123;    val foo = \"Foo\"    val foobar = foo.withBar()    println(foobar)&#125;// String 클래스에 withPostfix() 함수 추가.// this를 사용하여 인스턴스에 접근할 수 있다.private fun String.withPostfix(postFix: String) : String&#123;    return \"$this$postFix\"&#125;// this를 사용하여 인스턴스에 접근할 수 있으므로, 앞에서 정의한 확장 함수를 사용할 수 있다.fun String.withBar() = this.withPostfix(\"Bar\")// 결과FooBar\n\n확장 함수를 호출하는 모습이 클래스 내 정의된 함수의 경우와 똑같다 할지라도, 이는 클래스 외부에 정의하는 함수이다.\n리시버 객체에서는 클래스 내 public으로 정의된 프로퍼티나 함수에만 접근할 수 있다.\n확장 함수는 리시버 타입에 직접 추가되는 함수가 아니다. 리시버 타입과 확장 함수의 인자를 인자로 받는 새로운 함수를 만들고, 확장 함수를 호출하면 이 새로운 함수가 호출되는 형태이다.\n\n4. 연산자 오버로딩\n\n사용자 정의 타입에 한해 연산자 오버로딩을 지원한다.\n각 연산자별로 사전 정의된 함수를 재정의하는 방식으로 연산자 오버로딩을 사용할 수 있다.\noperator 키워드를 사용하며, 기존의 연산자를 재정의하는 것만 허용된다.\n연산자 재정의는 방법이 동일하기 때문에 사용자가 원하는 형태를 직접 구현하면 된다. 아래에 단항 연산자를 기준으로 예를 들어보겠다.\n\n1234567891011121314class Volume(var left: Int, var right: Int)&#123;    // 단항 연산자 '-'를 재정의한다.    operator fun unaryMinus(): Volume&#123;        this.left = -this.left        this.right = -this.right        return this    &#125;   &#125;var voulme = Volume(50,50)//  Volume 클래스 내 left, right 값이 반전되어 할당된다.var v1 = -volume\n주의할 점은 비교 연산자의 경우에는 다른 연산자와 달리 각 연산자가 모두 동일한 함수에 할당된다. 따라서 해당 함수가 반환하는 값의 크기에 따라 해당 연산자의 참, 거짓 여부를 판단한다. comparTo 함수의 반환형은 항상 Int 어야 한다.\n# 람다 표현식\n\n람다 표현식을 통해 훨씬 간편하고 직관적인 문법을 사용할 수 있다.\n특히 익명 클래스를 간결하게 표현할 때 유용하게 사용할 수 있다.\n중괄호를 사용하여 앞뒤를 묶어준다.\n\n12345// 람다 표현식을 사용한 리스너 선언.button.setOnClickListener(&#123;v: View -&gt; doSomething()&#125;)// 인자 타입 생략 가능.button.setOnClickListener(&#123;v -&gt; doSomething()&#125;)\n\n람다 표현식에서 하나의 메소드만 호출한다면 멤버 참조를 이용해 더 간략하게 표현할 수 있다.\n\n123456789fun doSomething(v: View)&#123;    // 생략.&#125;// doSomething() 함수 하나만을 호출하고 있다.button.setOnClickListener(&#123;v -&gt; doSomething(v)&#125;)// 멤버 참조를 사용해 doSomething() 함수에 바로 대입할 수 있다.button.setOnClickListener(::doSomething)\n코틀린에서는 프로퍼티도 멤버 참조를 지원한다.\n12345678910111213141516class Person(val name: String, val age: Int)&#123;    // 성인 여부를 표시하는 프로퍼티    val adult = age&gt;19&#125;fun printAdults(people: List&lt;Person&gt;)&#123;        // 필터링 조건을 람다 표현식을 사용해 대입.    people.filter(&#123;people -&gt; people.adult&#125;)        .forEach&#123; println(\"Name= $&#123;it.name&#125;) &#125;    // 멤버 참조를 사용해 adult 프로퍼티를 바로 대입한다.    people.filter(Person::adult)        .forEach&#123; println(\"Name= $&#123;it.name&#125;) &#125;&#125;\n람다 표현식의 유용한 기능\n\n함수가 단 하나의 함수 타입 매개변수를 가질 경우, 인자 대입을 위한 괄호를 생략하고 바로 람다 표현식을 사용할 수 있다.\n\n12345// setOnClickListener의 마지막 인자로 함수 타입을 대입한다.button.setOnClickListener(&#123;v -&gt; doSomething()&#125;)// 다른 인자가 없으므로, 괄호 없이 바로 외부에 람다 표현식을 사용할 수 있다.button.setOnClickListener &#123; v -&gt; doSomething() &#125;\n\n또한, 람다 표현식 내 매개변수의 개수가 하나인 경우 매개 변수 선언을 생략할 수 있으며, 참조가 필요한 경우 it을 사용할 수 있다.\n\n1button.setOnClickListener&#123; doSomething(it) &#125;\n\n여러 개의 매개 변수를 갖는 람다 표현식에서 사용하지 않는 매개변수는 이름 대신 _를 사용하여 사용하지 않는 매개변수라는 것을 명시할 수 있다.\n\n12345var dialog = AlertDialog.Builder(this)    // dialog 매개 변수를 사용하지 않아 _로 표시    .setNegativeButton(\"Cancel\") &#123;_, which -&gt; doCancel(which)&#125;    .create()\n인라인 함수\n\n람다 표현식을 사용하면, 함수를 인자로 넘길 수 있는 고차 함수(higher-order function)에 들어갈 함수형 인자를 쉽게 표현할 수 있다.\n인라인 함수를 사용하면 함수의 매개변수로 받는 함수형 인자의 본체를 해당 인자가 사용되는 부분에 그대로 대입하므로 성능 하락을 방지할 수 있다.\n\n123456789// 인자로 받은 함수를 내부에서 실행하는 함수.inline fun doSomething(body: () -&gt; Unit)&#123;    println(\"onPreExecute()\")    body()    println(\"onPostExecute()\")&#125;// 인라인 함수 호출.doSomething&#123; println(\"do Something()\") &#125;\n인라인 함수는 컴파일 과정에서 아래와 같이 변환된다.\n1234println(\"onPreExecute()\")// 인자로 전달된 함수 본체의 내용이 그대로 복사된 것을 확인할 수 있다.println(\"do Something()\")println(\"onPostExecute()\")\n# 여타 특징\n타입 별칭\n\n복잡한 구조로 구성된 타입을 간략하게 표현할 수 있다.\ntypealias를 사용한다.\n클래스나 함수와 마찬가지로 타입을 인자로 받을 수도 있으며, 함수형 타입에도 타입 별칭을 지정할 수 있다.\n\n12345678// List&lt;Person&gt;을 PeopleList라는 이름을 갖는 타입 별칭으로 선언.typealias PeopleList = List&lt;Person&gt;fun sendMessage(people: PeopleList)&#123;    people.forEach&#123;        // 메시지 전송.    &#125;&#125;\n타입 별칭을 사용해 새롭게 선언한다고 해서 이 타입에 해당하는 새로운 클래스가 생성되는 것은 아니다. 타입 별칭으로 선언된 타입은 컴파일 시점에 모두 원래 타입으로 변환되므로 실행 시점의 부하가 없다는 장점이 있다.\n분해 선언\n\n각 프로퍼티가 가진 자료의 값을 한번에 여러 개의 값(val) 혹은 변수(var)에 할당할 수 있다. 이 기능을 분해 선언이라고 부른다.\n\n123456data class Person(val age: Int, val name: Strig)val person = Person(\"Lee\",26)// 사람 객체에 포함된 필드의 값을 한번에 여러 값에 할당한다.val (ageOfPerson, nameOfPerson) = person\n분해 선언은 프로퍼티가 가진 자료의 값을 어떻게 전달할까? 이를 알아보기 위해 해당 코드가 어떻게 컴파일되는지 아래에서 알아보자.\n12val ageOfPerson: Int = person.component1()val nameOfPerson: String = person.component2()\n이처럼 분해 선언을 사용하면 내부적으로 각 값에 component1(), component2() 함수의 반환값을 할당한다. 프로퍼티의 수가 늘어나면 3,4, … 와 같이 함수 뒤의 숫자가 증가하는 형태, 즉 componentN() 형태의 함수를 추가로 사용하게 된다.\n분해 선언을 사용하려면 클래스에 프로퍼티의 수만큼 componentN() 함수가 있어야 하며, 이 함수들을 포함하고 있는 클래스에만 분해 선언을 사용할 수 있다. 아래는 분해 선언을 기본으로 제공하는 클래스들이다.\n\ndata class로 선언된 클래스\nkotlin.Pair\nkotlin.Triple\nkotlin.collections.Map.Entry\n\n특히, 맵 자료구조를 사용할 때 유용하다.\n123456789101112val cities: Map&lt;String, String&gt; = ... // 도시 정보를 저장하고 있는 맵// 맵 내 각 항목의 키와 값을 별도로 선언하여 사용한다.// 따라서 keySet()과 같은 함수가 필요없어진다.for((cityCode, name) in cities)&#123;    println(\"$cityCode = $name\")&#125;// 람다 표현식 내 매개변수에서도 분해 선언을 사용할 수 있다.cities.forEach&#123; cityCode, name -&gt;    println(\"$cityCode = $name\")&#125;\n분해 선언을 지원하는 클래스를 제외한 개발자가 작성한 클래스에서 분해 선언을 사용하고 싶다면, 해당 클래스 내에 별도로 componentN() 함수를 프로퍼티의 선언 순서 및 타입에 알맞게 추가해줘야 한다.\ncomponentN() 함수를 선언할 때는 앞에 operator를 붙여 줘야 한다.\n123456789101112131415class Person(val age: Int, val name: String)&#123;    // 첫 번째 프로퍼티의 값 반환.    operator fun component1() = this.age    // 두 번째 프로퍼티의 값 반환.    operator fun component2() = this.name&#125;val person = Person(\"lee\",26)// 분해 선언 사용.val (age,name) = person// 사용하지 않는 변수 혹은 값은 _로 표시한다.// 따라서 아래는 name 만 사용하는 경우이다.val (_, name) = person\n","dateCreated":"2019-05-07T17:15:30+09:00","dateModified":"2020-08-05T15:46:22+09:00","datePublished":"2019-05-07T17:15:30+09:00","description":"# 코틀린의 특징","headline":"[커니의 Kotlin] Chap2","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://woovictory.github.io/2019/05/07/kotlin-chap2/"},"publisher":{"@type":"Organization","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg","logo":{"@type":"ImageObject","url":"Victory.jpeg"}},"url":"https://woovictory.github.io/2019/05/07/kotlin-chap2/","keywords":"Android, Kotlin, 커니의 Kotlin"}</script>
+    <meta name="description" content="# 코틀린의 특징">
 <meta name="keywords" content="Android,Kotlin,커니의 Kotlin">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="[커니의 Kotlin] Chap2">
 <meta property="og:url" content="https://woovictory.github.io/2019/05/07/kotlin-chap2/index.html">
 <meta property="og:site_name" content="VictoryWoo">
-<meta property="og:description" content="# 코틀린의 특징 # 클래스 1. 데이터 클래스  자료를 저장하는 클래스를 만드는 과정을 단순하게 해준다. 자료를 구성하는 프로퍼티만 선언하면 컴파일러가 equlas(), hashcode(), toString(), copy() 함수를 자동으로 생성해준다. 코틀린에서 ==는 자바의 equals() 메소드와 같은 동작을 한다. 즉, 값을 비교한다.  12345">
+<meta property="og:description" content="# 코틀린의 특징">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2020-05-12T15:19:09.908Z">
+<meta property="og:updated_time" content="2020-08-05T06:46:22.359Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="[커니의 Kotlin] Chap2">
-<meta name="twitter:description" content="# 코틀린의 특징 # 클래스 1. 데이터 클래스  자료를 저장하는 클래스를 만드는 과정을 단순하게 해준다. 자료를 구성하는 프로퍼티만 선언하면 컴파일러가 equlas(), hashcode(), toString(), copy() 함수를 자동으로 생성해준다. 코틀린에서 ==는 자바의 equals() 메소드와 같은 동작을 한다. 즉, 값을 비교한다.  12345">
+<meta name="twitter:description" content="# 코틀린의 특징">
     
     
         
@@ -41,6 +41,15 @@
     <link rel="stylesheet" href="/assets/css/tranquilpeak.css">
     <!--STYLES END-->
     
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-125410253-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-125410253-1');
+    </script>
+
 
     
 
@@ -60,7 +69,7 @@
         
     
 
-<header id="header" data-behavior="4">
+<header id="header" data-behavior="2">
     <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
     <div class="header-title">
         <a
@@ -93,7 +102,7 @@
         
     
 
-<nav id="sidebar" data-behavior="4">
+<nav id="sidebar" data-behavior="2">
     <div class="sidebar-container">
         
             <div class="sidebar-profile">
@@ -255,7 +264,7 @@
 </nav>
 
             
-            <div id="main" data-behavior="4"
+            <div id="main" data-behavior="2"
                  class="
                         hasCoverMetaIn
                         ">
@@ -279,7 +288,7 @@
     
         <span>in </span>
         
-    <a class="category-link" href="/categories/Kotlin/">Kotlin</a>
+    <a class="category-link" href="/categories/Book/">Book</a>, <a class="category-link" href="/categories/Book/커니의-Kotlin/">커니의 Kotlin</a>
 
 
     
@@ -292,6 +301,7 @@
     <div class="post-content markdown">
         <div class="main-content-wrap">
             <h2 id="코틀린의-특징"># 코틀린의 특징</h2>
+<a id="more"></a>
 <h2 id="클래스"># 클래스</h2>
 <p><strong>1. 데이터 클래스</strong></p>
 <ul>
@@ -521,6 +531,16 @@
         
         
             
+                <li class="post-action">
+                    <a
+                        class="post-action-btn btn btn--default"
+                        href="#disqus_thread"
+                        aria-label="Leave a comment"
+                    >
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
         
         <li class="post-action">
             
@@ -536,6 +556,10 @@
         
         
             
+                <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+            
         
     </div>
 </article>
@@ -550,7 +574,7 @@
 
             </div>
             
-                <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="2">
                     <div class="post-actions-wrap">
     <nav>
         <ul class="post-actions post-action-nav">
@@ -636,6 +660,16 @@
         
         
             
+                <li class="post-action">
+                    <a
+                        class="post-action-btn btn btn--default"
+                        href="#disqus_thread"
+                        aria-label="Leave a comment"
+                    >
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
         
         <li class="post-action">
             
@@ -650,7 +684,7 @@
 
                 </div>
                 
-    <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+    <div id="share-options-bar" class="share-options-bar" data-behavior="2">
         <i id="btn-close-shareoptions" class="fa fa-times"></i>
         <ul class="share-options">
             
@@ -742,6 +776,23 @@
 <!--SCRIPTS END-->
 
 
+    
+        <script>
+          var disqus_config = function() {
+            this.page.url = 'https://woovictory.github.io/2019/05/07/kotlin-chap2/';
+              
+            this.page.identifier = '2019/05/07/kotlin-chap2/';
+              
+          };
+          (function() {
+            var d = document, s = d.createElement('script');
+            var disqus_shortname = 'https-woovictory-github-io';
+            s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+          })();
+        </script>
     
 
 

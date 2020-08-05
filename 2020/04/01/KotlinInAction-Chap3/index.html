@@ -11,19 +11,19 @@
     
     
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg"},"articleBody":"함수 정의와 호출\n코틀린 컬렉션\n123456789val set = hashSetOf(1, 7, 53)val list = listOf(1, 7, 53)val map = hashMapOf(1 to \"one\", 7 to \"seven\", 53 to \"fifty-three\")fun main(args: Array&lt;String&gt;) &#123;    println(set.javaClass)\t//class java.util.HashSet    println(list.javaClass)  //class java.util.ArrayList    println(map.javaClass)  //class java.util.HashMap&#125;\n\n자바 컬렉션을 활용한 코틀린 컬렉션\n자바보다 더 많은 기능을 쓸 수 있음\n\n1234val strings = listOf(\"first\", \"second\", \"fourteenth\")println(strings.last())\t//fourteenthval numbers = setOf(1, 14, 2)println(numbers.max())\t//14\n\nlast(), max() 는 코틀린에서 편의를 위해 추가한 확장함수\n\n직관적인 함수 호출\n\ntoString()함수 응용한 함수\n\n1234567891011121314151617181920212223242526fun &lt;T&gt; joinToString(        collection: Collection&lt;T&gt;,        separator: String,        prefix: String,        postfix: String): String &#123;    val result = StringBuilder(prefix)    for ((index, element) in collection.withIndex()) &#123;        if (index &gt; 0) result.append(separator)        result.append(element)    &#125;    result.append(postfix)    return result.toString()&#125;fun main(args: Array&lt;String&gt;) &#123;    val list = listOf(1, 2, 3)    val alphabets = listOf(\"a\", \"b\", \"c\")    println(joinToString(list, separator = \"; \", prefix = \"(\", postfix = \")\"))    println(joinToString(alphabets, separator = \"; \", prefix = \"(\", postfix = \")\"))    //(1; 2; 3)    //(a; b; c)&#125;\n\n인자 이름 &amp; 기본 파라미터 값\n\n\n인자의 이름을 명시 가능\n\nJava\n1joinToString(collection, /* separator */ \"\", /* prefix */ \"\", /*postfix */ \".\");\nKotlin\n1joinToString(collection, prefix = \"(\", separator = \";\", postfix = \")\")\n차이점? 파라미터 이름이 같다면 순서를 바꿔도 가능!\n주의! 자바에서 작성한 코드를 코틀린에서 호출한 경우에는 인자 이름 명시 불가능!\n함수 파라미터에 정보를 넣는 것은 자바 8이후, 코틀린은 JDK 6과 호환!\n\n기본 파라미터 값 초기화\n\n1234567891011121314151617181920fun &lt;T&gt; joinToString(    collection : Collection&lt;T&gt;,        separator: String = \", \",        prefix: String = \"\",        postfix: String = \"\"): String &#123;    ...&#125;  fun main(args: Array&lt;String&gt;) &#123;    val list = listOf(1, 2, 3)    println(joinToString(list))\t    //1, 2, 3    println(joinToString(list, separator = \";\"))\t    //1;2;3    println(joinToString(list, separator = \"; \", prefix = \"(\"))\t    //(1; 2; 3    println(joinToString(list, separator = \"; \", prefix = \"(\", postfix = \")\"))      //(1; 2; 3;)  &#125;\n\n값을 지정하지 않은 모든 인자는 디폴트 값을 적용\n\n주의!   자바에는 디폴트 파라미터 값이라는 개념이 없기때문에 코틀린 함수를 자바에서 호출하는 경우\n@JvmOverloads 애노테이션을 추가하면 컴파일러가 자동으로 오버로딩 함수 생성\n최상위 함수와 프로퍼티\n\n최상위 함수\n\nJava\n\n\n\n12345package strings;public class JoinKt&#123;\tpublic static String joinToString(...)&#123;...&#125;&#125;\n\nKotlin\n\n123package stringsfun joinToString(...)&#123;...&#125;\n\n자바에서 함수 호출\n\n1234import strings.JointKt; ... JoinKt.joinToStirng(list,\",\",\"\",\"\");\n\n파일에 대응하는 클래스 이름 변경\n\n123//코틀린@file:JvmName(\"StringFunctions\")\t//패키지명 선언보다 이전에 위치package strings\n  123//자바에서 호출import strings.StringFunctions;StringFunctions.joinToString(list, \",\", \"\", \"\");\n\n\nUtilClass를 대신해서 사용할 수 있다는 장점이 있다고 했는데, Util이 더 편하지않나…?\n\n\n최상위 프로퍼티\n\n123456var cnt;\t\t//최상위 프로퍼티fun performOperation()&#123;\t//최상위 함수\tcnt++&#125;...\n\n프로퍼티를 클래스보다 더 이전에 위치\n최상위 프로퍼티도 접근자 메소드를 통해 접근가능\nconst 변경자를 추가하면 public static final 필드로 만들 수 있다.\n\n확장함수와 확장 프로퍼티\n\n\n클래스의 멤버 메서드처럼 호출되지만 클래스 밖에 호출되는 함수\n\n\n확장함수를 만들기 위해서는 수신객체타입(Receiver Type)과 수신객체(Receiver Object)가 필요\n\n\n123fun String.lastChar() : Char = this.get(this.length - 1)println(\"Kotlin\".lastChar())//n\n\n수신객체타입(Receiver Type): 확장이 정의될 클래스 ex) String\n수신객체(Receiver Object): 위 클래스의 인스턴스 객체 ex)“Kotlin”, this\n확장함수 안에서는 private나 protected 접근 불가능, 해당 클래스의 public함수에만 접근 가능\n확장함수의 Import\n확장함수를 사용하기 위해서는 import를 통해서 사용\n\n123import strings.lastChar\t\t//import strings.*val c = \"Kotlin\".lastChar()\n주의! : 한 클래스 내의 같은 이름의 확장함수가 둘 이상일 경우 이름이 충돌할 수 있으니 as를 사용\n12import strings.lastChar as lastval c = \"Kotlin\".last()\n\njoinToString함수를 이용한 확장함수\n\n1234567891011121314151617181920212223242526fun &lt;T&gt; Collection&lt;T&gt;.joinToString(        separator: String = \", \",        prefix: String = \"\",        postfix: String = \"\"): String &#123;    val result = StringBuilder(prefix)    for ((index, element) in this.withIndex()) &#123;\t//this는 수신객체        if (index &gt; 0) result.append(separator)        result.append(element)    &#125;    result.append(postfix)    return result.toString()&#125;//문자열의 컬렉션만 받음fun Collection&lt;String&gt;.join(        separator: String = \", \",        prefix: String = \"\",        postfix: String = \"\") = joinToString(separator, prefix, postfix)fun main(args: Array&lt;String&gt;) &#123;    println(listOf(\"one\", \"two\", \"eight\").join(\" \"))\t//one two eight&#125;\n\n내부적으로 확장함수는 수신객체를 첫 번째 인자로 받음\n자바에서 호출시 수신객체를 첫 번째 인자로 넘겨줘야함\n\n확장함수의 오버라이드\n\n멤버함수 오버라이드\n\n123456789101112open class View &#123;    open fun click() = println(\"View clicked\")\t//멤버함수&#125;class Button: View() &#123;    override fun click() = println(\"Button clicked\")&#125;fun main(args: Array&lt;String&gt;) &#123;    val view: View = Button()    view.click()\t//Button Clicked&#125;\n\n확장 함수가 정적 메소드와 같은 특징을 가지므로 확장함수를 하위 클래스에서 오버라이드 할 수 없다.\n\n123456789101112131415open class View &#123;    open fun click() = println(\"View clicked\")\t//멤버함수&#125;class Button: View() &#123;    override fun click() = println(\"Button clicked\")&#125;fun View.showOff() = println(\"I'm a view!\")\t\t//확장함수fun Button.showOff() = println(\"I'm a button!\")\t//확장함수fun main(args: Array&lt;String&gt;) &#123;    val view: View = Button()    view.showOff()\t//I'm a view!&#125;\n\n확장 함수는 클래스의 밖에 선언되며 확장함수 호출 시, 수신 객체로 지정한 변수의 정적 타입에 의해 어떤 확장함수가 올 지 결정되는 것이지, 변수의 객체에 저장된 동적인 타입에 의해 확장 함수가 결정되지 않는다.\n\n&lt;그림 3.2 참고&gt;\nTODO - 알고가자!\n\nopen class : 코틀린에서의 모든 클래스는 암시적으로 상위 클래스로 Any클래스를 가지는데,명시적으로 상위클래스를 지정하기 위해서는 open을 명시\n멤버메서드? 정적메서드? 확장메서드?\n특정 클래스에 추가된 확장함수가 멤버함수와 이름이 같다면 우선순위는 멤버함수 &gt; 확장함수\n\n확장 프로퍼티\n12345678val String.lastChar : Char\tget() = get(length - 1)\t\t//getter만var StringBuilder.lastChar : Char\tget() = get(length - 1)\tset(value : Char)&#123;        this.setChartAt(length - 1, value)    &#125;\n\n일반 프로퍼티와 같은데 대신 수신객체클래스가 추가 되었을 뿐\n확장 프로퍼티는 backing field를 가지고 있지않으니 최소한 getter()는 구현해야 함.\n\n컬렉션 처리\n\n가변인자함수\n\n1234val numbers = listOf(1,2,3,4,5)val strings = listOf(\"1\", \"2\", \"3\")fun listOf&lt;T&gt;(vararg var: T) : List&lt;T&gt;&#123;...&#125;\n\nvararg를 변경자로 선언타입 앞에 붙임\n\n123456789fun printNumbers(vararg numbers: Int) &#123;    for (number in numbers) &#123;        println(number)    &#125;&#125;val numbers = intArrayOf(1, 2, 3)printNumbers(*numbers)printNumbers(10, 20, *numbers, 30, 40)\n\n자바의 스프레드 연산자: ... / 코틀린의 스프레드 연산자 *\n배열(Array)을 함수에 전달할 수 있다.\n중위 호출\n\n121 to \"one\"\t\t//중위함수 호출1.to(\"one\")\t\t//확장함수 호출\n\n중위함수 to\n\n1infix fun Any.to(other : Any) = Pair(this, other)    // to는 중위함수이자 확장함수\n\n구조 분해 선언(7장에서 자세히 다룸)\n\n\ndata class 형태로 나오는 여러 값을 동시에 반환할 수 있다.\n자동으로 componentN함수가 생성됨.\n\n123for ((index, element) in this.withIndex()) &#123;\t//this는 수신객체 Collection&lt;Int&gt; / (1, 2, 3)     println(\"$index: $element\")&#125;\n1234567891011data class Size(val width : Int, val height : Int)fun main()&#123;    val size = Size(10, 20)    val (w, h) = size    val a = size.component1()    val b = size.component2()        println(a) // 10    println(b) // 20&#125;\n문자열과 정규식\n\n문자열 나누기 / split()\n\n123//String.ktpublic inline fun CharSequence.split(regex: Regex, limit: Int = 0): List&lt;String&gt; = regex.split(this, limit)public fun CharSequence.split(vararg delimiters: String, ignoreCase: Boolean = false, limit: Int = 0): List&lt;String&gt; &#123;...&#125;\n1234println(\"12.345-6.A\".split(\"\\\\.|-\".toRegex()))\t\t//정규식을 파라미터로 받는 함수//[12, 345, 6, A]println(\"12.345-6.A\".split(\".\", \"-\"))\t\t\t    //String을 파라미터로 받는 함수//[12, 345, 6, A]\n\n마침표 . 를 문자로 읽기위해 \\\\.을 사용하여 escape 시킴\n코틀린에서는 split()의 확장함수를 제공함으로써 Java의 와일크카드 문자(?)로 인한 혼동을 피함.\n\n정규식 표현 https://regexr.com/,  https://ihateregex.io/playground에서 찾으면 쉽다.\n\n\n\n\n정규식과 3중 따옴표\n\n123456789101112131415161718fun parsePath(path: String) &#123;    val regex = \"\"\"(.+)/(.+)\\.(.+)\"\"\".toRegex()    //group#1: /Users/yole/kotlin-book    //group#2: chapter    //group#3: adoc    val matchResult = regex.matchEntire(path)    if (matchResult != null) &#123;        val (directory, filename, extension) = matchResult.destructured        // val directory = matchResult.destructured.component1()        // val filename = matchResult.destructured.component2()        // val extension = matchResult.destructured.component3()        println(\"Dir: $directory, name: $filename, ext: $extension\")    &#125;&#125;fun main(args: Array&lt;String&gt;) &#123;    parsePath(\"/Users/yole/kotlin-book/chapter.adoc\")&#125;\n\n3중 따옴표를 사용하면, \\, \\n등을 포함한 어떤 문자도 따로 escape  시킬 필요가 없다.\n주의! : 역슬래쉬(\\)나 줄바꿈(\\n)등을 3중 따옴표 안에 넣으면 문자로 인식해서 그냥 출력된다.\n\n중첩함수(Local method)\n\n함수에서 추출한 함수를 원 함수 내부에 중첩시키는 것을 말함.\n코드중복을 보여주는 예제  //아직 중첩함수 X\n\n1234567891011121314151617181920class User(val id: Int, val name: String, val address: String)fun saveUser(user: User) &#123;    if (user.name.isEmpty()) &#123;\t\t\t\t\t//-----------검증 중복        throw IllegalArgumentException(            \"Can't save user $&#123;user.id&#125;: empty Name\")    &#125;    if (user.address.isEmpty()) &#123;\t\t\t\t//------------검증 중복        throw IllegalArgumentException(            \"Can't save user $&#123;user.id&#125;: empty Address\")    &#125;    // Save user to the database&#125;fun main(args: Array&lt;String&gt;) &#123;    saveUser(User(1, \"\", \"\"))    //Can't save user $&#123;user.id&#125;: empty Name&#125;\n\n중첩함수를 이용한 중복 줄이기\n\n123456789101112131415161718192021class User(val id: Int, val name: String, val address: String)fun saveUser(user: User) &#123;    fun validate(user: User,\t\t\t\t//중첩함수 validate(...)선언                 value: String,                 fieldName: String) &#123;        if (value.isEmpty()) &#123;            throw IllegalArgumentException(                \"Can't save user $&#123;user.id&#125;: empty $fieldName\")        &#125;    &#125;    validate(user, user.name, \"Name\")    validate(user, user.address, \"Address\")    // Save user to the database&#125;fun main(args: Array&lt;String&gt;) &#123;    saveUser(User(1, \"\", \"\"))&#125;\n\n중첩함수는 자신이 속한 바깥함수의 모든 파라미터와 변수를 참조 가능\n따라서 validate의 파라미터인 user까지 제거\n\n1234567891011121314151617181920class User(val id: Int, val name: String, val address: String)fun saveUser(user: User) &#123;    fun validate(value: String, fieldName: String) &#123;\t//불필요한 user파라미터 제거        if (value.isEmpty()) &#123;            throw IllegalArgumentException(                \"Can't save user $&#123;user.id&#125;: \" +                    \"empty $fieldName\")        &#125;    &#125;    validate(user.name, \"Name\")\t\t\t\t\t\t\t//user.name만 전달    validate(user.address, \"Address\")\t\t\t\t\t//user.address만 전달    // Save user to the database&#125;fun main(args: Array&lt;String&gt;) &#123;    saveUser(User(1, \"\", \"\"))&#125;\n\n확장함수를 이용해서 검증로직 개선\n\n1234567891011121314151617181920212223class User(val id: Int, val name: String, val address: String)fun User.validateBeforeSave() &#123;\t\t\t//User클래스의 확장함수    fun validate(value: String, fieldName: String) &#123;\t//중첩함수        if (value.isEmpty()) &#123;            throw IllegalArgumentException(               \"Can't save user $id: empty $fieldName\")\t//&#123;$user.id&#125;를 쓸 필요 X, $id O         &#125;    &#125;    validate(name, \"Name\")    validate(address, \"Address\")&#125;fun saveUser(user: User) &#123;    user.validateBeforeSave()    // Save user to the database&#125;fun main(args: Array&lt;String&gt;) &#123;    saveUser(User(1, \"2\", \"\"))&#125;\nTODO - 생각해보자!\n좋은 구조인가??\n과유불급이라고 중첩된 함수의 깊이가 깊어지면 깊어질수록 코드 읽기가 어려우니\n일반적으로는 한 단계만 함수를 중첩시키는 것을 권장한다.\n참고\n\nKotlin In Action\nMade by iyj9328\n\n","dateCreated":"2020-04-01T20:02:44+09:00","dateModified":"2020-05-13T00:16:58+09:00","datePublished":"2020-04-01T20:02:44+09:00","description":"","headline":"[Kotlin in action] Chap3. 함수 정의와 호출","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://woovictory.github.io/2020/04/01/KotlinInAction-Chap3/"},"publisher":{"@type":"Organization","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg","logo":{"@type":"ImageObject","url":"Victory.jpeg"}},"url":"https://woovictory.github.io/2020/04/01/KotlinInAction-Chap3/","keywords":"Android, Kotlin, 코틀린, Kotlin in action, 프로그래밍 언어"}</script>
-    <meta name="description" content="함수 정의와 호출 코틀린 컬렉션 123456789val set = hashSetOf(1, 7, 53)val list = listOf(1, 7, 53)val map = hashMapOf(1 to &quot;one&quot;, 7 to &quot;seven&quot;, 53 to &quot;fifty-three&quot;)fun main(args: Array&amp;lt;String&amp;gt;) &amp;#123;    print">
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg"},"articleBody":"함수 정의와 호출\n\n코틀린 컬렉션\n123456789val set = hashSetOf(1, 7, 53)val list = listOf(1, 7, 53)val map = hashMapOf(1 to \"one\", 7 to \"seven\", 53 to \"fifty-three\")fun main(args: Array&lt;String&gt;) &#123;    println(set.javaClass)\t//class java.util.HashSet    println(list.javaClass)  //class java.util.ArrayList    println(map.javaClass)  //class java.util.HashMap&#125;\n\n자바 컬렉션을 활용한 코틀린 컬렉션\n자바보다 더 많은 기능을 쓸 수 있음\n\n1234val strings = listOf(\"first\", \"second\", \"fourteenth\")println(strings.last())\t//fourteenthval numbers = setOf(1, 14, 2)println(numbers.max())\t//14\n\nlast(), max() 는 코틀린에서 편의를 위해 추가한 확장함수\n\n직관적인 함수 호출\n\ntoString()함수 응용한 함수\n\n1234567891011121314151617181920212223242526fun &lt;T&gt; joinToString(        collection: Collection&lt;T&gt;,        separator: String,        prefix: String,        postfix: String): String &#123;    val result = StringBuilder(prefix)    for ((index, element) in collection.withIndex()) &#123;        if (index &gt; 0) result.append(separator)        result.append(element)    &#125;    result.append(postfix)    return result.toString()&#125;fun main(args: Array&lt;String&gt;) &#123;    val list = listOf(1, 2, 3)    val alphabets = listOf(\"a\", \"b\", \"c\")    println(joinToString(list, separator = \"; \", prefix = \"(\", postfix = \")\"))    println(joinToString(alphabets, separator = \"; \", prefix = \"(\", postfix = \")\"))    //(1; 2; 3)    //(a; b; c)&#125;\n\n인자 이름 &amp; 기본 파라미터 값\n\n\n인자의 이름을 명시 가능\n\nJava\n1joinToString(collection, /* separator */ \"\", /* prefix */ \"\", /*postfix */ \".\");\nKotlin\n1joinToString(collection, prefix = \"(\", separator = \";\", postfix = \")\")\n차이점? 파라미터 이름이 같다면 순서를 바꿔도 가능!\n주의! 자바에서 작성한 코드를 코틀린에서 호출한 경우에는 인자 이름 명시 불가능!\n함수 파라미터에 정보를 넣는 것은 자바 8이후, 코틀린은 JDK 6과 호환!\n\n기본 파라미터 값 초기화\n\n1234567891011121314151617181920fun &lt;T&gt; joinToString(    collection : Collection&lt;T&gt;,        separator: String = \", \",        prefix: String = \"\",        postfix: String = \"\"): String &#123;    ...&#125;  fun main(args: Array&lt;String&gt;) &#123;    val list = listOf(1, 2, 3)    println(joinToString(list))\t    //1, 2, 3    println(joinToString(list, separator = \";\"))\t    //1;2;3    println(joinToString(list, separator = \"; \", prefix = \"(\"))\t    //(1; 2; 3    println(joinToString(list, separator = \"; \", prefix = \"(\", postfix = \")\"))      //(1; 2; 3;)  &#125;\n\n값을 지정하지 않은 모든 인자는 디폴트 값을 적용\n\n주의!   자바에는 디폴트 파라미터 값이라는 개념이 없기때문에 코틀린 함수를 자바에서 호출하는 경우\n@JvmOverloads 애노테이션을 추가하면 컴파일러가 자동으로 오버로딩 함수 생성\n최상위 함수와 프로퍼티\n\n최상위 함수\n\nJava\n\n\n\n12345package strings;public class JoinKt&#123;\tpublic static String joinToString(...)&#123;...&#125;&#125;\n\nKotlin\n\n123package stringsfun joinToString(...)&#123;...&#125;\n\n자바에서 함수 호출\n\n1234import strings.JointKt; ... JoinKt.joinToStirng(list,\",\",\"\",\"\");\n\n파일에 대응하는 클래스 이름 변경\n\n123//코틀린@file:JvmName(\"StringFunctions\")\t//패키지명 선언보다 이전에 위치package strings\n  123//자바에서 호출import strings.StringFunctions;StringFunctions.joinToString(list, \",\", \"\", \"\");\n\n\nUtilClass를 대신해서 사용할 수 있다는 장점이 있다고 했는데, Util이 더 편하지않나…?\n\n\n최상위 프로퍼티\n\n123456var cnt;\t\t//최상위 프로퍼티fun performOperation()&#123;\t//최상위 함수\tcnt++&#125;...\n\n프로퍼티를 클래스보다 더 이전에 위치\n최상위 프로퍼티도 접근자 메소드를 통해 접근가능\nconst 변경자를 추가하면 public static final 필드로 만들 수 있다.\n\n확장함수와 확장 프로퍼티\n\n\n클래스의 멤버 메서드처럼 호출되지만 클래스 밖에 호출되는 함수\n\n\n확장함수를 만들기 위해서는 수신객체타입(Receiver Type)과 수신객체(Receiver Object)가 필요\n\n\n123fun String.lastChar() : Char = this.get(this.length - 1)println(\"Kotlin\".lastChar())//n\n\n수신객체타입(Receiver Type): 확장이 정의될 클래스 ex) String\n수신객체(Receiver Object): 위 클래스의 인스턴스 객체 ex)“Kotlin”, this\n확장함수 안에서는 private나 protected 접근 불가능, 해당 클래스의 public함수에만 접근 가능\n확장함수의 Import\n확장함수를 사용하기 위해서는 import를 통해서 사용\n\n123import strings.lastChar\t\t//import strings.*val c = \"Kotlin\".lastChar()\n주의! : 한 클래스 내의 같은 이름의 확장함수가 둘 이상일 경우 이름이 충돌할 수 있으니 as를 사용\n12import strings.lastChar as lastval c = \"Kotlin\".last()\n\njoinToString함수를 이용한 확장함수\n\n1234567891011121314151617181920212223242526fun &lt;T&gt; Collection&lt;T&gt;.joinToString(        separator: String = \", \",        prefix: String = \"\",        postfix: String = \"\"): String &#123;    val result = StringBuilder(prefix)    for ((index, element) in this.withIndex()) &#123;\t//this는 수신객체        if (index &gt; 0) result.append(separator)        result.append(element)    &#125;    result.append(postfix)    return result.toString()&#125;//문자열의 컬렉션만 받음fun Collection&lt;String&gt;.join(        separator: String = \", \",        prefix: String = \"\",        postfix: String = \"\") = joinToString(separator, prefix, postfix)fun main(args: Array&lt;String&gt;) &#123;    println(listOf(\"one\", \"two\", \"eight\").join(\" \"))\t//one two eight&#125;\n\n내부적으로 확장함수는 수신객체를 첫 번째 인자로 받음\n자바에서 호출시 수신객체를 첫 번째 인자로 넘겨줘야함\n\n확장함수의 오버라이드\n\n멤버함수 오버라이드\n\n123456789101112open class View &#123;    open fun click() = println(\"View clicked\")\t//멤버함수&#125;class Button: View() &#123;    override fun click() = println(\"Button clicked\")&#125;fun main(args: Array&lt;String&gt;) &#123;    val view: View = Button()    view.click()\t//Button Clicked&#125;\n\n확장 함수가 정적 메소드와 같은 특징을 가지므로 확장함수를 하위 클래스에서 오버라이드 할 수 없다.\n\n123456789101112131415open class View &#123;    open fun click() = println(\"View clicked\")\t//멤버함수&#125;class Button: View() &#123;    override fun click() = println(\"Button clicked\")&#125;fun View.showOff() = println(\"I'm a view!\")\t\t//확장함수fun Button.showOff() = println(\"I'm a button!\")\t//확장함수fun main(args: Array&lt;String&gt;) &#123;    val view: View = Button()    view.showOff()\t//I'm a view!&#125;\n\n확장 함수는 클래스의 밖에 선언되며 확장함수 호출 시, 수신 객체로 지정한 변수의 정적 타입에 의해 어떤 확장함수가 올 지 결정되는 것이지, 변수의 객체에 저장된 동적인 타입에 의해 확장 함수가 결정되지 않는다.\n\n&lt;그림 3.2 참고&gt;\nTODO - 알고가자!\n\nopen class : 코틀린에서의 모든 클래스는 암시적으로 상위 클래스로 Any클래스를 가지는데,명시적으로 상위클래스를 지정하기 위해서는 open을 명시\n멤버메서드? 정적메서드? 확장메서드?\n특정 클래스에 추가된 확장함수가 멤버함수와 이름이 같다면 우선순위는 멤버함수 &gt; 확장함수\n\n확장 프로퍼티\n12345678val String.lastChar : Char\tget() = get(length - 1)\t\t//getter만var StringBuilder.lastChar : Char\tget() = get(length - 1)\tset(value : Char)&#123;        this.setChartAt(length - 1, value)    &#125;\n\n일반 프로퍼티와 같은데 대신 수신객체클래스가 추가 되었을 뿐\n확장 프로퍼티는 backing field를 가지고 있지않으니 최소한 getter()는 구현해야 함.\n\n컬렉션 처리\n\n가변인자함수\n\n1234val numbers = listOf(1,2,3,4,5)val strings = listOf(\"1\", \"2\", \"3\")fun listOf&lt;T&gt;(vararg var: T) : List&lt;T&gt;&#123;...&#125;\n\nvararg를 변경자로 선언타입 앞에 붙임\n\n123456789fun printNumbers(vararg numbers: Int) &#123;    for (number in numbers) &#123;        println(number)    &#125;&#125;val numbers = intArrayOf(1, 2, 3)printNumbers(*numbers)printNumbers(10, 20, *numbers, 30, 40)\n\n자바의 스프레드 연산자: ... / 코틀린의 스프레드 연산자 *\n배열(Array)을 함수에 전달할 수 있다.\n중위 호출\n\n121 to \"one\"\t\t//중위함수 호출1.to(\"one\")\t\t//확장함수 호출\n\n중위함수 to\n\n1infix fun Any.to(other : Any) = Pair(this, other)    // to는 중위함수이자 확장함수\n\n구조 분해 선언(7장에서 자세히 다룸)\n\n\ndata class 형태로 나오는 여러 값을 동시에 반환할 수 있다.\n자동으로 componentN함수가 생성됨.\n\n123for ((index, element) in this.withIndex()) &#123;\t//this는 수신객체 Collection&lt;Int&gt; / (1, 2, 3)     println(\"$index: $element\")&#125;\n1234567891011data class Size(val width : Int, val height : Int)fun main()&#123;    val size = Size(10, 20)    val (w, h) = size    val a = size.component1()    val b = size.component2()        println(a) // 10    println(b) // 20&#125;\n문자열과 정규식\n\n문자열 나누기 / split()\n\n123//String.ktpublic inline fun CharSequence.split(regex: Regex, limit: Int = 0): List&lt;String&gt; = regex.split(this, limit)public fun CharSequence.split(vararg delimiters: String, ignoreCase: Boolean = false, limit: Int = 0): List&lt;String&gt; &#123;...&#125;\n1234println(\"12.345-6.A\".split(\"\\\\.|-\".toRegex()))\t\t//정규식을 파라미터로 받는 함수//[12, 345, 6, A]println(\"12.345-6.A\".split(\".\", \"-\"))\t\t\t    //String을 파라미터로 받는 함수//[12, 345, 6, A]\n\n마침표 . 를 문자로 읽기위해 \\\\.을 사용하여 escape 시킴\n코틀린에서는 split()의 확장함수를 제공함으로써 Java의 와일크카드 문자(?)로 인한 혼동을 피함.\n\n정규식 표현 https://regexr.com/,  https://ihateregex.io/playground에서 찾으면 쉽다.\n\n\n\n\n정규식과 3중 따옴표\n\n123456789101112131415161718fun parsePath(path: String) &#123;    val regex = \"\"\"(.+)/(.+)\\.(.+)\"\"\".toRegex()    //group#1: /Users/yole/kotlin-book    //group#2: chapter    //group#3: adoc    val matchResult = regex.matchEntire(path)    if (matchResult != null) &#123;        val (directory, filename, extension) = matchResult.destructured        // val directory = matchResult.destructured.component1()        // val filename = matchResult.destructured.component2()        // val extension = matchResult.destructured.component3()        println(\"Dir: $directory, name: $filename, ext: $extension\")    &#125;&#125;fun main(args: Array&lt;String&gt;) &#123;    parsePath(\"/Users/yole/kotlin-book/chapter.adoc\")&#125;\n\n3중 따옴표를 사용하면, \\, \\n등을 포함한 어떤 문자도 따로 escape  시킬 필요가 없다.\n주의! : 역슬래쉬(\\)나 줄바꿈(\\n)등을 3중 따옴표 안에 넣으면 문자로 인식해서 그냥 출력된다.\n\n중첩함수(Local method)\n\n함수에서 추출한 함수를 원 함수 내부에 중첩시키는 것을 말함.\n코드중복을 보여주는 예제  //아직 중첩함수 X\n\n1234567891011121314151617181920class User(val id: Int, val name: String, val address: String)fun saveUser(user: User) &#123;    if (user.name.isEmpty()) &#123;\t\t\t\t\t//-----------검증 중복        throw IllegalArgumentException(            \"Can't save user $&#123;user.id&#125;: empty Name\")    &#125;    if (user.address.isEmpty()) &#123;\t\t\t\t//------------검증 중복        throw IllegalArgumentException(            \"Can't save user $&#123;user.id&#125;: empty Address\")    &#125;    // Save user to the database&#125;fun main(args: Array&lt;String&gt;) &#123;    saveUser(User(1, \"\", \"\"))    //Can't save user $&#123;user.id&#125;: empty Name&#125;\n\n중첩함수를 이용한 중복 줄이기\n\n123456789101112131415161718192021class User(val id: Int, val name: String, val address: String)fun saveUser(user: User) &#123;    fun validate(user: User,\t\t\t\t//중첩함수 validate(...)선언                 value: String,                 fieldName: String) &#123;        if (value.isEmpty()) &#123;            throw IllegalArgumentException(                \"Can't save user $&#123;user.id&#125;: empty $fieldName\")        &#125;    &#125;    validate(user, user.name, \"Name\")    validate(user, user.address, \"Address\")    // Save user to the database&#125;fun main(args: Array&lt;String&gt;) &#123;    saveUser(User(1, \"\", \"\"))&#125;\n\n중첩함수는 자신이 속한 바깥함수의 모든 파라미터와 변수를 참조 가능\n따라서 validate의 파라미터인 user까지 제거\n\n1234567891011121314151617181920class User(val id: Int, val name: String, val address: String)fun saveUser(user: User) &#123;    fun validate(value: String, fieldName: String) &#123;\t//불필요한 user파라미터 제거        if (value.isEmpty()) &#123;            throw IllegalArgumentException(                \"Can't save user $&#123;user.id&#125;: \" +                    \"empty $fieldName\")        &#125;    &#125;    validate(user.name, \"Name\")\t\t\t\t\t\t\t//user.name만 전달    validate(user.address, \"Address\")\t\t\t\t\t//user.address만 전달    // Save user to the database&#125;fun main(args: Array&lt;String&gt;) &#123;    saveUser(User(1, \"\", \"\"))&#125;\n\n확장함수를 이용해서 검증로직 개선\n\n1234567891011121314151617181920212223class User(val id: Int, val name: String, val address: String)fun User.validateBeforeSave() &#123;\t\t\t//User클래스의 확장함수    fun validate(value: String, fieldName: String) &#123;\t//중첩함수        if (value.isEmpty()) &#123;            throw IllegalArgumentException(               \"Can't save user $id: empty $fieldName\")\t//&#123;$user.id&#125;를 쓸 필요 X, $id O         &#125;    &#125;    validate(name, \"Name\")    validate(address, \"Address\")&#125;fun saveUser(user: User) &#123;    user.validateBeforeSave()    // Save user to the database&#125;fun main(args: Array&lt;String&gt;) &#123;    saveUser(User(1, \"2\", \"\"))&#125;\nTODO - 생각해보자!\n좋은 구조인가??\n과유불급이라고 중첩된 함수의 깊이가 깊어지면 깊어질수록 코드 읽기가 어려우니\n일반적으로는 한 단계만 함수를 중첩시키는 것을 권장한다.\n참고\n\nKotlin In Action\nMade by iyj9328\n\n","dateCreated":"2020-04-01T20:02:44+09:00","dateModified":"2020-08-05T15:42:08+09:00","datePublished":"2020-04-01T20:02:44+09:00","description":"함수 정의와 호출","headline":"[Kotlin in action] Chap3. 함수 정의와 호출","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://woovictory.github.io/2020/04/01/KotlinInAction-Chap3/"},"publisher":{"@type":"Organization","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg","logo":{"@type":"ImageObject","url":"Victory.jpeg"}},"url":"https://woovictory.github.io/2020/04/01/KotlinInAction-Chap3/","keywords":"Android, Kotlin, 코틀린, Kotlin in action, 프로그래밍 언어"}</script>
+    <meta name="description" content="함수 정의와 호출">
 <meta name="keywords" content="Android,Kotlin,코틀린,Kotlin in action,프로그래밍 언어">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="[Kotlin in action] Chap3. 함수 정의와 호출">
 <meta property="og:url" content="https://woovictory.github.io/2020/04/01/KotlinInAction-Chap3/index.html">
 <meta property="og:site_name" content="VictoryWoo">
-<meta property="og:description" content="함수 정의와 호출 코틀린 컬렉션 123456789val set = hashSetOf(1, 7, 53)val list = listOf(1, 7, 53)val map = hashMapOf(1 to &quot;one&quot;, 7 to &quot;seven&quot;, 53 to &quot;fifty-three&quot;)fun main(args: Array&amp;lt;String&amp;gt;) &amp;#123;    print">
+<meta property="og:description" content="함수 정의와 호출">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2020-05-12T15:16:58.308Z">
+<meta property="og:updated_time" content="2020-08-05T06:42:08.171Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="[Kotlin in action] Chap3. 함수 정의와 호출">
-<meta name="twitter:description" content="함수 정의와 호출 코틀린 컬렉션 123456789val set = hashSetOf(1, 7, 53)val list = listOf(1, 7, 53)val map = hashMapOf(1 to &quot;one&quot;, 7 to &quot;seven&quot;, 53 to &quot;fifty-three&quot;)fun main(args: Array&amp;lt;String&amp;gt;) &amp;#123;    print">
+<meta name="twitter:description" content="함수 정의와 호출">
     
     
         
@@ -41,6 +41,15 @@
     <link rel="stylesheet" href="/assets/css/tranquilpeak.css">
     <!--STYLES END-->
     
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-125410253-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-125410253-1');
+    </script>
+
 
     
 
@@ -60,7 +69,7 @@
         
     
 
-<header id="header" data-behavior="4">
+<header id="header" data-behavior="2">
     <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
     <div class="header-title">
         <a
@@ -93,7 +102,7 @@
         
     
 
-<nav id="sidebar" data-behavior="4">
+<nav id="sidebar" data-behavior="2">
     <div class="sidebar-container">
         
             <div class="sidebar-profile">
@@ -255,7 +264,7 @@
 </nav>
 
             
-            <div id="main" data-behavior="4"
+            <div id="main" data-behavior="2"
                  class="
                         hasCoverMetaIn
                         ">
@@ -279,7 +288,7 @@
     
         <span>in </span>
         
-    <a class="category-link" href="/categories/Kotlin/">Kotlin</a>
+    <a class="category-link" href="/categories/Book/">Book</a>, <a class="category-link" href="/categories/Book/Kotlin-in-Action/">Kotlin in Action</a>
 
 
     
@@ -292,6 +301,7 @@
     <div class="post-content markdown">
         <div class="main-content-wrap">
             <h3 id="함수-정의와-호출">함수 정의와 호출</h3>
+<a id="more"></a>
 <p><strong>코틀린 컬렉션</strong></p>
 <figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> <span class="keyword">set</span> = hashSetOf(<span class="number">1</span>, <span class="number">7</span>, <span class="number">53</span>)</span><br><span class="line"><span class="keyword">val</span> list = listOf(<span class="number">1</span>, <span class="number">7</span>, <span class="number">53</span>)</span><br><span class="line"><span class="keyword">val</span> map = hashMapOf(<span class="number">1</span> to <span class="string">"one"</span>, <span class="number">7</span> to <span class="string">"seven"</span>, <span class="number">53</span> to <span class="string">"fifty-three"</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">(args: <span class="type">Array</span>&lt;<span class="type">String</span>&gt;)</span></span> &#123;</span><br><span class="line">    println(<span class="keyword">set</span>.javaClass)	<span class="comment">//class java.util.HashSet</span></span><br><span class="line">    println(list.javaClass)  <span class="comment">//class java.util.ArrayList</span></span><br><span class="line">    println(map.javaClass)  <span class="comment">//class java.util.HashMap</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <ul>
@@ -596,6 +606,16 @@
         
         
             
+                <li class="post-action">
+                    <a
+                        class="post-action-btn btn btn--default"
+                        href="#disqus_thread"
+                        aria-label="Leave a comment"
+                    >
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
         
         <li class="post-action">
             
@@ -611,6 +631,10 @@
         
         
             
+                <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+            
         
     </div>
 </article>
@@ -625,7 +649,7 @@
 
             </div>
             
-                <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="2">
                     <div class="post-actions-wrap">
     <nav>
         <ul class="post-actions post-action-nav">
@@ -711,6 +735,16 @@
         
         
             
+                <li class="post-action">
+                    <a
+                        class="post-action-btn btn btn--default"
+                        href="#disqus_thread"
+                        aria-label="Leave a comment"
+                    >
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
         
         <li class="post-action">
             
@@ -725,7 +759,7 @@
 
                 </div>
                 
-    <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+    <div id="share-options-bar" class="share-options-bar" data-behavior="2">
         <i id="btn-close-shareoptions" class="fa fa-times"></i>
         <ul class="share-options">
             
@@ -817,6 +851,23 @@
 <!--SCRIPTS END-->
 
 
+    
+        <script>
+          var disqus_config = function() {
+            this.page.url = 'https://woovictory.github.io/2020/04/01/KotlinInAction-Chap3/';
+              
+            this.page.identifier = '2020/04/01/KotlinInAction-Chap3/';
+              
+          };
+          (function() {
+            var d = document, s = d.createElement('script');
+            var disqus_shortname = 'https-woovictory-github-io';
+            s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+          })();
+        </script>
     
 
 

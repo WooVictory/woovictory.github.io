@@ -11,19 +11,19 @@
     
     
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg"},"articleBody":"1부에 이어서 작성…\n# 특징들\n생성자\n\n생성자 부분은 자바와 비교했을 때 조금 다른 면이 있다.\n다음은 기본 생성자의 정의이다.\n\ninit 블록을 사용해 기본 생성자를 대체한다.\n\n\n생성자에 인자가 필요한 경우 인자처럼 받을 수 있다.\n\n이를 주 생성자라고 부른다.\n\n\n\n12345678910111213class Test&#123;        init&#123;        // 기본 생성자에서 수행할 작업.    &#125;&#125;class Test(a : Int)&#123;        init&#123;        println(\"$a\")    &#125;&#125;\n\n생성자의 인자를 통해 클래스 내부의 프로퍼티에 값을 할당할 수 있다.\n생성자의 인자를 통해 프로퍼티 선언을 대신한다. 따라서 추가로 프로퍼티 선언이 필요 없다.\n\n1class Test(val a: Int, val b: Char)\n\n생성자의 인자에서 프로퍼티 선언이 함께 이루어지고, 값 할당 또한 생성자 호출과 동시에 수행되므로 짧은 코드를 확인할 수 있다.\n주 생성자 외에 다른 형태의 생성자가 필요한 경우 constructor 키워드를 사용해 선언할 수 있다.\n\n123456789class Test(val a: Int, val b: Char)&#123;    // a 값만 인자로 받는 추가 생성자.    // 기본 생성자를 반드시 호출해야 한다.    constructor(a: Int) : this(a,0)        // 두 인자의 값을 모두 0으로 지정하는 생성자.    constructor() : this(0,0)&#125;\n\n이처럼 추가 생성자를 정의하는 경우 주 생성자를 반드시 호출해야 한다.(상속과 this를 사용해서!)\n추가 생성자에서는 인자와 프로퍼티를 함께 선언할 수 없다. 따라서 프로퍼티 선언이 필요한 경우 주 생성자에서 이를 처리해야 한다.\n생성자 앞에 접근 제한자를 붙여 가시성을 변경할 수 있다.\n\n123456class Test private constructor(val a: Int, val b: Char)&#123;    private constructor(a: Int) : this(a,0)    constructor(): this(0,0)&#125;\n생성자는 중요한 개념이므로 추후 더 추가할 예정.\n함수\n\n메소드를 함수로 표현한다.\nvoid -&gt; Unit이며 반환 값이 없음을 의미한다.\n또한, 반환 값이 없는 함수는 Unit을 생략할 수 있다.\n\n123456789class Test&#123;    fun foo(): Unit&#123;        // Unit 생략 가능.    &#125;    fun bar(): Int&#123;        return 1    &#125;&#125;\n상속 및 인터페이스 구현\n\n클래스의 상속과 인터페이스 구현을 구분하지 않고 콜론(:)으로 통일한다.\n클래스를 상속받는 경우 반드시 부모 클래스의 생성자를 호출해야 하며, 부모 클래스의 생성자는 super 키워드를 사용해 호출한다.\n\n12345678910111213141516171819class MyView : View&#123;    constructor(context: Context) : super(context)&#123;    &#125;    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)&#123;        // 뷰 초기화    &#125;    // 생성자가 여럿일 경우 this 키워드를 사용해 자기 자신의 생성자를 호출할 수 있다.    constructor(context: Context) : this(context,null)&#123;    &#125;    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)&#123;        // 뷰 초기화    &#125;&#125;\n\n오버라이드 시 어노테이션을 사용하지 않고 override 키워드를 사용한다.\nopen 키워드를 사용해 클래스 혹은 함수의 상속 여부를 결정할 수 있다.\n\nopen 키워드가 있으면 상속 가능.\nopen 키워드가 없으면 상속 불가능(Java의 final과 비슷)\n\n\n\nthis\n\n해당 키워드를 사용한 클래스 자신을 지칭할 때 사용한다.\n해당 위치에서 가장 가까운 범위의 클래스를 의미한다. 따라서 클래스 내에서 다른 클래스나 인터페이스의 객체를 동적으로 생성하여 사용하는 경우 키워드를 사용하는 위치에 따라 this가 의미하는 클래스가 달라질 수 있다.\n따라서 this@{클래스이름} 처럼 명확하게 표시해준다.\n\n동반객체\n\n동반 객체(companion object)를 사용하면 클래스 내 모든 멤버에 접근할 수 있으면서 인스턴스 생성 없이 호출할 수 있는 함수를 작성할 수 있다.\n어디서든 접근이 가능하다.\n즉, 자바의 static 메소드, static 멤버와 같은 역할을 한다고 볼 수 있다.\n왜냐하면 코틀린은 클래스 내에 정적 필드나 정적 함수를 둘 수 없다. 그러한 개념이 없기 때문이다. 대신에 클래스별로 하나씩 클래스의 인스턴스 생성 없이 사용할 수 있는 오브젝트를 정의할 수 있는데, 이를 동반 객체라고 한다.\n\n싱글톤\n\n단 하나의 인스턴스만 생성되도록 제약을 둔 패턴으로 코틀린에서 object를 사용해 간편하게 선언할 수 있다.\n\n12345678910object Singleton&#123;    val a = \"a\"    fun aa()&#123;        println(\"aa call!\")    &#125;&#125;val aValue = Singleton.aSingleton.aa()\n코틀린에서의 특징만 살펴보도록 하겠다. 다 정리하기에는 시간이 오래 걸릴 듯 싶어서이다…\n시간이 생긴다면 정리하지 않은 특징도 추구하도록 하겠다. :)\nis 연산자\n\n자료형을 확인하기 위해 사용한다.\n자바의 instanceOf 연산자와 동일한 기능을 한다.\n특정 타입이 아닌 경우를 확인하기 위해서는 !is로 확인하면 된다.\n\n12345678fun Test(obj : Any)&#123;    if(obj is Int)&#123;    &#125;else if(obj is Float)&#123;    &#125;    ...&#125;\nas 연산자\n\n특정 변수를 원하는 자료형으로 변환하기 위한 연산자이다.\n\n123fun porcessNumber(number: Number)&#123;    val foo : Int = number as Int&#125;\n스마트 캐스트\n\n자료형 추론이 가능할 경우 캐스팅 없이 해당하는 자료형으로 객체를 사용할 수 있도록 하는 기능이다.\n값을 검사하는 시점과 사용하는 시점 사이에 값이 변하지 않았다는 것이 보장되는 경우에만 지원된다. 따라서 언제든지 값이 변할수 있는 var는 스마트 캐스트가 지원되지 않는다.\n\n범위\n\n특정 범위를 순회하거나 해당 범위 내에 특정 항목이 포함되어 있는지 확인할 때 사용한다.\n… 연산자를 사용.\n\n123456// 0부터 10까지, 시작과 끝을 포함하는 범위를 정의한다.val myRange : IntRange = 0..10for(i in myRange)&#123;    println(i)&#125;\n\n인덱스 순환을 위한 범위를 생성할 때는 until 함수를 사용하면 된다.\n가장 마지막 값을 포함하지 않는다.\n범위 내에 특정 항목이 있는지 확인할 때는 in 연산자를 사용한다.\n\n12345678910// 0&lt;=N&lt;10val myRagne : IntRange = 0 until 10// 0&lt;=N&lt;=10val myRange2 : IntRange = 0..10// 5가 myRange2 내에 포함되어 있는지 확인.val foo : Boolean = 5 in myRange2 // true 반환// 5가 myRange 내에 포함되지 않는지 확인.val bar : Boolean = 5 !in myRange // false 반환\n\ndownTo() 함수를 이용해 항목들의 순서가 반대로 정렬된 범위를 생성한다.\n시작과 끝을 포함한다.\n기본적으로 1씩 감소 시킨다.\nstep() 함수를 사용하여 감소/증가 폭을 변경할 수 있다.\n\n123456789for(i in 5 downTo 1)&#123;    print(i)&#125;// 결과 : 54321for(i in 5 downTo 1 step 2)&#123; // 2씩 감소시킨다.    print(i)&#125;// 결과 : 531\n예외\n\n사용법은 자바와 동일하다. 하지만, 코틀린에서는 값을 반환할 수 있다.\nchecked exception(뭐지? 검색해보자.)을 따로 검사하지 않는다. 즉, 대부분의 예외를 try-catch문으로 감싸 처리해야 했던 자바와 달리 코틀린에서는 이를 선택적으로 사용할 수 있다.\n\n123456789fun readFromJson(fileName : String) : String&#123;    // IOException을 발생시킬 수 있는 코드    ...&#125;fun process()&#123;    // try-catch문을 사용하지 않아도 된다.    val json : String = readFromJson(\"foo.json\")&#125;\n# 널안정성\n코틀린은 컴파일 단계에서 발생하는 널 포인터 예외가 발생할 문제를 해결하기위해 모든 타입에 명시적으로 널 허용 여부를 함께 표기한다.\n코틀린의 중요한 특징 중 하나라고 생각한다.\n널 허용 여부 표기\n\n널 값을 가질 수 있도록 하려면 명시적으로 타입 뒤에 ? 를 붙여주어야 한다.\n널 값을 허용하지 않는 변수를 초기화하지 않거나, null을 대입하면 컴파일 오류를 발생시킨다.\n함수의 파라미터나 반환 값에도 동일하게 적용된다.\n\n12345val a : String? = nullval b : String = \"b\"val name : String // 오류 : 값이 초기화 되지 않음.val address : String = null // 오류 : null을 허용하지 않는 변수에 null 대입 불가.\n엘비스(?:) 연산자\n\n널 값을 허용하지 않는 값 혹은 변수에 널 값을 반환할 수 있는 함수의 결과를 대입해야 하는 경우 엘비스 연산자를 이용해 편리하게 처리할 수 있다.\n널 값을 대신하는 방법으로 ?:를 사용한다.\n널 여부를 확인하는 작업을 별도로 하지 않아도 되므로 자바에 비해서 간편하게 함수의 로직을 작성할 수 있다.\n값 반환 대신 예외를 발생시킬 수도 있다.\n\n123foo ?: bar// foo가 null이 아닐 경우에는 foo를 반환// foo가 null일 경우에는 bar를 반환\n안전한 호출(?.) 연산자\n\n널 값 확인을 위해 자바에서 if문으로 검사하던 것을 간편화 할 수 있다.\n간단한 로직의 경우 상관이 없지만 복잡해질수록 if문의 향연이 펼쳐질 수 있다.\n안전한 호출 연산자를 사용하여 널 값 확인과 값 접근/함수 호출을 한 번에 할 수 있다.\n이 연산자를 사용하는 객체가 널 값이 아닌 경우에만 연산자 뒤의 문장을 수행한다. 널 값일 경우에는 뒤의 문장을 수행하지 않고 null 값을 반환한다.\n따라서 널 값인 객체의 프로퍼티를 참조하거나 함수를 호출하는 일을 방지할 수 있다.\n\n12345// bar가 null이 아닐 경우에만 해당 값인 baz를 대입. 그렇지 않은 경우 null을 foo에 대입val foo = bar?.baz// foo가 null이 아닐 경우에만 bar() 함수 호출.foo?.bar()\nas? 연산자\n\n자바에서 지원되지 않는 자료형으로 변환을 시도할 가능성이 있는 부분을 try-catch 블록으로 감싸서 처리한다.\n코틀린에서는 as? 연산자를 사용해 간편하게 해결할 수 있다.\n자료형 변환이 실패할 경우 예외를 발생시키는 대신 널 값을 반환한다.\n\n12345val foo : String = \"foo\"// 자료형 변환에 실패하므로 bar로 null 값이 할당된다.// 따라서 bar는 Int?를 통해 널 값을 허용하도록 선언한다.val bar : Int? = foo as? Int\n\n엘비스 연산자를 사용해 변환에 실패했을 때의 기본값을 지정할 수 있다.\n변환된 값을 받은 자료형의 널 허용 여부를 수정할 필요가 없으므로 유연하게 대처할 수 있다.\n\n12// 자료형 변환에 실패하는 경우 기본 값을 0으로 지정.val bar : Int = foo as? Int ?: 0\n널 값이 아님을 명시하기 : 비 널 값 보증\n\n널 값을 포함할 수 있는 타입을 널 값을 포함하지 않는 타입으로 변환하여 사용할 수 있다.\n보증하려는 항목 뒤에 !!을 붙여 사용한다.\n비 널 값 보증을 사용했지만 실제로 객체나 값에 널 값이 들어가 있을 경우 널 포인ㅌ 예외가 발생하므로 유의해서 사용해야 한다.\n\n12345678// 값 foo는 널 값을 포함할 수 있는 타입.val foo : Foo? = ...// 값 foo는 널 값을 포함하지 않음을 보증.val nonNullFoo : Foo = foo!!// 값 foo가 널 값이 아님을 보장하면서 bar() 함수 호출.foo!!.bar()\n비 널 값 보증 사용 주의\n비 널 값 보증은 아래처럼 중첩해서 사용하는 것을 권장하지 않는다.\ncontact.address와 address.line2 중 하나라도 널 값이라면 널 포인터 예외가 발생한다.\n하지만 에러 로그에서 라인만 알 수 있을 뿐, 어느 요소로 예외가 발생했는지 알 수 없다.\n따라서 비 널 값 보증은 중첩되는 호출 단계보다는 하나의 호출 단계에만 사용할 것을 권장한다.\n1234val contact : Contact = ...// address와 line2 모두 널 값이 아님을 보장.val line : String = contact.address!!.line2!!\nlateinit 키워드\n\n초기화 없이 변수만 선언할 수 있다. (var에만 사용할 수 있다.)\n즉, 초기화를 나중에 한다는 의미이다.\n초기화를 하지 않은 채로 사용하려고 하면 널 포인터 예외가 발생하기 때문에 초기화 작업을 반드시 해야 한다.\n초기화가 되었는지 확인하는 방법이 있다.\n\n12345678910class MainActivity: Activity()&#123;    lateinit var api : Api    fun process()&#123;        // lateinit 키워드를 사용한 변수가 초기화 되었는지 확인한다.        if (::api.isInitialized) &#123;             ...         &#125;    &#125;&#125;\n주의!\n코틀린에서는 값을 반환하는 구문들이 있다.\nfor, while, when, try-catch, if 등등이 있다.\n이러한 구문들이 값을 반환한다는 특징을 알고 코드를 더 편리하게 짤 수 있으므로 알아두면 좋을 것 같다.\n","dateCreated":"2019-05-03T20:47:16+09:00","dateModified":"2020-05-13T00:19:06+09:00","datePublished":"2019-05-03T20:47:16+09:00","description":"","headline":"[커니의 Kotlin] Chap1.2","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://woovictory.github.io/2019/05/03/kotlin-chap1-2/"},"publisher":{"@type":"Organization","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg","logo":{"@type":"ImageObject","url":"Victory.jpeg"}},"url":"https://woovictory.github.io/2019/05/03/kotlin-chap1-2/","keywords":"Android, Kotlin, 커니의 Kotlin"}</script>
-    <meta name="description" content="1부에 이어서 작성… # 특징들 생성자  생성자 부분은 자바와 비교했을 때 조금 다른 면이 있다. 다음은 기본 생성자의 정의이다.  init 블록을 사용해 기본 생성자를 대체한다.   생성자에 인자가 필요한 경우 인자처럼 받을 수 있다.  이를 주 생성자라고 부른다.    12345678910111213class Test&amp;#123;        init&amp;#">
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg"},"articleBody":"1부에 이어서 작성…\n\n# 특징들\n생성자\n\n생성자 부분은 자바와 비교했을 때 조금 다른 면이 있다.\n다음은 기본 생성자의 정의이다.\n\ninit 블록을 사용해 기본 생성자를 대체한다.\n\n\n생성자에 인자가 필요한 경우 인자처럼 받을 수 있다.\n\n이를 주 생성자라고 부른다.\n\n\n\n12345678910111213class Test&#123;        init&#123;        // 기본 생성자에서 수행할 작업.    &#125;&#125;class Test(a : Int)&#123;        init&#123;        println(\"$a\")    &#125;&#125;\n\n생성자의 인자를 통해 클래스 내부의 프로퍼티에 값을 할당할 수 있다.\n생성자의 인자를 통해 프로퍼티 선언을 대신한다. 따라서 추가로 프로퍼티 선언이 필요 없다.\n\n1class Test(val a: Int, val b: Char)\n\n생성자의 인자에서 프로퍼티 선언이 함께 이루어지고, 값 할당 또한 생성자 호출과 동시에 수행되므로 짧은 코드를 확인할 수 있다.\n주 생성자 외에 다른 형태의 생성자가 필요한 경우 constructor 키워드를 사용해 선언할 수 있다.\n\n123456789class Test(val a: Int, val b: Char)&#123;    // a 값만 인자로 받는 추가 생성자.    // 기본 생성자를 반드시 호출해야 한다.    constructor(a: Int) : this(a,0)        // 두 인자의 값을 모두 0으로 지정하는 생성자.    constructor() : this(0,0)&#125;\n\n이처럼 추가 생성자를 정의하는 경우 주 생성자를 반드시 호출해야 한다.(상속과 this를 사용해서!)\n추가 생성자에서는 인자와 프로퍼티를 함께 선언할 수 없다. 따라서 프로퍼티 선언이 필요한 경우 주 생성자에서 이를 처리해야 한다.\n생성자 앞에 접근 제한자를 붙여 가시성을 변경할 수 있다.\n\n123456class Test private constructor(val a: Int, val b: Char)&#123;    private constructor(a: Int) : this(a,0)    constructor(): this(0,0)&#125;\n생성자는 중요한 개념이므로 추후 더 추가할 예정.\n함수\n\n메소드를 함수로 표현한다.\nvoid -&gt; Unit이며 반환 값이 없음을 의미한다.\n또한, 반환 값이 없는 함수는 Unit을 생략할 수 있다.\n\n123456789class Test&#123;    fun foo(): Unit&#123;        // Unit 생략 가능.    &#125;    fun bar(): Int&#123;        return 1    &#125;&#125;\n상속 및 인터페이스 구현\n\n클래스의 상속과 인터페이스 구현을 구분하지 않고 콜론(:)으로 통일한다.\n클래스를 상속받는 경우 반드시 부모 클래스의 생성자를 호출해야 하며, 부모 클래스의 생성자는 super 키워드를 사용해 호출한다.\n\n12345678910111213141516171819class MyView : View&#123;    constructor(context: Context) : super(context)&#123;    &#125;    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)&#123;        // 뷰 초기화    &#125;    // 생성자가 여럿일 경우 this 키워드를 사용해 자기 자신의 생성자를 호출할 수 있다.    constructor(context: Context) : this(context,null)&#123;    &#125;    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)&#123;        // 뷰 초기화    &#125;&#125;\n\n오버라이드 시 어노테이션을 사용하지 않고 override 키워드를 사용한다.\nopen 키워드를 사용해 클래스 혹은 함수의 상속 여부를 결정할 수 있다.\n\nopen 키워드가 있으면 상속 가능.\nopen 키워드가 없으면 상속 불가능(Java의 final과 비슷)\n\n\n\nthis\n\n해당 키워드를 사용한 클래스 자신을 지칭할 때 사용한다.\n해당 위치에서 가장 가까운 범위의 클래스를 의미한다. 따라서 클래스 내에서 다른 클래스나 인터페이스의 객체를 동적으로 생성하여 사용하는 경우 키워드를 사용하는 위치에 따라 this가 의미하는 클래스가 달라질 수 있다.\n따라서 this@{클래스이름} 처럼 명확하게 표시해준다.\n\n동반객체\n\n동반 객체(companion object)를 사용하면 클래스 내 모든 멤버에 접근할 수 있으면서 인스턴스 생성 없이 호출할 수 있는 함수를 작성할 수 있다.\n어디서든 접근이 가능하다.\n즉, 자바의 static 메소드, static 멤버와 같은 역할을 한다고 볼 수 있다.\n왜냐하면 코틀린은 클래스 내에 정적 필드나 정적 함수를 둘 수 없다. 그러한 개념이 없기 때문이다. 대신에 클래스별로 하나씩 클래스의 인스턴스 생성 없이 사용할 수 있는 오브젝트를 정의할 수 있는데, 이를 동반 객체라고 한다.\n\n싱글톤\n\n단 하나의 인스턴스만 생성되도록 제약을 둔 패턴으로 코틀린에서 object를 사용해 간편하게 선언할 수 있다.\n\n12345678910object Singleton&#123;    val a = \"a\"    fun aa()&#123;        println(\"aa call!\")    &#125;&#125;val aValue = Singleton.aSingleton.aa()\n코틀린에서의 특징만 살펴보도록 하겠다. 다 정리하기에는 시간이 오래 걸릴 듯 싶어서이다…\n시간이 생긴다면 정리하지 않은 특징도 추구하도록 하겠다. :)\nis 연산자\n\n자료형을 확인하기 위해 사용한다.\n자바의 instanceOf 연산자와 동일한 기능을 한다.\n특정 타입이 아닌 경우를 확인하기 위해서는 !is로 확인하면 된다.\n\n12345678fun Test(obj : Any)&#123;    if(obj is Int)&#123;    &#125;else if(obj is Float)&#123;    &#125;    ...&#125;\nas 연산자\n\n특정 변수를 원하는 자료형으로 변환하기 위한 연산자이다.\n\n123fun porcessNumber(number: Number)&#123;    val foo : Int = number as Int&#125;\n스마트 캐스트\n\n자료형 추론이 가능할 경우 캐스팅 없이 해당하는 자료형으로 객체를 사용할 수 있도록 하는 기능이다.\n값을 검사하는 시점과 사용하는 시점 사이에 값이 변하지 않았다는 것이 보장되는 경우에만 지원된다. 따라서 언제든지 값이 변할수 있는 var는 스마트 캐스트가 지원되지 않는다.\n\n범위\n\n특정 범위를 순회하거나 해당 범위 내에 특정 항목이 포함되어 있는지 확인할 때 사용한다.\n… 연산자를 사용.\n\n123456// 0부터 10까지, 시작과 끝을 포함하는 범위를 정의한다.val myRange : IntRange = 0..10for(i in myRange)&#123;    println(i)&#125;\n\n인덱스 순환을 위한 범위를 생성할 때는 until 함수를 사용하면 된다.\n가장 마지막 값을 포함하지 않는다.\n범위 내에 특정 항목이 있는지 확인할 때는 in 연산자를 사용한다.\n\n12345678910// 0&lt;=N&lt;10val myRagne : IntRange = 0 until 10// 0&lt;=N&lt;=10val myRange2 : IntRange = 0..10// 5가 myRange2 내에 포함되어 있는지 확인.val foo : Boolean = 5 in myRange2 // true 반환// 5가 myRange 내에 포함되지 않는지 확인.val bar : Boolean = 5 !in myRange // false 반환\n\ndownTo() 함수를 이용해 항목들의 순서가 반대로 정렬된 범위를 생성한다.\n시작과 끝을 포함한다.\n기본적으로 1씩 감소 시킨다.\nstep() 함수를 사용하여 감소/증가 폭을 변경할 수 있다.\n\n123456789for(i in 5 downTo 1)&#123;    print(i)&#125;// 결과 : 54321for(i in 5 downTo 1 step 2)&#123; // 2씩 감소시킨다.    print(i)&#125;// 결과 : 531\n예외\n\n사용법은 자바와 동일하다. 하지만, 코틀린에서는 값을 반환할 수 있다.\nchecked exception(뭐지? 검색해보자.)을 따로 검사하지 않는다. 즉, 대부분의 예외를 try-catch문으로 감싸 처리해야 했던 자바와 달리 코틀린에서는 이를 선택적으로 사용할 수 있다.\n\n123456789fun readFromJson(fileName : String) : String&#123;    // IOException을 발생시킬 수 있는 코드    ...&#125;fun process()&#123;    // try-catch문을 사용하지 않아도 된다.    val json : String = readFromJson(\"foo.json\")&#125;\n# 널안정성\n코틀린은 컴파일 단계에서 발생하는 널 포인터 예외가 발생할 문제를 해결하기위해 모든 타입에 명시적으로 널 허용 여부를 함께 표기한다.\n코틀린의 중요한 특징 중 하나라고 생각한다.\n널 허용 여부 표기\n\n널 값을 가질 수 있도록 하려면 명시적으로 타입 뒤에 ? 를 붙여주어야 한다.\n널 값을 허용하지 않는 변수를 초기화하지 않거나, null을 대입하면 컴파일 오류를 발생시킨다.\n함수의 파라미터나 반환 값에도 동일하게 적용된다.\n\n12345val a : String? = nullval b : String = \"b\"val name : String // 오류 : 값이 초기화 되지 않음.val address : String = null // 오류 : null을 허용하지 않는 변수에 null 대입 불가.\n엘비스(?:) 연산자\n\n널 값을 허용하지 않는 값 혹은 변수에 널 값을 반환할 수 있는 함수의 결과를 대입해야 하는 경우 엘비스 연산자를 이용해 편리하게 처리할 수 있다.\n널 값을 대신하는 방법으로 ?:를 사용한다.\n널 여부를 확인하는 작업을 별도로 하지 않아도 되므로 자바에 비해서 간편하게 함수의 로직을 작성할 수 있다.\n값 반환 대신 예외를 발생시킬 수도 있다.\n\n123foo ?: bar// foo가 null이 아닐 경우에는 foo를 반환// foo가 null일 경우에는 bar를 반환\n안전한 호출(?.) 연산자\n\n널 값 확인을 위해 자바에서 if문으로 검사하던 것을 간편화 할 수 있다.\n간단한 로직의 경우 상관이 없지만 복잡해질수록 if문의 향연이 펼쳐질 수 있다.\n안전한 호출 연산자를 사용하여 널 값 확인과 값 접근/함수 호출을 한 번에 할 수 있다.\n이 연산자를 사용하는 객체가 널 값이 아닌 경우에만 연산자 뒤의 문장을 수행한다. 널 값일 경우에는 뒤의 문장을 수행하지 않고 null 값을 반환한다.\n따라서 널 값인 객체의 프로퍼티를 참조하거나 함수를 호출하는 일을 방지할 수 있다.\n\n12345// bar가 null이 아닐 경우에만 해당 값인 baz를 대입. 그렇지 않은 경우 null을 foo에 대입val foo = bar?.baz// foo가 null이 아닐 경우에만 bar() 함수 호출.foo?.bar()\nas? 연산자\n\n자바에서 지원되지 않는 자료형으로 변환을 시도할 가능성이 있는 부분을 try-catch 블록으로 감싸서 처리한다.\n코틀린에서는 as? 연산자를 사용해 간편하게 해결할 수 있다.\n자료형 변환이 실패할 경우 예외를 발생시키는 대신 널 값을 반환한다.\n\n12345val foo : String = \"foo\"// 자료형 변환에 실패하므로 bar로 null 값이 할당된다.// 따라서 bar는 Int?를 통해 널 값을 허용하도록 선언한다.val bar : Int? = foo as? Int\n\n엘비스 연산자를 사용해 변환에 실패했을 때의 기본값을 지정할 수 있다.\n변환된 값을 받은 자료형의 널 허용 여부를 수정할 필요가 없으므로 유연하게 대처할 수 있다.\n\n12// 자료형 변환에 실패하는 경우 기본 값을 0으로 지정.val bar : Int = foo as? Int ?: 0\n널 값이 아님을 명시하기 : 비 널 값 보증\n\n널 값을 포함할 수 있는 타입을 널 값을 포함하지 않는 타입으로 변환하여 사용할 수 있다.\n보증하려는 항목 뒤에 !!을 붙여 사용한다.\n비 널 값 보증을 사용했지만 실제로 객체나 값에 널 값이 들어가 있을 경우 널 포인ㅌ 예외가 발생하므로 유의해서 사용해야 한다.\n\n12345678// 값 foo는 널 값을 포함할 수 있는 타입.val foo : Foo? = ...// 값 foo는 널 값을 포함하지 않음을 보증.val nonNullFoo : Foo = foo!!// 값 foo가 널 값이 아님을 보장하면서 bar() 함수 호출.foo!!.bar()\n비 널 값 보증 사용 주의\n비 널 값 보증은 아래처럼 중첩해서 사용하는 것을 권장하지 않는다.\ncontact.address와 address.line2 중 하나라도 널 값이라면 널 포인터 예외가 발생한다.\n하지만 에러 로그에서 라인만 알 수 있을 뿐, 어느 요소로 예외가 발생했는지 알 수 없다.\n따라서 비 널 값 보증은 중첩되는 호출 단계보다는 하나의 호출 단계에만 사용할 것을 권장한다.\n1234val contact : Contact = ...// address와 line2 모두 널 값이 아님을 보장.val line : String = contact.address!!.line2!!\nlateinit 키워드\n\n초기화 없이 변수만 선언할 수 있다. (var에만 사용할 수 있다.)\n즉, 초기화를 나중에 한다는 의미이다.\n초기화를 하지 않은 채로 사용하려고 하면 널 포인터 예외가 발생하기 때문에 초기화 작업을 반드시 해야 한다.\n초기화가 되었는지 확인하는 방법이 있다.\n\n12345678910class MainActivity: Activity()&#123;    lateinit var api : Api    fun process()&#123;        // lateinit 키워드를 사용한 변수가 초기화 되었는지 확인한다.        if (::api.isInitialized) &#123;             ...         &#125;    &#125;&#125;\n주의!\n코틀린에서는 값을 반환하는 구문들이 있다.\nfor, while, when, try-catch, if 등등이 있다.\n이러한 구문들이 값을 반환한다는 특징을 알고 코드를 더 편리하게 짤 수 있으므로 알아두면 좋을 것 같다.\n","dateCreated":"2019-05-03T20:47:16+09:00","dateModified":"2020-08-05T15:46:28+09:00","datePublished":"2019-05-03T20:47:16+09:00","description":"1부에 이어서 작성…","headline":"[커니의 Kotlin] Chap1.2","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://woovictory.github.io/2019/05/03/kotlin-chap1-2/"},"publisher":{"@type":"Organization","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg","logo":{"@type":"ImageObject","url":"Victory.jpeg"}},"url":"https://woovictory.github.io/2019/05/03/kotlin-chap1-2/","keywords":"Android, Kotlin, 커니의 Kotlin"}</script>
+    <meta name="description" content="1부에 이어서 작성…">
 <meta name="keywords" content="Android,Kotlin,커니의 Kotlin">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="[커니의 Kotlin] Chap1.2">
 <meta property="og:url" content="https://woovictory.github.io/2019/05/03/kotlin-chap1-2/index.html">
 <meta property="og:site_name" content="VictoryWoo">
-<meta property="og:description" content="1부에 이어서 작성… # 특징들 생성자  생성자 부분은 자바와 비교했을 때 조금 다른 면이 있다. 다음은 기본 생성자의 정의이다.  init 블록을 사용해 기본 생성자를 대체한다.   생성자에 인자가 필요한 경우 인자처럼 받을 수 있다.  이를 주 생성자라고 부른다.    12345678910111213class Test&amp;#123;        init&amp;#">
+<meta property="og:description" content="1부에 이어서 작성…">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2020-05-12T15:19:06.645Z">
+<meta property="og:updated_time" content="2020-08-05T06:46:28.749Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="[커니의 Kotlin] Chap1.2">
-<meta name="twitter:description" content="1부에 이어서 작성… # 특징들 생성자  생성자 부분은 자바와 비교했을 때 조금 다른 면이 있다. 다음은 기본 생성자의 정의이다.  init 블록을 사용해 기본 생성자를 대체한다.   생성자에 인자가 필요한 경우 인자처럼 받을 수 있다.  이를 주 생성자라고 부른다.    12345678910111213class Test&amp;#123;        init&amp;#">
+<meta name="twitter:description" content="1부에 이어서 작성…">
     
     
         
@@ -41,6 +41,15 @@
     <link rel="stylesheet" href="/assets/css/tranquilpeak.css">
     <!--STYLES END-->
     
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-125410253-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-125410253-1');
+    </script>
+
 
     
 
@@ -60,7 +69,7 @@
         
     
 
-<header id="header" data-behavior="4">
+<header id="header" data-behavior="2">
     <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
     <div class="header-title">
         <a
@@ -93,7 +102,7 @@
         
     
 
-<nav id="sidebar" data-behavior="4">
+<nav id="sidebar" data-behavior="2">
     <div class="sidebar-container">
         
             <div class="sidebar-profile">
@@ -255,7 +264,7 @@
 </nav>
 
             
-            <div id="main" data-behavior="4"
+            <div id="main" data-behavior="2"
                  class="
                         hasCoverMetaIn
                         ">
@@ -279,7 +288,7 @@
     
         <span>in </span>
         
-    <a class="category-link" href="/categories/Kotlin/">Kotlin</a>
+    <a class="category-link" href="/categories/Book/">Book</a>, <a class="category-link" href="/categories/Book/커니의-Kotlin/">커니의 Kotlin</a>
 
 
     
@@ -292,6 +301,7 @@
     <div class="post-content markdown">
         <div class="main-content-wrap">
             <p>1부에 이어서 작성…</p>
+<a id="more"></a>
 <h2 id="특징들"># 특징들</h2>
 <p><strong>생성자</strong></p>
 <ul>
@@ -574,6 +584,16 @@ for, while, when, try-catch, if 등등이 있다.<br>
         
         
             
+                <li class="post-action">
+                    <a
+                        class="post-action-btn btn btn--default"
+                        href="#disqus_thread"
+                        aria-label="Leave a comment"
+                    >
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
         
         <li class="post-action">
             
@@ -589,6 +609,10 @@ for, while, when, try-catch, if 등등이 있다.<br>
         
         
             
+                <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+            
         
     </div>
 </article>
@@ -603,7 +627,7 @@ for, while, when, try-catch, if 등등이 있다.<br>
 
             </div>
             
-                <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="2">
                     <div class="post-actions-wrap">
     <nav>
         <ul class="post-actions post-action-nav">
@@ -689,6 +713,16 @@ for, while, when, try-catch, if 등등이 있다.<br>
         
         
             
+                <li class="post-action">
+                    <a
+                        class="post-action-btn btn btn--default"
+                        href="#disqus_thread"
+                        aria-label="Leave a comment"
+                    >
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
         
         <li class="post-action">
             
@@ -703,7 +737,7 @@ for, while, when, try-catch, if 등등이 있다.<br>
 
                 </div>
                 
-    <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+    <div id="share-options-bar" class="share-options-bar" data-behavior="2">
         <i id="btn-close-shareoptions" class="fa fa-times"></i>
         <ul class="share-options">
             
@@ -795,6 +829,23 @@ for, while, when, try-catch, if 등등이 있다.<br>
 <!--SCRIPTS END-->
 
 
+    
+        <script>
+          var disqus_config = function() {
+            this.page.url = 'https://woovictory.github.io/2019/05/03/kotlin-chap1-2/';
+              
+            this.page.identifier = '2019/05/03/kotlin-chap1-2/';
+              
+          };
+          (function() {
+            var d = document, s = d.createElement('script');
+            var disqus_shortname = 'https-woovictory-github-io';
+            s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+          })();
+        </script>
     
 
 
