@@ -272,219 +272,6 @@
                     
                         <a
                             class="link-unstyled"
-                            href="/2018/10/24/BOJ11651/"
-                            aria-label=": [11651] 좌표 정렬하기2"
-                        >
-                            [11651] 좌표 정렬하기2
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2018-10-24T20:58:34+09:00">
-	
-		    Oct 24, 2018
-    	
-    </time>
-    
-        <span>in </span>
-        
-    <a class="category-link" href="/categories/algorithm/">algorithm</a>, <a class="category-link" href="/categories/algorithm/BOJ/">BOJ</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <p>문제 : <a href="https://www.acmicpc.net/problem/11651" target="_blank" rel="noopener">https://www.acmicpc.net/problem/11651</a></p>
-<h1 id="풀이방법">풀이방법</h1>
-<hr>
-<p>어제 풀었던 좌표 정렬하기 문제에서 x를 기준으로 정렬했다면 이 문제는 y를 기준으로 정렬하고 y좌표의 값이 같으면 x좌표를 오름차순으로 정렬하는 문제입니다. 어제 언급했던 Comparable or Comparator을 활용해서 문제를 풀 수 있는지 확인하는 문제입니다.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.*;</span><br><span class="line"><span class="keyword">import</span> java.util.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BOJ11651</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        BufferedReader bf = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(System.in));</span><br><span class="line">        BufferedWriter bw = <span class="keyword">new</span> BufferedWriter(<span class="keyword">new</span> OutputStreamWriter(System.out));</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> N = Integer.parseInt(bf.readLine());</span><br><span class="line">        List&lt;Point&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; N; i++) &#123;</span><br><span class="line">            StringTokenizer st = <span class="keyword">new</span> StringTokenizer(bf.readLine(), <span class="string">" "</span>);</span><br><span class="line">            <span class="keyword">int</span> x = Integer.parseInt(st.nextToken());</span><br><span class="line">            <span class="keyword">int</span> y = Integer.parseInt(st.nextToken());</span><br><span class="line">            list.add(<span class="keyword">new</span> Point(x, y));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        Collections.sort(list, <span class="keyword">new</span> Comparator&lt;Point&gt;() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">compare</span><span class="params">(Point o1, Point o2)</span> </span>&#123;</span><br><span class="line">                <span class="keyword">if</span>(o1.y == o2.y)&#123;</span><br><span class="line">                    <span class="keyword">if</span>(o1.x&gt;o2.x)&#123;</span><br><span class="line">                        <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">                    &#125;<span class="keyword">else</span> <span class="keyword">if</span>(o1.x&lt;o2.x)&#123;</span><br><span class="line">                        <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">                    &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">                        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;<span class="keyword">else</span> <span class="keyword">if</span>(o1.y&gt;o2.y)&#123;</span><br><span class="line">                    <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">                &#125;<span class="keyword">else</span> <span class="keyword">if</span>(o1.y&lt;o2.y)&#123;</span><br><span class="line">                    <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">                &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">                    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;list.size();i++)</span><br><span class="line">            bw.write(list.get(i).x+<span class="string">" "</span>+list.get(i).y+<span class="string">"\n"</span>);</span><br><span class="line">        bw.flush();</span><br><span class="line">        bw.close();</span><br><span class="line">        bf.close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Point</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> x;</span><br><span class="line">    <span class="keyword">int</span> y;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Point</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.x = x;</span><br><span class="line">        <span class="keyword">this</span>.y = y;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2018/10/24/BOJ11651/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2018/10/23/BOJ11650/"
-                            aria-label=": [11650] 좌표 정렬하기"
-                        >
-                            [11650] 좌표 정렬하기
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2018-10-23T20:57:56+09:00">
-	
-		    Oct 23, 2018
-    	
-    </time>
-    
-        <span>in </span>
-        
-    <a class="category-link" href="/categories/algorithm/">algorithm</a>, <a class="category-link" href="/categories/algorithm/BOJ/">BOJ</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <p>문제 : <a href="https://www.acmicpc.net/problem/11650" target="_blank" rel="noopener">https://www.acmicpc.net/problem/11650</a></p>
-<h1 id="풀이방법">풀이방법</h1>
-<hr>
-<p>이 문제는 어제 풀어보았던 <strong>단어 정렬</strong> 문제와 비슷한 유형입니다. 바로 Comparator 혹은 Comparable을 구현해서 정렬하는 문제입니다. 그럼 여기서 의문이 생길 수 있습니다.</p>
-<blockquote>
-<p>그냥 sort를 사용해서 정렬을 하면 되는데, 왜 저런 것을 사용하는거지??</p>
-</blockquote>
-<p><strong>sort는 하나의 값을 기준으로 정렬할 때 사용할 수 있지만, 객체를 정렬할 때는 사용하지 못하기 때문입니다. 즉 객체의 어떤 속성(값)을 기준으로 정렬할 지 모호하기 때문에 Comparable 혹은 Comparator를 구현해서 원하는 정렬을 진행해야 합니다. 사용법만 안다면 간단하게 구현할 수 있습니다.</strong></p>
-<ol>
-<li><strong>Comparable 구현</strong><br>
-Comparable은 객체가 될 클래스가 Comparable을 구현함으로써 사용 가능합니다. compareTo라는 함수를 오버라이드 해서 클래스의 객체인 Coordinates와 this의 x,y 값을 비교해서 값을 리턴하게 됩니다.</li>
-</ol>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.*;</span><br><span class="line"><span class="keyword">import</span> java.util.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BOJ11650</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        BufferedReader bf = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(System.in));</span><br><span class="line">        BufferedWriter bw = <span class="keyword">new</span> BufferedWriter(<span class="keyword">new</span> OutputStreamWriter(System.out));</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> N = Integer.parseInt(bf.readLine());</span><br><span class="line">        List&lt;Coordinates&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; N; i++) &#123;</span><br><span class="line">            StringTokenizer st = <span class="keyword">new</span> StringTokenizer(bf.readLine(), <span class="string">" "</span>);</span><br><span class="line">            <span class="keyword">int</span> x = Integer.parseInt(st.nextToken());</span><br><span class="line">            <span class="keyword">int</span> y = Integer.parseInt(st.nextToken());</span><br><span class="line">            list.add(<span class="keyword">new</span> Coordinates(x, y));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        Collections.sort(list);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; list.size(); i++)</span><br><span class="line">            bw.write(list.get(i).x + <span class="string">" "</span> + list.get(i).y + <span class="string">"\n"</span>);</span><br><span class="line"></span><br><span class="line">        bw.flush();</span><br><span class="line">        bw.close();</span><br><span class="line">        bf.close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Coordinates</span> <span class="keyword">implements</span> <span class="title">Comparable</span>&lt;<span class="title">Coordinates</span>&gt; </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> x;</span><br><span class="line">    <span class="keyword">int</span> y;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Coordinates</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.x = x;</span><br><span class="line">        <span class="keyword">this</span>.y = y;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">compareTo</span><span class="params">(Coordinates o)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 오름 차순일 경우</span></span><br><span class="line">        <span class="comment">// this를 기준으로 함</span></span><br><span class="line">        <span class="comment">// this가 크면 1, this가 작으면 -1 : 오름차순 정렬!</span></span><br><span class="line">        <span class="comment">// 여기서 비교하는 값은 o라는 객체가 됨.</span></span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.x &gt; o.x) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (o.x == <span class="keyword">this</span>.x) &#123;</span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">this</span>.y &gt; o.y) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="keyword">this</span>.x &lt; o.x) &#123;</span><br><span class="line">            <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ol start="2">
-<li><strong>Comparator 구현</strong><br>
-Comparator를 구현하면 compare()라는 메소드를 오버라이드 합니다. 이 함수는 매개 변수로 두 개의 객체가 들어있어서 두 개의 객체를 비교하여 리턴하는 값에 따라서 정렬된 값을 알 수 있습니다. 두 객체를 비교해서 음수, 0, 양수를 반환하도록 합니다. Comparator를 구현하면 기본 정렬 외에도 다른 기준으로 정렬하고자 할 때 사용할 수 있습니다.</li>
-</ol>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> language;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.*;</span><br><span class="line"><span class="keyword">import</span> java.util.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BOJ11650</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        BufferedReader bf = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(System.in));</span><br><span class="line">        BufferedWriter bw = <span class="keyword">new</span> BufferedWriter(<span class="keyword">new</span> OutputStreamWriter(System.out));</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> N = Integer.parseInt(bf.readLine());</span><br><span class="line">        List&lt;Coordinates&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; N; i++) &#123;</span><br><span class="line">            StringTokenizer st = <span class="keyword">new</span> StringTokenizer(bf.readLine(), <span class="string">" "</span>);</span><br><span class="line">            <span class="keyword">int</span> x = Integer.parseInt(st.nextToken());</span><br><span class="line">            <span class="keyword">int</span> y = Integer.parseInt(st.nextToken());</span><br><span class="line">            list.add(<span class="keyword">new</span> Coordinates(x, y));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="comment">// Comparator를 이용한 방법</span></span><br><span class="line">        list.sort(<span class="keyword">new</span> Comparator&lt;Coordinates&gt;() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">compare</span><span class="params">(Coordinates o1, Coordinates o2)</span> </span>&#123;</span><br><span class="line">                <span class="comment">// o1을 기준으로 잡는다.</span></span><br><span class="line">                <span class="comment">// o2가 비교하는 객체가 된다.</span></span><br><span class="line">                <span class="comment">// 오름 차순!</span></span><br><span class="line">            </span><br><span class="line">                <span class="keyword">if</span> (o1.x == o2.x) &#123;</span><br><span class="line">                    <span class="keyword">if</span> (o1.y &gt; o2.y) &#123;</span><br><span class="line">                        <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">                    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                        <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;<span class="keyword">else</span> <span class="keyword">if</span>(o1.x&gt;o2.x)&#123;</span><br><span class="line">                    <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">                &#125;<span class="keyword">else</span> <span class="keyword">if</span>(o1.x&lt;o2.x)&#123;</span><br><span class="line">                    <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">                &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">                    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">        Collections.sort(list);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; list.size(); i++)</span><br><span class="line">            bw.write(list.get(i).x + <span class="string">" "</span> + list.get(i).y + <span class="string">"\n"</span>);</span><br><span class="line"></span><br><span class="line">        bw.flush();</span><br><span class="line">        bw.close();</span><br><span class="line">        bf.close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Coordinates</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> x;</span><br><span class="line">    <span class="keyword">int</span> y;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Coordinates</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.x = x;</span><br><span class="line">        <span class="keyword">this</span>.y = y;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>참고 : <a href="https://woovictory.github.io/2018/03/08/java-collection-framework/">Collection Framework 중 Comparable, Comparator에 관한 내용</a></p>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2018/10/23/BOJ11650/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2018/10/22/BOJ1181/"
-                            aria-label=": [1181] 단어 정렬"
-                        >
-                            [1181] 단어 정렬
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2018-10-22T22:33:43+09:00">
-	
-		    Oct 22, 2018
-    	
-    </time>
-    
-        <span>in </span>
-        
-    <a class="category-link" href="/categories/algorithm/">algorithm</a>, <a class="category-link" href="/categories/algorithm/BOJ/">BOJ</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <p>문제 : <a href="https://www.acmicpc.net/problem/1181" target="_blank" rel="noopener">https://www.acmicpc.net/problem/1181</a></p>
-<h1 id="풀이-방법">풀이 방법</h1>
-<hr>
-<ol>
-<li>첫 번째 시도<br>
-처음에는 간단하게 배열로 입력받은 문자열을 담은 다음에 Comparable을 구현한 클래스를 통해서 정렬을 하려고 했습니다. 하지만, 문자열의 길이순으로는 정렬이 되는데, 문자열의 길이가 같은 경우에는 사전 순으로 먼저 나오는 단어가 출력되고 그 다음 단어가 출력되는 형식으로 결과를 도출해야 합니다. 하지만, 배열을 사용할 경우에 그렇게 하기란 쉽지 않았습니다.</li>
-</ol>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.*;</span><br><span class="line"><span class="keyword">import</span> java.util.Arrays;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BOJ1181</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        BufferedReader bf = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(System.in));</span><br><span class="line">        BufferedWriter bw = <span class="keyword">new</span> BufferedWriter(<span class="keyword">new</span> OutputStreamWriter(System.out));</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> N = Integer.parseInt(bf.readLine());</span><br><span class="line">        Data[] arr = <span class="keyword">new</span> Data[N];</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;N;i++)&#123;</span><br><span class="line">            String input = bf.readLine();</span><br><span class="line">            arr[i] = <span class="keyword">new</span> Data(input,input.length());</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        Arrays.sort(arr);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;N;i++)</span><br><span class="line">            bw.write(arr[i].name+<span class="string">"\n"</span>);</span><br><span class="line"></span><br><span class="line">        bw.flush();</span><br><span class="line">        bw.close();</span><br><span class="line">        bf.close();</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Data</span> <span class="keyword">implements</span> <span class="title">Comparable</span>&lt;<span class="title">Data</span>&gt;</span>&#123;</span><br><span class="line">    String name;</span><br><span class="line">    <span class="keyword">int</span> length;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Data</span><span class="params">(String name, <span class="keyword">int</span> length)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">        <span class="keyword">this</span>.length = length;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">compareTo</span><span class="params">(Data o)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(<span class="keyword">this</span>.length&gt;o.length)&#123;</span><br><span class="line">            System.out.println(<span class="string">"here 0"</span>);</span><br><span class="line">            <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">        &#125;<span class="keyword">else</span> <span class="keyword">if</span>(<span class="keyword">this</span>.length&lt;o.length)&#123;</span><br><span class="line">            System.out.println(<span class="string">"here -1"</span>);</span><br><span class="line">            <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">        &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ol start="2">
-<li>두 번째 방법<br>
-문제를 자세히 읽어보니 이미 나온 단어가 또 나오면 한번만 출력한다고 합니다. 이 뜻은 중복을 허용하지 않는다는 뜻이므로, Set을 이용할 수 있다는 의미입니다. 또한, Set을 이용해서 데이터를 add 하고 나서 List<string> list = new ArrayList&lt;&gt;(set); 을 통해서 Set을 List의 생성자에 대입할 수 있습니다.</string></li>
-</ol>
-<p>그로 인해서 Set이 List가 되어서 Collections.sort를 통해서 입력 받은 문자열들을 먼저 사전순으로 정렬할 수 있습니다. 그 후에, Comparator를 구현하여 문자열의 길이순으로 오름차순 정렬을 수행할 수 있습니다.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.*;</span><br><span class="line"><span class="keyword">import</span> java.util.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BOJ1181</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        BufferedReader bf = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(System.in));</span><br><span class="line">        BufferedWriter bw = <span class="keyword">new</span> BufferedWriter(<span class="keyword">new</span> OutputStreamWriter(System.out));</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> N = Integer.parseInt(bf.readLine());</span><br><span class="line">        Set&lt;String&gt; set = <span class="keyword">new</span> HashSet&lt;&gt;();</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; N; i++) &#123;</span><br><span class="line">            String input = bf.readLine();</span><br><span class="line">            set.add(input);</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        List&lt;String&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;(set);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 일단 사전순으로 먼저 정렬</span></span><br><span class="line">        Collections.sort(list);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 길이순으로 정렬</span></span><br><span class="line">        <span class="comment">// Comparator을 구현함.</span></span><br><span class="line">        <span class="comment">// compare 함수를 오버라이드하여 길이로 비교함</span></span><br><span class="line">        Collections.sort(list, <span class="keyword">new</span> Comparator&lt;String&gt;() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">compare</span><span class="params">(String o1, String o2)</span> </span>&#123;</span><br><span class="line">                <span class="keyword">if</span> (o1.length() &gt; o2.length())</span><br><span class="line">                    <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">                <span class="keyword">else</span> <span class="keyword">if</span> (o1.length() &lt; o2.length())</span><br><span class="line">                    <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">                <span class="keyword">else</span></span><br><span class="line">                    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 출력</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; list.size(); i++)</span><br><span class="line">            bw.write(list.get(i) + <span class="string">"\n"</span>);</span><br><span class="line"></span><br><span class="line">        bw.flush();</span><br><span class="line">        bw.close();</span><br><span class="line">        bf.close();</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h1 id="배운-점">배운 점</h1>
-<hr>
-<p>1일 1 알고리즘을 실천하기 위해서 매일 알고리즘을 풉니다. 그리고 지금은 기초 단계이기 때문에 비교적 쉬운 문제이지만 기초를 잘 다져놔야 추후에 난이도 있는 문제도 풀 수 있다고 생각합니다. 오늘처럼 분명 사용해보았지만 기억이 나지 않았던 부분들은 확실하게 기억하고 넘어가야 할 필요가 있습니다.</p>
-<p><strong>오늘 나왔었던 개념은 문제를 자세히 읽어보고 <code>어떠한 자료구조를 선택할 것인가</code>를 잘 생각하고 문제를 이해하고 풀어야 한다는 것입니다. 이 부분은 자료구조에 대한 이해력을 더 높이고 공부를 더 해야 할 것 같습니다. 그리고 두 번째로는 <code>Comparable 혹은 Comparator</code>에 대한 내용입니다. 예전에 공부할 때 포스팅해 둔 내용이 있어서 잠깐 참고해서 보았습니다. 하지만, 이 부분도 시간이 지나면서 점차 기억 속에서 잊혀졌기 때문에 다시 한 번 보면서 개념을 상기시켜야 할 것 같습니다!! :)</strong></p>
-<p><strong>Comparable or Comparator 내용</strong> : <a href="https://woovictory.github.io/2018/03/08/java-collection-framework/">https://woovictory.github.io/2018/03/08/java-collection-framework/</a></p>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2018/10/22/BOJ1181/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
                             href="/2018/10/21/BOJ10813/"
                             aria-label=": [10813] 공 바꾸기"
                         >
@@ -924,6 +711,196 @@ Comparator를 구현하면 compare()라는 메소드를 오버라이드 합니�
         
     </article>
     
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2018/10/15/BOJ10824/"
+                            aria-label=": [10824] 네 수"
+                        >
+                            [10824] 네 수
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2018-10-15T20:27:20+09:00">
+	
+		    Oct 15, 2018
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/algorithm/">algorithm</a>, <a class="category-link" href="/categories/algorithm/BOJ/">BOJ</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <p>문제 : <a href="https://www.acmicpc.net/problem/10824" target="_blank" rel="noopener">https://www.acmicpc.net/problem/10824</a></p>
+<h1 id="풀이방법">풀이방법</h1>
+<hr>
+<p>이 문제도 앞에서 풀어보았던 10822, 10823과 같은 형식의 문제라고 생각하고 간단하게 접근을 했습니다. 로직을 다 짜고 실행시켜보니 <strong>런타임 에러</strong>…? 그래서 왜 런타임 에러가 날까 생각을 해보았습니다. 그리고 문제를 자세히 다시 읽어보니 입력받을 수 있는 네 수 A,B,C,D 모두 1~1,000,000의 범위를 가지고 있었습니다. 이렇게 큰 범위의 수는 int형으로 처리할 수 없기 때문에 이러한 큰 수를 다룰 수 있는 자료형인 <code>BigInteger</code>를 사용해야 합니다.</p>
+<p>또한 BigInteger는 객체이기 때문에 그냥 더할 수 없습니다. **add()**라는 메소드를 사용하여 BigInteger 객체끼리 더해줘야 합니다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.*;</span><br><span class="line"><span class="keyword">import</span> java.math.BigInteger;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BOJ10824</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        BufferedReader bf = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(System.in));</span><br><span class="line">        BufferedWriter bw = <span class="keyword">new</span> BufferedWriter(<span class="keyword">new</span> OutputStreamWriter(System.out));</span><br><span class="line"></span><br><span class="line">        String input = bf.readLine();</span><br><span class="line">        String[] words = input.split(<span class="string">" "</span>);</span><br><span class="line"></span><br><span class="line">        String ab = words[<span class="number">0</span>]+words[<span class="number">1</span>];</span><br><span class="line">        String cd = words[<span class="number">2</span>]+words[<span class="number">3</span>];</span><br><span class="line"></span><br><span class="line">        BigInteger big1 = <span class="keyword">new</span> BigInteger(ab);</span><br><span class="line">        BigInteger big2= <span class="keyword">new</span> BigInteger(cd);</span><br><span class="line">        bw.write(big1.add(big2)+<span class="string">"\n"</span>);</span><br><span class="line">        bw.flush();</span><br><span class="line">        bw.close();</span><br><span class="line">        bf.close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2018/10/15/BOJ10824/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2018/10/15/BOJ10823/"
+                            aria-label=": [10823] 더하기2"
+                        >
+                            [10823] 더하기2
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2018-10-15T19:37:49+09:00">
+	
+		    Oct 15, 2018
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/algorithm/">algorithm</a>, <a class="category-link" href="/categories/algorithm/BOJ/">BOJ</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <p>문제 : <a href="https://www.acmicpc.net/problem/10823" target="_blank" rel="noopener">https://www.acmicpc.net/problem/10823</a></p>
+<h1 id="풀이방법">풀이방법</h1>
+<hr>
+<p>이 문제는 BOJ 10822 문제와 비슷하지만 살짝 다릅니다. 다른 부분은 이 문제에서는 EOF까지 입력을 받아야 한다는 점입니다. EOF란 End of File의 약자로서 파일의 끝이라는 의미를 가지고 있습니다. 즉, 파일의 끝까지 입력을 받으라고 해석할 수 있으며, 다시 말하면 입력이 끝날 때까지 계속해서 입력을 받으라는 의미입니다.</p>
+<p>그래서 저는 BufferedReader를 이용해서 EOF까지 입력을 받고 입력받은 문자열의 길이만큼 반복문을 돌리면서 검사를 시작했습니다.</p>
+<p><strong>콤마(,)가 있는 경우와 없는 경우를 나누었으며, 콤마(,)가 없다면 StringBuilder 객체인 sb에 append 시켜주었으며, 콤마(,)를 만나면 지금까지 sb에 붙은 값들을 sum에 더해주고 StringBuilder 객체를 다시 새롭게 할당해줍니다. 다시 새롭게 할당하지 않고, 원래 객체에 이어 붙이게 되면 문자열 형태로 뒤에 붙기 때문에 새롭게 할당해주어야 합니다.</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.*;</span><br><span class="line"><span class="keyword">import</span> java.util.Scanner;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BOJ10823</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line"></span><br><span class="line">        BufferedReader bf = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(System.in));</span><br><span class="line">        BufferedWriter bw = <span class="keyword">new</span> BufferedWriter(<span class="keyword">new</span> OutputStreamWriter(System.out));</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        StringBuilder sb= <span class="keyword">new</span> StringBuilder();</span><br><span class="line">        <span class="keyword">int</span> sum=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span>(<span class="keyword">true</span>)&#123;</span><br><span class="line">            String input = bf.readLine();</span><br><span class="line">            <span class="keyword">if</span>(input == <span class="keyword">null</span>) <span class="keyword">break</span>;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;input.length();i++)&#123;</span><br><span class="line">                <span class="keyword">if</span>(input.charAt(i) == <span class="string">','</span>)&#123;</span><br><span class="line">                    sum+=Integer.parseInt(sb.toString());</span><br><span class="line">                    sb = <span class="keyword">new</span> StringBuilder(); <span class="comment">// 초기화</span></span><br><span class="line">                &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">                    sb.append(input.charAt(i));</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        bw.write(sum+Integer.parseInt(sb.toString())+<span class="string">"\n"</span>);</span><br><span class="line">        bw.flush();</span><br><span class="line">        bw.close();</span><br><span class="line">        bf.close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2018/10/15/BOJ10823/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2018/10/15/BOJ10822/"
+                            aria-label=": [10822] 더하기"
+                        >
+                            [10822] 더하기
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2018-10-15T19:37:45+09:00">
+	
+		    Oct 15, 2018
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/algorithm/">algorithm</a>, <a class="category-link" href="/categories/algorithm/BOJ/">BOJ</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <p>문제 : <a href="https://www.acmicpc.net/problem/10822" target="_blank" rel="noopener">https://www.acmicpc.net/problem/10822</a></p>
+<h1 id="풀이방법">풀이방법</h1>
+<hr>
+<p>이 문제는 콤마를 포함하는 숫자들을 문자열 형태로 입력을 받아서 <strong>split()</strong> 함수를 사용하여 콤마(,) 기준으로 문자열을 짤라서 문자열 배열에 담습니다. 그리고 배열의 길이만큼 반복문을 돌려서 sum이라는 변수에 값들을 더해준 후 출력해줍니다.</p>
+<p>이 문제도 비교적 간단하게 구현할 수 있는 문제였고, 많이 생각하지 않아도 되는 문제였습니다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.*;</span><br><span class="line"><span class="keyword">import</span> java.util.StringTokenizer;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BOJ10822</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        BufferedReader bf = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(System.in));</span><br><span class="line">        BufferedWriter bw = <span class="keyword">new</span> BufferedWriter(<span class="keyword">new</span> OutputStreamWriter(System.out));</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        String word = bf.readLine();</span><br><span class="line">        String[] strArr = word.split(<span class="string">","</span>);</span><br><span class="line">        <span class="keyword">int</span> sum=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;strArr.length;i++)</span><br><span class="line">            sum+=Integer.parseInt(strArr[i]);</span><br><span class="line"></span><br><span class="line">        bw.write(sum+<span class="string">"\n"</span>);</span><br><span class="line">        bw.flush();</span><br><span class="line">        bw.close();</span><br><span class="line">        bf.close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2018/10/15/BOJ10822/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
     <div class="pagination-bar">
     <ul class="pagination">
         
@@ -950,7 +927,7 @@ Comparator를 구현하면 compare()라는 메소드를 오버라이드 합니�
             </a>
           </li>
         
-        <li class="pagination-number">page 19 of 26</li>
+        <li class="pagination-number">page 19 of 25</li>
     </ul>
 </div>
 

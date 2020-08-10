@@ -273,243 +273,6 @@
                     
                         <a
                             class="link-unstyled"
-                            href="/2018/10/03/BOJ1076/"
-                            aria-label=": [1076] 저항"
-                        >
-                            [1076] 저항
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2018-10-03T16:18:29+09:00">
-	
-		    Oct 03, 2018
-    	
-    </time>
-    
-        <span>in </span>
-        
-    <a class="category-link" href="/categories/algorithm/">algorithm</a>, <a class="category-link" href="/categories/algorithm/BOJ/">BOJ</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <p>문제 : <a href="https://www.acmicpc.net/problem/1076" target="_blank" rel="noopener">https://www.acmicpc.net/problem/1076</a></p>
-<h1 id="풀이-방법">풀이 방법</h1>
-<hr>
-<ol>
-<li>첫 번째 접근 방법</li>
-</ol>
-<p>처음에는 Map이라는 자료구조를 사용해야 한다는 느낌을 받았지만, 조금 복잡하게 생각을 했었습니다. 아마도 문제의 패턴을 몰랐기 때문일 것입니다. 그래서 저는 값과 곱을 가지는 Class를 만들어서 이 클래스 타입의 ArrayList를 만들려고 시도했습니다. 하지만, 이렇게 되면 인덱스로 원소에 접근을 해야하는 문제와 시간 복잡도가 커질 수 있는 문제가 발생하여 비효율적임을 알게 되었습니다.</p>
-<ol start="2">
-<li>두 번째 접근 방법</li>
-</ol>
-<p>이번에는 다른 방식을 생각했습니다. 값과 곱의 규칙을 찾아내어 Class를 따로 만들 필요가 없음을 알았습니다. <code>10^값 = 곱</code> 이라는 규칙을 찾아 냈습니다. 쉽게 설명하면 값이 0일 때, 곱은 1 값이 1일 때, 곱은 10, 값이 2일 때, 곱은 100 … 이런 규칙성을 찾을 수 있었고, Map이라는 자료 구조에 String을 키로 하고, Integer를 값으로 하는 Map을 생성했고, 데이터를 넣어놓았습니다.</p>
-<p>그리고 문제에서 입력은 3개 뿐이므로, 반복문을 통해 입력을 받기보다는 바로 받아서 처리하는 것이 효율적이라고 판단했습니다. 코드는 아래에 있습니다.</p>
-<ul>
-<li>배운 점<br>
-** Map이라는 자료구조는 내가 생각하는 것보다 다양한 곳에서 쓰이는 것 같습니다. 이러한 자료구조를 사용해서 문제를 풀 수 있도록 많이 생각해보고 문제도 많이 풀어봐야 할 것 같습니다. :)</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.BufferedReader;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.io.InputStreamReader;</span><br><span class="line"><span class="keyword">import</span> java.util.HashMap;</span><br><span class="line"><span class="keyword">import</span> java.util.Map;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BOJ1076</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        <span class="comment">// 저항 문제는 Map 자료구조를 사용해서 풀 수 있다.</span></span><br><span class="line">        <span class="comment">// 문제에서 입력은 세 개이므로 for문을 돌려서 받지 않고 그냥 한번에 받는 것이 더 간단.</span></span><br><span class="line"></span><br><span class="line">        BufferedReader bf = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(System.in));</span><br><span class="line">        Map&lt;String, Integer&gt; map = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line"></span><br><span class="line">        map.put(<span class="string">"black"</span>, <span class="number">0</span>);</span><br><span class="line">        map.put(<span class="string">"brown"</span>, <span class="number">1</span>);</span><br><span class="line">        map.put(<span class="string">"red"</span>, <span class="number">2</span>);</span><br><span class="line">        map.put(<span class="string">"orange"</span>, <span class="number">3</span>);</span><br><span class="line">        map.put(<span class="string">"yellow"</span>, <span class="number">4</span>);</span><br><span class="line">        map.put(<span class="string">"green"</span>, <span class="number">5</span>);</span><br><span class="line">        map.put(<span class="string">"blue"</span>, <span class="number">6</span>);</span><br><span class="line">        map.put(<span class="string">"violet"</span>, <span class="number">7</span>);</span><br><span class="line">        map.put(<span class="string">"grey"</span>, <span class="number">8</span>);</span><br><span class="line">        map.put(<span class="string">"white"</span>, <span class="number">9</span>);</span><br><span class="line"></span><br><span class="line">        String one = bf.readLine(), two = bf.readLine(), three = bf.readLine();</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> firstResult = map.get(one) * <span class="number">10</span> + map.get(two);</span><br><span class="line">        <span class="keyword">long</span> secondResult = (<span class="keyword">long</span>) Math.pow(<span class="number">10</span>, map.get(three));</span><br><span class="line">        System.out.println(firstResult * secondResult);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2018/10/03/BOJ1076/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2018/09/23/BOJ10816/"
-                            aria-label=": [10816] "
-                        >
-                            [10816] 
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2018-09-23T21:11:55+09:00">
-	
-		    Sep 23, 2018
-    	
-    </time>
-    
-        <span>in </span>
-        
-    <a class="category-link" href="/categories/algorithm/">algorithm</a>, <a class="category-link" href="/categories/algorithm/BOJ/">BOJ</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <p>문제 : <a href="https://www.acmicpc.net/problem/10816" target="_blank" rel="noopener">https://www.acmicpc.net/problem/10816</a></p>
-<h1 id="풀이-방법">풀이 방법</h1>
-<hr>
-<ol>
-<li>멍청한 풀이</li>
-</ol>
-<p>오늘 풀어본 문제는 어제 풀었던 문제의 두번째 시리즈라고 할 수 있습니다. 즉, 숫자카드2 입니다. 어제 숫자카드 문제를 풀면서 이해를 했다고 생각하고 바로 두번째 시리즈에 도전했습니다. 하지만 역시나 시즌2는 쉽지는 않다는 것을 깨달았습니다. 단순하게 Set을 쓰려고했지만, 문제를 읽어보니 Set이 아닌 다른 자료구조를 써야한다는 생각을 했고, 저는 늘 써오던 List를 이용해서 문제를 풀려고 했습니다.</p>
-<p>하지만 List를 사용하게 되면 시간초과의 난관을 극복할 수 없었습니다. 애초에 List로 풀어야지라고 마음을 먹으면서 시간초과 날 것 같다는 염려를 했습니다…ㅜㅜ 아직 시간 초과를 해결하기 위한 다른 자료구조를 생각하는 능력이 많이 부족합니다…ㅜㅜ</p>
-<p>그래서 일단은 부딪혀보자는 마음으로 List를 사용하여 문제를 풀었습니다. 아래의 코드는 List를 이용한 문제 풀이 방법입니다. 완성된 코드는 아니며 제가 생각해보면서 짠 코드입니다.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.BufferedReader;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.io.InputStreamReader;</span><br><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"><span class="keyword">import</span> java.util.StringTokenizer;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BOJ10816</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        BufferedReader bf = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(System.in));</span><br><span class="line">        <span class="keyword">int</span> N = Integer.parseInt(bf.readLine());</span><br><span class="line"></span><br><span class="line">        List&lt;Integer&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"></span><br><span class="line">        StringTokenizer st = <span class="keyword">new</span> StringTokenizer(bf.readLine(), <span class="string">" "</span>);</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;N;i++)&#123;</span><br><span class="line">            list.add(Integer.parseInt(st.nextToken()));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> M = Integer.parseInt(bf.readLine());</span><br><span class="line">        StringTokenizer st2 = <span class="keyword">new</span> StringTokenizer(bf.readLine(), <span class="string">" "</span>);</span><br><span class="line">        StringBuilder sb = <span class="keyword">new</span> StringBuilder();</span><br><span class="line">        <span class="keyword">int</span>[] counts = <span class="keyword">new</span> <span class="keyword">int</span>[M];</span><br><span class="line">        <span class="keyword">int</span> count = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;M;j++)&#123;</span><br><span class="line">            <span class="keyword">int</span> value = Integer.parseInt(st2.nextToken());</span><br><span class="line"></span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> k=<span class="number">0</span>;k&lt;N;k++)&#123;</span><br><span class="line">                <span class="keyword">if</span>(list.get(k).equals(value))&#123;</span><br><span class="line">                    count+=<span class="number">1</span>;</span><br><span class="line">                    counts[M] = count;</span><br><span class="line">                &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">                    counts[M] = <span class="number">0</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                sb.append(counts[M]+<span class="string">" "</span>);</span><br><span class="line">                count = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line">          <span class="comment">/*  if(list.contains(value))&#123;</span></span><br><span class="line"><span class="comment">                System.out.println("들어오긴 하니;??"+", "+(j));</span></span><br><span class="line"><span class="comment">                count+=1;</span></span><br><span class="line"><span class="comment">                counts[M] = count;</span></span><br><span class="line"><span class="comment">                System.out.println(counts[M]);</span></span><br><span class="line"><span class="comment">            &#125;else &#123;</span></span><br><span class="line"><span class="comment">                counts[M] = 0;</span></span><br><span class="line"><span class="comment">            &#125;</span></span><br><span class="line"><span class="comment">            sb.append(counts[M]+" ");</span></span><br><span class="line"><span class="comment">            count = 0;*/</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        System.out.println(sb.toString());</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>전체적인 틀을 잡았고 어떻게 푸는지 알았지만 List만을 사용해서는 중복된 값이 들어있는 것을 Check하고 갯수를 확인하는 과정이 어려웠습니다. 그래서 생각을 하다가 구글링을 해보았습니다.</p>
-<ol start="2">
-<li>생각하고 나서 깨달은 풀이</li>
-</ol>
-<p>Map이라는 자료구조를 사용했습니다. Map은 키와 값을 쌍으로 저장하는 자료구조입니다. 특징은 저장 요소의 순서를 유지하지 않고, Key는 중복을 허용하지 않지만, 값은 중복을 허용합니다.</p>
-<p>Map을 이용해서 Key, Value 쌍으로 데이터를 저장하는 방식을 사용했습니다. 처음에 상근이가 가지고 있는 카드를 입력받는데, 이 값들을 모두 Map에 저장합니다. <strong>여기서 상근이가 가지고 있는 카드를 Key값으로 정했습니다.</strong></p>
-<p>Map은 초기화되지 않은 상태이기 때문에 처음에 들어오는 카드 입력들은 모두 카드를 Key값으로 가지면서 Value는 모두 1을 저장했습니다. 그러다가 앞에서 저장되었던 Key의 카드 입력이 들어오게 되면 기존에 있던 key에 해당하는 value를 1을 더한 값으로 교체해줍니다. *<strong>이러한 과정을 거쳐 상근이가 가지고 있는 카드를 입력받으면 Map이라는 자료구조에 상근이가 가지고 있는 카드의 갯수가 저장됩니다.</strong></p>
-<p>그리고 추후에 입력받는 카드들을 상근이가 가지고 있는지 비교하는 것이므로 입력받은 카드를 Map의 <code>containsKey()</code> 메소드를 이용해서 카드를 가지고 있는지 비교해서 가지고 있다면 입력받은 카드의 값을 Key로 해서 Map에서 뽑아내어 출력합니다.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.BufferedReader;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.io.InputStreamReader;</span><br><span class="line"><span class="keyword">import</span> java.util.HashMap;</span><br><span class="line"><span class="keyword">import</span> java.util.StringTokenizer;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BOJ10816</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        BufferedReader bf = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(System.in));</span><br><span class="line">        <span class="keyword">int</span> N = Integer.parseInt(bf.readLine());</span><br><span class="line">        HashMap&lt;Integer, Integer&gt; map = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line"></span><br><span class="line">        StringTokenizer st = <span class="keyword">new</span> StringTokenizer(bf.readLine(), <span class="string">" "</span>);</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; N; i++) &#123;</span><br><span class="line">            <span class="keyword">int</span> key = Integer.parseInt(st.nextToken());</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">            <span class="comment">// get()은 key에 해당하는 value를 반환</span></span><br><span class="line">            <span class="keyword">if</span> (map.containsKey(key)) &#123;</span><br><span class="line">                map.replace(key, map.get(key) + <span class="number">1</span>);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                map.put(key, <span class="number">1</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> M = Integer.parseInt(bf.readLine());</span><br><span class="line">        st = <span class="keyword">new</span> StringTokenizer(bf.readLine(), <span class="string">" "</span>);</span><br><span class="line">        StringBuilder sb = <span class="keyword">new</span> StringBuilder();</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; M; i++) &#123;</span><br><span class="line">            <span class="keyword">int</span> value = Integer.parseInt(st.nextToken());</span><br><span class="line">            <span class="keyword">if</span> (map.containsKey(value)) &#123;</span><br><span class="line">                sb.append(map.get(value) + <span class="string">" "</span>);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                sb.append(<span class="number">0</span> + <span class="string">" "</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(sb.toString());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 입력</span></span><br><span class="line"><span class="number">10</span></span><br><span class="line"><span class="number">6</span> <span class="number">3</span> <span class="number">2</span> <span class="number">10</span> <span class="number">10</span> <span class="number">10</span> -<span class="number">10</span> -<span class="number">10</span> <span class="number">7</span> <span class="number">3</span></span><br><span class="line"><span class="number">8</span></span><br><span class="line"><span class="number">10</span> <span class="number">9</span> -<span class="number">5</span> <span class="number">2</span> <span class="number">3</span> <span class="number">4</span> <span class="number">5</span> -<span class="number">10</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 출력</span></span><br><span class="line"><span class="number">3</span> <span class="number">0</span> <span class="number">0</span> <span class="number">1</span> <span class="number">2</span> <span class="number">0</span> <span class="number">0</span> <span class="number">2</span></span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>배운점</p>
-</blockquote>
-<p>알고리즘을 풀 때 시간초과를 생각하는 방법을 배웠습니다. 이전에는 무작정 풀고 나서 '왜 안되는거지???'라는 생각을 하고 구글링을 해서 다른 방법을 찾아보았다면 이제는 '시간 초과가 나서 안되네…'라는 생각을 하고 시간 초과가 나지 않는 자료구조를 생각해보고 로직을 생각하는 힘을 키우게 된 것 같습니다.</p>
-<p>또한, 알고리즘을 풀 때 어떠한 자료구조를 사용해야 할 지 결정하는 능력은 문제를 많이 풀어봐야 한다는 것을 알게 되었습니다. 문제를 보고 도전할 수 있는 자료구조는 List, Set 정도입니다. Map은 무엇인지 알긴 하지만, 알고리즘을 풀 때 어떻게 어떤 상황에서 사용하는지에 대해 잘 모르고 있었기 때문에 부족함을 많이 느꼈습니다. 앞으로 Map을 자주 사용해보고 많이 풀어보도록 노력하는게 좋을 것 같습니다.</p>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2018/09/23/BOJ10816/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2018/09/22/BOJ10815/"
-                            aria-label=": [10815] 숫자 카드 "
-                        >
-                            [10815] 숫자 카드 
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2018-09-22T22:14:02+09:00">
-	
-		    Sep 22, 2018
-    	
-    </time>
-    
-        <span>in </span>
-        
-    <a class="category-link" href="/categories/algorithm/">algorithm</a>, <a class="category-link" href="/categories/algorithm/BOJ/">BOJ</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <p>문제 : <a href="https://www.acmicpc.net/problem/10815" target="_blank" rel="noopener">https://www.acmicpc.net/problem/10815</a></p>
-<h1 id="풀이-방법">풀이 방법</h1>
-<ol>
-<li>첫번째 접근방법</li>
-</ol>
-<p>처음에는 배열을 이용해서 접근하려고 했습니다. 상근이가 몇개의 숫자 카드를 가지고 있는지 그리고 어떤 숫자 카드를 가지고 있는지 입력 받고, 그 후에는 카드의 갯수와 카드를 입력 받아서 후에 입력받은 카드를 상근이가 가지고 있는지 없는지 여부를 확인하였습니다.</p>
-<p>상근이가 숫자 카드를 가지고 있다면 1, 가지고 있지 않다면 0을 출력하게 됩니다. 그래서 저는 N, M 크기의 배열 2개를 만들고 각 배열에 저장해서 서로 비교할 수 있도록 구현했습니다.</p>
-<p><strong>문제에서 주어진 테스트 케이스를 만족시키는 답을 얻을 수 있었습니다. 허나 시간 초과를 피하지 못했습니다. 문제를 풀면서도 이 문제는 시간 초과가 날 것 같다는 느낌이 들었지만, 일단 무작정 풀어보았습니다. 결과는, 역시나… 그래서 다른 방법으로 풀어보았습니다.</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> language;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.BufferedReader;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.io.InputStreamReader;</span><br><span class="line"><span class="keyword">import</span> java.util.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BOJ10815</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        BufferedReader bf = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(System.in));</span><br><span class="line">        <span class="keyword">int</span> N = Integer.parseInt(bf.readLine()); <span class="comment">// 상근이가 가지고 있는 카드의 갯수</span></span><br><span class="line">        <span class="comment">//Set&lt;Integer&gt; set = new HashSet&lt;&gt;();</span></span><br><span class="line">        ArrayList&lt;Integer&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        StringTokenizer st = <span class="keyword">new</span> StringTokenizer(bf.readLine(), <span class="string">" "</span>);</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;N;i++)&#123;</span><br><span class="line">            list.add(Integer.parseInt(st.nextToken()));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//Set&lt;Integer&gt; check_set = new HashSet&lt;&gt;();</span></span><br><span class="line">        ArrayList&lt;Integer&gt; checkList = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        <span class="keyword">int</span> M = Integer.parseInt(bf.readLine());</span><br><span class="line">        StringTokenizer st2 = <span class="keyword">new</span> StringTokenizer(bf.readLine(), <span class="string">" "</span>);</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;M;i++)&#123;</span><br><span class="line">            checkList.add(Integer.parseInt(st2.nextToken()));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;M;i++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;N;j++)&#123;</span><br><span class="line">                <span class="keyword">if</span>(checkList.get(i).equals(list.get(j)))&#123;</span><br><span class="line">                    checkList.set(i,<span class="number">1</span>);</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">else</span>&#123;</span><br><span class="line">                    <span class="keyword">continue</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(!checkList.get(i).equals(<span class="number">1</span>))&#123;</span><br><span class="line">                checkList.set(i,<span class="number">0</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        Iterator&lt;Integer&gt; iterator = checkList.iterator();</span><br><span class="line">        <span class="keyword">while</span> (iterator.hasNext())&#123;</span><br><span class="line">            System.out.print(iterator.next()+<span class="string">" "</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 결과</span></span><br><span class="line">시간 초과....ㅜㅜ</span><br></pre></td></tr></table></figure>
-<ol start="2">
-<li>두 번째 방법</li>
-</ol>
-<p>그 다음으로는 Set 자료 구조를 이용하는 것입니다. Set 자료구조는 기본적으로 중복된 값의 저장을 허용하지 않고, 값이 정렬된 것처럼 저장됩니다. 여기서는 Set의 특성을 이용하지는 않지만, 배열보다는 더욱 편리하게 다룰 수 있을 것 같아서 이 자료구조를 사용하기로 결정했습니다.<br>
-[List를 사용해도 비슷한 결과를 얻을 수 있다고 생각합니다.]</p>
-<p>그리고 문제를 다시 살펴보면서 2개의 Set을 만들어서 값을 가지고 있을 필요가 없다고 생각했습니다. 어차피 우리가 가지고 있어야 할 값들은 <code>상근이가 가지고 있는 숫자 카드</code>이기 때문에 상근이가 가지고 있는 숫자 카드만 Set 자료구조에 저장해서 가지고 있도록 했습니다.</p>
-<p>M개의 숫자 카드를 가지고 있는지 확인하기 위해서 숫자 카드를 입력받는데 이 부분은 Set을 통해 값을 저장하지 않아도 됨을 깨달았습니다. 이유는 여기서 입력받는 값을 사용하지 않고 단순하게 상근이가 가지고 있는 카드인지 아닌지를 비교하기 위해서 사용하는 <strong>일회성</strong> 값이라고 판단되어 입력 받은 즉시 Set에 포함되어 있는지 <code>contains()</code> 메소드를 사용해서 확인해주었습니다.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.BufferedReader;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.io.InputStreamReader;</span><br><span class="line"><span class="keyword">import</span> java.util.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BOJ10815</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        BufferedReader bf = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(System.in));</span><br><span class="line">        <span class="keyword">int</span> N = Integer.parseInt(bf.readLine()); <span class="comment">// 상근이가 가지고 있는 카드의 갯수</span></span><br><span class="line">        Set&lt;Integer&gt; set = <span class="keyword">new</span> HashSet&lt;&gt;(); <span class="comment">// 상근이가 가지고 있는 카드를 담을 Set 자료구조</span></span><br><span class="line">        StringTokenizer st = <span class="keyword">new</span> StringTokenizer(bf.readLine(), <span class="string">" "</span>);</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;N;i++)&#123;</span><br><span class="line">            set.add(Integer.parseInt(st.nextToken()));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> M = Integer.parseInt(bf.readLine());</span><br><span class="line">        StringTokenizer st2 = <span class="keyword">new</span> StringTokenizer(bf.readLine(), <span class="string">" "</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">/*FIXME</span></span><br><span class="line"><span class="comment">        * 여기서는 어차피 기존에 상근이가 가지고 있는 카드와</span></span><br><span class="line"><span class="comment">        * 입력받은 카드를 비교해서 상근이가 가지고 있는지 가지고 있지 않은지</span></span><br><span class="line"><span class="comment">        * 판단하므로 굳이 Set을 통해서 값을 저장하지 않아도 됨.</span></span><br><span class="line"><span class="comment">        * 입력 받은 그대로 비교하면 된다.</span></span><br><span class="line"><span class="comment">        * */</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;M;i++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(set.contains(Integer.parseInt(st2.nextToken())))&#123;</span><br><span class="line">                System.out.print(<span class="number">1</span>+<span class="string">" "</span>);</span><br><span class="line">            &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">                System.out.print(<span class="number">0</span>+<span class="string">" "</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 입력</span></span><br><span class="line"><span class="number">5</span></span><br><span class="line"><span class="number">6</span> <span class="number">3</span> <span class="number">2</span> <span class="number">10</span> -<span class="number">10</span></span><br><span class="line"><span class="number">8</span></span><br><span class="line"><span class="number">10</span> <span class="number">9</span> -<span class="number">5</span> <span class="number">2</span> <span class="number">3</span> <span class="number">4</span> <span class="number">5</span> -<span class="number">10</span></span><br><span class="line"><span class="comment">// 출력 결과</span></span><br><span class="line"><span class="number">1</span> <span class="number">0</span> <span class="number">0</span> <span class="number">1</span> <span class="number">1</span> <span class="number">0</span> <span class="number">0</span> <span class="number">1</span></span><br></pre></td></tr></table></figure>
-<ol start="3">
-<li>세 번째 방법</li>
-</ol>
-<p>이 방법은 두 번째 방법과 똑같은 형태로 구현하지만, 실행 시간을 줄이기 위한 방법입니다. 두 번째 방법으로 문제를 풀면 실행시간은 1.9초 정도 나오게 됩니다. 이 문제의 시간 제한이 2초인 것에 비하면 그 안에 들어서 문제는 없습니다. 하지만 다른 사람들이 푼 코드를 통해서 시간을 줄일 수 있는 방법을 찾았습니다.</p>
-<p>그 방법은 System.out.print()를 빈번하게 호출하는 것보다는 StringBuilder 객체를 만들어서 append() 함수를 통해 값을 추가하고 마지막으로 한 번만 최종 결과를 출력해 주는 것입니다. 이 방법은 실행 시간이 0.9초 나오는 것을 확인할 수 있었고, 두 번째 방법과 1초 정도의 실핼 시간 차이가 남을 확인할 수 있었습니다.</p>
-<p>실행 시간을 단축할 수 있는 방법을 찾았습니다. :)</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> language;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.BufferedReader;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.io.InputStreamReader;</span><br><span class="line"><span class="keyword">import</span> java.util.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BOJ10815</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        BufferedReader bf = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(System.in));</span><br><span class="line">        <span class="keyword">int</span> N = Integer.parseInt(bf.readLine()); <span class="comment">// 상근이가 가지고 있는 카드의 갯수</span></span><br><span class="line">        Set&lt;Integer&gt; set = <span class="keyword">new</span> HashSet&lt;&gt;(); <span class="comment">// 상근이가 가지고 있는 카드를 담을 Set 자료구조</span></span><br><span class="line">        StringTokenizer st = <span class="keyword">new</span> StringTokenizer(bf.readLine(), <span class="string">" "</span>);</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;N;i++)&#123;</span><br><span class="line">            set.add(Integer.parseInt(st.nextToken()));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> M = Integer.parseInt(bf.readLine());</span><br><span class="line">        StringTokenizer st2 = <span class="keyword">new</span> StringTokenizer(bf.readLine(), <span class="string">" "</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">/*FIXME</span></span><br><span class="line"><span class="comment">        * 여기서는 어차피 기존에 상근이가 가지고 있는 카드와</span></span><br><span class="line"><span class="comment">        * 입력받은 카드를 비교해서 상근이가 가지고 있는지 가지고 있지 않은지</span></span><br><span class="line"><span class="comment">        * 판단하므로 굳이 Set을 통해서 값을 저장하지 않아도 됨.</span></span><br><span class="line"><span class="comment">        * 입력 받은 그대로 비교하면 된다.</span></span><br><span class="line"><span class="comment">        * */</span></span><br><span class="line">        StringBuilder sb = <span class="keyword">new</span> StringBuilder();</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;M;i++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(set.contains(Integer.parseInt(st2.nextToken())))&#123;</span><br><span class="line">                sb.append(<span class="number">1</span>+<span class="string">" "</span>);</span><br><span class="line">            &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">                sb.append(<span class="number">0</span>+<span class="string">" "</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(sb.toString());</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 입력</span></span><br><span class="line"><span class="number">5</span></span><br><span class="line"><span class="number">6</span> <span class="number">3</span> <span class="number">2</span> <span class="number">10</span> -<span class="number">10</span></span><br><span class="line"><span class="number">8</span></span><br><span class="line"><span class="number">10</span> <span class="number">9</span> -<span class="number">5</span> <span class="number">2</span> <span class="number">3</span> <span class="number">4</span> <span class="number">5</span> -<span class="number">10</span></span><br><span class="line"><span class="comment">// 출력 결과</span></span><br><span class="line"><span class="number">1</span> <span class="number">0</span> <span class="number">0</span> <span class="number">1</span> <span class="number">1</span> <span class="number">0</span> <span class="number">0</span> <span class="number">1</span></span><br></pre></td></tr></table></figure>
-<p><strong>단 3줄의 차이로 실행시간이 1초 줄어든 것을 확인할 수 있습니다. 앞으로 알고리즘 문제를 풀었더라도 실행 시간을 줄이는 방법을 찾아보고 공부해보는 것도 좋은 경험이 되고 실력도 쌓일 것 같습니다.</strong><br>
-<img src="/img/runtime_diff.png" width="800" height="300"></p>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2018/09/22/BOJ10815/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
                             href="/2018/09/22/BOJ10867/"
                             aria-label=": [10867] 중복빼고 정렬하기 "
                         >
@@ -1092,6 +855,434 @@ ex. https(ssl)</p>
         
     </article>
     
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2018/08/09/open-tutorials-6/"
+                            aria-label=": 생활코딩 :: URL"
+                        >
+                            생활코딩 :: URL
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2018-08-09T15:39:19+09:00">
+	
+		    Aug 09, 2018
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/Node-js/">Node.js</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="쿼리-스트링">쿼리 스트링</h1>
+<hr>
+<p>어떠한 사용자의 입력이 있을 때, 그 입력에 따라서 적당한 다른 결과를 보여주는 것이 의미있는 즉, 기능성이 있는 <strong>애플리케이션</strong>이라고 할 수 있습니다.</p>
+<img src="/img/url_string.png" width="400" height="200"> 
+<p>지금까지는 사용자가 어떤 <strong>주소</strong>로 접근하느냐에 따라서 사용자에게 다른 결과를 보여주었습니다.</p>
+<p>만약 우리의 웹사이트가 <code>a.com</code>이라고 한다면 사용자가 path에 <code>/login</code>을 하게 되면 <strong>login</strong>에 해당되는 Route가 그 라우트와 연결되어 있는 Controller(익명 함수)를 호출해서 적당한 결과를 만들어 내는 것이 애플리케이션의 구조입니다.</p>
+<img src="/img/path.png" width="400" height="200"> 
+<p>그림과 같이 paht만 놓고 본다면 서로 다른 결과를 사용자에게 보여주지만, <code>http://a.com/topic</code>이라는 path 한 개는 사용자에게 언제나 똑같은 결과만을 보여줍니다. 사고를 좀 더 확장해보면 이 <strong>topic</strong>으로 사용자가 접근했을 때도 경우에 따라서 다른 결과를 보여줄 수 있다면 더 좋을 것입니다.</p>
+<p>이것을 하기 위해서 <code>쿼리 스트링</code>을 배울 것입니다.</p>
+<img src="/img/topic.png" width="400" height="200"> 
+<ul>
+<li><strong>topic</strong>이라는 라우터에 id가 1이라고 하는 값을 전달하고 있습니다.
+<ul>
+<li>1이라는 숫자에 해당되는 결과를 처리해서 화면에 보여줍니다.</li>
+</ul>
+</li>
+<li>결과적으로 topic이라는 단 하나의 path로, 다른 말로 단 하나의 라우터로 id 값을 다르게 주는 것에 따라서 다른 결과를 만들어 낼 수 있습니다.</li>
+<li>? 뒤에 나타나는 정보를 <strong>쿼리 스트링</strong>이라고 합니다.</li>
+</ul>
+<h1 id="query-객체-사용법">query 객체 사용법</h1>
+<hr>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> express = <span class="built_in">require</span>(<span class="string">'express'</span>);</span><br><span class="line"><span class="keyword">var</span> app = express();</span><br><span class="line">app.get(<span class="string">'/topic'</span>,<span class="function"><span class="keyword">function</span>(<span class="params">req, res</span>)</span>&#123;</span><br><span class="line">    res.send(req.query.id);</span><br><span class="line">    res.send(req.query.id+<span class="string">', '</span>+req.query.name)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>
+<p>topic이라는 path가 가리키는 <strong>Controller</strong>가 쿼리 스트링을 어떻게 알 수 있을까??</p>
+<ul>
+<li>사용자는 주소를 통해서 웹 페이지에 접근하고 있고, 사용자는 우리에게 <strong>요청</strong>을 하고 있습니다. 이러한 요청과 관련된 정보는 <code>req</code>라는 첫 번째 매개변수에 값으로 request 정보가 들어오게 됩니다.</li>
+<li>쿼리 스트링으로 전달된 값이 이 함수의(Controller의) 첫 번째 매개변수의 값인 req에 query라고 하는 객체에 id라고 하는 프로퍼티 값으로 들어옵니다.</li>
+</ul>
+</li>
+<li>
+<p>express는 req라는 값을 전달하며, req는 query라고 하는 객체를 갖습니다. 그리고 query라는 객체는 사용자가 전달한 쿼리스트링을 프로퍼티로 갖습니다.</p>
+</li>
+<li>
+<p>topic?id=1&amp;name=“이승우”</p>
+<ul>
+<li>쿼리스트링을 통해서 우리가 애플리케이션에 전달할 수 있는 값은 하나가 아니라 여러 개 일수도 있습니다. 값을 구분하는 구분자로 쿼리스트링은 <code>&amp;</code>를 사용합니다.</li>
+</ul>
+</li>
+</ul>
+<h1 id="query-객체의-활용">query 객체의 활용</h1>
+<hr>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">app.get(<span class="string">'/topic'</span>,<span class="function"><span class="keyword">function</span>(<span class="params">req, res</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">var</span> topics = [</span><br><span class="line">		<span class="string">'Javascript is ...'</span>,</span><br><span class="line">		<span class="string">'Nodejs is ...'</span>,</span><br><span class="line">		<span class="string">'Express is ...'</span></span><br><span class="line">	];</span><br><span class="line">	<span class="keyword">var</span> output = <span class="string">`</span></span><br><span class="line"><span class="string">		&lt;a href="/topic?id=0"&gt;JavaScript&lt;/a&gt;&lt;br&gt;</span></span><br><span class="line"><span class="string">		&lt;a href="/topic?id=1"&gt;Nodejs&lt;/a&gt;&lt;br&gt;</span></span><br><span class="line"><span class="string">		&lt;a href="/topic?id=2"&gt;Express&lt;/a&gt;&lt;br&gt;&lt;br&gt;</span></span><br><span class="line"><span class="string">		<span class="subst">$&#123;topics[req.query.id]&#125;</span></span></span><br><span class="line"><span class="string">	`</span></span><br><span class="line">	res.send(output);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>쿼리스트링</strong> : 어떤 애플리케이션에서 정보를 전달할 때 사용하는 URL의 약속되어 있는 국제적인 표준입니다.</li>
+<li>그리고 쿼리스트링으로 전달된 값은 <strong>request</strong> 영역이기 때문에 첫 번째 매개변수에 담겨 있는 값인 <strong>req</strong> 객체, 또 그 객체가 가지고 있는 <strong>query</strong>라는 객체 또 그 객체 안에 있는 <strong>id</strong> 값을 통해서 가져올 수 있습니다.</li>
+</ul>
+<h1 id="시멘틱-url">시멘틱 URl</h1>
+<hr>
+<p><code>topic/?id=2</code>가 아니라 쿼리스트링이 없이 <code>topic/2</code>와 같은 깔끔한 URL을 통해서 애플리케이션을 제어할 수 있습니다. 이런 방식의 URL 체계를 <strong>시멘틱 URL</strong>이라고 합니다.</p>
+<p>하지만, 기존의 쿼리스트링 방식의 URL을 사용하면 <code>topic/2</code>와 같은 URL을 잡아내지 못하고, 주소 뒤에 오는 숫자 값을 사용하기 위해서는 <strong>시멘틱 URL</strong>에서는 <code>params</code>를 이용합니다.<br>
+따라서 아래와 같은 수정이 필요합니다.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">app.get(<span class="string">'/topic/:id'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">req, res</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> topics = [</span><br><span class="line">		<span class="string">'Javascript is ...'</span>,</span><br><span class="line">		<span class="string">'Nodejs is ...'</span>,</span><br><span class="line">		<span class="string">'Express is ...'</span></span><br><span class="line">	];</span><br><span class="line">	<span class="keyword">var</span> output = <span class="string">`</span></span><br><span class="line"><span class="string">		&lt;a href="/topic?id=0"&gt;JavaScript&lt;/a&gt;&lt;br&gt;</span></span><br><span class="line"><span class="string">		&lt;a href="/topic?id=1"&gt;Nodejs&lt;/a&gt;&lt;br&gt;</span></span><br><span class="line"><span class="string">		&lt;a href="/topic?id=2"&gt;Express&lt;/a&gt;&lt;br&gt;&lt;br&gt;</span></span><br><span class="line"><span class="string">		<span class="subst">$&#123;topics[req.params.id]&#125;</span></span></span><br><span class="line"><span class="string">	`</span></span><br><span class="line">	res.send(output);</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>쿼리 스트링</strong>을 사용해 접근하는 경우<br>
+: <code>req.query.id</code>로 접근하면 됩니다.</li>
+<li><strong>시멘틱 URL</strong>(path 방식)을 사용해 접근하는 경우<br>
+: <code>req.params.id</code>로 접근하면 됩니다.</li>
+</ul>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2018/08/09/open-tutorials-6/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2018/08/09/open-tutorials-5/"
+                            aria-label=": 생활코딩 :: 템플릿"
+                        >
+                            생활코딩 :: 템플릿
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2018-08-09T13:59:53+09:00">
+	
+		    Aug 09, 2018
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/Node-js/">Node.js</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="템플릿-엔진이란-무엇인가">템플릿 엔진이란 무엇인가?</h1>
+<hr>
+<ul>
+<li>
+<p>정적인 방법과 동적인 방법의 장/단점을 가지고 있습니다.</p>
+<ul>
+<li>정적인 파일만 서비스한다면 필요없지만, <strong>동적인 결과를 정적인 파일에 담기 위해 사용합니다.</strong></li>
+<li>풀어 설명하자면, 자바스크립트 코드로 연산된 결과를 변수에 넣고 변수를 뷰 파일에서도 사용할 수 있게끔 합니다.</li>
+</ul>
+</li>
+<li>
+<p>템플릿 엔진을 사용하는 이유</p>
+<ul>
+<li>클라이언트 요청에 따라 웹 페이지에 들어가는 내용(결과)이 달라질 수 있어서 정적인 부분과 동적인 부분을 따로 하기위해 사용합니다.</li>
+</ul>
+</li>
+<li>
+<p><code>app.js</code> 내 html 코드를 쓰지 않아도 됩니다.</p>
+</li>
+<li>
+<p>뷰 파일과 자바스크립트 코드를 한 파일에 정의하지 않고 <strong>따로 따로</strong> 사용할 수 있습니다.</p>
+</li>
+<li>
+<p>자바스크립트로 연산된 결과를 뷰 파일에 쉽게 넣을 수 있습니다.</p>
+</li>
+<li>
+<p>템플릿 엔진 중 <code>Jade</code>를 사용합니다.</p>
+</li>
+<li>
+<p>템플릿 엔진을 이용하면 <strong>짧은 코드로 장황한 HTML 코드를 만들어 낼 수 있는 기능</strong>을 제공합니다.</p>
+</li>
+<li>
+<p>템플릿 엔진 안에서 <strong>변수</strong>도 사용할 수 있다.</p>
+</li>
+</ul>
+<h1 id="express와-함께-템플릿-엔진-사용">Express와 함께 템플릿 엔진 사용</h1>
+<hr>
+<p>Express는 템플릿 엔진 기능이 없기 때문에 사용하기 위해서 템플릿 엔진을 설치해서 express와 연결한 다음에 사용하면 됩니다.</p>
+<p>'npm install jade --save’를 통해 모듈을 설치합니다.</p>
+<p>이를 통해 <strong>node_modules</strong> 폴더에 Jade가 추가되고, <strong>package.json</strong> 파일에 Jade가 dependencies 항목으로 추가됩니다.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> express = <span class="built_in">require</span>(<span class="string">'express'</span>);</span><br><span class="line"><span class="keyword">var</span> app = express();</span><br><span class="line">app.set(<span class="string">'view engine'</span>,<span class="string">'jade'</span>);</span><br><span class="line">app.set(<span class="string">'views'</span>, <span class="string">'./views'</span>);</span><br><span class="line"><span class="comment">// 위의 한 줄을 생략해도 express 기본적으로 views라는 디렉토리를 찾도록 설정되어 있습니다.</span></span><br><span class="line"></span><br><span class="line">app.get(<span class="string">'/template'</span>,<span class="function"><span class="keyword">function</span>(<span class="params">req, res</span>)</span>&#123;</span><br><span class="line">    res.render(<span class="string">'temp'</span>);</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>view engine : 약속되어 있는 이름</li>
+<li>jade : 템플릿 엔진</li>
+</ul>
+<p>express의 application에게 <code>jade</code>라는 템플릿 엔진을 set합니다.</p>
+<p>우리가 설치한 jade라고 하는 템플릿 엔진과 우리가 지금 만들고 있는 애플리케이션 프레임워크인 express를 연결합니다.</p>
+<p>그리고 <code>views</code>라는 폴더를 생성해줍니다. 앞으로의 jade 파일은 이 디렉토리에 저장합니다. (템플릿 엔진들의 템플릿 파일을 views라는 파일에 넣습니다.)</p>
+<ul>
+<li>‘/template/’ 경로를 통해서 들어온 사용자에게 함수가 실행되면서 temp라는 템플릿 파일을 웹 페이지로 렌더링해서 전송한다는 뜻입니다.</li>
+<li>템플릿 엔진의 코드에 따라서 만들어진 템플릿 파일을 읽어옵니다.</li>
+<li>temp라는 파일은 <strong>views</strong> 폴더에 위치합니다.</li>
+</ul>
+<p>response 즉, 응답으로 temp를 render하게 되면 express는 내부적으로 위쪽에 정의해놓은 views라고 하는 디렉토리에서 우리가 템플리세 엔진으로 jade를 정해놓았기 때문에 jade의 확장자인 temp.jade라는 파일을 찾아서 그 파일에 있는 내용을 jade의 문법에 따라서 해석한 후에 결과를 가져오고 그것을 사용자에게 response하는 코드입니다.</p>
+<h1 id="jade-문법">Jade 문법</h1>
+<hr>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">html</span><br><span class="line">    head</span><br><span class="line">    body</span><br><span class="line">        h1 Hello Jade</span><br><span class="line">        ul</span><br><span class="line">            - for(var i=0;i<span class="tag">&lt;<span class="name">5;i++)</span></span></span><br><span class="line"><span class="tag">                <span class="attr">li</span> <span class="attr">coding</span></span></span><br><span class="line"><span class="tag">        </span></span><br><span class="line"><span class="tag">        <span class="attr">div</span>= <span class="string">time</span> // <span class="attr">jade</span>의 변수</span></span><br></pre></td></tr></table></figure>
+<p>들여쓰기를 통해서 head 태그와 body 태그를 html 태그 안에 넣을 수 있습니다. 하지만, 웹 페이지에서 소스보기를 통해서 확인하면 코드의 가독성이 떨어지고 이쁘지 않은 모습을 볼 수 있습니다. 이럴 때는 <code>app.locals.pretty = true;</code>라는 코드를 추가해주면 이쁘게 바뀐 모습을 확인할 수 있습니다.</p>
+<p>반복적인 작업을 할 때는 <strong>for문</strong>을 이용하면 되는데, 이는 화면에 출력하는 코드가 아니고 <strong>프로그래밍적</strong>으로 제어하기 위한 코드입니다. 이러한 코드는 앞에 <code>-</code>라는 <strong>Jade</strong> 안에서 약속되어 있는 특수 기호를 붙이면 jade는 -를 보고 for가 화면에 출력되는 것이 아니라는 것을 알게 됩니다. for는 Jade 안에서 반복문으로 사용됩니다.</p>
+<p>Html을 작성하는 것이 훨씬 더 간결하게 가능해집니다. 그리고 동시에 프로그래머블하다는 특성을 가지게 됩니다.</p>
+<p>time이라는 변수로 현재 시간을 넣기 위해서는 jade 안에서 가능한 것이 아니고 jade를 사용하는 express 쪽에서 변수 값을 주입해주어야 합니다.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">app.get(<span class="string">'/template'</span>,<span class="function"><span class="keyword">function</span>(<span class="params">req, res</span>)</span>&#123;</span><br><span class="line">    res.render(<span class="string">'temp'</span>, &#123;<span class="attr">time</span>: <span class="built_in">Date</span>()&#125;);</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p><strong>render</strong> 함수의 두 번째 인자로 객체를 전달합니다. time이라는 객체가 render에 의해서 temp.jade라고 하는 template에 흘러들어가게 됩니다. 그러면 temp가 가리키고 있는 temp.jade는 내부적으로 time이라는 변수를 사용할 수 있게 됩니다. 우리가 넘긴 변수 값이 jade 파일 안에서 사용될 수 있습니다. 변수의 값은 여러 개가 전달될 수 있으며, <strong>Jade</strong> 파일에서 명시된 것과 <strong>동일한 이름</strong>을 사용해야 합니다.</p>
+<h1 id="정리">정리</h1>
+<hr>
+<p>먼저, 'npm install jade --save’를 통해서 사용할 템플릿 엔진인 <strong>Jade</strong>를 설치합니다.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> express = <span class="built_in">require</span>(<span class="string">'express'</span>);</span><br><span class="line"><span class="keyword">var</span> app = express();</span><br><span class="line"></span><br><span class="line">app.set(<span class="string">'view engine'</span>, <span class="string">'jade'</span>);</span><br><span class="line">app.set(<span class="string">'views'</span>, <span class="string">'./views'</span>);</span><br><span class="line">app.get(<span class="string">'/template'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">req, res</span>)</span>&#123;</span><br><span class="line">    res.render(<span class="string">'temp'</span>, &#123;<span class="attr">time</span> : <span class="built_in">Date</span>(), <span class="attr">_title</span> : <span class="string">'Jade'</span>&#125;);</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>설치된 jade와 express를 연결하기 위해서 위의 코드를 통해서 환결 설정을 해줍니다.</li>
+<li>그리고 우리가 어떤 특정한 템플릿을 사용하고 싶다면,
+<ul>
+<li><code>temp.jade</code>를 사용하고 싶다면 <strong>res</strong>가 가지고 있는 메소드 중에서 <strong>render</strong>라는 메소드를 호출하면서 첫 번째 인자로 그 템플릿의 이름을 전달해주면 render가 내부적으로 템플릿을 읽어서 그 템플릿 엔진의 문법에 따라서 해석한 다음에 사용자에게 response 해줍니다.</li>
+<li>만약에 템플릿에 데이터를 주입하고 싶다면, 객체를 정의해서 그 객체의 프로퍼티 값으로 원하는 값을 전달하면 그 템플릿 엔진에서는 <code>= time</code>과 같이 문법을 통해서 변수의 값을 화면에 출력할 수 있습니다.</li>
+</ul>
+</li>
+</ul>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2018/08/09/open-tutorials-5/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2018/08/03/open-tutorials-4/"
+                            aria-label=": 생활코딩 :: express"
+                        >
+                            생활코딩 :: express
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2018-08-03T13:13:32+09:00">
+	
+		    Aug 03, 2018
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/Node-js/">Node.js</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="express">Express</h1>
+<hr>
+<ul>
+<li><strong>IP</strong> : 어떠한 컴퓨터를 식별하는 식별자</li>
+<li><strong>Port</strong> : 그 컴퓨터 안에 설치되어 있는 서버들 중에서 어떤 서버를 사용할 것인가에 대한 식별자</li>
+</ul>
+<p>우리가 웹 서버를 만든 다음에 그 웹서버를 어떤 포트가 실행시킬 것이지를, 바라보게 할 것인지를 결정해야 합니다. 컴퓨터에는 0~65535개의 포트가 있고, 우리는 이 포트 중에서 어떤 특정한 웹서버를 만든 다음에 그 웹 서버가 특정한 포트를 바라보게 하면 사용자의 요청은 그 포트를 향해서 들어오게 됩니다.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> http = <span class="built_in">require</span>(<span class="string">'http'</span>);</span><br><span class="line"><span class="keyword">const</span> hostname = <span class="string">'127.0.0.1'</span>;</span><br><span class="line"><span class="keyword">const</span> port = <span class="number">1339</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> server = http.createServer(<span class="function"><span class="keyword">function</span>(<span class="params">req, res</span>)</span>&#123;</span><br><span class="line">	res.writeHead(<span class="number">200</span>, &#123; <span class="string">'Content-Type'</span>: <span class="string">'text/plain'</span> &#125;);</span><br><span class="line">  	res.end(<span class="string">'Hello World\n'</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">server.listen(port, hostname, <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">`Server running at http://<span class="subst">$&#123;hostname&#125;</span>:<span class="subst">$&#123;port&#125;</span>/`</span>);</span><br><span class="line">	<span class="comment">// 만들어진 서버를 가지고 실제로 그 포트로 사용자가 들어왔을 때, 어떤 내용을 출력할 것인가는 위에서 작성할 수 있습니다.</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<ul>
+<li>http라는 변수에 http라는 객체가 담겨있는데, 그 객체가 가지고 있는 createServer라는 함수를 호출해서 서버를 만듭니다.</li>
+<li>createServer에 의해서 서버가 만들어지고 만들어진 서버를 우리가 제어할 수 있도록 객체를 리턴합니다.</li>
+<li>실제로 그 포트로 사용자가 들어왔을 때 어떤 내용을 출력할 것인가는 이 함수에서 정의할 수 있습니다.</li>
+<li>역시나 이 함수도 익명함수를 통해 작성합니다.</li>
+<li>이 함수는 두 개의 인자를 받는데, req(요청과 관련된 것), res(응답과 관련된 것)</li>
+</ul>
+<ul>
+<li>서버가 특정 포트를 바라보게 하기 위해서 <strong>Port</strong>를 매개변수로 넘겨줍니다.</li>
+<li>사용자가 우리 서버로 접속할 때 여러가지 방법으로 접속할 수 있습니다. 그래서 어떤 IP를 타고 들어온 사용자를 수용할 것인가를 확인하기 위해서 <strong>hostname</strong>을 적습니다.</li>
+<li>시간이 좀 걸릴 수 있는 작업이기 때문에 listen이라는 메소드는 <strong>Callback</strong>으로 비동기적으로 작동합니다. 그래서 listen이 완료되었을 때 이 callback이 실행되도록 약속이 되어있는 것입니다.</li>
+</ul>
+<p>이것도 편한지만, 이런 것들을 우리가 훨씬 더 적은 코드로 이런 역할을 하면서도 더 많은 일을 할 수 있도록 해주는 도구들 (프레임워크)이 존재합니다. Node를 직접 사용해서 웹 애플리케이션을 구현하는 것도 좋겠지만, 손이 많이 가기 때문에 Node를 이용해서 만들어진 프레임워크를 통해서 웹 개발을 해볼 것입니다. 그것이 바로 <code>Express</code>라는 것입니다.</p>
+<h1 id="express-설치">Express 설치</h1>
+<hr>
+<ol>
+<li>먼저 설치를 하기 전에 해당 디렉토리를 Npm이 사용할 수 있는 프로젝트로 만들기 위해서 ‘npm init()’ 명령어를 수행합니다.</li>
+<li>그 다음 ‘npm install --save express’ 명령어를 통해 express를 설치합니다.</li>
+</ol>
+<img src="/img/express.png" width="400" height="200">
+<p>이제 해당 프로젝트 폴더에 설치해서 Express라는 프레임워크를 사용할 수 있는 기본적인 준비는 끝났습니다.</p>
+<h1 id="express-간단한-웹애플리케이션-만들기">Express - 간단한 웹애플리케이션 만들기</h1>
+<hr>
+<ul>
+<li>지금 app.js 라는 파일을 만들 것입니다. 이 파일을 메인 파일이라고 합니다. 또는 메인 애플리케이션(엔트리 애플리케이션)이라고 부릅니다. 최초의 진입점이 되는 파일입니다.</li>
+<li>app.js라는 이름은 express에서 권장하는 메인 애플리케이션의 이름입니다.</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> express = <span class="built_in">require</span>(<span class="string">'express'</span>);</span><br><span class="line"><span class="comment">// require를 통해 express 모듈을 리턴받고 express라는 변수를 통해서 모듈을 제어할 수 있습니다.</span></span><br><span class="line"><span class="comment">// 다음은 express라는 모듈을 통해서 application 객체를 만듭니다.</span></span><br><span class="line"><span class="keyword">var</span> app = express();</span><br><span class="line"><span class="comment">// express라는 모듈은 함수입니다. 그래서 실행하게 되면 함수는 application라는 객체를 리턴합니다.</span></span><br><span class="line"></span><br><span class="line">app.get(<span class="string">'/'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">req, res</span>)</span>&#123;</span><br><span class="line">	res.send(<span class="string">"Hello Homepage"</span>);</span><br><span class="line"></span><br><span class="line">	&#125;)</span><br><span class="line">app.get(<span class="string">'/login'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">req, res</span>)</span>&#123;</span><br><span class="line">	res.send(<span class="string">"Login please"</span>);</span><br><span class="line">	&#125;)</span><br><span class="line"></span><br><span class="line">app.listen(<span class="number">3000</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">"Connected 3000 Port!"</span>);</span><br><span class="line">	&#125;)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>Home 화면에 접속했을 때 우리가 실행시킨 <strong>get</strong>이라는 메소드를 통해서</li>
+<li>사용자가 홈으로 접속하면 두 번째 인자로 전달한 callback 함수가 실행되도록 약속되어 있습니다.</li>
+<li>함수의 인자로 첫 번째 매개변수는 req, 두 번째 매개변수는 res가 들어온다고 약속되어 있습니다.</li>
+<li>함수를 이렇게 정의하면, get이라는 함수는 사용자가 Home으로 들어오고 이것이 완료되었을 때, 인자로 전달된 함수를 실행시키면서 첫 번째 매개변수의 값으로 사용자가 요청한 것과 관련된 request 객체를 전달하는 것이고 두 번째로 사용자가 요청한 정보에 대해서 응답을 할 수 있는 여러가지 방법을 담고 있는 응답에 대한 객체를 전달하도록 약속이 되어 있습니다.</li>
+</ul>
+<p>정리하자면, <strong>get</strong>이라는 메소드는 사용자가 어떠한 경로로 들어왔을 때, 어떠한 것이 실행이 될 것인가를 결정하는 역할을 합니다. 이러한 역할을 하는 것을 <code>router</code>라고 부르며 router가 하는 일을 <strong>routing</strong>이라고 합니다. 우리가 배우는 메소드 중 <code>get, post, put, delete</code>가 <strong>router</strong>의 역할을 하는 메소드입니다.</p>
+<h1 id="routing">Routing</h1>
+<hr>
+<img src="/img/routing.png" width="600" height="200">
+<ul>
+<li>사용자 : 웹 브라우저를 사용해서 우리의 애플리케이션으로 접속하는 사람</li>
+<li>우리의 애플리케이션은 <strong>Router</strong>와 <strong>Controller</strong>라는 것으로 이루어져 있습니다.</li>
+</ul>
+<p>사용자가 '/'로 들어오게 되면 <code>get('/')</code>가 받고 이것을 두 번째 인자로 전달되었던 익명 함수를 실행시키고 &quot;Welcome to Home Page&quot;라는 정보를 사용자에게 응답해주고 있습니다.</p>
+<p>사용자가 '/login’으로 접속하면 저 <code>get('/login')</code>가 받고 두 번째 인자인 익명 함수 안에 있는 코드를 실행시켜서 사용자에게 &quot;login please&quot;라고 하는 정보를 사용자에게 응답해주고 있습니다.</p>
+<p>그래서 get이라고 하는 함수의 역할은 사용자의 요청과 그 요청에 대한 처리인 Controller를 중개해주는 역할을 하는 것이 라우터의 역할입니다. 이 라우터라고 하는 것은 웹 애플리케이션을 만든다라고 했을 때 가장 중요한 것 중 하나입니다.</p>
+<h1 id="연결성">연결성</h1>
+<hr>
+<blockquote>
+<p>Javascript와 Nodejs의 관계</p>
+</blockquote>
+<p>연결이라는 측면에서 보면 기본적으로 Node.js는 다음과 같은 기능을 제공합니다.</p>
+<img src="/img/nodejs1.png" width="200" height="200"> 
+<ul>
+<li>FS : File을 읽고 쓰는 시스템</li>
+<li>HTTP : 네트워크를 통해 어떠한 일을 할 수 있는 기능</li>
+<li>OS : 운영체제를 제어할 수 있는 여러가지 기능</li>
+</ul>
+<p><strong>Nodejs</strong>가 제공하는 기본적인 기능들을 <strong>Javascript</strong>라고 하는 프로그래밍 언어의 문법에 맞게 결합해서 우리가 의도하는 바에 해당되는 프로그램을 만들어 낼 수 있습니다. 일단 한 번 프로그램을 만들면 그 프로그램은 언제든지 똑같이 실행되는, 재사용할 수 있는 애플리케이션이 됩니다.</p>
+<p>이것이 가능한 이유는 <strong>Nodejs</strong>가 기초적인 명령들을 제공하고 <strong>Javascript</strong>이라는 프로그래밍 언어가 노드가 제공하는 명령들을 조합해서 새로운 명령을 만들어 낼 수 있습니다. 그렇게 해서 만들어 낼 수 있는 명령어의 개수는 정말 많고 다양한 가능성을 제공합니다.</p>
+<p>이것과 비슷한 관계에 있는 또 다른 하나는 <strong>Module</strong>과 <strong>NPM</strong>의 관계입니다.</p>
+<ul>
+<li>
+<p>Module : 우리의 프로그램 안에서 부품으로 사용될 작은 프로그램들을 말합니다. 이 세상에는 여러가지 모듈들이 만들어져 있고 그 중에는 우리가 만든 것, 우리가 만들지 않은 것이 있습니다.</p>
+</li>
+<li>
+<p>NPM : 다양한 모듈들을 NPM을 통해서 우리의 애플리케이션에 담아서 다양한 형태의 애플리케이션을 만들어 낼 수 있습니다. (ex. Express, Underscore, Jade)</p>
+</li>
+<li>
+<p>Router : 사용자의 접속을, 사용자의 요청을 어떤 Controller에 전달해줄 것인가라고 하는 중개자의 역할을 합니다.</p>
+</li>
+<li>
+<p>Controller : 예를 들면, 회원을 가입할 때 사용하는 Controller, 홈페이지의 표현을 위한 Controller, 에러 화면을 만들어주는 Controller가 있습니다.</p>
+</li>
+</ul>
+<p><code>JavaScript, NPM, Router</code> 이러한 연결하는 녀석들에게 연결할 대상을 제공해주는 것이<br>
+<strong>Node.js, Module, Controller</strong> 입니다.</p>
+<h1 id="정적파일을-서비스하는-법">정적파일을 서비스하는 법</h1>
+<hr>
+<ul>
+<li>정적인 정보 : 사람이 한 번 작성한 것이 즉, 만들어진 것이 언제나 똑같이 보이면 이것을 정적인 정보라고 합니다.</li>
+<li>동적인 정보 : 프로그래밍적으로 만들어진 정보를 동적인 정보라고 합니다.</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> express = <span class="built_in">require</span>(<span class="string">'express'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> app = express();</span><br><span class="line"></span><br><span class="line">app.use(express.static(<span class="string">'public'</span>));</span><br><span class="line">app.get(<span class="string">'/'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">req, res</span>)</span>&#123;</span><br><span class="line">	res.send(<span class="string">"Hello Homepage"</span>);</span><br><span class="line"></span><br><span class="line">	&#125;)</span><br><span class="line">app.get(<span class="string">'/login'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">req, res</span>)</span>&#123;</span><br><span class="line">	res.send(<span class="string">"Login please"</span>);</span><br><span class="line">	&#125;)</span><br><span class="line"></span><br><span class="line">app.listen(<span class="number">3000</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">"Connected 3000 Port!"</span>);</span><br><span class="line">	&#125;)</span><br></pre></td></tr></table></figure>
+<p>정적인 파일을 서비스하고 싶다면<br>
+<code>app.use(express.static('public'));</code> 이 한줄을 추가합니다.</p>
+<p><strong>public</strong>이라는 디렉토리에 우리가 정적인 파일을 갖다 놓으면 그 정적인 파일을 사용자에게 서비스 할 수 있습니다.</p>
+<h1 id="웹-페이지를-표현하는-방법">웹 페이지를 표현하는 방법</h1>
+<hr>
+<p>웹 페이지를 사용자에게 서비스 하는 방법은 두 가지가 있다.</p>
+<ol>
+<li><strong>정적인 파일 전달하는 법</strong>
+<ul>
+<li>한 번 만들어지면 언제나 똑같은 모습인 Html</li>
+<li>public이라는 디렉토리에 static.html 파일을 놓습니다.</li>
+<li>서버를 동작시키고, localhost:3000/static.html로 접근하면 작성된 웹 페이지를 확인할 수 있습니다.</li>
+<li>내용을 수정하면 서버를 껐다 킬 필요 없이 내용을 바로 반영시킬 수 있습니다.</li>
+<li>하지만, 웹 페이지 상에서 반복적인 일들이나 추가적인 사항이 많이 생긴다면 반영하기 어렵습니다.</li>
+<li>그 하나의 예로는 현재 시간을 보여주는 것이라고 할 수 있습니다.</li>
+</ul>
+</li>
+</ol>
+<p>자바스크립트에서는 여러 줄의 코드를 삽입하고 싶다면 <code>\</code>를 붙이면 가능하지만, 코드의 가독성이 많이 떨어집니다. 자바스크립트의 새로운 표준에는 <code>formatted text</code>라는 기능이 추가되었습니다.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">app.get(<span class="string">'/dynamic'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">req, res</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> time = <span class="built_in">Date</span>();</span><br><span class="line">    <span class="keyword">var</span> lis = <span class="string">' '</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>;i&lt;<span class="number">5</span>;i++)&#123;</span><br><span class="line">        lis = lis + <span class="string">'&lt;li&gt;Coding&lt;/li&gt;'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">var</span> output = <span class="string">`</span></span><br><span class="line"><span class="string">    &lt;html&gt;</span></span><br><span class="line"><span class="string">    &lt;head&gt;</span></span><br><span class="line"><span class="string">        &lt;meta charset="utf-8"&gt;</span></span><br><span class="line"><span class="string">    &lt;/head&gt;</span></span><br><span class="line"><span class="string">    &lt;body&gt;</span></span><br><span class="line"><span class="string">	Hello, Dynamic~~~~~</span></span><br><span class="line"><span class="string">	&lt;ul&gt;</span></span><br><span class="line"><span class="string">	    <span class="subst">$&#123;lis&#125;</span></span></span><br><span class="line"><span class="string">	&lt;/ul&gt;</span></span><br><span class="line"><span class="string">    <span class="subst">$&#123;time&#125;</span></span></span><br><span class="line"><span class="string">    &lt;/body&gt;</span></span><br><span class="line"><span class="string">    &lt;/html&gt;`</span>;</span><br><span class="line">	</span><br><span class="line">    res.send(output);</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li><strong>동적인 파일 전달하는 법</strong>
+<ul>
+<li>우리가 작성한 코드가 다시 실행되어야 하기 때문에 서버를 껐다가 다시 <code>node app.js</code>를 실행해주어야 합니다.</li>
+<li>내부적으로 <strong>dynamic</strong>하게 웹 코드를 작성하면 코드의 짧은 수정을 통해서 반복적인 작업의 횟수가 프로그래밍적으로 달라지기 때문에, 자바스크립트 코드에서 일부분만 수정하면 되므로 정확하게 원하는만큼 반복시킬 수 있습니다.</li>
+</ul>
+</li>
+</ol>
+<p>하지만, 정적인 파일의 경우에는 요청이 들어올 때마다 node가 그것을 잡아서 던져주기 때문에, 우리가 굳이 껐다 킬 필요가 없습니다. 이로 인해서 정적인 파일을 서비스하는 것이 좀 더 코드를 짜는데는 편리합니다. 물론 동적인 파일도 자동화 시키는 방법이 있지만, 아직은 배우지 않고 다음에 배울 것 입니다.</p>
+<p>또는 현재 시간을 웹 페이지에 표시하고 싶다면 <code>Date()</code>라는 API를 사용하여 동적인 파일을 서비스하는 방법을 통해서 웹 페이지에 보여줄 수 있습니다.</p>
+<p>변수의 값을 Html 코드에 삽입하면 <strong>문자열</strong>로 인식하기 때문에 <code>${time}</code>과 같은 방법을 써서 <strong>변수</strong>를 포함시킬 수 있도록 합니다.</p>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2018/08/03/open-tutorials-4/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
     <div class="pagination-bar">
     <ul class="pagination">
         
@@ -1118,7 +1309,7 @@ ex. https(ssl)</p>
             </a>
           </li>
         
-        <li class="pagination-number">page 21 of 26</li>
+        <li class="pagination-number">page 21 of 25</li>
     </ul>
 </div>
 

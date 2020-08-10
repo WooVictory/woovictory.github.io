@@ -366,7 +366,7 @@ all() 함수의 원형은 다음과 같다.</p>
     </article>
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -398,146 +398,17 @@ all() 함수의 원형은 다음과 같다.</p>
 
             </div>
             
-                <div class="postShorten-content">
-                    <h2 id="커맨드-패턴이란">커맨드 패턴이란</h2>
-<ul>
-<li><strong>실행될 기능을 캡슐화함으로써</strong> 주어진 여러 기능을 실행할 수 있는 <code>재사용성이 높은 클래스를 설계하는 패턴</code>이다.
-<ul>
-<li>즉, 이벤트가 발생했을 때 실행될 기능이 다양하면서도 변경이 필요한 경우에 이벤트를 발생시키는 클래스를 변경하지 않고 재사용하고자 할 때 유용하다.</li>
-<li>‘행위(Behavioral) 패턴’ 중 하나이다.</li>
-</ul>
-</li>
-</ul>
-<img src="/img/command_pattern1.png" width="500" height="200">
-<ul>
-<li>실행될 기능을 캡슐화함으로써 기능의 실행을 요구하는 호출자(위 그림에서 Invoker) 클래스와 실제 기능을 실행하는 수신자(Receiver) 클래스 사이의 <code>의존성을 제거</code>한다.</li>
-<li>따라서 실행될 기능의 변경에도 호출자 클래스의 수정 없이 그대로 사용할 수 있도록 해준다.</li>
-<li>위 그림에서 각 역할이 수행하는 작업
-<ul>
-<li><strong>Command</strong>
-<ul>
-<li>실행될 기능에 대한 인터페이스</li>
-<li>실행될 기능을 execute 메소드로 선언한다.</li>
-</ul>
-</li>
-<li><strong>ConcreteCommand</strong>
-<ul>
-<li>실제로 실행되는 기능을 구현한다.</li>
-<li>즉, Command 인터페이스를 구현한다.</li>
-</ul>
-</li>
-<li><strong>Invoker</strong>
-<ul>
-<li>기능의 실행을 요청하는 호출자 클래스</li>
-</ul>
-</li>
-<li><strong>Receiver</strong>
-<ul>
-<li>ConcreteCommand에서 execute 메소드를 구현할 때 필요한 클래스</li>
-<li>즉, ConcreteCommand의 기능을 실행하기 위해 사용하는 수신자 클래스</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<h2 id="예시">예시</h2>
-<p>개념을 어느 정도 봤으니 예시를 살펴보자. 이번에는 만능 버튼을 만들어 볼 예정이다. 버튼이 눌리면 불이 켜지는 프로그램이다.</p>
-<img src="/img/command_example2.png" width="500" height="200">
-<p><strong>Lamp, Button 클래스</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Lamp 클래스.</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Lamp</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">turnOn</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"Turn On!"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// Button 클래스.</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Button</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Lamp lamp;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Button</span><span class="params">(Lamp lamp)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.lamp=lamp;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">buttonPress</span><span class="params">()</span></span>&#123;</span><br><span class="line">        lamp.turnOn();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>Client 클래스</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CommandClient</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Lamp lamp = <span class="keyword">new</span> Lamp();</span><br><span class="line">        Button button = <span class="keyword">new</span> Button(lamp);</span><br><span class="line">        button.buttonPress();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>Lamp 클래스로부터 Lamp 객체를 생성한다.</li>
-<li>Button 클래스의 생성자를 이용해 불을 켤 Lamp 객체를 전달한다.</li>
-<li>Button 클래스의 buttonPress()가 호출되면 생성자를 통해 전달받은 Lamp 객체의 turnOn()를 호출해 불을 켠다.</li>
-</ul>
-<h2 id="문제점">문제점</h2>
-<ol>
-<li>버튼을 눌렀을 때 다른 기능을 실행하는 경우
-<ul>
-<li>버튼을 눌렀을 때 알람이 시작되게 하려면? 다음과 같이 수정하면 된다.</li>
-</ul>
-</li>
-</ol>
-<p><strong>Alarm, Button 클래스</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Alarm 클래스.</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Alarm</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">startAlarm</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"Start Alarm ~~~~!!"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 수정된 Button 클래스.</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Button</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Alarm alarm;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Button</span><span class="params">(Alarm alarm)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.alarm = alarm;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">buttonPress</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        alarm.startAlarm();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>Clien 클래스</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CommandClient</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Alarm alarm = <span class="keyword">new</span> Alarm();</span><br><span class="line">        Button button = <span class="keyword">new</span> Button(alarm);</span><br><span class="line">        button.buttonPress();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>새로운 기능으로 변경하려고 기존 코드인 Button 클래스의 내용을 수정했다. 이로 인해 OCP 원칙에 위배된다.</li>
-<li>Button 클래스의 buttonPress() 전체를 변경해야 한다.</li>
-</ul>
-<ol start="2">
-<li>버튼을 누르는 동작에 따라 다른 기능을 실행하는 경우
-<ul>
-<li>버튼을 처음 눌렀을 때는 램프를 켜고, 두 번째 눌렀을 때는 알람을 동작하게 하려면?</li>
-</ul>
-</li>
-</ol>
-<p><strong>수정된 Button 클래스</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Button</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Alarm alarm;</span><br><span class="line">    <span class="keyword">private</span> Lamp lamp;</span><br><span class="line">    <span class="keyword">private</span> Mode mode;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 생성자에서 버튼을 눌렀을 필요한 기능을 인자로 받는다.</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Button</span><span class="params">(Alarm alarm, Lamp lamp)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.alarm = alarm;</span><br><span class="line">        <span class="keyword">this</span>.lamp = lamp;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 램프 모드 또는 알람 모드를 설정.</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setMode</span><span class="params">(Mode mode)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.mode = mode;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 설정된 모드에 따라서 램프를 켜거나 알람을 시작한다.</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">buttonPress</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">switch</span> (mode) &#123;</span><br><span class="line">            <span class="keyword">case</span> LAMP:</span><br><span class="line">                lamp.turnOn();</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> ALARM:</span><br><span class="line">                alarm.startAlarm();</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>필요한 기능을 새로 추가할 때마다 Button 클래스의 코드를 수정해야 한다. 따라서 재사용하기 굉장히 어렵다.</p>
-<h2 id="해결책">해결책</h2>
-<p>문제를 해결하기 위해서는 구체적인 기능을 직접 구현하는 대신 <strong>실행될 기능을 캡슐화해야 한다.</strong></p>
-<ul>
-<li>즉, Button 클래스의 buttonPress() 메소드에서 구체적인 기능(램프 켜기, 알람 동작 등)을 직접 구현하는 대신 버튼을 눌렀을 때 실행될 기능을 Button 클래스 외부에서 제공받아 캡슐화해 buttonPress() 메소드에서 호출한다.</li>
-<li>이를 통해서 Button 클래스 코드를 수정하지 않고도 그대로 사용할 수 있다.</li>
-</ul>
-<img src="/img/command_solution.png" width="500" height="200">
-<ul>
-<li>Button 클래스는 미리 약속된 <strong>Command 인터페이스의 execute 메소드를 호출한다.</strong>
-<ul>
-<li>램프를 켜는 경우에는 theLamp.turnOn() 메소드를 호출하고 알람이 동작하는 경우에는 theAlarm.start() 메소드를 호출하도록 buttonPress() 메소드를 수정한다.</li>
-</ul>
-</li>
-<li>LampOnCommand 클래스에서는 <strong>Command 인터페이스의 execute</strong> 메소드를 구현해 Lamp 클래스의 turnOn() 메소드를 호출한다.(램프 켜는 기능)</li>
-<li>마찬가지로 AlarmStartCommand 클래스에서는 <strong>Command 인터페이스의 execute</strong> 메소드를 구현해 Alarm 클래스의 start() 메소드를 호출한다.(알람이 울리는 기능)</li>
-</ul>
-<p><strong>Command 인터페이스</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Command</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">execute</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>Button 클래스</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Button</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Command command;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 생성자에서 버튼을 눌렀을 때 필요한 기능을 인자로 받는다.</span></span><br><span class="line">    Button(Command command) &#123;</span><br><span class="line">        setCommand(command);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setCommand</span><span class="params">(Command command)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.command = command;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 버튼이 눌리면 주어진 Command 의 execute() 메소드를 호출한다.</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">buttonPress</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        command.execute();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>Lamp, LampOnCommand 클래스</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Lamp</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">turnOn</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"Turn On!"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 램프를 켜는 명령을 수행하는 LampOnCommand 클래스.</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LampOnCommand</span> <span class="keyword">implements</span> <span class="title">Command</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Lamp theLamp;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">LampOnCommand</span><span class="params">(Lamp lamp)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.theLamp = lamp;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Command 인터페이스의 execute() 메소드 실행.</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">execute</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        theLamp.turnOn();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>Alarm, AlarmStartCommand 클래스</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Alarm</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">startAlarm</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"Start Alarm ~~~~!!"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 알람을 울리는 명령을 수행하는 AlarmStartCommand 클래스.</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AlarmStartCommand</span> <span class="keyword">implements</span> <span class="title">Command</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Alarm theAlarm;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">AlarmStartCommand</span><span class="params">(Alarm alarm)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.theAlarm = alarm;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">execute</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        theAlarm.startAlarm();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>Client에서 사용</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CommandClient</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Lamp lamp = <span class="keyword">new</span> Lamp();</span><br><span class="line">        Alarm alarm = <span class="keyword">new</span> Alarm();</span><br><span class="line"></span><br><span class="line">        Command lampOnCommand = <span class="keyword">new</span> LampOnCommand(lamp);</span><br><span class="line">        Command alarmStartCommand = <span class="keyword">new</span> AlarmStartCommand(alarm);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Lamp 를 켜는 Command 를 설정.</span></span><br><span class="line">        Button button = <span class="keyword">new</span> Button(lampOnCommand);</span><br><span class="line">        button.buttonPress(); <span class="comment">// 램프를 켜는 기능 수행.</span></span><br><span class="line"></span><br><span class="line">        System.out.println();</span><br><span class="line">        <span class="comment">// 알람을 울리는 Command 를 설정.</span></span><br><span class="line">        Button button1 = <span class="keyword">new</span> Button(alarmStartCommand);</span><br><span class="line">        button1.buttonPress(); <span class="comment">// 알람 울리는 기능 수행.</span></span><br><span class="line">        button1.setCommand(lampOnCommand); <span class="comment">// 다시 램프를 켜는 Command 로 설정.</span></span><br><span class="line">        button1.buttonPress(); <span class="comment">// 램프를 켜는 기능 수행.</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>Command 인터페이스를 구현하는 LampOnCommand와 AlarmStartCommand 객체를 Button 객체에 설정한다.(setCommand() 메소드를 통해서)</li>
-<li>Button 클래스의 buttonPress() 메소드에서 Command 인터페이스의 execute() 메소드를 호출한다.</li>
-<li>즉, 버튼을 눌렀을 때 필요한 임의의 기능은 Command 인터페이스를 구현한 클래스의 객체를 Button 객체에 설정해서 실행할 수 있다.</li>
-<li>이렇게 Command 패턴을 이용하면 Button 클래스의 코드를 변경하지 않으면서 다양한 동작을 구현할 수 있게 된다.</li>
-</ul>
-<img src="/img/command_solution2.png" width="500" height="200">
-<h2 id="정리">정리</h2>
-<p>커맨드 패턴을 적용하지 않은 경우, Button에 많은 기능이 추가될수록 Button 클래스가 가지고 있는 객체 프로퍼티는 더욱 늘어날 것이고 기존의 buttonPress() 메소드에서 분기가 더 늘어날 것이다. 이는 결국 OCP에 위배된다.</p>
-<p>커맨드 패턴을 적용하면, Button이 할 수 있는 기능들(램프를 킨다, 알람을 시작한다.)을 클래스로 만든다. 즉, 기능을 수행하도록 명령을 내리는 클래스(LampOnCommand, AlarmStartCommand)로 만들어서 각 기능들을 캡슐화 한다.</p>
-<p>그리고 Button 클래스의 buttonPress() 메소드에서 lamp.turnOn(), alarm.start()와 같이 기능들을 직접 호출하지 않고, 캡슐화한 Command 인터페이스의 execute() 메소드를 호출하도록 한다.</p>
-<p>만약 버튼에 TV를 틀어주는 기능이 추가된다면 TvOnCommand 클래스와 TV 클래스를 추가하면 되므로, 기존의 코드를 수정할 필요가 없다. 따라서 OCP에 위배되지 않으면서 기능을 추가할 수 있다.</p>
-<h2 id="참고">참고</h2>
-<ul>
-<li><a href="https://gmlwjd9405.github.io/2018/07/07/command-pattern.html" target="_blank" rel="noopener">[Design Pattern] 커맨드 패턴이란</a></li>
-<li><a href="https://jusungpark.tistory.com/18" target="_blank" rel="noopener">디자인패턴 - 커맨드 패턴 (command pattern)</a></li>
-<li><a href="https://victorydntmd.tistory.com/295" target="_blank" rel="noopener">[디자인패턴] 커맨드 패턴 (Command Pattern)</a></li>
-</ul>
-
+                <div class="postShorten-excerpt">
+                    <h2>커맨드 패턴이란</h2>
                     
+                        <a
+                            href="/2019/06/13/DesignPattern-CommandPattern/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [Design Pattern] 커맨드 패턴"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2019/06/13/DesignPattern-CommandPattern/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             
@@ -623,7 +494,7 @@ all() 함수의 원형은 다음과 같다.</p>
     </article>
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -655,146 +526,18 @@ all() 함수의 원형은 다음과 같다.</p>
 
             </div>
             
-                <div class="postShorten-content">
+                <div class="postShorten-excerpt">
                     <p>싱글톤 패턴은 굉장히 많이 사용되는 패턴이다.<br>
 나도 많이 사용하지만, 개념을 정리하고 싶어서 글을 쓰게 되었다.</p>
-<h2 id="싱글톤-패턴이란">싱글톤 패턴이란</h2>
-<ul>
-<li>전역 변수를 사용하지 않고 <strong>객체를 하나만 생성</strong>하도록 하며, 생성된 객체를 <strong>어디에서든지 참조할 수 있도록 하는</strong> 패턴이다.
-<ul>
-<li>‘생성 패턴’ 중 하나이다.</li>
-</ul>
-</li>
-</ul>
-<img src="/img/singleton_example.png" width="200" height="200">
-<ul>
-<li>Singleton의 역할
-<ul>
-<li>하나의 인스턴스만을 생성하는 책임이 있으며 getInstance() 메소드를 통해 모든 클라이언트에게 동일한 인스턴스를 반환하는 작업을 수행한다.</li>
-</ul>
-</li>
-</ul>
-<h2 id="예시">예시</h2>
-<p><strong>프린트 관리자 만들기</strong></p>
-<ul>
-<li>프린트 하나를 10명이 공유해서 사용한다고 가정하자.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Printer</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Printer</span><span class="params">()</span></span>&#123; &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">(String str)</span></span>&#123;...&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>그러나 Printer 클래스를 사용해 프린터를 이용하려면 Client 프로그램에서 new Printer()가 반드시 한 번만 호출되도록 주의해야 한다. <strong>왜냐하면 프린터는 하나이기 때문에!</strong></li>
-<li>이를 해소하는 방법 중 하나는 생성자를 외부에서 호출할 수 없도록 하는 것이다.
-<ul>
-<li>Printer 클래스의 생성자를 <code>private</code>으로 선언</li>
-</ul>
-</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Printer</span> </span>&#123;</span><br><span class="line">    <span class="comment">// Printer 생성자를 외부에서 사용하지 못함.</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Printer</span><span class="params">()</span></span>&#123; &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">(String str)</span></span>&#123;...&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>자기 자신 프린터에 대한 인스턴스를 하나 만들어 외부에 제공해줄 메소드가 필요하다.</li>
-<li>static 메소드, static 변수
-<ul>
-<li>구체적인 인스턴스에 속하는 영역이 아니고, 클래스 자체에 속한다.</li>
-<li>클래스의 인스턴스를 생성하지 않고도 메소드를 실행할 수 있고 변수를 참조할 수 있다.</li>
-<li>객체가 저장되는 힙 영역이 아닌 클래스(메소드) 영역에 저장되어 모든 객체가 공유하는 메모리가 된다.</li>
-</ul>
-</li>
-<li>만약 new Printer()가 호출되기 전이면 인스턴스 메소드인 print() 메소드는 호출할 수 없다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Printer</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 외부에 제공할 자기 자신의 인스턴스</span></span><br><span class="line">    <span class="comment">// static 하기 때문에 해당 클래스의 객체들이 공유하낟.</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Printer printer = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Printer</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 자기 자신의 인스턴스를 외부에 제공하는 메소드.</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Printer <span class="title">getPrinter</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (printer == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="comment">// printer 인스턴스 생성.</span></span><br><span class="line">            printer = <span class="keyword">new</span> Printer();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> printer;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">(String str)</span> </span>&#123;</span><br><span class="line">        System.out.println(str);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>Client에서 사용</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PrinterClient</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> USER_NUMBER = <span class="number">5</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        User[] users = <span class="keyword">new</span> User[USER_NUMBER];</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; USER_NUMBER; i++) &#123;</span><br><span class="line">            users[i] = <span class="keyword">new</span> User(String.valueOf(i + <span class="number">1</span>));</span><br><span class="line">            users[i].print();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span> </span>&#123;</span><br><span class="line">        <span class="keyword">private</span> String name;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">User</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">this</span>.name = name;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            Printer printer = Printer.getPrinter();</span><br><span class="line">            printer.print(<span class="keyword">this</span>.name + <span class="string">" print using "</span> + printer.toString());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// printer.toString()을 통해서 하나의 printer 객체를 사용하는 것을 확인할 수 있다.</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 결과</span></span><br><span class="line"><span class="number">1</span> print using Singleton.Printer@<span class="number">60e53</span>b93</span><br><span class="line"><span class="number">2</span> print using Singleton.Printer@<span class="number">60e53</span>b93</span><br><span class="line"><span class="number">3</span> print using Singleton.Printer@<span class="number">60e53</span>b93</span><br><span class="line"><span class="number">4</span> print using Singleton.Printer@<span class="number">60e53</span>b93</span><br><span class="line"><span class="number">5</span> print using Singleton.Printer@<span class="number">60e53</span>b93</span><br></pre></td></tr></table></figure>
-<p><strong>문제점</strong></p>
-<p><strong>다중 스레드 환경</strong>에서 Printer 클래스를 이용할 때 인스턴스가 1개 이상 생성되는 경우가 발생할 수 있다.</p>
-<ul>
-<li><code>경합 조건(Race Condition)</code>을 발생시키는 경우</li>
-</ul>
-<ol>
-<li>Printer 인스턴스가 아직 생성되지 않았을 때 스레드 1이 getPrinter() 메소드의 if문을 실행해 이미 인스턴스가 생서되었는지 확인한다. 현재 printer 변수는 null인 상태이다.</li>
-<li>만약 스레드 1이 생성자를 호출해 인스턴스를 만들기 전에 스레드 1의 CPU 이용시간이 끝나 스레드 2가 CPU를 획득해 스레드 2가 if문을 실행해 printer 변수가 null인지 확인한다. 현재 printer 변수는 null이므로 인스턴스를 생성하는 생성자를 호출하는 코드를 실행하게 된다.</li>
-<li>스레드 1도 스레드 2와 마찬가지로 인스턴스를 생성하는 코드를 실행하게 되면 결과적으로 Printer 클래스의 인스턴스가 2개 생성되는 문제가 발생한다.</li>
-</ol>
-<ul>
-<li>race Condition이란?
-<ul>
-<li>메모리와 같은 한정적인 자원을 2개 이상의 스레드가 이용하려고 경합하는 현상을 말한다.</li>
-</ul>
-</li>
-</ul>
-<h2 id="해결책">해결책</h2>
-<p>프린터 관리자(Lazy Initialization)는 사실 다중 스레드 환경의 애플리케이션이 아닌 경우에는 아무런 문제가 되지 않는다.</p>
-<ul>
-<li>다중 스레드 환경에서 발생하는 문제를 해결하는 방법
-<ol>
-<li>정젹 변수에 인스턴스를 만들어서 바로 초기화 하는 방법(Eager Initialization)</li>
-<li>인스턴스를 만드는 메소드에 동기화 하는 방법(Thread-Safe Initialization)</li>
-<li>Enum 클래스 사용.</li>
-<li>Holder에 의한 초기화</li>
-</ol>
-</li>
-</ul>
-<p><strong>1. 정적 변수에 인스턴스를 만들어서 바로 초기화 하는 방법</strong></p>
-<p>이른 초기화(Eager Initialization)라고도 한다.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Printer</span> </span>&#123;</span><br><span class="line">    <span class="comment">// static 변수에 외부에 제공할 자기 자신의 인스턴스를 만들어 초기화한다.</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Printer printer = <span class="keyword">new</span> Printer();</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Printer</span><span class="params">()</span> </span>&#123; &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 자기 자신의 인스턴스를 외부에 제공.</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> Printer <span class="title">getPrinter</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> printer;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">(String str)</span> </span>&#123;</span><br><span class="line">        System.out.println(str);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>static 변수는 객체가 생성되기 전 클래스 로더에 의해 클래스가 메모리에 로딩될 때 만들어지기 때문에 초기화가 한 번만 실행된다. 또, 클래스 로더에 의해 클래스가 최초 로딩될 때 객체가 생성됨으로 <code>Thread-Safe</code> 하다.</p>
-<p>프로그램 시작부터 종료까지 없어지지 않고 메모리에 계속 상주하며 클래스에서 생성된 모든 객체에서 참조할 수 있다.</p>
-<p>하지만, 싱글톤 객체의 사용 유무와 상관 없이 클래스가 로딩되는 시점에 항상 싱글톤 객체가 생성되고 메모리를 점유하고 있기 때문에 비효율적인 부분이 있다.</p>
-<p><strong>2-1. 인스턴스를 만드는 메소드에 동기화 하는 방법</strong></p>
-<p>늦은 초기화(Lazy Initializaion)라고 한다.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Printer</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 외부에 제공할 자기 자신의 인스턴스</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Printer printer = <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> count = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Printer</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 인스턴스를 생성하는 메소드 동기화. (임계 구역)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">static</span> Printer <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (printer == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="comment">// printer 인스턴스 생성</span></span><br><span class="line">            printer = <span class="keyword">new</span> Printer();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> printer;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">(String str)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 오직 하나의 스레드 접근만을 허용한다. (임계 구역)</span></span><br><span class="line">        <span class="comment">// 성능을 위해 필요한 부분만을 임계 구역으로 설정한다.</span></span><br><span class="line">        <span class="keyword">synchronized</span> (<span class="keyword">this</span>) &#123;</span><br><span class="line">            count++;</span><br><span class="line">            System.out.println(str);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>임계 구역</strong></p>
-<ul>
-<li>인스턴스를 만드는 메소드를 <strong>임계 구역으로 변경</strong>했다.
-<ul>
-<li>임계 구역 : 둘 이상의 스레드가 동시에 접근해서는 안되는 공유 자원을 접근하는 코드의 일부를 말한다.</li>
-<li>다중 스레드 환경에서 동시에 여러 스레드가 getPrinter() 메소드를 소유하는 객체에 접근하는 것을 방지한다.</li>
-</ul>
-</li>
-<li>공유 변수에 접근하는 부분을 <strong>임계 구역으로 변경</strong>
-<ul>
-<li>여러 개의 스레드가 하나뿐인 count 변수 값에 동시에 접근해서 갱신하는 것을 방지하기 위함이다.</li>
-</ul>
-</li>
-</ul>
-<p><code>synchronized</code> 키워드를 사용해서 getInstance() 메소드를 lock, unlock 처리하기 때문에 많은 비용이 발생한다. 대략 100배 정도 비효율적이라고 한다. 따라서 많은 쓰레드가 getInstance() 메소드를 호출하게 되면 프로그램의 전반적인 성능 저하가 발생한다.</p>
-<p><strong>2-2. Thread Safe Lazy Initialization + Double - Checked locking</strong></p>
-<p>2-1에서 언급한 인스턴스를 만드는 메소드에 동기화를 하는 방법에서 조금 바꾸면 된다. 2-1의 문제는 많은 쓰레드들이 동시에 synchronized 처리된 getInstance() 메소드를 접근하면 성능저하가 발생한다. 이를 완화하기 위해서 Double-Checked locking 기법을 사용한다. DCL이라고도 부른다.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Printer&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">volatile</span> <span class="keyword">static</span> Printer printer;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Printer</span><span class="params">()</span></span>&#123; &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Printer <span class="title">getInstance</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(printer == <span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">synchronized</span>(Printer.class)&#123;</span><br><span class="line">                <span class="keyword">if</span>(printer == <span class="keyword">null</span>)&#123;</span><br><span class="line">                    printer = <span class="keyword">new</span> Printer();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> printer;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>메소드에 synchronized를 제거하면서 동기화 오버헤드를 줄여보고자 하는 의도로 설계되었다. printer가 null인지 체크하고 null일 경우 동기화 블록에 진입하게 된다. 그래서 최초 객체가 생성된 이후로는 동기화 블록에 진입하지 않기 때문에 효율적이다.</p>
-<p>하지만, 아주 안 좋은 케이스로 정상 동작하지 않을 수도 있다. 그래서 권고하지 않는 방법 중 하나이다.</p>
-<p><strong>3. Enum 클래스</strong></p>
-<p>간단하게 class가 아닌 <code>enum</code>으로 정의하는 것이다.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> Printer&#123;</span><br><span class="line">    INSTANCE;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Printer <span class="title">getInstance</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> INSTANCE;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><code>Enum</code>은 인스턴스가 여러 개 생기지 않도록 확실하게 보장해준다.(Thread-Safe) 또한, 복잡한 직렬화나 리플렉션 상황에서도 직렬화가 자동으로 지원된다는 이점이 있다.</p>
-<p>하지만, Enum에도 한계라는 것이 있다. 보통 Android 개발을 하게 될 경우 Singleton의 초기화 과정에 <code>Context</code>라는 의존성이 끼어들 가능성이 노다. Enum의 초기화는 컴파일 타임에 결정되므로 매번 메소드 등을 호출할 때 Context 정보를 넘겨야 하는 비효율적인 상황이 발생할 수 있다.</p>
-<p>결론적으로 Enum은 효율적인 방법이지만, 상황에 따라 사용이 어려울 수도 있다는 점이다.</p>
-<p><strong>4. Holder에 의한 초기화</strong></p>
-<p>지금까지 나온 방법 중 가장 완벽하다고 평가 받는 방법이다.<br>
-코드를 먼저 확인해보자.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Printer</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Printer</span><span class="params">()</span> </span>&#123; &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> Printer <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> LazyHolder.INSTANCE;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">LazyHolder</span> </span>&#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Printer INSTANCE = <span class="keyword">new</span> Printer();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>한마디로 객체가 필요할 때로 초기화를 미루는 것이다. 따라서 <code>Lazy Initialization</code>이라고도 한다. Printer 클래스에는 LazyHolder 클래스의 변수가 없기 때문에 Printer 클래스 로딩 시 LazyHolder 클래스를 초기화하지 않는다.</p>
-<p>LazyHolder 클래스는 Printer 클래스의 getInstance() 메소드에서 <code>LazyHolder.INSTANCE</code>를 참조하는 순간 클래스 로더에 의해 Class가 로딩되며 초기화가 진행된다.</p>
-<p>클래스 로더가 Class를 로딩하고 초기화하는 시점은 <code>Thread-Safe</code>를 보장하기 때문에 <strong>volatile</strong>이나 <strong>synchronized</strong> 같은 키워드가 없어도 <code>thread-safe</code> 하면서 성능도 보장하는 아주 훌륭한 방법이다.</p>
-<h2 id="참고">참고</h2>
-<ul>
-<li><a href="https://gmlwjd9405.github.io/2018/07/06/singleton-pattern.html" target="_blank" rel="noopener">[Design Pattern] 싱글턴 패턴이란</a></li>
-<li><a href="https://medium.com/@joongwon/multi-thread-%ED%99%98%EA%B2%BD%EC%97%90%EC%84%9C%EC%9D%98-%EC%98%AC%EB%B0%94%EB%A5%B8-singleton-578d9511fd42" target="_blank" rel="noopener">Multi Thread 환경에서의 올바른 Singleton</a></li>
-</ul>
-
                     
+                        <a
+                            href="/2019/06/12/DesignPattern-Singleton/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [Design Pattern] 싱글톤 패턴"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2019/06/12/DesignPattern-Singleton/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             
@@ -803,7 +546,7 @@ all() 함수의 원형은 다음과 같다.</p>
     </article>
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -835,191 +578,17 @@ all() 함수의 원형은 다음과 같다.</p>
 
             </div>
             
-                <div class="postShorten-content">
-                    <h2 id="스트래티지-패턴strategy-pattern이란">스트래티지 패턴(Strategy Pattern)이란</h2>
-<ul>
-<li><strong>행위를 클래스로 캡슐화해</strong> 동적으로 행위를 자유롭게 바꿀 수 있게 해주는 패턴
-<ul>
-<li>같은 문제를 해결하는 여러 알고리즘이 클래스별로 캡슐화되어 있고 이들이 필요할 때 교체할 수 있도록 함으로써 동일한 문제를 다른 알고리즘으로 해결할 수 있게 하는 디자인 패턴</li>
-<li>행위 패턴(Behavioral) 중 하나이다.</li>
-</ul>
-</li>
-<li>즉, <strong>전략을 쉽게 바꿀 수 있도록 해주는 디자인 패턴</strong>
-<ul>
-<li>전략 : 어떤 목적을 달성하기 위해 일을 수행하는 방식, 비즈니스 규칙, 문제를 해결하는 알고리즘 등을 말한다.</li>
-</ul>
-</li>
-<li>예를 들어, 게임 프로그래밍에서 게임 캐릭터가 자신이 처한 상황에 따라 공격이나 행동하는 방식을 바꾸고 싶을 때 스트래티지 패턴은 유용하다.</li>
-</ul>
-<p><strong>그림</strong><br>
-<img src="/img/design_pattern_strategy.png" width="700" height="200"></p>
-<p><strong>각 역할이 수행하는 작업</strong></p>
-<ul>
-<li>Strategy
-<ul>
-<li>인터페이스나 추상 클래스로 외부에서 동일한 방식으로 알고리즘을 호출하는 방법을 명시</li>
-</ul>
-</li>
-<li>ConcreteStrategy
-<ul>
-<li>스트래티지 패턴에서 명시한 알고리즘을 실제로 구현한 클래스. 즉, 구현체</li>
-</ul>
-</li>
-<li>Context
-<ul>
-<li>스트래티지 패턴을 이용하는 역할을 수행한다.</li>
-<li>필요에 따라 동적으로 구체적인 전략을 바꿀 수 있도록 setter 메소드(<code>집약 관계</code>)를 제공한다.</li>
-</ul>
-</li>
-</ul>
-<p><strong>집약 관계</strong></p>
-<ul>
-<li>참조값을 인자로 받아 필드를 세팅하는 경우</li>
-<li>전체 객체의 라이프 타임과 부분 객체의 라이프 타임은 독립적이다.</li>
-<li>즉, 전체 객체가 메모리에서 사라진다 해도 부분 객체는 사라지지 않는다.</li>
-</ul>
-<h2 id="예시">예시</h2>
-<p><strong>오리 게임을 만들어보자.</strong></p>
-<p>오리 어플리케이션 게임을 운영하는 회사를 다니면서 오리게임을 만든다고 가정해보자. 표준적인 객체지향 기법을 사용해 Duck 이라는 슈퍼클래스를 만든 다음, 그 클래스를 확장하여 다른 종류의 오리를 만든다.</p>
-<img src="/img/strategy_pattern1.jpeg" width="300" height="200">
-<p>추상 클래스인 Duck 클래스를 RedHeadDuck 클래스와 MallardDuck 클래스가 상속을 받아 추상 메소드인 display()를 각각 구현한다.</p>
-<p><strong>문제의 시작1</strong></p>
-<p>처음 계획에는 없었는데 오리들이 물에 떠있는 기능 이외에 날아다녀야 하는 요구사항이 생겼다. 이건 간단하다.</p>
-<img src="/img/strategy_pattern2.jpeg" width="300" height="200">
-<p>그림처럼 나는 기능을 하는 fly() 메소드를 추가했다. 이로써 모든 오리들에게 날 수 있는 기능이 추가되었다.</p>
-<p>그런데 오리 중 날 수 없는 오리가 있다는 사실을 잊고 있었다.</p>
-<img src="/img/strategy_pattern3.jpeg" width="300" height="200">
-<p>Duck 클래스에서 코드 한 부분만을 바꿈으로 인해서 프로그램 전체에 부작용이 발생했다. 장난감 고무 오리도 날게 된 것이다.</p>
-<p>문제를 해결하기 위해 RubberDuck 클래스에서 fly() 메소드와 quak() 메소드를 오버라이드 하여 소리를 낼 수 있고 날 수 있게 하는 기능을 변경시켜 주었다.</p>
-<img src="/img/strategy_pattern4.jpeg" width="300" height="200">
-<p>눈 앞에 있는 문제는 해결되었지만, 향후에 RubberDuck과 같은 가짜 오리가 더 추가가 된다면 그때마다 맞지 않는 상속되는 메소드들을 오버라이드해서 구현해야 하는 문제가 여전히 존재한다.</p>
-<p><strong>문제의 시작2</strong></p>
-<p>갑자기 회사에서 1개월 마다 한번씩 새로운 오리를 업데이트 한다고 한다. 여러 오리가 새롭게 추가될 것이고 그 규격도 계속 변할 것이라고 한다.</p>
-<p>그렇다면 매번 모든 오리 서브클래스의 fly()와 quack() 같은 메소드를 일일이 살펴봐야 하고 상황에 따라 오버라이드 해야 할 수도 있다. 그럼 여기서 의문이 생긴다. ‘과연 상속을 활용하는게 맞는 방법일까?’ 다시 생각해보자.</p>
-<p>‘인터페이스는 어떨까?’</p>
-<img src="/img/strategy_pattern5.jpeg" width="300" height="200">
-<p>음, 코드 중복이 엄청나다. 메소드 몇개 오버라이드 하는 것을 피하다가 날아가는 동작 바꾸기 위해서 새롭게 생긴 모든 Duck 서브 클래스들을 전부 고쳐야 한다.</p>
-<p><strong>해결해보자</strong></p>
-<p>상속을 사용하는 것도 서브 클래스의 행동이 바뀔 수 있는데도 모든 서브 클래스들이 하나의 행동을 사용하는 것이 문제가 된다.</p>
-<p>그리고 Flyable, Quackable 인터페이스를 사용하는 방법도 코드 재사용을 할 수 없다는 문제가 있다. (한가지의 행동을 바꿀 때마다 그 행동이 정의되어 있는 모든 서브 클래스들은 전부 찾아서 코드를 일일히 고쳐야 하고, 그 과정에서 새로운 버그가 생길 가능성이 많다.)</p>
-<p><code>디자인 원칙</code></p>
-<ul>
-<li>애플리케이션에서 달라지는 부분을 찾아내고, 달라지지 않는 부분으로부터 분리킨다.</li>
-</ul>
-<p>위의 디자인 원칙을 적용해보자. 달라지는 부분을 찾아서 나머지 코드에 영향을 주지 않도록 <strong>캡슐화</strong>를 시켜준다.</p>
-<p>그러면 위에서 달라지는 부분은 fly(), quak() 이다.<br>
-이러한 행동을 Duck 클래스로부터 분리시키기 위해 각 행동을 나타낼 새로운 클래스의 집합을 만들어준다.</p>
-<img src="/img/strategy_pattern6.jpeg" width="300" height="200">
-<p>행동에 관한 인터페이스가 2개 생겼고 구체적인 행동을 구현하는 클래스들이 각각 생성된다. 이제 더이상 Duck에서 나는 행동과 소리를 내는 행동을 Duck 클래스나 그 서브 클래스에서 구현하지 않고 다른 클래스에게 위임을 해주게 된다.</p>
-<p><code>디자인 원칙</code></p>
-<ul>
-<li>상속보다는 구성을 활용한다.</li>
-<li>구현이 아닌 인터페이스에 맞춰서 프로그래밍 한다.</li>
-</ul>
-<p>그리고 Duck 클래스는 두 개의 인터페이스 형식의 인스턴스 변수가 추가된다.</p>
-<img src="/img/strategy_pattern7.jpeg" width="300" height="200">
-<p>Duck 클래스에서는 이제 행동을 직접 처리하는 대신에 새로 만든 performFly(), performQuack() 메소드에서 각각 FlyBehavior, QuackBehavior로 <strong>참조되는 객체에 그 행동을 위임해 줄 것이다.</strong></p>
-<p>A는 B이다 보다는 A에는 B가 있다가 나을 수 있다.<br>
-각각의 오리들에게는 FlyBehavior와 QuackBehavior 인터페이스 객체가 있으며 각각 나는 행동과 소리 행동을 위임 받는다.</p>
-<p>이런 방식으로 두 클래스를 합치는 것을 구성(Composition)을 이용하는 것이라고 한다. 여기의 오리 클래스는 행동을 상속받는 대신, 올바른 행동 객체로 구성됨으로써 행동을 부여받게 되는 것이다.</p>
-<h2 id="예시2">예시2</h2>
-<p>이번에는 로봇 만들기로 예시를 들어보자.</p>
-<img src="/img/strategy_example.png" width="600" height="200">
-<p><strong>Robot 클래스</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Robot</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Robot</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 추상 메소드.</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">attack</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">movie</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>TaekwonV, Atom 클래스</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TaekwonV</span> <span class="keyword">extends</span> <span class="title">Robot</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">TaekwonV</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(name);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">attack</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"I have Missile."</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">movie</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"I can only walk."</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Atom</span> <span class="keyword">extends</span> <span class="title">Robot</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Atom</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(name);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">attack</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"I have strong punch."</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">movie</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"I can fly."</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>client 클래스</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RobotClient</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Robot taekwonV = <span class="keyword">new</span> TaekwonV(<span class="string">"TaekwonV"</span>);</span><br><span class="line">        Robot atom = <span class="keyword">new</span> Atom(<span class="string">"Atom"</span>);</span><br><span class="line"></span><br><span class="line">        System.out.println(<span class="string">"My Name is "</span>+taekwonV.getName());</span><br><span class="line">        taekwonV.movie();</span><br><span class="line">        taekwonV.attack();</span><br><span class="line"></span><br><span class="line">        System.out.println();</span><br><span class="line">        System.out.println(<span class="string">"My Name is "</span>+atom.getName());</span><br><span class="line">        atom.movie();</span><br><span class="line">        atom.attack();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>문제점</strong></p>
-<ol>
-<li>기존 로봇의 공격과 이동 방법을 수정하는 경우
-<ul>
-<li>Atom이 날 수는 없고 오직 걷게만 만들고 싶다면?</li>
-<li>TaekwonV를 날게 하려면?</li>
-</ul>
-</li>
-</ol>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Atom</span> <span class="keyword">extends</span> <span class="title">Robot</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Atom</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(name);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">attack</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"I have strong punch."</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">movie</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"I can only Walk."</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>새로운 기능으로 변경하려고 기존 코드의 내용을 수정해야 한다. 따라서 <strong>OCP(개방 폐쇄 원칙)에 위배된다.</strong></li>
-<li>또한, TaekwonV와 Atom의 move() 메소드의 내용이 중복된다. 이런 중복 상황은 많은 문제를 야기하는 원인이 된다.</li>
-<li>만약, 걷는 방식에 문제가 있거나 새로운 방식으로 수정하려면 모든 중복 코드를 일관성 있게 변경해야만 한다.</li>
-</ul>
-<ol start="2">
-<li>새로운 로봇을 만들어 기존의 공격 또는 이동 방법을 추가, 수정하는 경우</li>
-</ol>
-<ul>
-<li>새로운 로봇으로 Sungard를 만들어 TaekwonV의 미사일 공격 기능을 추가하려면?</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Sungard</span> <span class="keyword">extends</span> <span class="title">Robot</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Sungard</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(name);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">attack</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"I have Missile."</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">movie</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"I can only walk."</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>TaekwonV와 Sungard 클래스의 attack() 메소드의 내용이 중복된다.</li>
-</ul>
-<img src="/img/strategy_ocp.png" width="600" height="200">
-<ul>
-<li>현재 시스템의 캡슐화 단위가 Robot 자체이므로 로봇을 추가하기는 매우 쉽다.</li>
-<li>그러나 새로운 로봇인 Sungard에 기존의 공격 또는 이동 방법을 추가하거나 변경하려고 하면 문제가 발생한다. (메소드의 중복 문제라던지 OCP 원칙 위반 등)</li>
-</ul>
-<p><strong>해결책</strong></p>
-<p><code>문제를 해결하기 위해서는 무엇이 변화되었는지를 찾은 후에 변화하지 않는 부분과 분리하여 변화하는 부분을 클래스로 캡슐화해야 한다.</code></p>
-<ul>
-<li>로봇 예제에서 변화되면서 문제를 발생시키는 요인은 <strong>로봇의 이동 방식과 공격 방식의 변화</strong>이다.</li>
-<li>이를 캡슐화하려면 외부에서 구체적인 이동 방식과 공격 방식을 담은 구체적인 클래스들을 은닉해야 한다.
-<ul>
-<li>공격과 이동을 위한 인터페이스를 각각 만들고, 이들을 실제로 구현한 클래스를 만들어야 한다.</li>
-</ul>
-</li>
-</ul>
-<img src="/img/strategy_solution.png" width="600" height="200">
-<ul>
-<li>Robot 클래스가 이동 기능과 공격 기능을 이용하는 클라이언트 역할을 수행한다.
-<ul>
-<li>구체적인 이동, 공격 방식이 MovingStrategy와 AttackStrategy 인터페이스에 의해 캡슐화 되어 있다.</li>
-<li>이 인터페이스들이 일종의 방화벽 역할을 수행해 Robot 클래스의 변경을 차단해준다.</li>
-</ul>
-</li>
-<li>스트래티지 패턴을 이용하면 새로운 기능의 추가(새로운 이동, 공격 기능)가 기존의 코드에 영향을 미치지 못하게 하므로 <strong>OCP를 만족</strong>하는 설계가 된다.
-<ul>
-<li>이렇게 변경된 새로운 구조에서는 외부에서 로봇 객체의 이동, 공격 방식을 임의대로 바꾸도록 해주는 setter 메소드가 필요하다.</li>
-<li>setMovingStrategy, setAttackStrategy</li>
-<li>이렇게 변경이 가능한 이유는 상속 대신 <strong>집약 관계</strong>를 이용했기 때문이다.</li>
-</ul>
-</li>
-</ul>
-<p>스트래티지 패턴을 적용해서 로봇 예시를 수정해보자.</p>
-<p><strong>공격에 대한 인터페이스 구체적인 클래스</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 공격 기능에 대한 인터페이스.</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">AttackStrategy</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">attack</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 공격 인터페이스를 구현한 구현체 클래스.</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MissileStrategy</span> <span class="keyword">implements</span> <span class="title">AttackStrategy</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">attack</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"I have Missile"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PunchStrategy</span> <span class="keyword">implements</span> <span class="title">AttackStrategy</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">attack</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"I have strong punch."</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>이동에 대한 인터페이스와 구체적인 클래스</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 이동 기능에 대한 인터페이스.</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">MovingStrategy</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">move</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 이동 인터페이스를 구현한 구체적인 클래스.</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FlyingStrategy</span> <span class="keyword">implements</span> <span class="title">MovingStrategy</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">move</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"I can fly."</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WalkingStrategy</span> <span class="keyword">implements</span> <span class="title">MovingStrategy</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">move</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"I can only walk."</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>Robot 클래스</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Robot</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> AttackStrategy attackStrategy;</span><br><span class="line">    <span class="keyword">private</span> MovingStrategy movingStrategy;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Robot</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">attack</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        attackStrategy.attack();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">movie</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        movingStrategy.move();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// setter 메소드</span></span><br><span class="line">    <span class="comment">// 집약 관계, 전체 객체가 메모리에서 사라진다 해도 부분 객체는 사라지지 않는다.</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setAttackStrategy</span><span class="params">(AttackStrategy attackStrategy)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.attackStrategy = attackStrategy;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setMovingStrategy</span><span class="params">(MovingStrategy movingStrategy)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.movingStrategy = movingStrategy;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>구체적인 Robot 클래스</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TaekwonV</span> <span class="keyword">extends</span> <span class="title">Robot</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">TaekwonV</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(name);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Atom</span> <span class="keyword">extends</span> <span class="title">Robot</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Atom</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(name);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>Client에서 사용</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RobotClient</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Robot taekwonV = <span class="keyword">new</span> TaekwonV(<span class="string">"TaekwonV"</span>);</span><br><span class="line">        Robot atom = <span class="keyword">new</span> Atom(<span class="string">"Atom"</span>);</span><br><span class="line"></span><br><span class="line">        taekwonV.setAttackStrategy(<span class="keyword">new</span> MissileStrategy());</span><br><span class="line">        taekwonV.setMovingStrategy(<span class="keyword">new</span> FlyingStrategy());</span><br><span class="line"></span><br><span class="line">        System.out.println(<span class="string">"My name is "</span> + taekwonV.getName());</span><br><span class="line">        taekwonV.attack();</span><br><span class="line">        taekwonV.move();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 수정된 부분 : 전략 변경 방법.</span></span><br><span class="line">        System.out.println();</span><br><span class="line">        taekwonV.setAttackStrategy(<span class="keyword">new</span> PunchStrategy());</span><br><span class="line">        taekwonV.setMovingStrategy(<span class="keyword">new</span> WalkingStrategy());</span><br><span class="line">        taekwonV.attack();</span><br><span class="line">        taekwonV.move();</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        System.out.println();</span><br><span class="line">        atom.setMovingStrategy(<span class="keyword">new</span> WalkingStrategy());</span><br><span class="line">        atom.setAttackStrategy(<span class="keyword">new</span> PunchStrategy());</span><br><span class="line"></span><br><span class="line">        System.out.println(<span class="string">"My name is "</span> + atom.getName());</span><br><span class="line">        atom.attack();</span><br><span class="line">        atom.move();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>따라서 기존의 코드를 수정하지 않고도 기능을 추가하거나 수정할 수 있게 되었다. OCP 원칙을 위배하지 않고 스트래티지 패턴을 적용한 예시이다.</p>
-<h2 id="참고">참고</h2>
-<ul>
-<li><a href="https://jusungpark.tistory.com/7" target="_blank" rel="noopener">디자인패턴 - 스트래티지 패턴 (strategy pattern)</a></li>
-<li><a href="https://gmlwjd9405.github.io/2018/07/06/strategy-pattern.html" target="_blank" rel="noopener">[Design Pattern] 스트래티지 패턴이란</a></li>
-</ul>
-
+                <div class="postShorten-excerpt">
+                    <h2>스트래티지 패턴(Strategy Pattern)이란</h2>
                     
+                        <a
+                            href="/2019/06/11/DesignPattern-StrategyPattern/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [Design Pattern] 스트래티지 패턴"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2019/06/11/DesignPattern-StrategyPattern/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             
@@ -1028,7 +597,7 @@ all() 함수의 원형은 다음과 같다.</p>
     </article>
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -1060,63 +629,17 @@ all() 함수의 원형은 다음과 같다.</p>
 
             </div>
             
-                <div class="postShorten-content">
-                    <h2 id="디자인-패턴design-pattern">디자인 패턴(Design Pattern)</h2>
-<p>소프트웨어를 설계할 때 특정 맥락에서 자주 발생하는 문제들을 해결하기 위해 만든 재사용 가능한 해결책</p>
-<p><strong>패턴</strong></p>
-<ul>
-<li>각기 다른 프로젝트를 개발할 때, 서로 간에 공통되는 설계 문제가 존재하며 이를 처리하는 해결책 사이에도 공통점이 있다. 이러한 유사점을 패턴이라고 한다.</li>
-<li>패턴은 공통의 언어를 만들어주며 팀원 사이의 의사 소통을 원활하게 해주는 아주 중요한 역할을 한다.</li>
-</ul>
-<h2 id="디자인-패턴의-종류">디자인 패턴의 종류</h2>
-<p><strong>GoF 디자인 패턴</strong></p>
-<p>GoF(Gang of Fout)라 불리는 에리히 감마(Erich Gamma), 리차드 헬름(Richard Helm), 랄프 존슨(Ralph Johnson), 존 블리시디스(John Vissides)가 소프트웨어 개발 영역에서 디자인 패턴을 구체화하고 체계화하였다.<br>
-23가지의 디자인 패턴을 정리하고 각각의 디자인 패턴을 생성(Creational), 구조(Structural), 행위(Behavioral)의 3가지로 분류했다.</p>
-<p><strong>분류</strong></p>
-<img src="/img/design_pattern_classification.png" width="700" height="200">
-<ol>
-<li>생성(Creational) 패턴</li>
-</ol>
-<ul>
-<li>객체 생성에 관련된 패턴</li>
-<li>객체의 생성과 조합을 캡슐화해 특정 객체가 생성되거나 변경되어 프로그램 구조에 영향을 크게 받지 않도록 유연성을 제공한다.</li>
-</ul>
-<ol start="2">
-<li>구조(Structural) 패턴</li>
-</ol>
-<ul>
-<li>클래스나 객체를 조합해 더 큰 구조를 만드는 패턴</li>
-<li>예를 들어, 서로 다른 인터페이스를 지닌 2개의 객체를 묶어 단일 인터페이스를 제공하거나 객체들을 서로 묶어 새로운 기능을 제공하는 패턴이다.</li>
-</ul>
-<ol start="3">
-<li>행위(Behavioral) 패턴</li>
-</ol>
-<ul>
-<li>객체나 클래스 사이의 알고리즘이나 책임 분배에 관련된 패턴</li>
-<li>한 객체가 혼자 수행할 수 없는 작업을 여러 개의 객체로 어떻게 분배하는지, 또 그렇게 하면서도 객체 사이의 결합도를 최소화하는 것에 중점을 둔다.</li>
-</ul>
-<p>이 포스팅은 디자인 패턴을 공부하면서 정리하는 글입니다.<br>
-하루에 1개씩 공부하고 정리하면서 학습할 예정입니다. ^__^</p>
-<h2 id="참고">참고</h2>
-<ul>
-<li><a href="https://gmlwjd9405.github.io/2018/07/06/design-pattern.html" target="_blank" rel="noopener">[Design Pattern] 디자인 패턴 종류</a></li>
-</ul>
-
+                <div class="postShorten-excerpt">
+                    <h2>디자인 패턴(Design Pattern)</h2>
                     
+                        <a
+                            href="/2019/06/10/DesignPattern-Overview/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [Design Pattern] 개요"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2019/06/10/DesignPattern-Overview/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             

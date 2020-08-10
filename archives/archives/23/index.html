@@ -273,420 +273,6 @@
                     
                         <a
                             class="link-unstyled"
-                            href="/2018/06/09/sopt-semniar6/"
-                            aria-label=": [SOPT] Seminar6"
-                        >
-                            [SOPT] Seminar6
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2018-06-09T01:26:45+09:00">
-	
-		    Jun 09, 2018
-    	
-    </time>
-    
-        <span>in </span>
-        
-    <a class="category-link" href="/categories/Inno-SOPT/">Inno_SOPT</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <p>이번주에는 내부 DB, Realm, SQLite에 대해 배워보겠습니다.</p>
-<h1 id="내부-db">내부 DB</h1>
-<hr>
-<p>안드로이드 앱 개발을 하다보면 서버와 통신을 하면서 가끔 이런 생각을 하곤 합니다.</p>
-<p>데이터가 어딘가에 저장되어 있어야 하는 건 맞고 서버랑 통신을 하긴 하는데, 굳이 이런 데이터까지 서버랑 통신을 해야하나… 혹은 오히려 서버랑 통신하면 더 불편할 정도로 정말 너무나도 간단한 데이터를 다루거나 서버한테 데이터를 맡기는 것보다는 내가 처리하는게 낫겠다라는 생각을 해본 적이 있습니다…(서버 디스는 아닙니다…^0^)</p>
-<h2 id="sharedpreference">SharedPreference</h2>
-<hr>
-<ul>
-<li>가장 간단하게 다룰 수 있는 데이터 저장 방식</li>
-<li>자동 로그인을 사용할 때 특히 많이 쓰임</li>
-<li>어플이 종료되어도 저장된 데이터는 사라지지 않음</li>
-<li>어플이 <code>삭제</code>되면 저장된 데이터는 <strong>증발</strong>함</li>
-<li>요청한 데이터가 없을 때 기본값을 지정할 수 있음</li>
-<li>쿼리문이 없다.</li>
-</ul>
-<p><code>Code</code></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// SharedPreference에 저장</span></span><br><span class="line"><span class="function">fun <span class="title">setId</span><span class="params">(context : Context, id : String)</span></span>&#123;</span><br><span class="line">	val pref = context.getSharedPreferences(USER, Context.MODE_PRIVATE)</span><br><span class="line">	val editor = pref.edit()</span><br><span class="line">	editor.putString(ID,id)</span><br><span class="line">	editor.commit()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// SharedPreference에서 가져오기</span></span><br><span class="line"><span class="function">fun <span class="title">getId</span><span class="params">(context : Context)</span> : String</span>&#123;</span><br><span class="line">	val pref = context.getSharedPreferences(USER, Context.MODE_PRIVATE)</span><br><span class="line">	<span class="keyword">return</span> pref.getString(ID, <span class="string">""</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="realm">Realm</h2>
-<hr>
-<ul>
-<li>최근 각광받는 Mobile Database</li>
-<li>쿼리문을 사용하지 않음</li>
-<li>객체들로 하여금 데이터를 다룸</li>
-<li>어플이 종료되어도 데이터는 유지</li>
-<li>어플이 <code>삭제</code>되면 데이터는 <strong>증발</strong>함</li>
-<li>일단 DB처럼 Primary Key를 필수로 지정해야 함</li>
-<li>데이터가 만일</li>
-</ul>
-<p><code>Code</code></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 데이터 저장 객체 생성</span></span><br><span class="line">open class MemberVO : RealmObject()&#123;</span><br><span class="line">	<span class="meta">@PrimaryKey</span></span><br><span class="line">	var id : String = <span class="string">""</span></span><br><span class="line">	var pwd : String = <span class="string">""</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Realm 초기화</span></span><br><span class="line"><span class="function">fun <span class="title">init</span><span class="params">()</span></span>&#123;</span><br><span class="line">	Realm.init(<span class="keyword">this</span>)</span><br><span class="line">	memberRealm = Realm.getDefaultInstance()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 데이터 가져오기</span></span><br><span class="line"><span class="function">fun <span class="title">getMemberList</span><span class="params">(id : String)</span> : RealmResults&lt;MemberVO&gt;</span>&#123;</span><br><span class="line">	<span class="keyword">return</span> memberRealm.where(MemberVO::<span class="class"><span class="keyword">class</span>.<span class="title">java</span>)</span></span><br><span class="line">	.equalTo("id",id).findAll()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 데이터 삽입</span></span><br><span class="line"><span class="function">fun <span class="title">insertMemberList</span><span class="params">()</span></span>&#123;</span><br><span class="line">	memberVO = MemberVO()</span><br><span class="line">	memberVO.id = sign_id_edit.text.toString()</span><br><span class="line">	memberVO.pwd = sign_pw_edit.text.toString()</span><br><span class="line"></span><br><span class="line">	memberRealm.beginTransaction()</span><br><span class="line">	memberRealm.copyToRealm(memberVO)</span><br><span class="line">	memberRealm.commitTransaction()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 데이터 삭제</span></span><br><span class="line"><span class="function">fun <span class="title">deletePokemonList</span><span class="params">(name : String)</span></span>&#123;</span><br><span class="line">	val result = pokemonRealm.where(PokemonVO::<span class="class"><span class="keyword">class</span>.<span class="title">java</span>)</span></span><br><span class="line">	.equalTo("name",name)</span><br><span class="line">	.findAll()</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span>(result.isEmpty())&#123;</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	pokemonRealm.beginTransaction()</span><br><span class="line">	result.deleteAllFromRealm()</span><br><span class="line">	pokemonRealm.commitTransaction()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>별도의 과제는 없고 내가 <strong>우아한 테크 캠프</strong> 코딩 테스트를 보느라 출석만 하고 바로 빠져나오는 바람에 세미나를 듣지 못하였다. 일단은 혼자 자료를 보면서 정리하였는데, 얼른 프로젝트를 보면서 혼자 만들어보면서 공부해야겠다.</p>
-<p>공부한 다음에 <strong>Github</strong>에 코드를 올릴 예정이다.</p>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2018/06/09/sopt-semniar6/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2018/06/08/BOJ11723/"
-                            aria-label=": [11723] 집합"
-                        >
-                            [11723] 집합
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2018-06-08T14:35:26+09:00">
-	
-		    Jun 08, 2018
-    	
-    </time>
-    
-        <span>in </span>
-        
-    <a class="category-link" href="/categories/algorithm/">algorithm</a>, <a class="category-link" href="/categories/algorithm/BOJ/">BOJ</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <p>한 동안 졸업 작품과 다른 것들로 인해서 바빠서 알고리즘을 풀지 못했다… 이런 나를 반성하면서 다시 꾸준하게 알고리즘을 풀면서 공부해야겠다!!</p>
-<h2 id="문제-httpswwwacmicpcnetproblem11723">문제 : <a href="https://www.acmicpc.net/problem/11723" target="_blank" rel="noopener">https://www.acmicpc.net/problem/11723</a></h2>
-<p><code>Explain</code></p>
-<p>비어있는 공집합 S가 있고, 문제에 나온 명령어가 주어졌을 때 명령어에 따라 연산을 진행한다.</p>
-<blockquote>
-<p>입력 : 첫 줄에 수행하는 연산의 수인 M이 주어진다. (1&lt;=M&lt;=3,000,000)</p>
-</blockquote>
-<blockquote>
-<p>출력 : check 연산이 주어질 때마다, 출력한다.</p>
-</blockquote>
-<p><code>Key Points</code></p>
-<p>간단하게 <code>비트 마스크</code>를 이용하여 문제를 풀어보았다. 비트 마스크를 이용하여 문제에 원하는 추가, 삭제, 검색 등을 구현할 수 있다.</p>
-<p>문제에서 집합에 추가하는 수인 x의 범위가 1&lt;=x&lt;=20이다. 하지만, 비트 마스크는 0 ~ N-1 까지의 수를 저장하고 있기 때문에 문제를 풀기 위해서는 입력 받은 수 모두 1을 빼주어서 0 ~ 19 로 맞추고 문제를 풀면 된다.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.BufferedReader;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.io.InputStreamReader;</span><br><span class="line"><span class="keyword">import</span> java.util.StringTokenizer;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BOJ11723</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> NumberFormatException, IOException </span>&#123;</span><br><span class="line">		</span><br><span class="line">		</span><br><span class="line">		<span class="comment">// 내가 배운 비트마스크는 0~N-1 까지의 수를 저장하고 있기 때문에</span></span><br><span class="line">		<span class="comment">// 이 문제를 풀기 위해서는 입력으로 받은 수를 모두 1을 빼주고 0~19로 만든 다음에 구현하면 된다.</span></span><br><span class="line">		<span class="comment">// 왜냐하면 문제에서 집합에 추가할 수 있는 x의 범위가 1~20이기 때문에 내가 배운 비트마스크의 범위인 0~N-1을 맞추기 위해서</span></span><br><span class="line">		<span class="comment">// 입력받은 집합에서 1씩 빼주어 0~19 사이의 범위로 맞춘다.</span></span><br><span class="line">		</span><br><span class="line">		</span><br><span class="line">		BufferedReader bf = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(System.in));</span><br><span class="line">		<span class="keyword">int</span> N = <span class="number">20</span>;</span><br><span class="line">		<span class="keyword">int</span> s = <span class="number">0</span>; <span class="comment">// 처음에 비어있는 집합 생성</span></span><br><span class="line">		<span class="keyword">int</span> M = Integer.parseInt(bf.readLine()); <span class="comment">// test_case</span></span><br><span class="line">		StringBuilder sb = <span class="keyword">new</span> StringBuilder();</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;M;i++) &#123;</span><br><span class="line">			StringTokenizer st = <span class="keyword">new</span> StringTokenizer(bf.readLine(), <span class="string">" "</span>);</span><br><span class="line">			String command = st.nextToken();</span><br><span class="line">			</span><br><span class="line">			<span class="keyword">if</span>(command.equals(<span class="string">"add"</span>)) &#123;</span><br><span class="line">				<span class="keyword">int</span> x = Integer.parseInt(st.nextToken());</span><br><span class="line">				x--;</span><br><span class="line">				s = s | (<span class="number">1</span>&lt;&lt;x);</span><br><span class="line">				</span><br><span class="line">			&#125; <span class="keyword">else</span> <span class="keyword">if</span>(command.equals(<span class="string">"remove"</span>)) &#123;</span><br><span class="line">				<span class="keyword">int</span> x = Integer.parseInt(st.nextToken());</span><br><span class="line">				x--;</span><br><span class="line">				s = s &amp; ~(<span class="number">1</span>&lt;&lt;x);</span><br><span class="line">				</span><br><span class="line">			&#125; <span class="keyword">else</span> <span class="keyword">if</span>(command.equals(<span class="string">"check"</span>)) &#123;</span><br><span class="line">				<span class="keyword">int</span> x = Integer.parseInt(st.nextToken());</span><br><span class="line">				x--;</span><br><span class="line">				<span class="keyword">int</span> tmp = s &amp; (<span class="number">1</span>&lt;&lt;x);</span><br><span class="line">				<span class="keyword">if</span>(tmp !=<span class="number">0</span>) &#123;</span><br><span class="line">					sb.append(<span class="string">"1"</span>);</span><br><span class="line">					sb.append(<span class="string">"\n"</span>);</span><br><span class="line">				&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">					sb.append(<span class="string">"0"</span>);</span><br><span class="line">					sb.append(<span class="string">"\n"</span>);</span><br><span class="line">				&#125;</span><br><span class="line">				</span><br><span class="line">			&#125; <span class="keyword">else</span> <span class="keyword">if</span>(command.equals(<span class="string">"toggle"</span>)) &#123;</span><br><span class="line">				<span class="keyword">int</span> x = Integer.parseInt(st.nextToken());</span><br><span class="line">				x--;</span><br><span class="line">				s = s ^ (<span class="number">1</span>&lt;&lt;x);</span><br><span class="line">			&#125; <span class="keyword">else</span> <span class="keyword">if</span>(command.equals(<span class="string">"all"</span>)) &#123;</span><br><span class="line">				s = (<span class="number">1</span>&lt;&lt;N) - <span class="number">1</span>;</span><br><span class="line">			&#125; <span class="keyword">else</span> <span class="keyword">if</span>(command.equals(<span class="string">"empty"</span>)) &#123;</span><br><span class="line">				s = <span class="number">0</span>;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		System.out.println(sb.toString());</span><br><span class="line">		</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2018/06/08/BOJ11723/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2018/06/04/boostcourse2/"
-                            aria-label=": [BoostCourse] 2. Event와 ListView"
-                        >
-                            [BoostCourse] 2. Event와 ListView
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2018-06-04T23:29:38+09:00">
-	
-		    Jun 04, 2018
-    	
-    </time>
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="스크롤뷰-사용하기">스크롤뷰 사용하기</h1>
-<hr>
-<ol>
-<li>테이블 레이아웃</li>
-</ol>
-<ul>
-<li>격자 형태로 뷰를 배치할 때 사용한다.</li>
-<li>TableLayout 안쪽에 TableRow를 넣으면 그것이 한 줄을 나타낸다.</li>
-<li>각각의 줄(행)이 추가할 때는 TableRow 태그를 이용해서 추가하면 된다.</li>
-<li>여러 개의 TableRow가 추가될 수 있고 각각의 TableRow 안에는 여러 개의 뷰가 들어갈 수 있는 구조로 되어 있다.</li>
-<li>리니어 레이아웃 안에 리니어 레이아웃을 넣는 방식을 사용해도 격자 모양을 만들 수 있지만 테이블 레이아웃을 사용하면 좀 더 쉽게 만들 수 있다.</li>
-<li>TableRow 태그 안에 있는 Button에 layout_column 속성을 이용해서 해당되는 칼럼의 인덱스에 위치시킬 수 있다.</li>
-</ul>
-<blockquote>
-<p>stretchColumns란?</p>
-</blockquote>
-<p>TableRow에 Button과 같은 위젯을 추가하게 되면 각각이 칼럼이 된다. 그리고 0,1,2 이렇게 번호를 가지고 추가가 된다. 하지만, 이렇게 되면 오른쪽에 공간이 남게 되기 때문에 이 공간을 버튼 3개가 꽉 차게 가지고 싶다면??</p>
-<p>stretchColumns라는 속성을 사용하면 된다. 콤마로 구분하게 되는 0,1,2 이렇게 값을 넣어주면 0,1,2가 남아있는 여유 공간을 다 차지하도록 해준다.<br>
-즉, 0,1,2 세개의 칼럼이 추가가 되는데, 그거를 전부 다 가로를 꽉 채워달라는 의미</p>
-<ol start="2">
-<li>스크롤뷰(ScrollView)</li>
-</ol>
-<ul>
-<li>글자나 이미지가 들어간 뷰가 화면 영역을 벗어나면 보이지 않게 된다.</li>
-<li>이 때는 손가락으로 스크롤 하여 보이지 않는 부분을 보이도록 만들어주어야 한다.</li>
-<li><code>ScrollView</code>는 이런 스크롤 기능을 쉽게 만들 수 있도록 도와준다.</li>
-<li><strong>ImageView</strong>나 <strong>TextView</strong>등의 뷰를 <code>ScrollView</code>로 감싸주면 ScrollView가 뷰의 영역을 계산하게 된다. 그리고 화면에 보이는 공간을 넘어갔을 때 자동으로 스크롤을 만들어 준다.</li>
-<li>ScrollView의 속성으로 상,하 스크롤을 할 것인지 좌,우 스크롤을 할 지 설정할 수 있다.</li>
-</ul>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2018/06/04/boostcourse2/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2018/05/19/sopt-seminar5/"
-                            aria-label=": [SOPT] Seminar5"
-                        >
-                            [SOPT] Seminar5
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2018-05-19T14:22:15+09:00">
-	
-		    May 19, 2018
-    	
-    </time>
-    
-        <span>in </span>
-        
-    <a class="category-link" href="/categories/Inno-SOPT/">Inno_SOPT</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="스플래쉬-폰트-아이콘">스플래쉬 + 폰트 + 아이콘</h1>
-<hr>
-<ol>
-<li><code>스플래쉬(Splash)</code></li>
-</ol>
-<p><img src="/img/splash.png" alt=""></p>
-<ul>
-<li>백그라운드에 있지 않은 어플리케이션을 실행했을 때 <strong>맨 처음 나오는 화면</strong><br>
-(보통은 로그인 하기 전에 나오는 화면)을 말한다.</li>
-<li>사용자로 하여금 앱이 실행되고 있음을 보여준다.</li>
-<li>로그인 전에 <strong>서버와 통신해야 할 부분이나 기타 처리할 데이터가 있으면 이 화면에서 처리</strong>한다.</li>
-</ul>
-<ol start="2">
-<li><code>폰트</code></li>
-</ol>
-<ul>
-<li>외부 폰트를 안드로이드 스튜디오 내에서 사용할 수 있도록 xml로 작성한다.</li>
-<li>res -&gt; new -&gt; Android Resource Directroy에서 font를 추가</li>
-<li>사용할 폰트를 font 폴더에 추가한다.</li>
-<li>그리고 추가한 폰트를 사용하는 xml 파일을 작성한다.</li>
-<li>그리고 layout xml 파일에서 사용할 폰트 xml 파일을 적용한다.</li>
-</ul>
-<ol start="3">
-<li><code>아이콘</code></li>
-</ol>
-<p><em>우리가 사용하는 앱의 아이콘은 어떻게 설정할까요??</em></p>
-<ul>
-<li>그렇게 어렵지 않습니다.</li>
-<li>res -&gt; mimmap -&gt; new -&gt; Image Asset에서 새로운 아이콘 이미지 추가<br>
-<strong>Path</strong>에서 사용하고 싶은 이미지를 불러오고 적용 시키면 끝!!</li>
-</ul>
-<h1 id="화면의-이해">화면의 이해</h1>
-<hr>
-<ol>
-<li><strong>해상도</strong> : 하나의 이미지를 표혀하는데 몇 개의 픽셀(pixel) 또는 도트(dot)로 나타내는 지의 정도를 알려주는 지표</li>
-</ol>
-<ul>
-<li>안드로이드 운영체제를 가진 <strong>device</strong>는 다양한 종류가 존재한다. 즉 너무나도 다양한 해상도가 존재하는 것이다. 이처럼 다양한 해상도를 가진 device에 뷰를 맞춰서 개발하는 것은 힘든 일이다.</li>
-<li>이와 같은 문제를 잘 해결하기 위해서 다음에서 설명하는 개념들을 잘 알고 있어야 한다.</li>
-</ul>
-<ol start="2">
-<li><code>픽셀의 이해</code></li>
-</ol>
-<ul>
-<li>픽셀은 <strong>고정값</strong>이다.</li>
-<li>그래서 크기가 변한다.</li>
-<li>값은 고정이지만 해상도별로 달라보이는 문제가 발생한다.</li>
-<li>그래서 값은 고정이어도 크기는 <strong>변한다</strong>.</li>
-<li>그래서 픽셀로는 화면에 대응하기가 힘들다.</li>
-<li>픽셀 : 기기 대응이 힘들다.</li>
-</ul>
-<ol start="3">
-<li><code>DP</code></li>
-</ol>
-<ul>
-<li>dp는 디바이스에 따라 값이 변한다.</li>
-<li>그래서 크기가 고정된다.</li>
-<li>기기 해상도에 따라 네모 사이즈가 <strong>같아</strong>보인다.<br>
-(디바이스 해상도에 따라 크기의 사이즈가 조정되었기 때문)</li>
-<li>그래서 device는 달라도 크기는 <strong>고정된다</strong>.</li>
-<li><strong>이 때문에 디자이너가 여러 dp에 대응하게끔 이미지를 준다</strong>.</li>
-</ul>
-<blockquote>
-<p>문제</p>
-</blockquote>
-<ul>
-<li><strong>같은 dp</strong>라 할지라도 화면 너비, 높이에 따라 <strong>차지하는 정도는 달라질 수 있다</strong>.즉, <code>여백 문제</code>가 발생함</li>
-<li><strong>크기 중심</strong>으로 갈 지 <strong>여백 중심</strong>으로 갈 지 잘 판단해야 한다.</li>
-<li>우선적으로는 사용할 <strong>대표 기기</strong>를 선정하는 것이 그나마 수치의 오차를 줄일 수 있는 방법</li>
-<li>사실상, 가장 확실한 방법은 기기마다 레이아웃을 짜는 것이지만, 쉽지는 않다.</li>
-</ul>
-<ol start="4">
-<li><code>SP</code></li>
-</ol>
-<ul>
-<li><strong>글자</strong>에 많이 쓰이는 사이즈 단위</li>
-<li>글자가 가지는 고유의 사이즈에 <code>비례</code>해서 크기가 변하는 것</li>
-<li>기본 원리는 <strong>dp와 유사</strong></li>
-<li>사용자가 설정한 <strong>글꼴에 따라 호환</strong>되어 사이즈 조정</li>
-</ul>
-<h1 id="디자이너와-협동하기">디자이너와 협동하기</h1>
-<hr>
-<blockquote>
-<p>방법</p>
-</blockquote>
-<ol>
-<li>서로가 고생하기</li>
-</ol>
-<p>디자이너는 모든 기기에 대한 디자인을 만든다<br>
-개발자는 모든 기기에 대한 레이아웃을 짠다.</p>
-<p><em>가능할까?</em><br>
-Build 클래스를 통해 기기 분류가 가능하다. 가장 정확한 방법이지만, <strong>SOPT</strong>에서 진행하는 2주간의 <code>App Jam</code>에서는 시간이 부족하고 불가능한 방법이다.</p>
-<ol start="2">
-<li>적당히 타협하기</li>
-</ol>
-<ul>
-<li><strong>중요도</strong>를 묻는다.<br>
-– <strong>뷰 자체의 크기</strong>가 중요하면 뷰 위주로 값을 넣을 것<br>
-– <strong>배치 및 공간</strong>이 중요하면 여백 위주로 값을 넣을 것</li>
-<li>기기들의 태생적 <strong>한계</strong>를 공유한다.<br>
-– 기기가 너무 다양한 나머지 디자인적인 <strong>차이와 한계</strong>가 존재한다.<br>
-– 디자이너가 <strong>기준</strong>으로 정한 기기 이외의 기기들과는 보이는 모습이 조금 <strong>달라 질 수 있음</strong>을 충분히 인지시키자.</li>
-<li><strong>수치</strong>를 최대한 자세하게 요구한다.<br>
-– 길이든 색상이든 일단 <strong>최대한 빈틈없이</strong> 알려달라 할 것<br>
-– 수치를 보면 <strong>무엇이 중요</strong>한지(자체 크기, 공간) 어느정도 판단 가능</li>
-<li>이미지 이름은 꼭 <code>소문자, 밑줄(_) 그리고 숫자 조합</code>지어달라 한다.</li>
-</ul>
-<h1 id="과제">과제</h1>
-<ul>
-<li>세미나 시간 동안 디자이너와 협업한 View 완성하기(SeekBar 사용)</li>
-<li>참고 : 기능은 구현하지 않고 View 만 구현하였습니다.</li>
-</ul>
-<p><code>Github</code> : <a href="https://github.com/WooVictory/SOPT_22th_Seminar5_HomeWork" target="_blank" rel="noopener">https://github.com/WooVictory/SOPT_22th_Seminar5_HomeWork</a></p>
-<ul>
-<li>다른 뮤직 플레이어 (Progressbar Wheel 사용)</li>
-</ul>
-<p><code>Github</code> : <a href="https://github.com/WooVictory/SOPT_22th_Seminar5_Preview" target="_blank" rel="noopener">https://github.com/WooVictory/SOPT_22th_Seminar5_Preview</a></p>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2018/05/19/sopt-seminar5/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
                             href="/2018/05/19/BOJ9025/"
                             aria-label=": [9025] 맥주 마시며 걸어가기"
                         >
@@ -1068,348 +654,6 @@ UDP(<strong>User Datagram Protocol</strong>)는 <strong>비연결형</strong> �
                     
                         <a
                             class="link-unstyled"
-                            href="/2018/05/17/DataStructure/"
-                            aria-label=": 자료구조 :: 자료구조?"
-                        >
-                            자료구조 :: 자료구조?
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2018-05-17T01:07:37+09:00">
-	
-		    May 17, 2018
-    	
-    </time>
-    
-        <span>in </span>
-        
-    <a class="category-link" href="/categories/자료구조/">자료구조</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <p>[2020.05.12]<br>
-이 글은 굉장히 오래 전에 작성된 글입니다. 그래서 정리라기 보다는 내용을 한 곳에 썼다는 표현이 나을 것 같네요! 삭제하려고 했지만, 많은 내용을 담고 있어 레거시로 유지하려고 합니다. :) 이 페이지의 내용들이 여러 포스팅으로 나누어 작성되었으니 그 글을 참고하면 좋을 것 같습니다.</p>
-<h1 id="자료구조란-무엇인가">자료구조란 무엇인가??</h1>
-<p>자료구조 하면 무엇이 떠오를까요??? 흔한 자료구조의 형태로 <code>큐(Queue)</code>나 <code>스택(Stack)</code> 혹은 연결 리스트(Linked List), 트리(Tree) 등을 떠올리거나 선택정렬, 삽입 정렬 등등의 정렬 알고리즘 등이 먼저 떠오릅니다.</p>
-<p>사전적인 의미는 <code>자료(data)</code>의 집합을 의미하며, 각 원소들이 <strong>논리적으로 정의된 규칙</strong>에 의해 나열되며 자료에 대한 처리를 <strong>효율적</strong>으로 수행할 수 있도록 자료를 구분하여 표현한 것이라고 한다.</p>
-<p>목적은 명확하다. <code>자료</code>를 더 <strong>효율적으로 저장</strong>하고, 관리하기 위해 사용하며, 잘 선택된 자료구조는 <strong>실행시간을 단축</strong>시켜주거나 <strong>메모리 용량의 절약</strong>을 이끌어 낼 수 있다.</p>
-<blockquote>
-<p>자료구조의 선택 기준</p>
-</blockquote>
-<ul>
-<li>자료의 처리 시간</li>
-<li>자료의 크기</li>
-<li>자료의 활용 빈도</li>
-<li>자료의 갱신 정도</li>
-<li>프로그램의 용이성</li>
-</ul>
-<p>자료의 처리를 보다 효율적으로 하기 위해서 위와 같은 사항을 고려하여 선택, 사용해야 한다.</p>
-<h1 id="자료구조의-특징">자료구조의 특징</h1>
-<ol>
-<li>효율성</li>
-</ol>
-<p>자료구조를 사용하는 목적은 효율적인 데이터의 관리 및 사용이다. 따라서 적절한 자료구조를 선택하여 사용한다면 업무의 효율이 올라갈 것이다.<br>
-Ex) 검색에 대한 알고리즘을 구현할 때, 데이터의 양이 많다면 순차 검색을 사용하는 것보다 이분 검색을 활용하는 것이 더 효율적일 것이다. 왜냐하면 학생이라는 테이블에 학생에 대한 데이터가 100만개 있다고 할 때, 순차 검색으로 데이터를 검색하게 되면 운이 좋을 때는 1번의 연산으로 찾을 수 있지만, 운이 없을 경우에는 100만번의 연산을 거쳐야 할 것이다. 이에 반해 이분 검색은 연산의 횟수가 훨씬 줄어든다. 이와 같이 목적에 맞는 자료구조를 사용하는 것이 효율적이다.</p>
-<ol start="2">
-<li>추상화</li>
-</ol>
-<p>추상화란 복잡한 자료, 모듈, 시스템 등으로부터 핵심적인 개념만 간추려 내는 것이다. 자료구조를 구현할 때 중요한 것은 어느 시점에 데이터를 삽입할 것이며, 어느 시점에 이러한 데이터를 어떻게 사용할 것인지에 대해서 초점을 맞출 수 있기 때문에 구현 외적인 부분에 더 시간을 쏟을 수 있다. 알고리즘 자체에는 중점을 두지 않는다.</p>
-<p>마찬가지로 자료구조 내부의 구현은 중요하지 않다. 어떻게 구현했는지 보다 어떻게 사용해야 하는지를 알고 있어야 한다.<br>
-Ex) Stack의 경우 먼저 들어간 것이 나중에 나오는 LIFO(Last In First Out)의 형태를 가지고 있다. 그리고 push() 함수를 이용해서 데이터를 삽입할 수 있고, pop() 함수를 이용해서 데이터를 추출할 수 있다. 그 함수 내부 구현이 어떻게 되었는지는 중요하지 않다. 사람마다 다른 코드를 작성할 것이고, 사용 언어, 개발 툴 등 환경적인 변수에 의해 다른 코드가 나올 것이기 때문에 추상적인 개념에 대해서만 이해하고 있다면 사용할 수 있다.</p>
-<ol start="3">
-<li>재사용성</li>
-</ol>
-<p>자료구조를 설계할 때 특정 프로그램에서만 동작하게 설계 하지는 않는다. 다양한 프로그램에서 동작할 수 있도록 범용성 있게 설계하기 때문에 해당 프로젝트가 아닌 다른 프로젝트에서도 사용할 수 있어야 한다.</p>
-<h1 id="자료구조의-분류">자료구조의 분류</h1>
-<p>자료구조는 크게 <strong>선형 자료구조</strong>와 <strong>비선형 자료구조</strong>로 나뉜다.</p>
-<ol>
-<li><code>선형 자료구조</code> : 데이터가 일렬로 나열되어 있는 것을 뜻한다.</li>
-</ol>
-<ul>
-<li>배열(Array)</li>
-<li>연결 리스트(Linked List)</li>
-<li>스택(Stack)</li>
-<li>큐(Queue)</li>
-</ul>
-<ol start="2">
-<li><code>비선형 자료구조</code> : 특정한 형태를 띄고 있는 것을 뜻함</li>
-</ol>
-<ul>
-<li>트리(Tree)</li>
-<li>그래프(Graph)</li>
-</ul>
-<h1 id="array-vs-linked-list">Array vs Linked List</h1>
-<blockquote>
-<p>Array</p>
-</blockquote>
-<p>가장 기본적인 자료구조인 <code>Array</code> 자료구조는, <strong>논리적 저장 순서</strong>와 <strong>물리적 저장 순서</strong>가 <code>일치</code>한다. 따라서 <code>인덱스(index)</code>로 해당 원소에 접근할 수 있다. 그렇기 때문에 찾고자 하는 원소의 인덱스 값을 알고 있으면 시간 복잡도 O(1)에 해당 원소로 접근할 수 있다. 즉 <strong>random access</strong>가 가능하다는 장점이 존재</p>
-<p>하지만 삭제 또는 삽입의 과정에서는 해당 원소에 접근하여 작업을 완료한 뒤(O(1)), 또 한 가지의 작업을 추가적으로 해줘야 하기 때문에, 시간이 더 걸린다. 만약, 배열 중 어느 원소를 삭제했다고 했을 때, <strong>배열의 연속적인 특징이 깨지게 된다.</strong> 즉 빈 공간이 생기는 것이다. 따라서 삭제한 원소보다 큰 인덱스를 갖는 원소들을 <code>shift</code>해줘야 하는 비용(cost)이 발생하고 이 경우의 시간 복잡도는 O(n)가 된다. 그렇기 때문에 Array 자료구조에서 삭제 기능에 대한 time complexity와 worst case는 O(n)이 된다.<br>
-삽입의 경우도 마찬가지이다. 만약 첫번째 자리에 새로운 원소를 추가하고자 한다면 모든 원소들의 인덱스를 1씩 <code>shift</code> 해줘야 하므로 이 경우도 시간 복잡도 O(n)을 갖게 된다.</p>
-<blockquote>
-<p>Linked List</p>
-</blockquote>
-<p>이 부분에 대한 문제점을 해결하기 위한 자료구조가 <code>Linked List</code>이다. 각각의 원소들은 자기 자신 다음에 어떤 원소인지만을 기억하고 있다. 따라서 이 부분만 다른 값으로 바꿔주면 삭제와 삽입을 시간 복잡도 O(1)만에 해결할 수 있다.<br>
-하지만 <code>Linked List</code> 역시 한 가지 문제가 존재한다. 원하는 위치에 삽입을 하고자 하면 원하는 위치를 Search 하는 과정에 있어서 <strong>첫 번째 원소부터 모두 확인</strong>해봐야 한다는 것이다. Array와는 달리 논리적 저장 순서와 물리적 저장 순서가 일치하지 않기 때문이다. 이것은 일단 삽입하고 정렬하는 것과 마찬가지이다. 이 과정 때문에, 어떠한 원소를 삭제 또는 추가하고자 했을 때, 그 원소를 찾기 위해서 시간 복잡도 O(n)의 시간이 추가적으로 발생하게 된다.</p>
-<p>결국 <code>Linked List</code> 자료구조는 Search에도 O(n)의 시간 복잡도를 갖고, 삽입, 삭제에 대해서도 O(n)의 시간 복잡도를 갖는다. 그렇다고 해서 아주 쓸모 없는 자료구조는 아니기에, 우리가 아직 배우는 것이다. Tree 구조의 근간이 되는 자료구조이며, Tree에서 사용되었을 때, 그 유용성이 드러난다.</p>
-<h1 id="stack-and-queue">Stack and Queue</h1>
-<blockquote>
-<p>Stack</p>
-</blockquote>
-<p><code>선형 자료구조</code>의 일종으로 <strong>Last In First Out(LIFO)</strong> 즉, 나중에 들어간 원소가 먼저 나온다. 이것이 Stack의 가장 큰 특징이다. 차곡 차곡 쌓이는 구조로 먼저 Stack에 들어가게 된 원소는 맨 바닥에 깔리게 된다. 그렇기 때문에 늦게 들어간 녀석들은 그 위에 쌓이게 되고 호출 시 가장 위에 있는 녀석이 호출되는 구조이다.</p>
-<blockquote>
-<p>Queue</p>
-</blockquote>
-<p><code>선형 자료구조</code>의 일종으로 <strong>Fist In First Out(FIFO)</strong> 즉, 먼저 들어간 놈이 먼저 나온다. Stack과는 반대로 먼저 들어간 놈이 맨 앞에서 대기하고 있다가 먼저 나오게 되는 구조이다.</p>
-<h1 id="tree">Tree</h1>
-<p>트리는 스택이나 큐와 같은 선형 구조가 아닌 <strong>비선형 자료구조</strong>이다. 트리는 <code>계층적 관계</code>를 표현하는 자료구조이다. <code>트리</code>라는 자료구조는 표현에 집중한다.</p>
-<blockquote>
-<p>트리를 구성하고 있는 구성요소들 - 용어</p>
-</blockquote>
-<ul>
-<li>Node(노드) : 트리를 구성하고 있는 각각의 요소를 의미</li>
-<li>Edge(간선) : 트리를 구성하기 위해 노드와 노드를 연결하는 선을 의미</li>
-<li>Root Node(루트 노드) : 트리 구조에서 최상위에 있는 노드를 의미</li>
-<li>Termianl Node( = leaf Node, 단말 노드) : 하위에 다른 노드가 연결되어 있지 않은 노드를 의미</li>
-<li>Internal Node(내부 노드, 비단말 노드) : 단말 노드를 제외한 모든 노드로 루트 노드를 포함한다.</li>
-</ul>
-<h2 id="binary-tree이진-트리">Binary Tree(이진 트리)</h2>
-<p>루트 노드를 중심으로 두 개의 서브 트리(큰 트리에 속하는 작은 트리)로 나뉘어 진다. 또한 나뉘어진 두 서브 트리 모두 이진 트리어야 한다. 즉, 각 노드가 자식을 최대 2명을 가지는 트리를 의미한다. 재귀적인 정의라 맞는듯 하면서도 이해가 쉽지 않을 듯 하다. 덧붙이자면 공집합도 이진 트리로 포함시켜야 한다. 그래야 재귀적으로 조건을 확인해갔을 때, leaf node에 다 달았을 때, 정의가 만족되기 때문이다.</p>
-<p>트리에서는 각 <strong>층별</strong>로 숫자를 매겨서 이를 트리의 <code>Level</code>이라고 하낟. 루트 노드부터 시작하고 루트 노드의 level은 9이다. 그리고 트리의 최고 level을 가리켜 해당 트리의 <code>height(높이)</code>라고 한다.</p>
-<blockquote>
-<p>완전 이진 트리(Complete Binary Tree)</p>
-</blockquote>
-<p><img src="/img/binary_tree.png" alt=""></p>
-<p>그림과 같이 위에서 아래로, 왼쪽에서 오른쪽으로 순서대로 차곡차곡 채워지고 자식이 2개이고 꽉 찬 트리르 완전 이진 트리라고 한다.<br>
-완전 이진 트리의 노드 개수는 2^(level-1)이다.</p>
-<blockquote>
-<p>포화 이진 트리(Full Binary Tree)</p>
-</blockquote>
-<p>모든 레벨이 꽉 찬 이진 트리를 가리켜 포화 이진 트리라고 한다.</p>
-<p>Full Binary Tree와 Complete Binary Tree는 노드의 개수가 n일 때, i번째 노드에 대해서 parent(i) = i/2, left_child(i) = 2i, right_child(i) = 2i+1 의 index 값을 갖는다.</p>
-<p><img src="/img/tree.png" alt=""></p>
-<p>이러한 최악의 경우 한쪽으로 계속 쏠리게 되는 형태 또한 이진 트리이다. 이러한 경우 사실 트리를 쓰는 이유가 사라지게 된다. 트리의 특정한 경우이지만 이렇게 된다면, 탐색, 삽입, 삭제, 메모리 성능 모든 면에서 배열에 비해 좋은 것이 없다.</p>
-<ul>
-<li>이진 트리의 순회 방법</li>
-</ul>
-<ol>
-<li>전위 순회(Preorder) : 루트 -&gt; 왼쪽 서브트리 -&gt; 오른쪽 서브트리</li>
-<li>중위 순회(Inorder) : 왼쪽 서브트리 -&gt; 루트 -&gt; 오른쪽 서브트리</li>
-<li>후위 순회(Postorder) : 왼쪽 서브트리 -&gt; 오른쪽 서브트리 -&gt; 루트</li>
-</ol>
-<h2 id="bstbinary-search-tree">BST(Binary Search Tree)</h2>
-<p>효율적인 탐색을 위한 저장방법이 무엇일까를 고민해야 한다. 이진 탐색 트리는 이진 트리의 일종이다. 단 이진 탐색 트리에는 <strong>데이터를 저장하는 규칙이 있다.</strong> 그리고 그 규칙은 특정 데이터의 위치를 찾는데 사용할 수 있다.</p>
-<ul>
-<li>규칙1 : 이진 탐색 트리의 노드에 저장된 키는 유일하다.</li>
-<li>규칙2 : 루트 노드의 키가 왼쪽 서브 트리를 구성하는 어떤 노드의 키보다 크다.</li>
-<li>규칙3 : 루트 노드의 키가 오른쪽 서브 트리를 구성하는 어떤 노드의 키보다 작다.</li>
-<li>규칙4 : 왼쪽과 오른쪽 서브트리도 이진 탐색 트리다.</li>
-</ul>
-<p>이진 탐색 트리의 탐색 연산은 O(log n)의 시간 복잡도를 갖는다. 사실 정확히 말하면 O(h)라고 표현하는 것이 맞다. 트리의 높이를 하나씩 더해갈수록 추가할 수 있는 노드의 수가 두 배씩 증가하기 때문이다. 하지만 이러한 이진 탐색 트리는 Skewed Tree(편향 트리)가 될 수 있다. 저장 순서에 따라 계속 한 쪽으로만 노드가 추가되는 경우가 발생하기 때문이다.<br>
-이럴 경우 성능에 영향을 미치게 되며, 탐색의 <strong>Worst Case</strong>가 되고 시간 복잡도는 O(n)이 된다.</p>
-<p>배열보다 많은 메모리를 사용하며 데이터를 저장했지만 탐색에 필요한 시간 복잡도가 같게 되는 비효율적인 상황이 발생한다. 이를 해결하기 위해 <code>Rebalancing</code> 기법이 등장했다. 균형을 잡기 위한 트리 구조의 재조정을 <code>Rebalancing</code>이라 한다. 이 기법을 구현한 트리에는 여러 종류가 존재하는데 긎 ㅜㅇ에서 하나가 뒤에서 살펴볼 <code>Red-black-Tree</code>이다.</p>
-<h2 id="binary-heap">Binary Heap</h2>
-<p>자료구조의 일종으로 Tree의 형식을 하고 있으며, Tree 중에서도 배열에 기반한 <code>Complete Binary Tree</code>이다. 배열에 트리의 값을 넣어 줄 때, 0번째는 건너뛰고 1번 index 부터 루트 노드가 시작된다. 이는 노드의 고유번호 값과 배열의 index를 일치시켜 혼동을 줄이기 위함이다.<br>
-힙에는 <code>최대힙(max heap)</code>과 <code>최소힙(min heap)</code> 두 종류가 있다.</p>
-<p><code>Max heap</code>이란, 각 노드의 값이 해당 children의 값보다 크거나 같은 **Complete Binary Tree(완전 이진 트리)**를 말한다. [Min heap은 그 반대]</p>
-<p>Max heap에서는 Root noed에 있는 값이 제일 크므로, 최대값을 찾는데 소요되는 연산의 시간 복잡도가 O(1)이다. 그리고 complete binary tree 이기 때문에 배열을 사용하여 효율적으로 관리할 수 있다 (즉, random access가 가능하다. Min heap에서는 최소값을 찾는데 소요되는 연산의 시간복잡도가 O(1)이다.) 하지만 heap의 구조를 계속 유지하기 위해서는 제거된 루트 노드를 대체할 다른 노드가 필요하다. 여기서 heap은 맨 마지막 노드를 루트 노드로 대체시킨 후, 다시 heapify 과정을 거쳐 heap 구조를 유지한다. 이런 경우에는 결국 O(log n)의 시간 복잡도로 최대값 또는 최소값에 접근할 수 있게 된다.</p>
-<h2 id="red-black-tree">Red Black Tree</h2>
-<p>RBT(Red-Black Tree)는 BST를 기반으로 하는 <strong>트리 형식의 자료구조</strong>이다. 결론부터 말하자면 Red-Black Tree에 데이터를 저장하게 되면 Search, Insert, Delete에 O(log n)의 시간 복잡도가 소요된다. 동일한 노드의 개수일 때, <strong>depth</strong>를 최소화하여 <code>시간 복잡도를 줄이는 것</code>이 핵심 아이디어이다. 동일한 노드의 개수일 때, <strong>depth</strong>가 최소가 되는 경우는 tree가 완전 이진 트리(complete binary tree)인 경우이다.</p>
-<h3 id="red-black-tree의-정의">Red-Black Tree의 정의</h3>
-<p>RBT는 다음의 성질을 만족하는 BST이다.</p>
-<ol>
-<li>각 노드는 <code>Red</code> or <code>Black</code>라는 색깔을 갖는다.</li>
-<li>Root node의 색깔은 <code>Black</code>이다.</li>
-<li>각 leaf node는 <code>black</code>이다.</li>
-<li>어떤 노드의 색깔이 <code>red</code>라면 두 개의 children 의 색깔은 모두 black이다.</li>
-<li>각 노드에 대해서 노드로부터 descendant leaves까지의 단순 경로는 모두 같은 수의 black nodes들을 포함하고 있다. 이를 해당 노드의 <code>Black-Height</code>라고 한다.<br>
-cf) Black-Height : 노드 x로부터 노드 x를 포함하지 않은 leaf node까지의 simple path 상에 있는 black node들의 개수</li>
-</ol>
-<h3 id="red-black-tree의-특징">Red-Black Tree의 특징</h3>
-<ol>
-<li>Binary Search Tree이므로 BST의 특징을 모두 갖는다.</li>
-<li>Root node부터 leaf node 까지의 모든 경로 중 최소 경로와 최대 경로의 크기 비율은 2보다 크지 않다. 이러한 상태를 <code>balanced</code> 상태라고 한다.</li>
-<li>노드의 child가 없을 경우 child를 가리키는 포인터는 NIL 값을 저장한다. 이러한 NIL들을 leaf node로 간주한다.</li>
-</ol>
-<h3 id="삽입">삽입</h3>
-<p>우선 BST의 특성을 유지하면서 노드를 삽입한다. 그리고 삽입된 노드의 색깔을 RED로 지정한다. Red로 지정하는 이유는 Black-Height 변경을 최소화하기 위함이다. 삽입 결과 RBT의 특성 위배시 노드의 색깔을 조정하고, Black-Height가 위배되었다면 <strong>rotation</strong>을 통해 height를 조정한다. 이러한 과정을 통해 RBT의 동일한 height에 존재하는 internal node들의 Black-height가 같아지게 되고 최소 경로와 최대 겨올의 크기 비율이 2미만으로 유지된다.</p>
-<h3 id="삭제">삭제</h3>
-<p>삭제도 삽입과 마찬가지로 BST의 특성을 유지하면서 해당 노드를 삭제한다. 삭제될 노드의 child의 개수에 따라 rotation 방법이 달라지게 된다. 그리고 만약 지워진 노드의 색깔이 Black이라면 Black-height가 1 감소한 경로에 black node가 1개 추가되도록 rotation하고 노드의 색깔을 조정한다. 지워진 노드의 색깔이 red라면 Violation이 발생하지 않으므로 RBT가 그대로 유지된다.</p>
-<h1 id="hashtable">HashTable</h1>
-<p><code>hash</code>는 내부적으로 <strong>배열</strong>을 사용하여 데이터를 저장하기 때문에 빠른 검색 속도를 갖는다. 특정한 값을 Search하는데 데이터 고유의 <code>인덱스</code>로 접근하게 되므로 average case에 대하여 시간 복잡도가 O(1)이 되는 것이다. (항상 O(1)이 아니고 average case에 대해서 O(1)인 것은 collision 때문이다.) 하지만 문제는 이 인덱스로 저장되는 key 값이 불규칙하다는 것이다.</p>
-<p>그래서 <strong>특별한 알고리즘을 이용하여</strong> 저장할 데이터와 <strong>고유한 숫자를 만들어 낸 뒤</strong> 이를 인덱스로 사용한다. 특정 데이터가 저장되는 인덱스는 그 데이터만의 고유한 위치이기 때문에, 삽입 연산 시 다른 데이터의 사이에 끼어들거나, 삭제 시 다른 데이터로 채울 필요가 없으므로 연산에서 추가적인 비용이 없도록 만들어진 구조이다.</p>
-<h2 id="hash-function">hash function</h2>
-<p>'특별한 알고리즘’을 통해 고유한 인덱스 값을 설정하는 것이 중요하다. '특별한 알고리즘’을 <code>hash method</code>또는 <code>해시 함수(hash function)</code>라고 하고 이 메소드에 의해 반환된 데이터의 고유의 숫자 값을 <code>hashcode</code>라고 한다. 저장되는 값들의 key 값을 <code>hash function</code>을 통해서 <strong>작은 범위의 값들로</strong> 바꿔준다.</p>
-<p>하지만 어설픈 <code>hash function</code>을 통해서 key 값들을 결정한다면 동일한 값이 도출될 수가 있다. 이렇게 되면 동일한 key 값에 복수 개의 데이터가 하나의 테이블에 존재할 수 있게 되는 것인데 이를 <code>Collision</code>이라고 한다.</p>
-<ul>
-<li>Collision : 서로 다른 두 개의 키가 같은 인덱스로 hashing(hash 함수를 통해 계산됨을 의미)되면 같은 곳에 저장할 수 없게 된다.</li>
-</ul>
-<p>일반적으로 좋은 <code>hash function</code>는 키의 일부분을 참조하여 해쉬 값을 만들지 않고 키 전체를 참조하여 해쉬 값을 만들어 낸다. 하지만 좋은 해쉬 함수는 키의 어떤 특성을 가지고 있느냐에 따라 달라지게 된다.</p>
-<p><code>hash function</code>를 무조건 1:1로 만드는 것보다 <strong>Collision</strong>을 최소화하는 방향으로 설계하고 발생하는 Collision에 대비해 어떻게 대응할 것인가가 더 중요하다. 1:1 대응이 되도록 만드는 것이 거의 불가능하기도 하지만 그런 hash function를 만들어봤자 그건 array와 다를바 없고 메모리를 너무 차지하게 된다.</p>
-<p><strong>Collision</strong>이 많아질 수록 Search에 필요한 시간 복잡도가 O(1)에서 O(n)에 가까워진다. 어설픈 hash function는 hash를 hash답게 사용하지 못하도록 한다. 좋은 hash function를 선택하는 것은 hash table의 성능 향상에 필수적인 것이다.</p>
-<p>따라서 hashing된 인덱스에 이미 다른 값이 들어 있다면 세 데이터를 저장할 다른 위치를 찾은 뒤에야 저장할 수 있는 것이다. 따라서 충돌 해결은 필수이며 그 방법들에 대해 알아보자.</p>
-<h2 id="resolve-confilct">Resolve Confilct</h2>
-<ol>
-<li>Open Address 방식(개방 주소법)</li>
-</ol>
-<p>해시 충돌이 발생하면, (즉 삽입하려는 해시 버킷이 이미 사용중인 경우) <strong>다른 해시 버킷에 해당 자료를 삽입하는 방식</strong>이다. 버킷이란 바구니와 같은 개념으로 <strong>데이터를 저장하기 위한 공간</strong>이라고 생각하면 된다. 다른 해시 버킷이란 어떤 해시 버킷인가???</p>
-<p>공개 주소 방식이라고도 불리는 이 알고리즘은 Collision이 발생하면 데이터를 저장할 장소를 찾아 헤맨다. <strong>Worst Case</strong>의 경우 비어있는 버킷을 찾지 못하고 탐색을 시작한 위치까지 되돌아 올 수 있다. 이 과정에서도 방법이 존재하고, 3가지를 살펴보겠다.</p>
-<ul>
-<li>Linear Probing : 순차적으로 탐색하며 비어있는 버킷을 찾을 때까지 계속 진행된다.</li>
-<li>Quadratic probing : 2차 함수를 이용해 탐색할 위치를 찾는다.</li>
-<li>Double hashing probing : 하나의 해쉬 함수에서 충돌이 발생하면 2차 해쉬 함수를 이용해 새로운 주소를 할당한다. 위 두 가지 방법에 비해 많은 연산량을 요구하게 된다.</li>
-</ul>
-<ol start="2">
-<li>Seperate Chaining 방식(분리 연결법)</li>
-</ol>
-<p>일반적으로 Open Addressing은 Separate Chaining보다 느리다. Open Addressing의 경우 해시 버킷을 채운 밀도가 높아질수록 Worst Case 발생 빈도가 더 높아지기 때문이다. 반면 <code>Separate Chaining</code> 방식의 경우 해시 <strong>충돌이 잘 발생하지 않도록 보조 해시 함수를 통해 조정</strong>할 수 있다면 <strong>Worst Case에 가까워 지는 빈도를 줄일 수 있다</strong>. Java 7에서는 Separate Chaining 방식을 사용하여 HashMap을 구현하고 있다. Separate Chaining 방식으로는 두 가지 구현 방식이 존재한다.</p>
-<ul>
-<li>
-<p>연결 리스트를 사용하는 방식(Linked List)<br>
-각각의 버킷들을 연결 리스트로 만들어 <code>Collision</code>이 발생하면 해당 버킷의 list에 추가하는 방식이다. 연결 리스트의 특징을 그대로 이어받아 삭제 또는 삽입이 간단하다. 하지만 단점도 그대로 물려받아 작은 데이터들을 저장할 때 연결 리스트 자체의 <strong>오버헤드</strong>가 부담이 된다. 또 다른 특징으로는, 버킷을 계속해서 사용하는 Open Address 방식에 바해 테이블의 확장을 늦출 수 있다.</p>
-</li>
-<li>
-<p>Tree를 사용하는 방식<br>
-기본적인 알고리즘은 <code>Separate Chaining</code> 방식과 동일하며 연결 리스트 대신 트리를 사용하는 방식이다. 연결 리스트를 사용할 것인가와 트리를 사용할 것인가에 대한 기준은 하나의 해시 버킷에 할당된 <code>key-value</code> 쌍의 개수이다. 데이터의 개수가 적다면 Linked List를 사용하는 것이 맞다.<br>
-Tree는 기본적으로 메모리 사용량이 많기 때문이다. 데이터 개수가 적을 때 Worst Case를 살펴보면 트리와 링크드 리스트의 성능 상 차이가 거의 없다. 따라서 메모리 측면을 봤을 때 데이터 개수가 적을 때는 링크드 리스트를 사용한다.</p>
-</li>
-</ul>
-<p><strong>데이터가 적다는 것은 얼마나 적다는 것을 의미하는가?</strong><br>
-앞에서 말했듯이 기준은 하나의 해시 버킷에 할당된 key-value 쌍의 개수이다. 이 키-값 쌍의 개수가 6개, 8개를 기준으로 결정한다. 기준이 두 개 인것이 이상하게 느껴질 수 있다. 7은 어디로 갔는가? 링크드 리스트의 기준과 트리의 기준을 6과 8로 잡은 것은 변경하는데 소요되는 비용을 줄이기 위함이다.</p>
-<p><strong>한 가지 상황을 가정해보자.</strong><br>
-해시 버킷에 6개 의 key-value 쌍이 들어있었다. 그리고 하나의 값이 추가되었다. 만약 기준이 6과 7이라면 자료구조를 링크드 리스트에서 트리로 변경해야 한다. 그러다 바로 하나의 값이 삭제된다면 다시 트리에서 링크드 리스트로 자료구조를 변경해야 한다. 각각 자료구조로 넘어가는 기준이 1이라면 Switching 비용이 너무 많이 필요하게 되는 것이다. 그래서 2라는 여유를 남겨두고 기준을 잡아준 것이다. 따라서 데이터의 개수가 6개에서 7개로 증가했을 때는 링크드 리스트의 자료구조를 취하고 있을 것이고 8개에서 7개로 감소했을 때는 트리의 자료구조를 취하고 있을 것이다.</p>
-<ul>
-<li>Open Address vs Separate Chaining</li>
-</ul>
-<p>일단 두 방식 모두 Worst Case 에서 O(M)이다. 하지만 <code>Open Address</code>방식은 연속된 공간에 데이터를 저장하기 때문에 <code>Separate Chaining</code>에 비해 <strong>캐시 효율이 높다</strong>. 따라서 데이터의 개수가 충분히 적다면 <code>Open Address</code> 방식이 <code>Separate Chaining</code> 보다 더 성능이 좋다.<br>
-한 가지 차이점이 더 존재한다. Separate Chaining방식에 비해 Open Address방식은 버킷을 계속해서 사용한다. 따라서 Separate Chaining 방식은 테이블의 <strong>확장을 보다 늦출 수 있다.</strong></p>
-<p><strong>보조 해시 함수</strong></p>
-<p>보조 해시 함수의 목적은 <code>key</code>의 해시 값을 변형하여 <strong>해시 충돌 가능성을 줄이는 것</strong>이다. <code>Separate Chaining</code> 방식을 사용할 때 함께 사용되며 보조 해시 함수로 <strong>Worst Case</strong>에 가까워지는 경우를 줄일 수 있다.</p>
-<ol start="3">
-<li>해시 버킷 동적 확장(Resize)</li>
-</ol>
-<p>해시 버킷의 개수가 적다면 메모리 사용을 아낄 수 있지만 해시 충돌로 인해 성능 상 손실이 발생한다. 그래서 <strong>HashMap</strong>은 key-value 쌍 데이터 개수가 일정 개수 이상이 되면 해시 버킷의 개수를 두 배로 늘린다. 이렇게 늘리면 해시 충돌로 인한 성능 손실 문제를 어느 정도 해결할 수 있다.<br>
-<code>일정 개수 이상</code> -&gt; 해시 버킷 크기를 두 배로 확장하는 임계점은 현재 데이터 개수가 해시 버킷의 개수의 75%가 될 때이다. <strong>0.75</strong> -&gt; <strong>load factor</strong>라고 불린다.</p>
-<h1 id="graph">Graph</h1>
-<p><strong>Graph</strong> : 정점과 간선의 집합<br>
-cf) 트리 또한 그래프이며, 그 중 사이클이 허용되지 않는 그래프를 말한다.</p>
-<h2 id="그래프-관련-용어-정리">그래프 관련 용어 정리</h2>
-<ol>
-<li>
-<p>Undirected Graph<br>
-정점과 간선의 연결 관계에 있어서 방향성이 없는 그래프</p>
-</li>
-<li>
-<p>Directed Graph(Diagraph)<br>
-간선에 방향성이 포함되어 있는 그래프</p>
-</li>
-<li>
-<p>Degree(차수)</p>
-</li>
-</ol>
-<p>Undirected Graph에서 각 정점에 연결된 Edge의 개수를 말한다. Directed Graph에서는 간선에 방향성이 존재하기 때문에 Degree가 두 개로 나뉘게 된다.<br>
-각 정점으로부터 나가는 간선의 개수를 <strong>OutDegree</strong>라 하고, 들어오는 간선의 개수를 <strong>Indegree</strong>이라 한다.</p>
-<ol start="4">
-<li>가중치 그래프(Weight Graph)와 부분 그래프(Sub Graph)</li>
-</ol>
-<p><strong>가중치 그래프</strong>란 간선에 가중치 정보를 두어서 구성한 그래프를 말한다. 반대의 개념인 <strong>비가중치 그래프</strong> 즉, 모든 간선의 가중치가 동일한 그래프도 존재한다. 부분 집합과 유사한 개념으로 부분 그래프라는 것이 있다. 부분 그래프는 본래의 그래프의 일부 정점 및 간선으로 이루어진 그래프를 말한다.</p>
-<ol start="5">
-<li>그래프를 구현하는 두 방법</li>
-</ol>
-<ul>
-<li>
-<p>인접 행렬(adjacent matrix) : 정방 행렬을 사용하는 방법<br>
-해당하는 위치의 value 값을 통해서 vertex(정점)간의 연결 관계를 O(1)로 파악할 수 있다. Edge 개수와는 무관하게 V^2의 공간 복잡도를 갖는다. Dense graph를 표현할 때 적절한 방법이다.</p>
-</li>
-<li>
-<p>인접 리스트(adjacent list) : 연결 리스트를 사용하는 방법</p>
-</li>
-</ul>
-<p>vertex(정점)의 adjacent list를 확인해봐야 하므로 vertex간 연결되어 있는지 확인하는데 오래 걸린다. 공간 복잡도는 O(E+V)이다. <strong>Sparse graph</strong>를 표현하는데 적당한 방법</p>
-<ol start="6">
-<li>그래프 탐색</li>
-</ol>
-<p>그래프는 정점의 구성 뿐만 아니라 간선의 연결에도 규칙이 존재하지 않기 때문에 탐색이 복잡하다. 따라서 그래프의 모든 정점을 탐색하기 위한 방법은 다음의 두 가지 알고리즘을 기반으로 한다.</p>
-<ul>
-<li>깊이 우선 탐색(Depth First Search : DFS)</li>
-</ul>
-<p>그래프 상에 존재하는 임의의 한 정점으로부터 연결되어 있는 <strong>한 정점으로만 나아간다</strong>라는 방법을 우선으로 탐색한다. 일단 연결된 정점으로 탐색하는 것이다. 연결할 수 있는 정점이 있을 때까지 계속 연결하다가 더 이상 연결되지 않은 정점이 없으면 바로 그 전 단계의 정점으로 돌아가서 연결할 수 있는 정점이 있는지 살펴봐야 할 것이다. 갔던 길을 되돌아 오는 상황이 존재하는 미로찾기처럼 구성하면 되는 것이다.<br>
-어떤 자료구조를 사용해야할까?? Stack이다.<br>
-시간 복잡도 : O(V+E) … vertex개수+edge개수</p>
-<ul>
-<li>너비 우선 탐색(Breadth First Search : BFS)</li>
-</ul>
-<p>그래프 상에 존재하는 임의의 한 정점으로부터 연결되어 있는 <strong>모든 정점으로 나아간다</strong>. Tree에서의 Level Order Traversal 형식으로 진행되는 것이다. BFS에서는 자료구조로 <code>Queue</code>를 사용한다. 연락을 취할 정점의 순서를 기록하기 위한 것이다. 우선, 탐색을 시작하는 정점을 <code>Queue</code>에 넣는다.(enqueue) 그리고 <strong>dequeue</strong>를 하면서 정점과 간선으로 연결되어 있는 정점들을 <strong>enqueue</strong>한다. 즉 vertex들을 방문한 순서대로 queue에 저장하는 방법을 사용하는 것이다.<br>
-시간 복잡도 : O(V+E) … vertex개수 + edge 개수<br>
-<strong>BFS로 구한 경로는 최단 경로</strong></p>
-<ol start="7">
-<li>Minimum Spanning Tree</li>
-</ol>
-<p>그래프 G의 spanning tree 중 edge weight의 합이 최소이 <code>spanning tree</code>를 말한다. 여기서 말하는 <code>spanning tree</code>란 그래프 G의 모든 vertex가 cycle이 없이 연결된 형태를 말한다.</p>
-<ol start="8">
-<li>Kruskal Algorithm</li>
-</ol>
-<p>초기화 작업으로 <strong>edge</strong> 없이 vertex들만으로 그래프를 구성한다. 그리고 weight가 제일 작은 edge부터 검토한다. 그러기 위해서는 edge Set을 non-decreasing으로 해야 한다. 그리고 가장 작은 weight에 해당하는 edge를 추가하는데 추가할 때 그래프에 cycle이 생기지 않는 경우에만 추가한다. spanning tree가 완성되면 모든 vertex들이 연결된 상태로 종료가 되고 완성될 수 없는 그래프에 대해서는 모든 edge에 대해 판단이 이루어지면 종료된다.</p>
-<ul>
-<li>
-<p>어떻게 cycle 생성 여부를 판단하는가??<br>
-graph의 각 vertex에 <strong>set-id</strong>라는 것을 추가적으로 부여한다. 그리고 초기화 과정에서 모두 1~n까지의 값으로 각각의 vertex들을 초기화한다. 여기서 0은 어떠한 edge와도 연결되지 않았음을 의미하게 된다. 그리고 연결할 때마다 <strong>set-id</strong>를 하나로 통일시키는데, 값이 동일한 <strong>set-id</strong>개수가 많은 <strong>set-id</strong> 값으로 통일시킨다.</p>
-</li>
-<li>
-<p>Time Complexity(시간 복잡도)</p>
-</li>
-</ul>
-<ol>
-<li>
-<p>Edge의 weight를 기준으로 sorting - O(E log E)</p>
-</li>
-<li>
-<p>cycle 생성 여부를 검사하고 set-id를 통일 - O(E + V log V) =&gt; 전체 시간 복잡도 : O(E log E)</p>
-</li>
-<li>
-<p>Prim Algorithm</p>
-</li>
-</ol>
-<p>초기화 과정에서 한 개의 vertex로 이루어진 초기 그래프 A를 구성한다. 그리고 나서 그래프 A 내부에 있는 vertex로부터 외부에 있는 vertex 사이의 edge를 연결하는데 그 중 가장 작은 weight의 edge를 통해 연결되는 vertex를 추가한다. 어떤 vertex건 간에 상관없이 edge의 weight를 기준으로 연결하는 것이다. 이렇게 연결된 vertex(정점)는 그래프 A에 포함된다. 위 과정을 반복하고 모든 vertex들이 연결되면 종료한다.</p>
-<p>Time Complexity(시간 복잡도)<br>
-=&gt; 전체 시간 복잡도 : O(E log V)</p>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2018/05/17/DataStructure/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
                             href="/2018/05/05/sopt-seminar4/"
                             aria-label=": [SOPT] Seminar4"
                         >
@@ -1537,6 +781,793 @@ graph의 각 vertex에 <strong>set-id</strong>라는 것을 추가적으로 부�
         
     </article>
     
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2018/05/05/sopt-seminar3/"
+                            aria-label=": [SOPT] Seminar3"
+                        >
+                            [SOPT] Seminar3
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2018-05-05T11:48:08+09:00">
+	
+		    May 05, 2018
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/Inno-SOPT/">Inno_SOPT</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="recyclerview">RecyclerView</h1>
+<ul>
+<li>특징<br>
+<strong>반복되는 패턴</strong> 적용에 유리한 View(일종의 <code>리스트</code>)<br>
+<strong>LayoutManager</strong> 속성을 추가하여 리스트 타입을 쉽게 변경 할 수 있다.<br>
+<strong>재활용성</strong>이 뛰어난 구조</li>
+</ul>
+<h2 id="구성-요소">구성 요소</h2>
+<p><strong>DataClass</strong><br>
+<strong>ViewHolder</strong><br>
+<strong>LayoutManager</strong><br>
+<strong>Adapter</strong></p>
+<h2 id="dataclass">DataClass</h2>
+<p><img src="/img/kakaotalk.png" alt=""></p>
+<ul>
+<li>위의 네모난 채팅방을 item이라고 하며, 이 item에 들어갈 **데이터(자료형)**가 무엇인지 명시</li>
+<li>프로필 이미지(Int), 채팅방 이름(String), 미리보기(String), 날짜(String)이 표시 된다.</li>
+</ul>
+<p><img src="/img/api.png" alt=""></p>
+<ul>
+<li>위 서버의 Response를 보고 작성한 DataClass</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">data class GetBoardResponse(</span><br><span class="line">        var message : String,</span><br><span class="line">        var data : ArrayList&lt;GetBoardResponseData&gt;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">class GetBoardResponseData(</span><br><span class="line">        var board_idx : Int,</span><br><span class="line">        var board_title : String?,</span><br><span class="line">        var board_content : String,</span><br><span class="line">        var board_view : Int,</span><br><span class="line">        var board_photo : String?,</span><br><span class="line">        var board_writetime : String?,</span><br><span class="line">        var user_id : String</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>서버 API를 보고 DataClass를 작성할 경우에는 서버의 Key값과 동일하게 변수명을 작성하여야 한다.</li>
+</ul>
+<h2 id="viewholder">ViewHolder</h2>
+<p><img src="/img/kakaotalk.png" alt=""></p>
+<ul>
+<li>Item에 들어갈 View가 무엇인지 명시</li>
+<li>프로필 이미지(ImageView), 채팅방 이름(TextView), 미리보기((TextView), 날짜((TextView)</li>
+</ul>
+<h2 id="layoutmanger">LayoutManger</h2>
+<p><img src="/img/layoutmanager.png" alt=""></p>
+<ul>
+<li>Item들의 배치 방식을 결정</li>
+<li>LinearLayoutManager(선형), StaggeredGridLayoutManager(지그재그, 정확히는 가변 그리드), GridLayoutManager(사진첩 형태)</li>
+<li>이번 세미나에서는 <strong>LinearLayoutManager</strong>를 통해서 수직 배치를 할 예정!</li>
+</ul>
+<h2 id="adapter">Adapter</h2>
+<p><img src="/img/kakaotalk.png" alt=""></p>
+<ul>
+<li><strong>DataClass</strong>와 <strong>ViewHolder</strong>를 연결</li>
+<li>이번 세미나에서는 DataClass의 프로필 이미지(Int)을 ViewHolder의 프로필 ImageView에, 채팅방(String)을 채팅방 TextView에, 미리보기(String)을 미리보기 TextView에 연결, 날짜(String)를 날짜 TextView에 연결한다.</li>
+<li>서버와 통신을 할 경우에는 DataClass를 서버의 Response(응답)을 보고 작성하게 되는데, DataClass가 서버의 응답을 받아서 ViewHolder와 연결을 해주면 된다!!</li>
+<li>DataClass가 중요한 부분!!</li>
+<li>연결 후 RecyclerView가 Adapter를 잡게 함으로써 사용자에게 보여준다.</li>
+</ul>
+<h1 id="과제">과제</h1>
+<ol>
+<li>복습 : RecyclerView를 이용한 리스트 만들기 [hint : color값 넘기기!]</li>
+<li>응용 : Item 요소 중에서 '프로필 이미지’를 클릭하면 프뢸 이미지만 볼 수 있는 Activity로 넘어가도록 작성 [hint : Adapter의 ViewHolder를 변경하면 됨]<br>
+[주의 : Item을 클릭하면 상대방과의 채팅방으로 이동하는 Activity와는 별개로 작성해야 함]</li>
+<li>심화 : RecyclerView의 Header를 만들어서 다른 형태의 Item도 RecyclerView에 포함되도록 작성</li>
+</ol>
+<p><code>Github</code> : <a href="https://github.com/WooVictory/SOPT_22th_Seminar3_HomeWork" target="_blank" rel="noopener">https://github.com/WooVictory/SOPT_22th_Seminar3_HomeWork</a></p>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2018/05/05/sopt-seminar3/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2018/05/02/sopt-seminar2/"
+                            aria-label=": [SOPT] Seminar2"
+                        >
+                            [SOPT] Seminar2
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2018-05-02T12:03:54+09:00">
+	
+		    May 02, 2018
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/Inno-SOPT/">Inno_SOPT</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="안드로이드의-4대-컴포넌트">안드로이드의 4대 컴포넌트</h1>
+<h2 id="activity액티비티">Activity(액티비티)</h2>
+<p>사용자 인터페이스 화면을 가지며 특정한 작업을 담당하는 컴포넌트<br>
+UI를 구성하는 컴포넌트<br>
+안드로이드의 Manifest 파일에 등록이 되어 있어야 한다.<br>
+안드로이드 Application은 최소 1개 이상의 Activity가 있어야 한다.<br>
+하나 이상의 View를 가질 수 있다.<br>
+쉽게 말하자면 사용자가 보는 화면이다.</p>
+<h2 id="service서비스">Service(서비스)</h2>
+<p>백그라운드에서 실행되는 컴포넌트로 오랫동안 실행되는 작업이나 원격 프로세스를 위한 작업을 할 때 사용된다.<br>
+모든 서비스는 Service 클래스를 상속 받는다.<br>
+한 번 실행되면 다른 어플리케이션으로 이동하더라도 종료되지 않는다.<br>
+네트워크를 통하여 데이터를 꺼내올 수도 있다.<br>
+ex) 뮤직 플레이어, 안드로이드 사용량 모니터링, 주기적으로 특정 웹사이트에서 데이터를 읽어오는 것 등등</p>
+<h2 id="broadcast-receiver">BroadCast Receiver</h2>
+<p>BroadCast는 시스템에서 발생하는 이벤트이며 이것의 Receiver은 특정 BroadCast에 반응하는 컴포넌트<br>
+단말기에서 발생하는 다양한 이벤트 / 정보를 받고 반응한다.<br>
+수신기를 통해 상황을 감지하고 적절한 작업을 수행한다.<br>
+신호만 기다릴 뿐 별도의 UI를 거치지 않는다.<br>
+ex) 배터리 부족, 네트워크 전송, 시스템 부팅, 전화/문자 수신, 네트워크 끊김을 알려주는 것 등등</p>
+<h2 id="content-provider">Content Provider</h2>
+<p>데이터를 관리하고 어플리케이션 간 데이터 공유를 위한 컴포넌트<br>
+데이터는 파일 시스템이나 SQLite 데이터베이스, 웹 상에 저장될 수 있습니다.<br>
+콘텐트 제공자를 통해서 다른 애플리케이션의 데이터를 쿼리하거나 변경 가능합니다.<br>
+유일한 합법적 데이터 공유 장치<br>
+(주소록 Content Provider를 통해 제공)</p>
+<h1 id="activity의-생명주기">Activity의 생명주기</h1>
+<p><img src="/img/fgh.png" alt=""></p>
+<h3 id="oncreate">onCreate()</h3>
+<ul>
+<li>액티비티가 만들어지고 나서 최초에 실행될 때 호출됩니다.</li>
+<li>액티비티에 필요한 리소스들을 초기화하거나 화면에 보이는 뷰들의 일반적인 상태들을 여기서 설정합니다.</li>
+<li>이전 상태가 저장되어 있을 경우, 번들 객체를 참조하여 이전 상태로 복원이 가능합니다.</li>
+<li>이 다음에는 항상 <strong>onStart</strong>()가 호출됩니다.</li>
+</ul>
+<h3 id="onstart">onStart()</h3>
+<ul>
+<li>액티비티가 화면에 보이기 바로 전에 호출됩니다.</li>
+<li>액티비티가 화면상에 보이면 이 메소드 다음에 <strong>onResume</strong>()메소드가 호출된 것입니다.</li>
+<li>매우 빠르게 끝나고, <strong>onResume</strong>() 단계로 넘어갑니다.</li>
+<li>보통 <strong>Broadcast Receiver</strong>는 이 단계에서 등록하는 것이 좋습니다.</li>
+<li>액티비티가 시작되기 전에 호출되는 함수 / 액티비티가 멈춘 후 다시 시작되기 전에 호출되는 함수</li>
+</ul>
+<h3 id="onresume">onResume()</h3>
+<ul>
+<li>액티비티가 사용자와 상호 작용하기 바로 직전에 호출되는 함수입니다. 이 메소드가 호출되고 나서 바로 액티비티가 사용자에게 보이기 시작합니다.</li>
+<li>액티비티가 <strong>화면에 보여집니다.</strong></li>
+<li>사용자에게 <strong>focus</strong>를 잡은 상태입니다.</li>
+</ul>
+<h3 id="onrestart">onRestart()</h3>
+<ul>
+<li>액티비티가 <strong>중지된(Stopped)</strong> 이후에 호출되는 메소드로 다시 시작되기 바로 전에 호출됩니다.</li>
+<li>액티비티가 <strong>멈춰 있다가 다시 다시 호출될 때 불리는 함수입니다.</strong></li>
+</ul>
+<h2 id="다른-액티비티가-호출되는-경우">다른 액티비티가 호출되는 경우</h2>
+<h3 id="onpause">onPause()</h3>
+<ul>
+<li>액티비티 위에 <strong>액티비티가 올라와서 focus를 잃었을 때</strong> 호출되는 함수</li>
+<li>액티비티가 완전히 가려지지 않고 <code>부분만 가려진 상태</code>에서 호출되는 함수, 즉 <strong>일부분이 보이거나 투명상태일 경우</strong>에 호출됩니다.</li>
+<li>다른 액티비티가 호출되기 전에 실행되기 때문에 <code>onPause()</code> 함수에서 <strong>시간이 많이 소요되는 작업이나 많은 일을 처리하면 다른 액티비티가 호출되는 시간이 지연</strong>되기 때문에 많은 일을 처리하지 않도록 주의합니다.</li>
+<li>영구적인 Data는 여기서 저장합니다.</li>
+<li>이 메소드가 리턴하기 전에는 다음 액티비티가 시작될 수 없으므로 이 작업은 빠르게 리턴되어야 합니다.</li>
+<li>액티비티가 이 상테에 들어가면 시스템은 액티비티를 강제 종료할 수 있습니다.</li>
+</ul>
+<h3 id="onstop">onStop()</h3>
+<ul>
+<li>액티비티 위에 다른 <strong>액티비티가 완전히 올라와 100% 가려질 때</strong> 호출되는 함수</li>
+<li>액티비티가 <strong><code>사용자에게 더 이상 보이지 않을 때</code></strong> 호출되는 함수</li>
+<li>만약 이 상태에서 액티비티가 다시 불려지면 <code>onRestart()</code>함수가 호출됩니다.</li>
+<li>시스템이 onStop() 상태에 들어오면, <strong>onSaveInstanceState</strong>()이라는 메소드를 호출하는데, 이 단계에서는 <code>key-value</code> 형태로 값을 저장할 수 있고, 이 값을 <code>onCreate()</code>에서 복원할 수 있습니다.</li>
+<li>ex) 홈 키를 누른 경우, 또는 다른 액티비티 페이지로 이동이 있는 경우에 호출됩니다.</li>
+</ul>
+<h3 id="ondestroy">onDestroy()</h3>
+<ul>
+<li>액티비티가 완전히 스택에서 없어질 때 호출되는 함수</li>
+<li>즉 <strong>제거</strong>되는 경우입니다.</li>
+<li><code>Finish()</code> 메소드가 호출되거나 <code>시스템 메모리 확보</code>를 위해서 시스템이 강제로 종료시키는 경웨 호출될 수 있습니다.</li>
+</ul>
+<h3 id="참고">참고</h3>
+<ul>
+<li>onStop(), onDestroy() 함수는 호출되지 않을 수도 있습니다.</li>
+<li>메모리 부족으로 인해 onStop()이 호출되지 않을 수 있습니다.</li>
+</ul>
+<h2 id="fragment프래그먼트">Fragment(프래그먼트)</h2>
+<p>일종의 하위 Activity이며 자체 생명주기를 갖는다.<br>
+자체 입력 이벤트를 가지고 있으며 값 전달은 Bundle로 한다.<br>
+[Activity가 Intent로 한 것과는 대조적이다.]<br>
+Tag를 달 수 있다.<br>
+FragmentManager를 통해 관리할 수 있다.</p>
+<h3 id="fragmentmanager">FragmentManager</h3>
+<p>Fragment 관리를 목적으로 하는 클래스<br>
+FragmentManager 클래스를 통해 FragmentTransaction 객체를 FragmentTransaction을 통해 동적 관리<br>
+Kotlin에서는 supportFragmentManager를 통해 생성</p>
+<h3 id="fragmenttransaction">FragmentTransaction</h3>
+<p>Fragment 추가, 삭제, 전환을 도와주는 클래스<br>
+addToBackStack() 함수를 호출해서 교체되서 Fragment를 back stack에 저장<br>
+항상 마지막에 변경사항 적용을 위해 commit()을 해야 한다.</p>
+<p><img src="/img/fragment.png" alt=""></p>
+<h3 id="onattach">onAttach() :</h3>
+<ul>
+<li>프래그먼트가 액티비티에 붙을 때 호출된다.</li>
+<li>하지만, 아직 완벽하게 생성된 것은 아니다.</li>
+<li>프래그먼트는 액티비티 없이는 단독적으로 존재할 수 없기 때문이다.</li>
+</ul>
+<h3 id="oncreate">onCreate() :</h3>
+<ul>
+<li>본격적으로 프래그먼트가 액티비티의 호출을 받아 생성되는 시점이다.</li>
+<li>액티비티의 onCreate()에서는 view나 UI 작업을 할 수 있으나, 프래그먼트의 onCreate()에서는 할 수 없다.</li>
+</ul>
+<h3 id="oncreateview">onCreateView() :</h3>
+<ul>
+<li>프래그먼트에 속한 각종 view나 viewGroup에 대한 UI 바인딩 작업을 할 수 있다.</li>
+<li>(Layout을 inflate하여 view 작업을 수행한다.)</li>
+</ul>
+<h3 id="onactivitycreated">onActivityCreated() :</h3>
+<ul>
+<li>액티비티에서 프래그먼트를 모두 생성하고 난 다음에 호출된다.</li>
+<li>즉 액티비티에서 onCreate() 다음에 호출되는 메소드이다.</li>
+<li>액티비티와 프래그먼트가 드디어 연결되는 시점이다.</li>
+</ul>
+<h3 id="onstart">onStart() :</h3>
+<ul>
+<li>프래그먼트가 사용자에게 보여지기 전에 호출되는 함수</li>
+<li>(액티비티와 같음)</li>
+</ul>
+<h3 id="onresume">onResume() :</h3>
+<ul>
+<li>프래그먼트가 비로소 화면에 보이는 단계이다.</li>
+<li>사용자에게 focus를 잡은 상태</li>
+<li>사용자와의 상호작용이 가능</li>
+</ul>
+<h3 id="다른-프래그먼트가-치고-들어오는-경우add되는-경우">다른 프래그먼트가 치고 들어오는 경우(add되는 경우)</h3>
+<h3 id="onpause">onPause() :</h3>
+<ul>
+<li>프래그먼트는 사용자와의 상호작용을 중지한다.</li>
+<li>다시 돌아온다는 보장이 없으므로, 중요한 정보는 저장해둔다.</li>
+</ul>
+<h3 id="onstop">onStop() :</h3>
+<ul>
+<li>프래그먼트는 더 이상 보여지지 않게 되며, 프래그먼트 기능은 중지한다.</li>
+</ul>
+<h3 id="ondestroyview">onDestroyView() :</h3>
+<ul>
+<li>프래그먼트를 view에서 제거한다.</li>
+<li>Backstack을 사용했다면, 다시 해당 프래그먼트로 돌아올 때 onCreateView()가 호출된다.</li>
+</ul>
+<h3 id="ondestroy">onDestroy() :</h3>
+<ul>
+<li>프래그먼트를 제거하기 직전이다.</li>
+</ul>
+<h3 id="ondetach">onDetach() :</h3>
+<ul>
+<li>프래그먼트를 비로소 제거하고 액티비티와의 연결도 해제한다.</li>
+</ul>
+<h1 id="과제">과제</h1>
+<ol>
+<li>복습 : 세미나 시간동안 구현한 것 완성</li>
+<li>응용 : Fragment안에 Fragment 구현</li>
+<li>심화 : 첫 Fragment에서 이미지가 여러장일 경우에는 swipe를 통해 구현</li>
+</ol>
+<p><code>Github</code> : <a href="https://github.com/WooVictory/SOPT_22th_Seminar2_HomeWork" target="_blank" rel="noopener">https://github.com/WooVictory/SOPT_22th_Seminar2_HomeWork</a></p>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2018/05/02/sopt-seminar2/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2018/05/01/sopt-semniar1/"
+                            aria-label=": [SOPT] Seminar1"
+                        >
+                            [SOPT] Seminar1
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2018-05-01T18:45:28+09:00">
+	
+		    May 01, 2018
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/Inno-SOPT/">Inno_SOPT</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="android-가볍게-보는-특징">Android 가볍게 보는 특징</h1>
+<ul>
+<li>Google에서 만든 모바일 운영체제</li>
+<li>가장 많이 사용하는 OS</li>
+<li>오픈소스</li>
+<li>다양한 라이브러리 지원</li>
+<li>개발 접근이 용이</li>
+<li>빈번한 SDK 업그레이드</li>
+</ul>
+<h2 id="최근-이슈">최근 이슈</h2>
+<p>최근에 구글과 오라클의 소송에서 구글이 패배함으로써 자바가 위협을 받고 <code>Kotlin</code>이 대두되고 있습니다. SOPT에서는 <strong>Kotlin</strong>을 이용하여 안드로이드 개발을 배우고 세미나를 진행합니다.</p>
+<h2 id="kotlin의-특징">Kotlin의 특징</h2>
+<ul>
+<li>자동 형 변환 기능을 허용하지 않는다. [타입이 다르면 반드시 형 변환을 해야 한다.]</li>
+<li><code>NPE에 대응</code> [NPE = Null Pointer Exception]</li>
+<li>뛰어난 <strong>자바와의 호환성</strong></li>
+<li>표현이 자바에 비해 훨씬 <strong>간결</strong></li>
+<li>문장 끝에 <strong>세미콜론</strong>을 사용하지 않는다.</li>
+</ul>
+<h1 id="view-layout이란">View / Layout이란??</h1>
+<h2 id="view와-viewgroup">View와 ViewGroup</h2>
+<ul>
+<li>View<br>
+버튼, 텍스트, 이미지 <strong>등 모든 유저 인터페이스(UI)의 통칭</strong><br>
+<strong>사용자 눈에 보이는</strong> 화면 구성 요소<br>
+Activity 상에서 직접 Code를 작성해서 구현할 수 있지만 더 쉽고 정교하게 작성하기 위해서 <code>XML</code>사용</li>
+</ul>
+<p><img src="/img/view.png" alt=""></p>
+<ul>
+<li>layout_width -&gt; 뷰의 너비(가로 길이)</li>
+<li>layout_height -&gt; 뷰의 높이(세로 길이)</li>
+<li>wrap_content -&gt; <code>내용의 길이(혹은 크기)</code>에 맞게 조절</li>
+<li>match_parent -&gt; <code>부모 뷰에 꽉 채워진 크기</code>(여백 제외)<br>
+위의 두 가지가 아닌 경우에는 <strong>직접 설정</strong></li>
+<li><strong>배경 지정</strong> / <strong>색</strong> 뿐만 아니라 <strong>이미지</strong>도 지정 가능</li>
+<li>화면에 보여지는 속성</li>
+</ul>
+<ol>
+<li><strong>visible</strong> : 공간도 차지하고 화면에 보임</li>
+<li><strong>invisible</strong> : 공간은 차지하는데 보이지는 않음</li>
+<li><strong>gone</strong> : 공간도 차지하지 않고 보이지도 않음</li>
+</ol>
+<p><img src="/img/margin.png" alt=""></p>
+<ul>
+<li><strong>View</strong>의 <strong>여백</strong> 설정</li>
+<li>margin -&gt; 부모 혹은 View와의 여백</li>
+<li>padding -&gt; View 외곽과 내용 사이의 여백</li>
+</ul>
+<p><code>ViewGroup</code></p>
+<ul>
+<li>뷰들을 여러 개 포함하고 있는 것</li>
+<li>뷰 그룹도 뷰에서 상속하여 뷰가 된다. 즉, 위의 뷰는 버튼, 텍스트 뿐만 아니라 이것들을 포함하는 눈에 보이지 않는 영역을 포함</li>
+</ul>
+<p><img src="/img/hierarchical.png" alt=""></p>
+<p><code>위젯</code><br>
+뷰 중에서 일반적인 <strong>컨트롤</strong> 역할을 하고 있는 것<br>
+ex) 버튼, 텍스트뷰 등등</p>
+<h2 id="layout">Layout</h2>
+<p><strong>View</strong>들이 배치 될 그룹<br>
+<strong>Layout</strong>에 따라 <strong>배치</strong>되는 <strong>방식</strong>이 달라짐<br>
+XML을 통해 작성<br>
+<strong>LinearLayout, RelativeLayout</strong>, FrameLayout, ConstraintLayout 등등 존재</p>
+<p>레이아웃은 그 안에 다른 뷰들을 담을 수 있는데, 레이아웃도 뷰를 상속하여 정의되었기 때문에 레이아웃 안에 다른 레이아웃을 담을 수 있다. 이를 이용하여 복잡한 화면 구성을 할 수 있다.</p>
+<p><img src="/img/organization.png" alt=""></p>
+<h3 id="linearlayout">LinearLayout</h3>
+<ul>
+<li>View들의 선형 배치를 제공하는 Layout</li>
+<li>수직 방향, 수평 방향으로 배치 가능</li>
+<li>수직 배치시 다음 뷰는 가장 아래 뷰를 기준으로 밑에<br>
+수평 배치시 다음 뷰는 가장 오른쪽 뷰를 기준으로 오른쪽에 배치</li>
+<li>배치 기준이 정해져 있어서 직접 정해주지 않아도 됨</li>
+<li>특정 뷰 기준으로 배치하는 것은 불가능하다.</li>
+<li>방향성이 존재하기 때문에 뷰 위에 뷰를 쌓는 것이 불가능하다.</li>
+<li>계단식으로 배치할 때 용이하게 사용할 수 있다.</li>
+</ul>
+<p><img src="/img/linearLayout.png" alt=""></p>
+<ul>
+<li>orientation : 뷰 배치에 방향성을 부여한다.(horizontal, vertical)</li>
+<li>layout_gravity : 부모 컨테이너 안에서 뷰의 위치를 정함</li>
+<li>gravity : 뷰 안에서 내용물의 위치를 정함</li>
+<li>layout_weight : 뷰의 가중치로 비율을 통해 너비 혹은 길이를 정함</li>
+</ul>
+<h3 id="ralativelayout">RalativeLayout</h3>
+<ul>
+<li>View들의 상대적 배치를 제공하는 Layout</li>
+<li>특정 뷰를 기준으로 다른 뷰를 배치하는 특징을 가지고 있다.</li>
+<li>기준을 정해주지 않게 되면 뷰가 왼쪽 상단에 쌓이게 된다.</li>
+<li>뷰 위에 뷰를 겹칠 수 있따.</li>
+<li>원하는 배치를 하기 위해서 직접 기준을 정해주면 된다.</li>
+<li>복잡한 뷰를 작성할 때 용이하게 사용할 수 있다.</li>
+</ul>
+<p><img src="/img/RelativeLayout.png" alt=""></p>
+<p><code>Github</code> : <a href="https://github.com/WooVictory/SOPT_22th_Seminar1_HomeWork" target="_blank" rel="noopener">https://github.com/WooVictory/SOPT_22th_Seminar1_HomeWork</a></p>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2018/05/01/sopt-semniar1/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2018/04/18/devknowledge-RESTful/"
+                            aria-label=": [개발 상식] RESTful"
+                        >
+                            [개발 상식] RESTful
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2018-04-18T17:43:33+09:00">
+	
+		    Apr 18, 2018
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/개발-상식/">개발 상식</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="restful-api">RESTful API</h1>
+<hr>
+<blockquote>
+<p>월드 와이드 웹(World Wide Web a.k.a WWW)과 같은 분산 하이퍼미디어 시스템을 위한 소프트웨어 아키텍처의 한 형식으로 자원을 정의하고 자원에 대한 주소를 지정하는 방법 전반에 대한 패턴</p>
+</blockquote>
+<p><code>REST</code>란 REpresentational State Transfer의 약자이다. 여기에 ~ful이라는 형용사형 어미를 붙여 ~한 API라는 표현으로 사용된다. 즉, REST의 기본 원칙을 성실히 지킨 서비스 디자인은 <code>RESTful</code>하다라고 표현할 수 있다.</p>
+<p><code>REST</code>가 디자인 패턴이다. 아키텍처마다 많은 이야기가 존재하는데, 하나의 아키텍처로 볼 수 있다. 좀 더 정확한 표현으로 말하자면, REST는 <code>Resource Oriented Architecture</code>이다. API 설계의 중심에 자원(Resource)이 있고, HTTP Method를 통해 자원을 처리하도록 설계하는 것이다.</p>
+<h2 id="rest-구성">REST 구성</h2>
+<p>REST API는 다음의 구성으로 이루어져 있다.</p>
+<ul>
+<li>자원(Resource) - URI</li>
+<li>행위(Verb) - HTTP Method</li>
+<li>표현(Representations)</li>
+</ul>
+<h2 id="rest-6가지-원칙">REST 6가지 원칙</h2>
+<ol>
+<li>Uniform<br>
+URI로 지정한 리소스에 대한 조작을 통일되고 한정적인 인터페이스로 수행하는 아키텍처 스타일을 말한다.</li>
+<li>Stateless<br>
+무상태성 성격을 갖는다. 다시 말해 작업을 위한 상태정보를 따로 저장하고 관리하지 않는다. 세션 정보자 쿠키 정보를 별도로 저장하고 관리하지 않기 때문에 API 서버는 들어오는 요청만 단순히 처리하면 된다. 때문에 서비스의 자유도가 높아지고 서버에서 불필요한 정보를 관리하지 않음으로써 구현이 단순해집니다.</li>
+<li>Caching<br>
+REST의 가장 큰 특징 중 하나는 HTTP라는 기존 웹 표준을 그대로 사용하기 때문에, 웹에서 사용하는 기존 인프라를 그대로 활용 가능합니다. 따라서 HTTP가 가진 캐싱 기능의 적용이 가능.<br>
+HTTP 프로토콜 표준에서 사용하는 Last-Modified 태그나 E-Tag를 이용하면 캐싱 구현이 가능</li>
+<li>Client-Server<br>
+REST 서버는 API 제공, Client는 사용자 인증이나 컨텍스트(세션, 로그인 정보)등을 직접 관리하는 구조로 각각의 역할이 확실히 구분되기 때문에 Client와 Server에게 개발해야 할 내용이 명확해지고 서로간 의존성이 줄어들게 된다.</li>
+<li>Hierarchical system<br>
+REST 서버는 다중 계층으로 구성될 수 있으며 보안, 로드 밸런싱, 암호화 계층을 추가해 구조상의 유연성을 둘 수 있고 Proxy, 게이트웨이 같은 네트워크 기반의 중간매체를 사용할 수 있게 한다.</li>
+<li>Code on demand</li>
+</ol>
+<h2 id="restful-하게-api를-디자인-한다는-것은-무엇을-의마하는가">RESTful 하게 API를 디자인 한다는 것은 무엇을 의마하는가</h2>
+<ol>
+<li>리소스와 행위를 명시적이고 직관적으로 분리한다.</li>
+</ol>
+<p>리소스는 <code>URI</code>로 표현되는데 리소스가 가리키는 것은 <code>명사</code>로 표현되어야 한다.<br>
+행위는 <code>HTTP Method</code>로 표현하고, <code>GET(조회)</code>,POST(생성)<code>,PUT(기존 entity 전체 수정)</code>,PATCH(기존),DELETE(삭제)` 을 분명한 목적으로 사용한다.</p>
+<ol start="2">
+<li>Message는 Header와 Body를 명확하게 분리해서 사용한다.</li>
+</ol>
+<p>Entity에 대한 내용은 body에 담는다.<br>
+애플리케이션 서버가 행동할 판단의 근거가 되는 컨트롤 정보인 API 버전 정보, 응답받고자 하는 MIME 타입 등은 header에 담는다.<br>
+header와 body는 http header와 http body로 나눌 수도 있고, http body에 들어가는 json 구조로 분리할 수도 있다.</p>
+<ol start="3">
+<li>API 버전을 관리한다.</li>
+</ol>
+<p>환경을 항상 변하기 때문에 API의 signature가 변경될 수도 있음에 유의하자.<br>
+특정 API를 변경할 때는 반드시 하위호환성을 보장해야 한다.</p>
+<ol start="4">
+<li>서버와 클라이언트가 같은 방식을 사용해서 요청하도록 한다.</li>
+</ol>
+<p>브라우저는 form-data 형식의 submit으로 보내고 서버에서는 json 형태로 보내는 식의 분리보다는 json으로 보내든, 둘 다 form-data 형식으로 보내든 하나로 통일한다.<br>
+다른 말로 표현하자면 URI가 플랫폼 중립적이어야 한다.</p>
+<h2 id="장점">장점</h2>
+<ul>
+<li>Open API를 제공하기 쉽다.</li>
+<li>멀티플랫폼 지원 및 연동이 용이하다.</li>
+<li>원하는 타입으로 데이터를 주고 받을 수 있다.</li>
+<li>기존 웹 인프라(HTTP)를 그대로 사용할 수 있다.</li>
+</ul>
+<h2 id="단점">단점</h2>
+<ul>
+<li>사용할 수 있는 메소드가 4가지 밖에 없다.</li>
+<li>분산환경에는 부적합하다.</li>
+<li>HTTP 통신 모델에 대해서만 지원한다.</li>
+</ul>
+<h2 id="rest-api-디자인-가이드">REST API 디자인 가이드</h2>
+<ol>
+<li>URI는 정보의 자원을 표현해야 한다.</li>
+<li>자원에 대한 행위는 HTTP Method(GET,POST,PUT,DELETE)로 표현한다.</li>
+</ol>
+<h3 id="rest-api-중심-규칙">REST API 중심 규칙</h3>
+<ol>
+<li>URI는 정보의 자원을 표현해야 한다. (리소스명은 동사보다는 명사를 사용)</li>
+</ol>
+<blockquote>
+<p>GET /members/delete/1</p>
+</blockquote>
+<p>위와 같은 방식은 REST를 제대로 적용하지 않은 URI입니다. URI는 자원을 표현하는데 중점을 두어야 하므로 delete와 같은 행위에 대한 표현이 들어가서는 안된다.</p>
+<ol start="2">
+<li>자원에 대한 행위는 HTTP Method로 표현<br>
+위의 잘못 된 URI를 HTTP Method를 통해 수정하면</li>
+</ol>
+<blockquote>
+<p>DELETE /members/1</p>
+</blockquote>
+<p>으로 수정할 수 있다. 회원 정보를 가져올 때는 GET, 회원 추가 시의 행위를 표현하고자 할 때는 POST Method를 사용하여 표현하면 된다.</p>
+<ul>
+<li>HTTP Method의 역할</li>
+</ul>
+<ol>
+<li><code>POST</code> : POST를 통해 해당 URI를 요청하면 리소스를 생성</li>
+<li><code>GET</code> : GET을 통해 해당 리소스를 조회. 리소스를 조회하고 해당 도큐먼트에 대한 자세한 정보를 가져온다.</li>
+<li><code>PUT</code> : PUT을 통해 해당 리소스를 수정</li>
+<li><code>DELETE</code> : DELETE를 통해 리소스를 삭제</li>
+</ol>
+<h3 id="uri-설계-시-주의할-점">URI 설계 시 주의할 점</h3>
+<ol>
+<li>슬래시 구분자(/)는 계층 관계를 나타내는 데 사용</li>
+<li>URI 마지막 문자로 슬래시(/)를 포함하지 않는다.<br>
+<code>URI</code>에 포함되는 모든 글자는 리소스의 유일한 식별자로 사용되어야 하며 URI가 다르다는 것은 리소스가 다르다는 것이고 역으로 리소스가 다르면 URI도 달라져야 한다. REST API는 분명한 URI를 만들어 통신을 해야 하기 때문에 혼동을 주지 않도록 URI 경로의 마지막에는 슬래시(/)를 사용하지 않는다.</li>
+<li>하이픈(-)은 URI 가독성을 높이는 데 사용<br>
+URI를 쉽게 읽고 해석하기 위해, 불가피하게 긴 URI 경로를 사용하게 된다면 하이픈을 사용해 가독성을 높일 수 있다.</li>
+<li>언더바는 URI에 사용하지 않는다.<br>
+글꼴에 따라 다르긴 하지만 밑줄은 보기 어렵거나 밑줄 때문에 문자가 가려지기도 한다. 이런 문제를 피하기 위해 언더바 대신 하이픈(-)을 사용하는 것이 좋다.(가독성)</li>
+<li>URI 경로에는 소문자가 적합<br>
+URI 경로에 대문자 사용은 피하도록 한다. 대소문자에 따라 다른 리소스로 인식하게 되기 때문이다. RFC 3986(URI 문법 형식)은 URI 스키마와 호스트를 제외하고는 대소문자를 구별하도록 규정함</li>
+<li>파일 확장자는 URI에 포함시키지 않는다.<br>
+REST API에서는 메시지 바디 내용의 포맷을 나타내기 위한 파일 확장자를 URI 안에 포함시키지 않는다. Accept header를 사용하도록 한다.</li>
+</ol>
+<h3 id="리소스-간의-관계를-표현하는-방법">리소스 간의 관계를 표현하는 방법</h3>
+<p>REST 리소스 간에는 연관 관계가 있을 수 있고, 이런 경우 다음과 같이 표현</p>
+<p>/리소스명/리소스 ID/관계가 있는 다른 리소스명</p>
+<blockquote>
+<p>GET : /users/{userid}/devices (일반적으로 소유 'has’의 관계를 포현할 때)</p>
+</blockquote>
+<p>만약에 관계명이 복잡하다면 이를 서브 리소스에 명시적으로 표현하는 방법이 있다. 예를 들어 사용자가 ‘좋아하는’ 디바이스 목록을 표현해야 할 경우 다음과 같이 표현 가능</p>
+<blockquote>
+<p>GET : /users/{userid}/likes/devices (관계명이 애매하거나 구체적으로 표현이 필요할 때)</p>
+</blockquote>
+<h3 id="자원을-표현하는-collection과-document">자원을 표현하는 Collection과 Document</h3>
+<p>Collection과 Document에 대해 알면 URI 설계가 한 층 더 쉬워진다. Document는 단순히 문서로 이해해도 되고, 한 객체라고 이해하면 편하다. Collection은 문서들의 집합, 객체들의 집합이라고 생각하면 이해가 편하다. Collection과 Document는 모두 리소스라고 표현할 수 있으며 URI에 표현된다.</p>
+<blockquote>
+<p>http:// <a href="http://restapi.example.com/sports/soccer" target="_blank" rel="noopener">restapi.example.com/sports/soccer</a></p>
+</blockquote>
+<p><code>sports</code>라는 컬렉션과 <code>soccer</code>이라는 도큐먼트로 표현된다.</p>
+<blockquote>
+<p>http:// <a href="http://restapi.example.com/sports/soccer/players/13" target="_blank" rel="noopener">restapi.example.com/sports/soccer/players/13</a></p>
+</blockquote>
+<p><code>sports, players</code> 컬렉션과 <code>soccer,13</code>을 의미하는 도큐먼트로 URI가 이루어지게 된다. 여기서 중요한 점은 <strong>컬렉션은 복수</strong>로 사용한다는 점이다. 좀 더 직관적인 REST API를 위해서는 컬렉션과 도큐먼트를 사용할 때 단수, 복수도 지켜준다면 좀 더 이해하기 쉬운 URI를 설계할 수 있다.</p>
+<h3 id="http-응답-상태-코드">HTTP 응답 상태 코드</h3>
+<ul>
+<li>
+<p>200 : client의 요청을 정상적으로 수행함</p>
+</li>
+<li>
+<p>201 : client가 어떠한 리소스 생성을 요청, 해당 리소스가 성공적으로 생성됨(POST를 통한 리소스 생성 작업 시)</p>
+</li>
+<li>
+<p>400 : client의 요청이 부적절 할 경우 사용하는 응답 코드</p>
+</li>
+<li>
+<p>401 : client가 인증되지 않은 상태에서 보호된 리소스를 요청했을 때 사용하는 응답 코드<br>
+(로그인 하지 않은 유저가 로그인 했을 때, 요청 가능한 리소스를 요청했을 때)</p>
+</li>
+<li>
+<p>403 : 유저 인증상태와 관계 없이 응답하고 싶지 않은 리소스를 client가 요청했을 때 사용하는 응답 코드<br>
+(403 보다는 400이나 404를 사용할 것을 권고. 403 자체가 리소스가 존재한다는 뜻이기 때문에)</p>
+</li>
+<li>
+<p>405 : client가 요청한 리소스에서는 사용 불가능한 Method를 이용했을 경우 사용하는 응답 코드</p>
+</li>
+<li>
+<p>301 : client가 요청한 리소스에 대한 URI가 변경 되었을 때 사용하는 응답 코드<br>
+(응답 시 Location header에 변경된 URI를 적어줘야 한다.)</p>
+</li>
+<li>
+<p>500 : 서버에 문제가 있을 경우 사용하는 응답 코드</p>
+</li>
+</ul>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2018/04/18/devknowledge-RESTful/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2018/04/13/BOJ1759/"
+                            aria-label=": [1759] 암호 만들기"
+                        >
+                            [1759] 암호 만들기
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2018-04-13T19:02:33+09:00">
+	
+		    Apr 13, 2018
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/algorithm/">algorithm</a>, <a class="category-link" href="/categories/algorithm/BOJ/">BOJ</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <p>문제 : <a href="https://www.acmicpc.net/problem/1759" target="_blank" rel="noopener">https://www.acmicpc.net/problem/1759</a></p>
+<p><code>Explain</code></p>
+<p>암호는 서로 다른 L개의 알파벳 소문자들로 구성되며, <strong>최소 한 개의 모음과 최소 두 개의 자음</strong>으로 구성되어 있다.<br>
+암호를 이루는 알파벳은 <strong>오름차순 정렬</strong><br>
+암호로 사용할 수 있는 문자의 종류는 C가지</p>
+<p><code>Key Point</code></p>
+<p>알파벳을 입력받은 다음</p>
+<ol>
+<li>오름차순 정렬을 먼저 한다.</li>
+<li>각각의 문자를 사용할지 말지 결정한다.</li>
+</ol>
+<blockquote>
+<p><strong>go(L, alphabet, password, index)</strong></p>
+</blockquote>
+<ul>
+<li>L : 만들어야 하는 암호의 길이</li>
+<li>alphabet : 사용할 수 있는 알파벳 배열</li>
+<li>password : 현재까지 만든 암호</li>
+<li>index : 사용할 지 말 지 결정해야 하는 알파벳의 index</li>
+</ul>
+<blockquote>
+<p><code>예외</code></p>
+</blockquote>
+<ol>
+<li>불가능한 경우 : 더 이상 사용할 알파벳 배열이 없을 경우</li>
+<li>정답을 찾은 경우 : 지금까지 만든 암호의 길이가 만들어야 하는 암호의 길이와 같을 경우</li>
+<li>다음 경우</li>
+</ol>
+<ul>
+<li>i번째 알파벳을 사용하는 경우 = <code>go(L, alphabet, password+alphabet[index], index+1)</code></li>
+<li>i번째 알파벳을 사용하지 않는 경우 = <code>go(L, alphabet, password, index+1)</code></li>
+</ul>
+<p><code>Code</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line">public class Exam1759 &#123;</span><br><span class="line">	// 자음과 모음의 개수를 check하는 배열</span><br><span class="line">	public static boolean check(String password) &#123;</span><br><span class="line">		int ja = 0; // 자음</span><br><span class="line">		int mo = 0; // 모음</span><br><span class="line">		</span><br><span class="line">		for(char word : password.toCharArray()) &#123;</span><br><span class="line">			// 문자열의 문자 각각이 자음인지 모음인지 확인하기 위한 과정</span><br><span class="line">			if(word == &apos;a&apos; || word == &apos;e&apos; || word == &apos;i&apos; || word == &apos;o&apos; || word == &apos;u&apos;) &#123; </span><br><span class="line">				mo++;</span><br><span class="line">			&#125;else &#123;</span><br><span class="line">				ja++;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		return ja&gt;=2 &amp;&amp; mo&gt;=1;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	// 재귀 함수</span><br><span class="line">	public static void go(int L, String[] alphabet, String password, int index) &#123;</span><br><span class="line"></span><br><span class="line">		// 정답을 찾은 경우</span><br><span class="line">		</span><br><span class="line">		if(L == password.length()) &#123;</span><br><span class="line">			if(check(password)) &#123;</span><br><span class="line">				System.out.println(password);</span><br><span class="line">			&#125;</span><br><span class="line">			return;</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		// 더 이상 사용할 알파벳이 없을 경우 [다 탐색을 진행한 경우]</span><br><span class="line">		</span><br><span class="line">		if(index &gt;= alphabet.length) &#123;</span><br><span class="line">			return;</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		go(L, alphabet, password+alphabet[index], index+1); // 다음의 알파벳을 사용하는 경우 [ 현재까지 만든 암호에 다음 알파벳을 이어 붙여준다.] 그리고 index 증가</span><br><span class="line">		go(L, alphabet, password, index+1); // 다음의 알파벳을 사용하지 않는 경우 [다음 알파벳을 사용하지 않으므로 현재까지 만든 암호만 넘겨준다.] 그리고 수행을 했으므로 index 증가</span><br><span class="line">		// ( 다음 알파벳은 사용하지 않았지만, 다 다음 알파벳에 대해서 진행해야 하기 때문에 index를 증가시키는 것이다. )</span><br><span class="line">		</span><br><span class="line">	&#125;</span><br><span class="line">	public static void main(String[] args) throws IOException &#123;</span><br><span class="line">		BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));</span><br><span class="line">		StringTokenizer st1 = new StringTokenizer(bf.readLine(), &quot; &quot;);</span><br><span class="line">		int L = Integer.parseInt(st1.nextToken()); // 만들어야 하는 암호의 길이 : 4</span><br><span class="line">		int C = Integer.parseInt(st1.nextToken()); // 암호로 사용할 수 있는 문자의 종류 : 6가지</span><br><span class="line">		</span><br><span class="line">		String[] alphabet = new String[C];</span><br><span class="line">		StringTokenizer st2 = new StringTokenizer(bf.readLine(), &quot; &quot;);</span><br><span class="line">		for(int i=0;i&lt;C;i++) &#123;</span><br><span class="line">			alphabet[i] = st2.nextToken();</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		Arrays.sort(alphabet); // 오름차순으로 정렬</span><br><span class="line">		</span><br><span class="line">		go(L, alphabet, &quot;&quot;, 0);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2018/04/13/BOJ1759/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
     <div class="pagination-bar">
     <ul class="pagination">
         
@@ -1563,7 +1594,7 @@ graph의 각 vertex에 <strong>set-id</strong>라는 것을 추가적으로 부�
             </a>
           </li>
         
-        <li class="pagination-number">page 23 of 26</li>
+        <li class="pagination-number">page 23 of 25</li>
     </ul>
 </div>
 

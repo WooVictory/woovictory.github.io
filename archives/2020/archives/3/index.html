@@ -586,7 +586,7 @@
     </article>
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -618,110 +618,17 @@
 
             </div>
             
-                <div class="postShorten-content">
+                <div class="postShorten-excerpt">
                     <p>구현 과정에서 람다를 사용하므로 Java 8을 베이스로 진행한다.</p>
-<h3 id="자바에서-trie-구현하기">자바에서 Trie 구현하기</h3>
-<h4 id="클래스-생성">클래스 생성</h4>
-<p>자바로 Trie 자료구조를 구현하기 위해서는 자료구조인 Trie와 이를 구성할 TrieNode 클래스가 각각 필요하다.<br>
-먼저, TrieNode 클래스부터 보도록 하자.</p>
-<p><strong>TrieNode.java</strong></p>
-<ul>
-<li>TrieNode는 <code>자식 노드맵</code>과 <code>현재 노드가 마지막 글자인지 여부</code>에 대한 정보를 가지고 있다.</li>
-<li>여기에서 마지막 글자 여부란 'DEV’라는 단어에서 [D], [E]는 마지막 글자가 아니지만 [V]는 마지막 글자로, 한 단어가 완성되는 시점임을 알 수 있도록 하는 boolean 값이다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.HashMap;</span><br><span class="line"><span class="keyword">import</span> java.util.Map;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * created by victory_woo on 2020/04/22</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TrieNode</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 자식 노드맵.</span></span><br><span class="line">    <span class="keyword">private</span> Map&lt;Character, TrieNode&gt; childeNodes = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">    <span class="comment">// 마지막 글자인지 여부.</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">boolean</span> isLastChar;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>이렇게 두 변수가 할당되었으면 이 변수에 접근할 수 있는 getter/setter를 구현한다. <strong>자식 노드는 Trie 차원에서 생성해서 넣을 것이기 때문에 getter만 생성</strong>해준다.</li>
-<li>마지막 글자 여부는 추후 노드 삭제하는 과정에서 변경이 필요하기 때문에 getter/setter를 둘 다 생성해준다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.HashMap;</span><br><span class="line"><span class="keyword">import</span> java.util.Map;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * created by victory_woo on 2020/04/22</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TrieNode</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 자식 노드맵.</span></span><br><span class="line">    <span class="keyword">private</span> Map&lt;Character, TrieNode&gt; childeNodes = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">    <span class="comment">// 마지막 글자인지 여부.</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">boolean</span> isLastChar;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Map&lt;Character, TrieNode&gt; <span class="title">getChildeNodes</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> childeNodes;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isLastChar</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.isLastChar;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setLastChar</span><span class="params">(<span class="keyword">boolean</span> isLastChar)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.isLastChar = isLastChar;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>Trie.java</strong></p>
-<ul>
-<li><strong>Trie</strong>는 <code>기본적으로 빈 문자열을 가지는 루트 노드만 가지고 있다.</code></li>
-<li>이후에 나올 insert() 메소드를 통해 단어를 넣음으로써 그에 맞게 자식 노드가 생성된다.</li>
-<li>우선, Trie가 생성되면 rootNode가 생성될 수 있도록 <code>생성자를 통해 rootNode를 초기화해준다.</code></li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * created by victory_woo on 2020/04/22</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Trie</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 루트 노드.</span></span><br><span class="line">    <span class="keyword">private</span> TrieNode rootNode;</span><br><span class="line"></span><br><span class="line">    Trie() &#123;</span><br><span class="line">        rootNode = <span class="keyword">new</span> TrieNode();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="메소드-구현">메소드 구현</h4>
-<ul>
-<li>이제 본격적으로 Trie 자료구조에 단어 정보를 저장(insert)하고, 해당 단어가 존재하는지 확인(contains)하고, Trie에서 특정 단어를 삭제(delete)하는 세 가지 메소드를 만들어보자.</li>
-</ul>
-<p><strong>1. insert</strong></p>
-<ul>
-<li>입력받은 단어의 각 알파벳을 계층 구조의 자식 노드로 만들어 넣는다.</li>
-<li>이떄, 이미 같은 알파벳이 존재하면 공통 접두어 부분까지는 생성하지 않는다.</li>
-<li>즉, <code>해당 계층 문자의 자식노드가 존재하지 않을 때에만 자식 노드를 생성</code>해준다.(여기서 람다식 사용)</li>
-<li>예를 들면, 이미 'DEV’가 들어있는 Trie에 'DEAR’를 넣을 때, 'DE-'는 중복이므로 ‘D-E-’ 노드 아래 'A-R’만 추가로 자식 노드를 생성해주는 것이다.</li>
-<li>그리고 마지막 글자에서는 <code>여기까지를 끝으로 하는 단어가 존재한다는 표시를 위해 setLastCahr(true)</code> 해준다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 자식 노드 추가.</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">insert</span><span class="params">(String word)</span> </span>&#123;</span><br><span class="line">    TrieNode thisNode = <span class="keyword">this</span>.rootNode;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// word 문자열의 각 단어를 확인한다.</span></span><br><span class="line">    <span class="comment">// thisNode 가 word 문자열의 각 단어를 key 로 하는 자식 노드가 존재하지 않을 때만 자식 노드를 생성해준다.</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; word.length(); i++) &#123;</span><br><span class="line">        thisNode = thisNode.getChildNodes().computeIfAbsent(word.charAt(i), c -&gt; <span class="keyword">new</span> TrieNode());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    thisNode.setLastChar(<span class="keyword">true</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>2. contains</strong></p>
-<ul>
-<li>특정 단어가 Trie에 존재하는지를 확인하기 위해서는 다음 두 가지 조건을 만족시켜야 한다.
-<ol>
-<li>루트 노드부터 <code>순서대로 알파벳이 일치하는 자식 노드들이 존재할</code> 것!</li>
-<li>해당 단어의 <code>마지막 글자에 해당하는 노드의 isLastChar가 true</code>일 것!<br>
-(해당 글자를 마지막으로 하는 단어가 있다는 뜻)</li>
-</ol>
-</li>
-<li>여기서 두 번째 조건에 유념해야 한다.</li>
-<li>예를 들어, Trie에는 'POW’와 'PIE’라는 단어만 등록되어 있는데, 'PI’라는 단어를 검색한다고 가정해보자.</li>
-<li>'PI’는 'PIE’와 'PI-'가 일치하기 때문에 1번 조건에는 부합(PI가 PIE에 포함되는 단어)하지만, insert 메소드에서 'PIE’의 '-E’에만 setIsLastChar(true) 했기 때문에 2번 조건에는 부합하지 않아 Trie에 없는 단어임을 확인할 수 있게 된다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 특정 단어가 들어있는지 확인.</span></span><br><span class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">contains</span><span class="params">(String word)</span> </span>&#123;</span><br><span class="line">    TrieNode thisNode = <span class="keyword">this</span>.rootNode;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; word.length(); i++) &#123;</span><br><span class="line">        <span class="keyword">char</span> character = word.charAt(i);</span><br><span class="line">        <span class="comment">// TrieNode 가 가지고 있는 자식 노드 중에서 해당 문자를 가진 노드를 가져온다.</span></span><br><span class="line">        TrieNode node = thisNode.getChildNodes().get(character);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// rootNode 의 자식 노드 중 해당 문자를 가진 노드가 없다면 null 이므로 false 를 반환한다.</span></span><br><span class="line">        <span class="comment">// 즉, word 라는 문자가 없음을 뜻한다.</span></span><br><span class="line">        <span class="keyword">if</span> (node == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 문자가 존재하면 문자열의 모든 단어가 trie 에 존재하는지 확인하기 위해서</span></span><br><span class="line">        <span class="comment">// thisNode 를 자식 노드로 바꾸면서 반복한다.</span></span><br><span class="line">        thisNode = node;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> thisNode.isLastChar();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>3. delete</strong></p>
-<ul>
-<li>
-<p>마지막으로 Trie에 넣었던 단어를 삭제하는 과정이다.</p>
-</li>
-<li>
-<p>contains 메소드처럼 주어진 단어를 찾아 하위 노드로 단어 길이만큼 내려간다.</p>
-</li>
-<li>
-<p>주의할 점은 노드들이 부모노드의 정보를 가지고 있지 않기 때문에, <code>하위 노드로 내려가며 삭제 대상 단어를 탐색</code>하고 <code>다시 올라오며 삭제하는 과정이 콜백(Callback) 형식으로 구현</code>되어야 한다는 점이다.</p>
-</li>
-<li>
-<p>탐색 진행방향 : 부모 노드 -&gt; 자식 노드</p>
-</li>
-<li>
-<p>삭제 진행방향 : 자식 노드 -&gt; 부모 노드</p>
-</li>
-</ul>
-<img src="/img/trie_sample3.png">
-<ul>
-<li>삭제 진행은 마지막 글자에서 부모 노드 방향으로 되돌아 오는 과정에서 진행된다는 점에 유이하여 다음 삭제 조건을 살펴보자.
-<ol>
-<li>자식 노드를 가지고 있지 않아야 한다.<br>
-위 그림에서 'PI’를 지워버리면 'PIE’까지 삭제되어 버리기 때문이다.</li>
-<li>삭제를 시작하는 첫 노드는 isLastChar == true이어야 한다.<br>
-false인 경우는 Trie에 없는 단어란 뜻이기 때문이다. 예를 들어, 위 그림에서 'PO’라는 글자를 지우라고 명령을 내려도 Trie가 가지고 있지 않은 단어라는 점이다.</li>
-<li>삭제를 진행하던 중에는 isLastChar == false이어야 한다.<br>
-삭제 과정 중에서 isLastChar가 true라는 것은 또다른 단어가 있다는 의미이므로 삭제 대상이 아니다. 'PIE’를 삭제 대상으로 했을 때, '-E’를 삭제 후 'PI’라는 단어의 'I’가 isLastChar==true이므로 또다른 단어가 있음을 알려준다.</li>
-</ol>
-</li>
-</ul>
-<p>3번이 의미하는 바는 이해가 잘 안갔지만, 이해가 되었다. 삭제 과정 중에 isLastChar가 true라는 것은 또 다른 단어가 있다는 의미이므로 삭제 대상이 아니다. 'PIE’를 삭제 대상으로 했을 때, '-E’를 삭제 후, 'PI’라는 단어의 'I’가 isLastChar == true이면 'PI’라는 단어가 있음을 뜻한다.</p>
-<p>참고로, 삭제 대상 단어의 마지막 글자가 isLastChar false이거나 해당하는 마지막 글자가 없는 경우는 new Error를 던지도록 구현했습니다.</p>
-<h2 id="참고">참고</h2>
-<ul>
-<li><a href="https://the-dev.tistory.com/3" target="_blank" rel="noopener">[자료구조] Trie(트라이)-2 : 자바로 구현하기</a></li>
-</ul>
-
                     
+                        <a
+                            href="/2020/04/22/Java-Trie-Implement/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [Java] 트라이(Trie) 자료구조 구현"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2020/04/22/Java-Trie-Implement/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             
@@ -730,7 +637,7 @@ false인 경우는 Trie에 없는 단어란 뜻이기 때문이다. 예를 들�
     </article>
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -762,55 +669,21 @@ false인 경우는 Trie에 없는 단어란 뜻이기 때문이다. 예를 들�
 
             </div>
             
-                <div class="postShorten-content">
-                    <h3 id="trie-자료구조란">Trie 자료구조란?</h3>
+                <div class="postShorten-excerpt">
+                    <h3>Trie 자료구조란?</h3>
 <ul>
 <li>일반 트리 자료구조 중 하나로, Digital Tree, Radix Tree, Prefix Tree라고도 불린다.</li>
 <li>텍스트 자동 완성 기능과 같이 문자열을 저장하고 탐색하는데 유용한 자료구조이다.</li>
 </ul>
-<h3 id="trie-자료구조의-형태는">Trie 자료구조의 형태는?</h3>
-<ul>
-<li>각 노드는 &lt;Key, Value&gt; 맵을 가지고 있다. <strong>Key</strong>는 하나의 알파벳이 되고, <strong>Value</strong>는 그 Key에 해당하는 자식 노드가 된다.</li>
-<li>다음은 DEV, DEAR, PIE, POP, POW라는 단어가 들어있는 Trie 자료구조를 도식화한 것이다. 휴대폰 전화번호부에서 검색을 하거나 사전에서 단어를 찾는 것과 같다.</li>
-<li>예를 들어, 아래 그림에서 'DEV’라는 문자열을 찾으려면 루트 노드에서부터 순차적으로 [D] -&gt; [E] -&gt; [V] 를 탐색한다.</li>
-</ul>
-<img src="/img/trie_sample.png">
-<ul>
-<li>그림에서 볼 수 있듯이 <code>루트 노드는 특정 문자를 의미하지 않고, 자식 노드만 가지고 있다.</code></li>
-<li>유의할 점은 <strong>'부모 노드’나 '자신이 어떤 알파벳(Key)에 해당하는 노드(Value)'인지를 가지고 있는게 아니라는 점입니다.</strong></li>
-</ul>
-<ul>
-<li>즉, 루트 노드는 [D], [P]라고 하는 알파벳을 Key로 하는 자식 노드들을 가지고 있고, [D]는 [E]를 Key로 하는 자식 노드, [P]는 [I]와 [O]를 Key로 하는 자식 노드들을 가지고 있는 것이다.</li>
-<li>또 루트 노드를 제외한 <code>노드의 자손들은 해당 노드와 공통 접두어를 가진다는 특징이 있다.</code> 즉, ‘DE’ 노드의 자손인 'DEAR’와 'DEV’는 'DE-'를 공통 접두어로 가지며, 'P’의 자손인 'POW’와 'PIE’는 'P-'를 공통 접두어로 가진다.</li>
-</ul>
-<img src="/img/trie_sample2.png">
-<h3 id="trie-자료구조의-특징">Trie 자료구조의 특징</h3>
-<ul>
-<li>정렬된 트리 구조이다.(데이터에 따라 이진트리일 때도 있다.)</li>
-<li>Trie는 자식 노드를 Map&lt;Key, Value&gt; 형태로 가지고 있다.</li>
-<li>루트 노드를 제외한 노드의 자손들은 해당 노드와 공통 접두어를 가진다.</li>
-<li>루트 노드는 빈 문자와 연관있다.(특정 문자가 할당되어 있지 않다.)</li>
-</ul>
-<h2 id="참고">참고</h2>
-<ul>
-<li><a href="https://the-dev.tistory.com/2" target="_blank" rel="noopener">[자료구조] Trie(트라이)-1 : 기초 개념</a></li>
-</ul>
-
                     
+                        <a
+                            href="/2020/04/22/Java-Trie/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [Java] 트라이(Trie) 자료구조 개념"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2020/04/22/Java-Trie/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             
@@ -819,7 +692,7 @@ false인 경우는 Trie에 없는 단어란 뜻이기 때문이다. 예를 들�
     </article>
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -851,97 +724,17 @@ false인 경우는 Trie에 없는 단어란 뜻이기 때문이다. 예를 들�
 
             </div>
             
-                <div class="postShorten-content">
+                <div class="postShorten-excerpt">
                     <p>배열의 복사와 관련해서는 얕은 복사와 깊은 복사의 차이점을 알아야 한다.</p>
-<h3 id="얕은-복사shallow-copy">얕은 복사(shallow copy)</h3>
-<ul>
-<li>한 쪽에서 수정이 발생되면 다른쪽에도 영향을 끼쳐 같아지게 된다.</li>
-<li>가능한 이유는 얕은 복사가 주소값을 복사하기 때문에 주소로 값을 참조하여 값이 변경되면 해당 값을 참조하고 있는 배열들의 값이 변경된다.</li>
-<li>즉, 복사된 배열이나 원본 배열이 변경될 때, 함께 변경된다. = 연산자는 얕은 복사를 수행한다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span>[] a = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">2</span>];</span><br><span class="line">a[<span class="number">0</span>] = <span class="number">2</span>;</span><br><span class="line">a[<span class="number">1</span>] = <span class="number">4</span>;</span><br><span class="line"><span class="keyword">int</span>[] b = a;</span><br><span class="line">b[<span class="number">0</span>] = <span class="number">6</span>;</span><br><span class="line">b[<span class="number">1</span>] = <span class="number">8</span>;</span><br><span class="line"></span><br><span class="line">System.out.println(a[<span class="number">0</span>]+<span class="string">", "</span>+a[<span class="number">1</span>]);</span><br><span class="line">System.out.println(b[<span class="number">0</span>]+<span class="string">", "</span>+b[<span class="number">1</span>]);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 결과</span></span><br><span class="line"><span class="number">6</span>, <span class="number">8</span></span><br><span class="line"><span class="number">6</span>, <span class="number">8</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li>위의 코드처럼 1차원 배열을 = 연산자를 사용해 얕은 복사를 진행하게 되면 복사된 배열의 값이 변경될 때, 원본 배열의 값도 변경된다.</li>
-<li>2차원 배열도 마찬가지이다. 다음 코드를 보자.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span>[][] a = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">2</span>][<span class="number">2</span>];</span><br><span class="line"><span class="keyword">int</span>[][] copy = a;</span><br><span class="line"></span><br><span class="line">copy[<span class="number">0</span>][<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span>[] aa : a) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> v : aa) System.out.print(v + <span class="string">" "</span>);</span><br><span class="line">    System.out.println();</span><br><span class="line">&#125;</span><br><span class="line">System.out.println();</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span>[] aa : copy) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> v : aa) System.out.print(v + <span class="string">" "</span>);</span><br><span class="line">    System.out.println();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 결과</span></span><br><span class="line"><span class="number">1</span> <span class="number">0</span></span><br><span class="line"><span class="number">0</span> <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="number">1</span> <span class="number">0</span></span><br><span class="line"><span class="number">0</span> <span class="number">0</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li>= 연산자를 이용해 2차원 배열에서 얕은 복사가 이뤄졌다. 그렇다면 이러한 문제를 어떻게 해결할 수 있을까? 깊은 복사를 사용하자!</li>
-</ul>
-<h3 id="깊은-복사deep-copy">깊은 복사(Deep copy)</h3>
-<ul>
-<li>깊은 복사는 주소값을 참조하는 것이 아닌, 새로운 메모리 공간에 값을 복사하는 것이기 때문에 원본 배열이 변경되어도 복사된 배열에 전혀 상관이 없다.</li>
-<li>따라서 <strong>배열을 복사한 후에 한쪽 값을 수정해도 다른 배열에 영향을 끼치지 않는다.</strong></li>
-</ul>
-<p><code>1) 1차원 배열의 깊은 복사</code></p>
-<ul>
-<li>1차원 배열의 깊은 복사는 배열.clone() 함수를 이용하면 간단하게 할 수 있다.(일반 자료형의 경우)</li>
-<li>혹은 간단하게 for문을 돌며 넣어줘도 된다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span>[] arr = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">10</span>];</span><br><span class="line">    <span class="keyword">int</span>[] copy = deepCopyWithClone(arr);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; arr.length; i++) arr[i] = i;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> a : arr) System.out.print(a + <span class="string">" "</span>);</span><br><span class="line"></span><br><span class="line">    System.out.println();</span><br><span class="line">    copy[<span class="number">0</span>] = <span class="number">100</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> a : copy) System.out.print(a + <span class="string">" "</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span>[] deepCopyWithClone(<span class="keyword">int</span>[] original) &#123;</span><br><span class="line">    <span class="keyword">if</span> (original == <span class="keyword">null</span>) <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">int</span>[] result = <span class="keyword">new</span> <span class="keyword">int</span>[original.length];</span><br><span class="line"></span><br><span class="line">    result = original.clone();</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 결과</span></span><br><span class="line"><span class="number">0</span> <span class="number">1</span> <span class="number">2</span> <span class="number">3</span> <span class="number">4</span> <span class="number">5</span> <span class="number">6</span> <span class="number">7</span> <span class="number">8</span> <span class="number">9</span> -&gt; arr</span><br><span class="line"><span class="number">100</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> -&gt; copy</span><br></pre></td></tr></table></figure>
-<p><strong>주의</strong><br>
-<img src="/img/arr_address.png"></p>
-<ul>
-<li>객체 배열의 경우, <code>.clone()</code>을 사용하면 깊은 복사가 안된다. 이유는 객체는 주소값을 가지고 있기 때문이다. 마찬가지로 2차원 배열의 경우도 각각 row에 대한 주소값을 가지고 있기 때문에 deepCopy가 안된다.</li>
-</ul>
-<p><code>2) 1차원 객체 배열의 경우, 깊은 복사</code></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">ObjectArray</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Position[] pos = <span class="keyword">new</span> Position[<span class="number">10</span>];</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; pos.length; i++) pos[i] = <span class="keyword">new</span> Position(i, i);</span><br><span class="line"></span><br><span class="line">    Position[] copy = deepCopy(pos);</span><br><span class="line">    copy[<span class="number">0</span>].a = <span class="number">100</span>;</span><br><span class="line">    copy[<span class="number">0</span>].b = <span class="number">200</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; pos.length; i++) &#123;</span><br><span class="line">        System.out.print(<span class="string">"("</span> + pos[i].a + <span class="string">", "</span> + pos[i].b + <span class="string">")"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    System.out.println();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; copy.length; i++) &#123;</span><br><span class="line">        System.out.print(<span class="string">"("</span> + copy[i].a + <span class="string">", "</span> + copy[i].b + <span class="string">")"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> Position[] deepCopy(Position[] original) &#123;</span><br><span class="line">    <span class="keyword">if</span> (original == <span class="keyword">null</span>) <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    Position[] result = <span class="keyword">new</span> Position[original.length];</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; result.length; i++) result[i] = <span class="keyword">new</span> Position(original[i].a, original[i].b);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 결과</span></span><br><span class="line">(<span class="number">0</span>, <span class="number">0</span>)(<span class="number">1</span>, <span class="number">1</span>)(<span class="number">2</span>, <span class="number">2</span>)(<span class="number">3</span>, <span class="number">3</span>)(<span class="number">4</span>, <span class="number">4</span>)(<span class="number">5</span>, <span class="number">5</span>)(<span class="number">6</span>, <span class="number">6</span>)(<span class="number">7</span>, <span class="number">7</span>)(<span class="number">8</span>, <span class="number">8</span>)(<span class="number">9</span>, <span class="number">9</span>)</span><br><span class="line">(<span class="number">100</span>, <span class="number">200</span>)(<span class="number">1</span>, <span class="number">1</span>)(<span class="number">2</span>, <span class="number">2</span>)(<span class="number">3</span>, <span class="number">3</span>)(<span class="number">4</span>, <span class="number">4</span>)(<span class="number">5</span>, <span class="number">5</span>)(<span class="number">6</span>, <span class="number">6</span>)(<span class="number">7</span>, <span class="number">7</span>)(<span class="number">8</span>, <span class="number">8</span>)(<span class="number">9</span>, <span class="number">9</span>)</span><br></pre></td></tr></table></figure>
-<ul>
-<li>이처럼 1차원 객체 배열을 복사하기 위해서는 for문을 돌며 넣어주는데 이때마다 새로운 객체를 new로 생성하며 직접 값을 넣어주어야 한다. 그래야 다른 새로운 객체를 담은 배열로 복사된 배열을 가질 수 있다.</li>
-</ul>
-<p><code>3) 2차원 배열의 깊은 복사</code></p>
-<ol>
-<li><strong>이중 for문을 순회하는 방법</strong></li>
-</ol>
-<ul>
-<li>기본 자료형인 경우, 간단하게 사용할 수 있다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">TwoArrayDeepCopy</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span>[][] arr = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">5</span>][<span class="number">5</span>];</span><br><span class="line">    <span class="keyword">int</span>[][] copy = deepCopyTwoArray(arr);</span><br><span class="line"></span><br><span class="line">    arr[<span class="number">0</span>][<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line">    copy[<span class="number">0</span>][<span class="number">1</span>] = <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; arr.length; i++) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; arr.length; j++) &#123;</span><br><span class="line">            System.out.print(arr[i][j] + <span class="string">" "</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    System.out.println();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; copy.length; i++) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; copy.length; j++) &#123;</span><br><span class="line">            System.out.print(copy[i][j] + <span class="string">" "</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    System.out.println();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span>[][] deepCopyTwoArray(<span class="keyword">int</span>[][] original) &#123;</span><br><span class="line">    <span class="keyword">if</span> (original == <span class="keyword">null</span>) <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">int</span>[][] result = <span class="keyword">new</span> <span class="keyword">int</span>[original.length][original.length];</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; result.length; i++) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; result.length; j++) &#123;</span><br><span class="line">            result[i][j] = original[i][j];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 결과</span></span><br><span class="line"><span class="comment">// arr</span></span><br><span class="line"><span class="number">1</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> </span><br><span class="line"><span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> </span><br><span class="line"><span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> </span><br><span class="line"><span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> </span><br><span class="line"><span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> </span><br><span class="line"></span><br><span class="line"><span class="comment">// copy</span></span><br><span class="line"><span class="number">0</span> <span class="number">2</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> </span><br><span class="line"><span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> </span><br><span class="line"><span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> </span><br><span class="line"><span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> </span><br><span class="line"><span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li>이처럼 값을 직접 넣어줘도 deepCopy가 잘된다. 배열을 복사한 이후, 복사한 배열의 값을 변경해도 원래 배열에 영향을 끼치지 않는 깊은 복사가 잘 이루어졌다.</li>
-</ul>
-<ol start="2">
-<li><strong>System.arraycopy를 이용하는 방법</strong></li>
-</ol>
-<ul>
-<li>기본 자료형인 경우, 아래 코드처럼 System.arraycopy 메소드를 이용해 2차원 배열을 복사할 수 있다.</li>
-<li>1차원 배열을 2차원 배열의 row 길이만큼 복사한다고 생각하면 된다.</li>
-<li>1번에서 사용한 배열과 같은 배열을 사용했다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span>[][] deepCopyUseSystemArrayCopy(<span class="keyword">int</span>[][] original) &#123;</span><br><span class="line">    <span class="keyword">if</span> (original == <span class="keyword">null</span>) <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">int</span>[][] result = <span class="keyword">new</span> <span class="keyword">int</span>[original.length][original.length];</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; result.length; i++) &#123;</span><br><span class="line">        System.arraycopy(original[<span class="number">0</span>], <span class="number">0</span>, result[<span class="number">0</span>], <span class="number">0</span>, original[<span class="number">0</span>].length);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 결과</span></span><br><span class="line"><span class="number">1</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> </span><br><span class="line"><span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> </span><br><span class="line"><span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> </span><br><span class="line"><span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> </span><br><span class="line"><span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> </span><br><span class="line"></span><br><span class="line"><span class="number">0</span> <span class="number">2</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> </span><br><span class="line"><span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> </span><br><span class="line"><span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> </span><br><span class="line"><span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> </span><br><span class="line"><span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li>1번과 동일한 결과를 보이며, deepCopy가 이루어졌음을 확인할 수 있다.</li>
-</ul>
-<p><code>4) 2차원 객체 배열의 복사</code></p>
-<ul>
-<li>2차원 객체 배열의 복사를 할 경우, arraycopy나 clone을 이용해서 복사할 수 없다.</li>
-<li>그래서 for문을 돌면서 값을 직접 복사하며, 객체를 새로 생성해야 한다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    Position[][] positions = <span class="keyword">new</span> Position[<span class="number">3</span>][<span class="number">3</span>];</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; positions.length; i++) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; positions[i].length; j++) &#123;</span><br><span class="line">            positions[i][j] = <span class="keyword">new</span> Position(i, j);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    Position[][] copy = deepCopy(positions);</span><br><span class="line">    copy[<span class="number">0</span>][<span class="number">0</span>].a = <span class="number">100</span>;</span><br><span class="line">    copy[<span class="number">0</span>][<span class="number">1</span>].b = <span class="number">200</span>;</span><br><span class="line">    positions[<span class="number">0</span>][<span class="number">0</span>].a = <span class="number">2</span>;</span><br><span class="line">    positions[<span class="number">0</span>][<span class="number">0</span>].b = <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line">    print(positions);</span><br><span class="line">    print(copy);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">(Position[][] arr)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; arr.length; i++) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; arr[<span class="number">0</span>].length; j++) &#123;</span><br><span class="line">            Position pos = arr[i][j];</span><br><span class="line">            System.out.print(<span class="string">"("</span> + pos.a + <span class="string">", "</span> + pos.b + <span class="string">") "</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println();</span><br><span class="line">    &#125;</span><br><span class="line">    System.out.println();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// for문을 돌면서 값을 직접 복사하며 객체를 새로 생성한다.</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> Position[][] deepCopy(Position[][] original) &#123;</span><br><span class="line">    <span class="keyword">if</span> (original == <span class="keyword">null</span>) <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    Position[][] result = <span class="keyword">new</span> Position[original.length][original.length];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; result.length; i++) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; result[i].length; j++) &#123;</span><br><span class="line">            result[i][j] = <span class="keyword">new</span> Position(original[i][j]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Position</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> a;</span><br><span class="line">    <span class="keyword">int</span> b;</span><br><span class="line"></span><br><span class="line">    Position(<span class="keyword">int</span> a, <span class="keyword">int</span> b) &#123;</span><br><span class="line">        <span class="keyword">this</span>.a = a;</span><br><span class="line">        <span class="keyword">this</span>.b = b;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 복사를 위한 생성자.</span></span><br><span class="line">    Position(Position position) &#123;</span><br><span class="line">        <span class="keyword">this</span>.a = position.a;</span><br><span class="line">        <span class="keyword">this</span>.b = position.b;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>복사된 배열의 값을 변경해도 원본 배열에 영향을 끼치지 않으며, 그 반대도 성립한다. 따라서 deepCopy가 잘 이루어진 것을 확인할 수 있다.</li>
-</ul>
-<h2 id="참고">참고</h2>
-<ul>
-<li><a href="https://hoho325.tistory.com/89" target="_blank" rel="noopener">자바(java) 배열의 깊은 복사(deep copy)와 얕은 복사 완벽정리(1차원 배열, 2차원 배열, 객체 배열 복사)</a></li>
-<li><a href="https://limkydev.tistory.com/177" target="_blank" rel="noopener">[JAVA] JAVA 1차원 배열, 2차원 배열 깊은복사</a></li>
-</ul>
-
                     
+                        <a
+                            href="/2020/04/22/Java-Array-Copy/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [Java] 얕은 복사와 깊은 복사"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2020/04/22/Java-Array-Copy/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             
@@ -950,7 +743,7 @@ false인 경우는 Trie에 없는 단어란 뜻이기 때문이다. 예를 들�
     </article>
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -959,9 +752,9 @@ false인 경우는 Trie에 없는 단어란 뜻이기 때문이다. 예를 들�
                         <a
                             class="link-unstyled"
                             href="/2020/04/21/Java-String-Method/"
-                            aria-label=": [Java] 문자열 관련 함수."
+                            aria-label=": [Java] 문자열 관련 함수"
                         >
-                            [Java] 문자열 관련 함수.
+                            [Java] 문자열 관련 함수
                         </a>
                     
                 </h1>
@@ -982,164 +775,17 @@ false인 경우는 Trie에 없는 단어란 뜻이기 때문이다. 예를 들�
 
             </div>
             
-                <div class="postShorten-content">
+                <div class="postShorten-excerpt">
                     <p>최근에 프로그래머스에서 제공하는 <strong>2020 카카오 블라인드 채용 코딩 테스트</strong> 문제를 풀었다. 그 중에서도 문자열 압축이라는 문제를 풀었는데, 그렇게 어렵지 않았다. 하지만, 문자열을 처리하는 부분에 대해서 취약하다는 걸 깨달을 수 있는 문제였다. 어렵지 않지만, 문자열 처리에 관해 얼마나 아는지 물어보는 문제였다.</p>
-<p>그래서 푸는데 시간이 좀 걸리긴 했지만, 이 문제를 통해서 문자열 관련 함수를 한 번 정리하는 계기가 된 것 같다.</p>
-<h2 id="문자열-함수">문자열 함수</h2>
-<h3 id="startswith">startsWith</h3>
-<ul>
-<li><strong>대상 문자열이 특정 문자</strong> 또는 <strong>문자열</strong>로 <code>시작하는지 체크하는 함수</code>이다.</li>
-<li>해당 문자열로 시작되는지 여부를 확인하고 boolean에 맞춰 <strong>true/false</strong> 값을 반환한다.</li>
-<li>대소문자를 구별한다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">String s = <span class="string">"I have a book"</span></span><br><span class="line">s.startsWith(<span class="string">"I"</span>) <span class="comment">// 1. true</span></span><br><span class="line">s.startWith(<span class="string">"book"</span>) <span class="comment">// 2. false</span></span><br></pre></td></tr></table></figure>
-<h3 id="endswith">endsWith</h3>
-<ul>
-<li><strong>대상 문자열이 특정 문자</strong> 또는 <strong>문자열</strong>로 <code>끝나는지 체크하는 함수</code>이다.</li>
-<li>해당 문자열로 끝나는지 여부를 확인하고 boolean에 맞춰 <strong>true/false</strong> 값을 반환한다.</li>
-<li>대소문자를 구별한다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">String s = <span class="string">"I have a book"</span>;</span><br><span class="line">System.out.println(s.endsWith(<span class="string">"book"</span>)); <span class="comment">// true</span></span><br><span class="line">System.out.println(s.endsWith(<span class="string">"a"</span>)); <span class="comment">// false</span></span><br></pre></td></tr></table></figure>
-<h3 id="equals">equals</h3>
-<ul>
-<li>두 개의 String 문자열 값만을 비교하는 함수이다.</li>
-<li>두 문자열의 값이 같으면 true, 다르면 false를 반환한다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">String str1 = <span class="string">"Java"</span>;</span><br><span class="line">String str2 = <span class="string">"Java"</span>;</span><br><span class="line">System.out.println(str1.equals(str2)); <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
-<h3 id="indexof">indexOf</h3>
-<ul>
-<li>지정한 문자가 대상 문자열의 몇번째에 위치한 인덱스인지 확인한다.</li>
-<li>반환값은 지정한 문자가 위치한 인덱스를 반환한다.</li>
-<li><strong>다만, 문자열에 지정한 문자가 여러 개 존재하는 경우, 제일 앞쪽에 나타나는 인덱스를 반환한다.</strong></li>
-<li><strong>지정한 문자가 문자열에 존재하지 않는 경우, -1을 반환한다.</strong></li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">String a = <span class="string">"I have a book"</span>;</span><br><span class="line">System.out.println(a.indexOf(<span class="string">'z'</span>)); <span class="comment">// -1</span></span><br><span class="line">System.out.println(a.indexOf(<span class="string">'a'</span>)); <span class="comment">// 3</span></span><br></pre></td></tr></table></figure>
-<h3 id="lastindexof">lastIndexOf</h3>
-<ul>
-<li>지정한 문자가 대상 문자열의 마지막 몇번째에 위치한 인덱스인지 확인한다.</li>
-<li>indexOf() 함수가 앞에서부터 확인했다면, lastIndexOf() 함수는 뒤에서부터 확인하고, 찾으면 찾은 인덱스를 반환한다.</li>
-<li><strong>지정한 문자가 문자열에 존재하지 않는 경우, -1을 반환한다.</strong></li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">String a = <span class="string">"I have a book"</span>;</span><br><span class="line">System.out.println(a.lastIndexOf(<span class="string">'z'</span>)); <span class="comment">// -1</span></span><br><span class="line">System.out.println(a.lastIndexOf(<span class="string">'a'</span>)); <span class="comment">// 7</span></span><br></pre></td></tr></table></figure>
-<h3 id="replace">replace</h3>
-<ul>
-<li>문자열에 지정한 문자가 있으면 새로 지정한 문자로 바꿔준다.</li>
-<li>replace()는 지정한 문자를 새로 지정한 문자로 바꾼 새로운 문자열을 반환한다. 따라서 <strong>기존의 문자열을 변경되지 않는다.</strong></li>
-<li>지정한 문자가 대상 문자열에 존재하지 않으면, replace() 함수는 수행되지 않는다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">String a = <span class="string">"I have a book"</span>;</span><br><span class="line">System.out.println(a.replace(<span class="string">'I'</span>, <span class="string">'Y'</span>)); <span class="comment">// Y have a book</span></span><br><span class="line">System.out.println(a); <span class="comment">// I have a book</span></span><br><span class="line">System.out.println(a.replace(<span class="string">'z'</span>, <span class="string">'Y'</span>)); <span class="comment">// I have a book</span></span><br></pre></td></tr></table></figure>
-<h3 id="replaceall">replaceAll</h3>
-<h3 id="split">split</h3>
-<ul>
-<li>지정한 문자로 대상 문자열을 나누어 배열을 반환한다.</li>
-<li>문자열을 문자열 배열로 만들기 위해서는 지정 문자를 &quot;&quot;로 하면 된다.</li>
-<li>공백이 있는 경우, 공백도 문자열 배열에 들어간다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">String str = <span class="string">"A:B:C:D:abcd"</span>;</span><br><span class="line">String[] split = str.split(<span class="string">":"</span>);</span><br><span class="line"><span class="keyword">for</span> (String s:split) System.out.print(s);</span><br><span class="line">System.out.println();</span><br><span class="line">System.out.println(split[<span class="number">4</span>]);</span><br><span class="line"><span class="comment">// ABCDabcd</span></span><br><span class="line"><span class="comment">// abcd</span></span><br><span class="line"></span><br><span class="line">String a = <span class="string">"ABCDEF G"</span>;</span><br><span class="line">String[] b = a.split(<span class="string">""</span>);</span><br><span class="line"><span class="keyword">for</span> (String s:b) System.out.print(s);</span><br><span class="line"><span class="comment">// ABCDEF G</span></span><br></pre></td></tr></table></figure>
-<h3 id="substring">substring</h3>
-<ul>
-<li>문자열에 지정한 범위에 속하는 문자열을 반환한다.</li>
-<li>시작범위의 값은 포함하고, 끝나는 범위의 값은 포함하지 않는다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">String a = <span class="string">"ABCDEFG"</span>;</span><br><span class="line">System.out.println(a.substring(<span class="number">0</span>,<span class="number">2</span>)); <span class="comment">// AB</span></span><br><span class="line">System.out.println(a); <span class="comment">// ABCDEFG</span></span><br></pre></td></tr></table></figure>
-<h3 id="tolowercase">toLowerCase</h3>
-<ul>
-<li>문자열에 존재하는 대문자를 소문자로 바꾼 새로운 문자열을 반환한다.</li>
-<li>기존에 소문자였던 문자열은 그대로 유지한다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">String a = <span class="string">"abcDEFG"</span>;</span><br><span class="line">System.out.println(a.toLowerCase()); <span class="comment">// abcdefg</span></span><br><span class="line">System.out.println(a); <span class="comment">// abcDEFG</span></span><br></pre></td></tr></table></figure>
-<h3 id="touppercase">toUpperCase</h3>
-<ul>
-<li>문자열에 존재하는 소문자를 대문자로 바꾼 새로운 문자열을 반환한다.</li>
-<li>마찬가지로, 기존에 대문자였던 문자열은 그대로 유지한다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">String a = <span class="string">"abcDEFG"</span>;</span><br><span class="line">System.out.println(a.toUpperCase()); <span class="comment">// ABCDEFG</span></span><br><span class="line">System.out.println(a); <span class="comment">// abcDEFG</span></span><br></pre></td></tr></table></figure>
-<h3 id="trim">trim</h3>
-<ul>
-<li>문자열에 존재하는 공백을 제거할 때, 사용한다.</li>
-<li><strong>문자열의 앞, 뒤 쪽에 있는 공백만 제거할 수 있으며 가운데 존재하는 공백은 제거할 수 없고, replace() 함수를 사용해야 한다.</strong></li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">String a = <span class="string">"   a  aaa  a   "</span>;</span><br><span class="line">System.out.println(a.trim()); <span class="comment">// a  aaa  a</span></span><br><span class="line">System.out.println(a); <span class="comment">//    a  aaa  a</span></span><br></pre></td></tr></table></figure>
-<h3 id="contains">contains</h3>
-<ul>
-<li>두 개의 String 값을 비교하여 비교 대상 String 문자열을 포함하고 있는지 여부를 확인한다.</li>
-<li>비교 대상 문자열을 포함하고 있으면 true, 그렇지 않으면 false를 반환한다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">String a = <span class="string">"I have a book"</span>;</span><br><span class="line">System.out.println(a.contains(<span class="string">"have"</span>)); <span class="comment">// true</span></span><br><span class="line">System.out.println(a.contains(<span class="string">"z"</span>)); <span class="comment">// false</span></span><br></pre></td></tr></table></figure>
-<h3 id="tostring">toString</h3>
-<ul>
-<li>문자열을 반환한다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">String a = <span class="string">"a"</span>;</span><br><span class="line">System.out.println(a.toString()); <span class="comment">// a</span></span><br></pre></td></tr></table></figure>
-<h3 id="valueof">valueOf</h3>
-<ul>
-<li>지정한 개체의 원시 값을 반환한다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> i = <span class="number">123456789</span>;</span><br><span class="line"><span class="keyword">long</span> l = <span class="number">1l</span>;</span><br><span class="line"><span class="keyword">char</span> c = <span class="string">'1'</span>;</span><br><span class="line">System.out.println(String.valueOf(i)); <span class="comment">// 123456789</span></span><br><span class="line">System.out.println(String.valueOf(l)); <span class="comment">// 1</span></span><br><span class="line">System.out.println(String.valueOf(c)); <span class="comment">// 1</span></span><br></pre></td></tr></table></figure>
-<h3 id="tostring-vs-valueof">toString() vs valueOf()</h3>
-<ul>
-<li>toString()과의 차이점이 존재한다. 먼저, toString(), valueOf() 메소드는 모두 Object의 값을 String으로 변환하지만, 변경하고자 하는 Object가 null인 경우 다르다.</li>
-<li>toString() : Null Pointer Exception(NPE) 발생.</li>
-<li>valueOf() : &quot;null&quot;이라는 문자열로 처리한다.
-<ul>
-<li>valueOf() 함수의 원형은 다음과 같다. obj가 null인 경우, “null” 문자열을 반환한다.</li>
-</ul>
-</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">valueOf</span><span class="params">(Object obj)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> (obj == <span class="keyword">null</span>) ? <span class="string">"null"</span> : obj.toString();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>두 메소드의 차이는 null 값에 따른 <code>NPE</code>의 발생 유무이다. null로 인해 발생된 에러는 시간이 지나고, 타인의 소스인 경우 디버깅하기 어렵다. 또한, 어떤 의미를 내포하고 있는지 판단하기 어렵다. <strong>때문에 NPE를 방지하기 위해 toString보다는 valueOf를 사용하는 것을 추천한다.</strong></li>
-</ul>
-<h3 id="charat">charAt</h3>
-<ul>
-<li>지정한 index번째 문자를 반환한다.</li>
-<li>문자열의 길이보다 큰 인덱스를 지정하면 <code>StringIndexOutOfBoundsException</code>라는 예외가 발생한다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">String a = <span class="string">"I have a book"</span>;</span><br><span class="line">System.out.println(a.charAt(<span class="number">0</span>)); <span class="comment">// I</span></span><br><span class="line">System.out.println(a.charAt(<span class="number">20</span>)); <span class="comment">// 예외 발생.</span></span><br></pre></td></tr></table></figure>
-<h3 id="concat">concat</h3>
-<ul>
-<li>문자열과 문자열을 결합해 새로운 문자열을 반환한다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">String a = <span class="string">"I"</span>;</span><br><span class="line">String b = <span class="string">" have"</span>;</span><br><span class="line">System.out.println(a.concat(b)); <span class="comment">// I have</span></span><br><span class="line">System.out.println(a); <span class="comment">// I</span></span><br><span class="line">System.out.println(b); <span class="comment">//  have</span></span><br></pre></td></tr></table></figure>
-<h3 id="format">format</h3>
-<ul>
-<li>서식 문자열을 이용해서 서식화된 문자열을 반환한다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> i = <span class="number">123456789</span>;</span><br><span class="line">System.out.println(String.format(<span class="string">"%,d"</span>,i)); <span class="comment">// 123,456,789</span></span><br></pre></td></tr></table></figure>
-<h3 id="matches">matches</h3>
-<ul>
-<li>지정한 정규 표현식과 일치할 때, true를 반환하고 그렇지 않으면 false를 반환한다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> i = <span class="number">123456</span>;</span><br><span class="line">String str1 = String.format(<span class="string">"%,d"</span>, i); <span class="comment">// 123,456</span></span><br><span class="line">String str2 = <span class="string">"123456"</span>;</span><br><span class="line"><span class="keyword">boolean</span> matcher = str1.matches(str2);</span><br><span class="line">System.out.println(matcher); <span class="comment">// false</span></span><br></pre></td></tr></table></figure>
-<h3 id="replacefirst">replaceFirst</h3>
-<ul>
-<li>문자열에 지정한 문자열이 있으면 첫 번째만 새로 지정한 문자열로 바꿔서 새로운 문자열을 반환한다.</li>
-<li>아래의 a는 &quot;A&quot;라는 문자열이 앞, 뒤에 등장한다. 이 경우에 replaceFirst() 메소드는 처음에 등장하는 &quot;A&quot;만을 &quot;Super&quot;라는 문자열로 바꾼다. 따라서 결과는 &quot;SupermenA&quot;가 된다.</li>
-<li>b 문자열은 뒤에만 &quot;A&quot;라는 문자열이 존재하기 때문에 이게 처음 등장하는 &quot;A&quot;가 된다. 따라서 결과는 &quot;menSuper&quot;가 된다.</li>
-<li>replace는 &quot;A&quot;라는 문자열이 등장하면 이를 모두 &quot;Super&quot;로 바꾼다. 따라서 결과는 &quot;SupermenSuper&quot;가 된다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">String a = <span class="string">"AmenA"</span>;</span><br><span class="line">System.out.println(a.replace(<span class="string">"A"</span>,<span class="string">"Super"</span>)); <span class="comment">// SupermenSuper</span></span><br><span class="line">System.out.println(a.replaceFirst(<span class="string">"A"</span>,<span class="string">"Super"</span>)); <span class="comment">// SupermenA</span></span><br><span class="line"></span><br><span class="line">String b = <span class="string">"menA"</span>;</span><br><span class="line">System.out.println(b.replaceFirst(<span class="string">"A"</span>,<span class="string">"Super"</span>)); menSuper</span><br></pre></td></tr></table></figure>
-<h2 id="참고">참고</h2>
-<ul>
-<li><a href="https://swjeong.tistory.com/146" target="_blank" rel="noopener">Java의 toString()과 String.valueOf()의 차이점</a></li>
-<li><a href="https://sks3297.tistory.com/entry/%EC%9E%90%EB%B0%94-%EB%AC%B8%EC%9E%90%EC%97%B4-%ED%95%A8%EC%88%98" target="_blank" rel="noopener">자바 문자열 함수</a></li>
-</ul>
-
                     
+                        <a
+                            href="/2020/04/21/Java-String-Method/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [Java] 문자열 관련 함수"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2020/04/21/Java-String-Method/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             

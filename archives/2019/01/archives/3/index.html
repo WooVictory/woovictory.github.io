@@ -511,65 +511,6 @@ RelativeLayout이 Linear나 ConstraintLayout보다 <code>onMeasure()</code> 함�
                     
                         <a
                             class="link-unstyled"
-                            href="/2019/01/13/DesignPattern-Bridge/"
-                            aria-label=": [디자인 패턴] 브릿지 패턴"
-                        >
-                            [디자인 패턴] 브릿지 패턴
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2019-01-13T23:40:31+09:00">
-	
-		    Jan 13, 2019
-    	
-    </time>
-    
-        <span>in </span>
-        
-    <a class="category-link" href="/categories/Design-Pattern/">Design Pattern</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h2 id="브릿지-패턴">브릿지 패턴</h2>
-<p>구현부에서 추상층을 분리하여 각자 독립적으로 변형이 가능하고 확장이 가능하도록 한다. 즉, 기능과 구현에 대해서 두 개를 별도의 클래스로 구현을 한다.</p>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2019/01/13/DesignPattern-Bridge/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
                             href="/2019/01/07/Android-For-Interview-4/"
                             aria-label=": [안드로이드] 안드로이드 면접 4"
                         >
@@ -1059,7 +1000,7 @@ View Lifecycle을 보면 뷰를 다시 그리도록 유도하는 <code>invalidat
     </article>
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -1091,55 +1032,19 @@ View Lifecycle을 보면 뷰를 다시 그리도록 유도하는 <code>invalidat
 
             </div>
             
-                <div class="postShorten-content">
+                <div class="postShorten-excerpt">
                     <p>직렬화할 때 사용하는 방법 중에 Serializable과 Parcelable 두 개가 있다.<br>
 그 중에서 Serializable을 공부하던 중 이것이 마커 인터페이스라고 부르는 것을 보았다.<br>
 그래서 생긴 의문은 도대체 <strong>마커 인터페이스</strong>는 무엇인가</p>
-<h2 id="마커-인터페이스">마커 인터페이스</h2>
-<p>자바의 마커 인터페이스는 일반적인 인터페이스와 동일하지만 사실상 아무 메소드도 선언하지 않은 인터페이스를 말한다. 예를 들면 아래와 같다.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">SomethingObject</span></span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>얼핏 보기엔 난해한 코드이다. 인터페이스만 있고 메소드가 없으니 어디에다 쓸지도 난해하다. 자바로 코딩을 하다보면 저런 인터페이스가 종종 있다. 자바의 대표적인 마커 인터페이스로는 위에서 언급한 <strong>Serializable, Cloneable</strong>과 흔히 알지는 못하지만 Spring에서 event 리스너를 사용한다면 종종 보이는 <strong>EventListener</strong>라는 인터페이스도 있다.</p>
-<p>뭔가 대단한 것처럼 보일수도 있지만 실질적으로는 간단하다. 대부분의 경우에는 <strong>단순한 타입 체크</strong>라고 할 수 있다. 자바의 대표적인 마커 인터페이스인 Serializable를 살펴보자.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Serializable</span></span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>메소드가 한개도 선언되어 있지 않다. Serializable 인터페이스 같은 경우에는 직렬화를 할 수 있다는 뜻이다. 즉, 이 인터페이스를 구현하지 않은 클래스의 경우에는 직렬화를 하지 못한다.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">serializableTest</span><span class="params">()</span> <span class="keyword">throws</span> IOException, ClassNotFoundException </span>&#123;</span><br><span class="line">  File f= <span class="keyword">new</span> File(<span class="string">"a.txt"</span>);</span><br><span class="line">  ObjectOutputStream objectOutputStream = <span class="keyword">new</span> ObjectOutputStream(<span class="keyword">new</span> FileOutputStream(f));</span><br><span class="line">  objectOutputStream.writeObject(<span class="keyword">new</span> SomeObject(<span class="string">"wonwoo"</span>, <span class="string">"test@test.com"</span>));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SomeObject</span> </span>&#123;</span><br><span class="line">  <span class="keyword">private</span> String name;</span><br><span class="line">  <span class="keyword">private</span> String email;</span><br><span class="line">  <span class="comment">//생성자 및 기타 메서드 생략</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>위 코드를 실행하면 아래와 같은 에러가 발생한다.</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java.io.NotSerializableException: me.wonwoo.SomeObject</span><br></pre></td></tr></table></figure>
-<p>이는 직렬화를 할 수 있는 Serializable을 구현하지 않았기 때문이다. 그렇다면 직렬화를 할 수 있도록 Serializable 인터페이스를 구현해보자.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SomeObject</span> <span class="keyword">implements</span> <span class="title">Serializable</span> </span>&#123;</span><br><span class="line">  <span class="keyword">private</span> String name;</span><br><span class="line">  <span class="keyword">private</span> String email;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>간단하게 구현할 수 있다. 인터페이스의 메소드도 없으니 구현할 메소드도 필요 없다. 그냥 선언만 해주면 된다. 그럼 위에서 사용했던 <code>writeObject()</code> 메소드 안을 들여다 보자. writeObject() 메소드 안에는 writeObject0()가 존재한다. 이 메소드 맨 아래에 보면 다음과 같은 코드가 있다.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//... </span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (obj <span class="keyword">instanceof</span> String) &#123;</span><br><span class="line">  writeString((String) obj, unshared);</span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (cl.isArray()) &#123;</span><br><span class="line">  writeArray(obj, desc, unshared);</span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (obj <span class="keyword">instanceof</span> Enum) &#123;</span><br><span class="line">  writeEnum((Enum&lt;?&gt;) obj, desc, unshared);</span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (obj <span class="keyword">instanceof</span> Serializable) &#123;</span><br><span class="line">  writeOrdinaryObject(obj, desc, unshared);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (extendedDebugInfo) &#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> NotSerializableException(</span><br><span class="line">      cl.getName() + <span class="string">"\n"</span> + debugInfoStack.toString());</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> NotSerializableException(cl.getName());</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//...</span></span><br></pre></td></tr></table></figure>
-<p>이 코드에는 if문이 꽤 있다. 보면 String은 Serializable을 구현했으니 되고 배열도 Serializable 할 수 있고 Enum도 Serializable를 구현했으니 되고 다음으로는 Serializable가 되어있는지 체크하는 부분이다. 만약 Serializable가 없다면 에러로 처리한다. 위에서 보았듯이 간단하게 Serializable가 선언되었는지 안되어 있는지 <strong>체크 정도만</strong>한다. 실질적으로 뭘 하는 건 아니다. 그래서 <strong>마커 인터페이스</strong>라고 부른다.</p>
-<p>마커 인터페이스는 어노테이션으로도 대체 가능하다. 만약 @SomeAnnotation이라는 어노테이션이 있다면 아래와 같이 가져와서 체크하면 된다.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">final</span> SomeAnnotation someAnnotation = someObject.getClass().getAnnotation(SomeAnnotation.class);</span><br></pre></td></tr></table></figure>
-<p>그럼 마커 인터페이스와 마커 어노테이션의 차이를 살펴보자.<br>
-마커 인터페이스 같은 경우에는 <strong>컴파일 시점</strong>에 발견할 수 있다는 큰 장점이 있다. 그리고 또한 적용 범위를 좀 더 세밀하게 지정할 수 있다.</p>
-<p>만약 어노텡션 자료형을 선언할 때 target에 <strong>ElementType.TYPE</strong>라고 지정해서 사용한다고 하면 <strong>ElementType.TYPE</strong>은 클래스 뿐만 아니라 인터페이스에도 적용 가능하다. 그런데 특정한 인터페이스를 구현한 클래스에만 적용할 수 있어야 하는 마커가 필요하다고 가정해보자.</p>
-<p>마커 인터페이스를 쓴다면 그 특정 인터페이스를 상속하도록 선언만 하면 된다. 그럼 마커를 상속한 모든 자료형은 자동으로 그 특정 인터페이스의 하위 자료형이 된다.</p>
-<p>그렇다면 마커 어노테이션의 장점은 뭘까? 마커 어노테이션은 <strong>유연하게 확장이 가능</strong>하다. 어노테이션을 만들어 사용한 뒤에도 계속적으로 더 많은 정보를 추가할 수 있는 것이 큰 장점이다.</p>
-<p>예를 들어, 어떤 어노테이션을 만들고 배포를 한 뒤에 뭔가 더 정보를 추가하고 싶다면 새로 추가된 요소들에 대해 <code>default</code> 값을 갖게 하면 하위 호환성도 지킬 수 있으면 처음에는 마커 어노테이션으로 시자갷ㅆ다가 나중에는 기능이 많은 어노테이션으로 진화 가능하다.</p>
-<p>하지만 인터페이스 경우에는 메소드를 만드는 순간 하위 호환성이 깨지므로 마커 어노테이션처럼 지속적인 진화는 불가능하다.</p>
-<p>마커 어노테이션과 마커 인터페이스 중 둘 중 어느게 낫다고 할 수 없다. 각각의 쓰임새가 다르기 때문이다. 위에서 언급했듯이 새로운 메소드가 없이 자료형을 정의하고 싶다면 마커 인터페이스를 이용해야 하고 클래스나 인터페이스 이외의 마커를 달아야 하고 앞으로도 더 많은 추가 정보가 있다고 생각하면 마커 어노테이션을 사용하면 된다.</p>
-<h2 id="참고">참고</h2>
-<ul>
-<li><a href="http://wonwoo.ml/index.php/post/1389" target="_blank" rel="noopener">자바의 마커 인터페이스</a></li>
-</ul>
-
                     
+                        <a
+                            href="/2019/01/04/Java-What-is-Marker-interface/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [Java] 마커인터페이스"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2019/01/04/Java-What-is-Marker-interface/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             
@@ -1148,7 +1053,7 @@ View Lifecycle을 보면 뷰를 다시 그리도록 유도하는 <code>invalidat
     </article>
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -1180,110 +1085,17 @@ View Lifecycle을 보면 뷰를 다시 그리도록 유도하는 <code>invalidat
 
             </div>
             
-                <div class="postShorten-content">
+                <div class="postShorten-excerpt">
                     <p>안드로이드 개념을 공부하던 중 <strong>직렬화</strong>라는 개념에 대해서 공부를 했다. 직렬화란 메모리에 올라가 있는 정보를 byte 단위의 코드로 나열하는 것이다. 이를 통해서 객체와 같은 정보를 전달할 수 있게 하는 것이다.</p>
-<p>직렬화를 가능하게 하는 방법 중에는 Serializable과 Parcelable을 구현하는 2가지 방법이 존재한다. 그 중 Serializable은 구현은 상당히 쉬우나 속도가 느리다는 단점이 있다.</p>
-<p>속도가 느린 이유는 내부적으로 Reflection을 사용하기 때문에 필요없는 쓰레기 객체들을 만들어내고 이를 제거하기 위해 GC가 동작해서 비용이 발생하게 된다.</p>
-<p>그렇다면 여기서 말하는 <code>Reflection</code>은 무엇일까??</p>
-<h2 id="reflection">Reflection</h2>
-<p>객체를 통해 클래스의 정보를 분석해 내는 프로그래밍 기법을 말한다.<br>
-리플렉션은 구체적인 클래스 타입을 알지 못해도 컴파일된 바이트 코드를 통해 그 클래스의 메소드, 타입, 변수들을 접근할 수 있도록 해주는 자바 API를 말한다. 이게 무슨 의미일까?</p>
-<blockquote>
-<p>구체적인 클래스 타입을 알지 못하면 메소드를 실행할 수 없나?</p>
-</blockquote>
-<p>아래 코드를 살펴보자.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Car</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">drive</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="comment">// Do anything.</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">        Object car = <span class="keyword">new</span> Car();</span><br><span class="line">        car.drive(); <span class="comment">// 컴파일 에러</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>위에 코드 블록에서 컴파일 에러가 나는 이유는 모든 클래스의 조상 클래스인 Object라는 타입으로 Car 클래스의 인스턴스를 담을 수는 있지만 사용 가능한 메소드는 Object의 메소드와 변수들 뿐이기 때문이다.  그러니까 car 인스턴스의 메소드는 사용하지 못하는 것이다.</p>
-<p>이런 식으로 구체적인 타입의 클래스를 모를 때 사용하는게 리플렉션이다. 그렇다면 또 의문이 생긴다. 역시 의문을 가지는 것은 아주 좋다.</p>
-<blockquote>
-<p>내가 만드는 프로그램의 코드 흐름인데, 내가 사용할 클래스의 타입과 이름을 모르는 경우가 있을까?</p>
-</blockquote>
-<p>그렇다. 일반적으로는 만나기 힘든 경우이다. 코드를 작성할 시점에는 어떤 타입의 클래스를 사용할지 모르는 경우가 있다. 내가 지금 작성하는 코드가 나중에 어떤 기능이 추가되어서 어떻게 필요에 따라 사용될지 모르는 경우 같은 것이다. 이럴 때는 실행할 시점, 그러니까 런타임에 지금 실행되고 있는 클래스를 가져와서 실행을 해야 되는 것이다.</p>
-<p>즉, 설계할 때는 사용될 클래스가 어떤 타입인지 모르지만 리플렉션을 이용해서 코드를 일단 작성하고 실행 시점에 확인해서 활용할 수 있도록 하는 메커니즘이다.</p>
-<p>그렇다면 어떻게 이게 가능한 것일까??</p>
-<p>자바 클래스 파일은 바이트 코드로 컴파일 되어 <strong>static</strong>한 영역에 위치하게 된다. 때문에 클래스 이름만 알고 있다면 언제든, 이 영역을 뒤져서 클래스에 대한 정보를 가져올 수 있는 것이다. 아래는 가져올 수 있는 정보들이다.</p>
-<ul>
-<li>ClassName</li>
-<li>Clas Modifiers(public, private, synchronized 등)</li>
-<li>Package Info</li>
-<li>Superclass</li>
-<li>Implemented Interfaces</li>
-<li>Constructors</li>
-<li>MethodsFields</li>
-<li>Annotations</li>
-</ul>
-<h2 id="간단한-예제">간단한 예제</h2>
-<p>String 클래스의 풀패스를 통해 String이 가지고 있는 모든 메소드를 출력하는 간단한 예제이다.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    Class c = Class.forName(<span class="string">"java.lang.String"</span>);</span><br><span class="line">    Method m[] = c.getDeclaredMethods();</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; m.length; i++)</span><br><span class="line">        System.out.println(m[i].toString());</span><br><span class="line">&#125; <span class="keyword">catch</span> (Throwable e) &#123;</span><br><span class="line">    System.err.println(e);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>리플렉션을 사용하기 위한 3가지 스텝</strong></p>
-<ol>
-<li>클래스 Class 객체를 얻는다.</li>
-</ol>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Class c1 = Class.forName(<span class="string">"java.lang.String"</span>);</span><br><span class="line">Class c2 = <span class="keyword">int</span>.class;</span><br><span class="line">Class c3 = Integer.Type;</span><br></pre></td></tr></table></figure>
-<ol start="2">
-<li>getDeclaredMethods()와 같은 메소드를 호출하여 클래스 내에 정의된 메소드를 모두 가져올 수 있다.</li>
-</ol>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Method[] m = c1.getDeclaredMethods();</span><br></pre></td></tr></table></figure>
-<ol start="3">
-<li>리플렉션 API를 사용하여 정보를 조작 및 얻기.</li>
-</ol>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Class c = Class.forName(<span class="string">"java.lang.String"</span>);</span><br><span class="line">Method m[] = c.getDeclaredMethods();</span><br><span class="line">System.out.println(m[<span class="number">0</span>].toString());</span><br></pre></td></tr></table></figure>
-<p>첫번째 메소드의 이름을 출력하게 된다.</p>
-<h2 id="사용해보기">사용해보기</h2>
-<p><strong>instanceof 연산자 모의실험 해보기</strong></p>
-<p>클래스 정보를 얻고 나면 클래스 객체에 대한 정보도 얻을 수 있다. Class.isInstance 메소드는 instanceof 연산자를 시뮬레이팅 할 수 있다.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Class cls = Class.forName(<span class="string">"java.lang.String"</span>);</span><br><span class="line"><span class="keyword">boolean</span> b1 = cls.isInstance(<span class="number">3</span>);</span><br><span class="line">Log.e(TAG, <span class="string">"b1="</span>+b1);<span class="comment">//b1=false</span></span><br><span class="line"><span class="keyword">boolean</span> b2 = cls.isInstance(<span class="string">"Test"</span>);</span><br><span class="line">Log.e(TAG, <span class="string">"b2="</span>+b2);<span class="comment">//b2=true</span></span><br></pre></td></tr></table></figure>
-<p>b1에는 String 클래스인 cls가 3과 같은 타입이 아님을 알려주고 b2에는 String 클래스인 cls가 Test와 같은 타입임을 알려준다.</p>
-<p><strong>클래스의 메소드 찾기</strong></p>
-<p>리플렉션의 가장 기본적이고 가장 주용한 사용범 중 하나가 바로 클래스에 정의된 메소드를 찾는 것이다. 메소드를 찾는 것 뿐만 아니라 메소드가 가지고 있는 파라미터 타입, Exception 타입, 반환 타입 등을 알아낼 수 있다.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    Class cls = Class.forName(<span class="string">"java.lang.String"</span>);</span><br><span class="line">    Method methods[] = cls.getDeclaredMethods();</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; methods.length; i++) &#123;</span><br><span class="line">        Method m = methods[i];</span><br><span class="line">        Log.e(TAG, <span class="string">"메소드 이름 = "</span> + m.getName());</span><br><span class="line">        Log.e(TAG, <span class="string">"정의된 클래스이름 = "</span> + m.getDeclaringClass());</span><br><span class="line"> </span><br><span class="line">        Class pvec[] = m.getParameterTypes();</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; pvec.length; j++) &#123;</span><br><span class="line">            Log.e(TAG, <span class="string">"인자 #"</span> + j + <span class="string">" "</span> + pvec[j]);</span><br><span class="line">        &#125;</span><br><span class="line"> </span><br><span class="line">        Class evec[] = m.getExceptionTypes();</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; evec.length; j++) &#123;</span><br><span class="line">            Log.e(TAG, <span class="string">"익셉션 #"</span> + j + <span class="string">" "</span> + evec[j]);</span><br><span class="line">        &#125;</span><br><span class="line"> </span><br><span class="line">        Log.e(TAG,<span class="string">"return type = "</span> + m.getReturnType());</span><br><span class="line">        Log.e(TAG,<span class="string">"-----"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">catch</span> (Throwable e) &#123;</span><br><span class="line">    Log.e(TAG,e.toString());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>생성자 정보 얻기</strong></p>
-<p>메소드를 찾는 방법과 비슷하다. 참고로 생성자는 반환 타입이 없다.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    Class cls = Class.forName(<span class="string">"java.lang.String"</span>);</span><br><span class="line">    Constructor ctorlist[] = cls.getDeclaredConstructors();</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; ctorlist.length; i++) &#123;</span><br><span class="line">        Constructor ct = ctorlist[i];</span><br><span class="line">        Log.e(TAG,<span class="string">"생성자 이름 = "</span> + ct.getName());</span><br><span class="line">        Log.e(TAG,<span class="string">"정의된 클래스이름 = "</span> + ct.getDeclaringClass());</span><br><span class="line">        Class pvec[] = ct.getParameterTypes();</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; pvec.length; j++)&#123;</span><br><span class="line">            Log.e(TAG,<span class="string">"param #"</span> + j + <span class="string">" "</span> + pvec[j]);<span class="comment">//생성자 파라미터</span></span><br><span class="line">        &#125;</span><br><span class="line">        Class evec[] = ct.getExceptionTypes();</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; evec.length; j++)&#123;</span><br><span class="line">            Log.e(TAG,<span class="string">"exc #"</span> + j + <span class="string">" "</span> + evec[j]);<span class="comment">//익셉션 타입</span></span><br><span class="line">        &#125;</span><br><span class="line">        Log.e(TAG,<span class="string">"-----"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">catch</span> (Throwable e) &#123;</span><br><span class="line">    Log.e(TAG,e.toString());</span><br></pre></td></tr></table></figure>
-<p><strong>클래스 필드 찾기</strong></p>
-<p>클래스에 정의된 데이터 필드 또한 찾는게 가능하다. 접근 제어자(modifier)를 알 수 있다. 그리고 <strong>private</strong> 필드도 찾을 수 있다.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    Class cls = Class.forName(<span class="string">"java.lang.String"</span>);</span><br><span class="line">    Field fieldlist[] = cls.getDeclaredFields();</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; fieldlist.length; i++) &#123;</span><br><span class="line">        Field fld = fieldlist[i];</span><br><span class="line">        Log.e(TAG,<span class="string">"필드명 = "</span> + fld.getName());</span><br><span class="line">        Log.e(TAG,<span class="string">"정의된클래스 = "</span> + fld.getDeclaringClass());</span><br><span class="line">        Log.e(TAG,<span class="string">"필드타입 = "</span> + fld.getType());</span><br><span class="line">        <span class="keyword">int</span> mod = fld.getModifiers();</span><br><span class="line">        Log.e(TAG,<span class="string">"접근제어자 = "</span> + Modifier.toString(mod));</span><br><span class="line">        Log.e(TAG,<span class="string">"-----"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">catch</span> (Throwable e) &#123;</span><br><span class="line">    Log.e(TAG,e.toString());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>메소드 이름으로 실행하기</strong></p>
-<p>메소드 이름으로 특정 메소드를 실행하는 것이다.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    Class cls = Class.forName(<span class="string">"java.lang.String"</span>);</span><br><span class="line">    String data = <span class="string">"Hello World"</span>;<span class="comment">//테스트용 데이터</span></span><br><span class="line">    Method lengthMethod = cls.getMethod(<span class="string">"length"</span>);<span class="comment">//length()메소드를 찾는다.</span></span><br><span class="line">    <span class="keyword">int</span> length = (<span class="keyword">int</span>) lengthMethod.invoke(data);<span class="comment">//data.length() 수행</span></span><br><span class="line">    Log.e(TAG, <span class="string">"length="</span> + length); <span class="comment">//length=11 출력</span></span><br><span class="line"> </span><br><span class="line">    Method substringMethod = cls.getMethod(<span class="string">"substring"</span>, <span class="keyword">int</span>.class, <span class="keyword">int</span>.class);</span><br><span class="line">    <span class="comment">//두개의 int타입이 있는 substring메소드를 가져옵니다.</span></span><br><span class="line">    String subStr = (String) substringMethod.invoke(data,<span class="number">0</span>, <span class="number">5</span>);</span><br><span class="line">    <span class="comment">//data.substring(0,5)와 같은 효과</span></span><br><span class="line">    Log.e(TAG,<span class="string">"subStr="</span>+subStr);<span class="comment">//Hello 출력</span></span><br><span class="line">&#125; <span class="keyword">catch</span> (Throwable e) &#123;</span><br><span class="line">    Log.e(TAG, e.toString());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>자 그러면 의문이 생긴다. 앞에서 private한 메소드도 찾았는데 실행은 못시킬까??</p>
-<p>결론부터 말하자면 가능하다.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">A</span></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String TAG = A.class.getSimpleName();</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">show</span><span class="params">()</span></span>&#123;</span><br><span class="line">        Log.e(TAG,<span class="string">"Hello I am Private method"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    A a = <span class="keyword">new</span> A();</span><br><span class="line">    <span class="comment">//메소드가 private하여 a.show() 찾을 수가 없음</span></span><br><span class="line">    Method showMethod = a.getClass().getDeclaredMethod(<span class="string">"show"</span>);</span><br><span class="line">    showMethod.setAccessible(<span class="keyword">true</span>); <span class="comment">//접근 가능!</span></span><br><span class="line">    showMethod.invoke(a);</span><br><span class="line">&#125;<span class="keyword">catch</span> (Exception e)&#123;</span><br><span class="line">    Log.e(TAG,e.toString());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>위에서 A라는 클래스에서 private한 메소드인 show()를 선언하면 다른 클래스에서는 이 클래스로 만든 인스턴스로는 show() 메소드에 접근이 불가능하다. 하지만 <strong>리플렉션</strong>은 이를 가능하게 해준다.</p>
-<p><strong>getMethod() 메소드는 public한 메소드를 가지고 오며, getDeclaredMethod()는 private한 메소드를 포함한 클래스에 선언된 모든 메소드를 가지고 온다.</strong> setAccessible을 true로 설정하여 private한 메소드에 접근할 수 있다.</p>
-<p><strong>리플렉션으로 오브젝트 생성하기</strong></p>
-<p>리플렉션으로 오브젝트를 생성하는 예는 아래와 같다.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Person</span> </span>&#123;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String TAG = Person.class.getSimpleName();</span><br><span class="line"> </span><br><span class="line">    String name;</span><br><span class="line">    <span class="keyword">int</span> age;</span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Person</span><span class="params">(String name, <span class="keyword">int</span> age)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">        <span class="keyword">this</span>.age = age;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sayMyName</span><span class="params">()</span></span>&#123;</span><br><span class="line">        Log.e(TAG,String.format(<span class="string">"Hello! My name is %s and I'm %d years old"</span>,name, age) );</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    Class personClass = Class.forName(<span class="string">"com.charlezz.reflection.Person"</span>);</span><br><span class="line">    Constructor personConstructor = personClass.getConstructor(String.class, <span class="keyword">int</span>.class);</span><br><span class="line">    Person person = (Person) personConstructor.newInstance(<span class="string">"Charles"</span>,<span class="number">20</span>);</span><br><span class="line">    person.sayMyName();</span><br><span class="line"> </span><br><span class="line">    <span class="comment">//Hello! My name is Charles and I'm 20 years old 출력</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">catch</span> (Throwable e) &#123;</span><br><span class="line">    Log.e(TAG,e.toString());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>Constructor.newInstance를 이용하여 new 생성자와 같이 객체를 생성할 수 있다.</p>
-<p><strong>필드의 값 변경하기</strong></p>
-<p>필드의 값 또한 리플렉션을 이용한다면 변경시킬 수 있다.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    Class cls = Class.forName(<span class="string">"com.charlezz.reflection.Person"</span>);</span><br><span class="line">    Field ageField = cls.getField(<span class="string">"age"</span>);</span><br><span class="line">    Person person = <span class="keyword">new</span> Person(<span class="string">"Charles"</span>, <span class="number">20</span>);</span><br><span class="line">    Log.e(TAG,<span class="string">"person.age = "</span> + person.age);<span class="comment">//person.age = 20</span></span><br><span class="line">    ageField.setInt(person, <span class="number">10</span>);</span><br><span class="line">    Log.e(TAG,<span class="string">"person.age = "</span> + person.age);<span class="comment">//person.age = 10</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">catch</span> (Throwable e) &#123;</span><br><span class="line">    Log.e(TAG,e.toString());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>set~~() 메소드를 이용하여 필드의 값을 변경시킬 수 있다.</p>
-<p><strong>결론</strong></p>
-<p>실제로 리플렉션은 비용이 큰 작업이므로 신중하게 사용해야 한다. 나는 안드로이드 애플리케이션 개발을 하면서 리플렉션을 사용해 본 적은 없지만 이렇게 개념적인 부분을 알게 되어서 너무 좋았다. 참고할 자료들이 많아서 개념을 잘 잡을 수 있었다.</p>
-<h2 id="참고">참고</h2>
-<ul>
-<li><a href="https://brunch.co.kr/@kd4/8" target="_blank" rel="noopener">자바의 리플렉션</a></li>
-<li><a href="https://www.charlezz.com/?p=756" target="_blank" rel="noopener">안드로이드와 Java의 Reflection</a></li>
-</ul>
-
                     
+                        <a
+                            href="/2019/01/04/Java-What-is-Reflection/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [Java] Reflection"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2019/01/04/Java-What-is-Reflection/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             
@@ -1292,7 +1104,7 @@ View Lifecycle을 보면 뷰를 다시 그리도록 유도하는 <code>invalidat
     </article>
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -1316,7 +1128,58 @@ View Lifecycle을 보면 뷰를 다시 그리도록 유도하는 <code>invalidat
     
         <span>in </span>
         
-    <a class="category-link" href="/categories/Design-Pattern/">Design Pattern</a>
+    <a class="category-link" href="/categories/ETC/">ETC</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-excerpt">
+                    <h2>싱글톤 패턴</h2>
+                    
+                        <a
+                            href="/2019/01/04/Android-What-is-Singleton-Pattern/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [디자인패턴] 싱글톤 패턴"
+                        >
+                            Continue reading
+                        </a>
+                        
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2019/01/03/Android-What-is-serialization/"
+                            aria-label=": [안드로이드] 직렬화에 관해서"
+                        >
+                            [안드로이드] 직렬화에 관해서
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2019-01-03T21:46:29+09:00">
+	
+		    Jan 03, 2019
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/Android/">Android</a>
 
 
     
@@ -1325,120 +1188,89 @@ View Lifecycle을 보면 뷰를 다시 그리도록 유도하는 <code>invalidat
             </div>
             
                 <div class="postShorten-content">
-                    <h2 id="싱글톤-패턴">싱글톤 패턴</h2>
-<p><strong>싱글톤 패턴</strong>은 애플리케이션이 시작될 때 어떤 클래스가 최초 한번만 메모리를 할당하고(Static) 그 메모리에 인스턴스를 만들어 사용하는 디자인 패턴을 말한다.</p>
-<p>생성자가 여러번 호출되더라도 실제로 생성되는 객체는 하나이고 최초 생성 이후에 호출된 생성자는 최초에 생성한 객체를 반환한다.[자바에서는 생성자를 <code>private</code>으로 선언해서 생성 불가능하게 하고 getInstance()로 받아서 사용한다.]</p>
-<p>따라서, <strong>싱글톤 패턴은 단 하나의 인스턴스를 생성해 사용하는 디자인 패턴이라고 말할 수 있다.</strong><br>
-(인스턴스가 필요할 때 똑같은 인스턴스를 만들어 내는 것이 아니라, 동일(기존) 인스턴스를 사용하게 한다.)</p>
-<p><strong>싱글톤 패턴을 쓰는 이유</strong></p>
-<p>고정된 메모리 영역을 얻으면서 한번의 new로 인스턴스를 사용하기 때문에 메모리 낭비를 방지할 수 있다. 또한 싱글톤으로 만들어진 클래스의 인스턴스는 전역 인스턴스이기 때문에 다른 클래스의 인스턴스들이 데이터를 공유하기 쉽다.</p>
-<p>DBCP(DataBase Connection Pool)처럼 공통된 객체를 여러 개 생성해서 사용해야 하는 상황에서 많이 사용한다.<br>
-(쓰레드풀, 캐시, 대화상자, 사용자 설정, 레지스트리 설정, 로그 기록 객체 등)</p>
-<p>안드로이드 앱 같은 경우 각 액티비티나 클래스별로 주요 클래스들을 일일이 전달하기가 번거롭기 때문에 싱글톤 클래스를 만들어 어디서나 접근하도록 설계하는 것이 편하다.</p>
-<ul>
-<li>인스턴스가 절대적으로 한개만 존재하는 것을 보증하고 싶은 경우 사용.</li>
-<li>두 번째 이용시부터는 객체 로딩 시간이 현저하게 줄어 성능이 좋아지는 장점.</li>
+                    <ul>
+<li><a href="#%EC%A7%81%EB%A0%AC%ED%99%94%EB%9E%80?">직렬화란?</a></li>
+<li><a href="#%EC%97%AD%EC%A7%81%EB%A0%AC%ED%99%94%EB%9E%80?">역직렬화란?</a></li>
+<li><a href="#Serializable">Serializable</a></li>
+<li><a href="#Parcelable">Parcelable</a></li>
 </ul>
-<p><strong>싱글톤 패턴의 문제점</strong></p>
-<p>싱글톤 인스턴스가 너무 많은 일을 하거나 많은 데이터를 공유시킬 경우 다른 클래스의 인스턴스들 간에 결합도가 높아져 <strong>개방-폐쇄 원칙</strong>을 위배하게 된다.(= 객체지향 설계 원칙에 어긋난다.)<br>
-[객체 지향 설계 원칙 찾아보기]</p>
-<p>따라서 수정이 어려워지고 테스트하기도 어려워진다. 또한 멀티 쓰레드 환경에서 동기화 처리를 안하면 인스턴스가 두 개가 생성된다던지 하는 경우가 발생할 수 있다. 즉, 싱글톤이 Thred-safe 하지않을 수 있다. 불필요한 오버헤드가 생길 수 있다.</p>
-<h2 id="멀티쓰레드에서-안전한thred-safe-싱글톤-클래스-인스턴스-만드는-방법">멀티쓰레드에서 안전한(Thred-safe) 싱글톤 클래스, 인스턴스 만드는 방법</h2>
-<p><code>1. Thread safe Lazy initialization(게으른 초기화)</code></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SingleTon</span></span>&#123;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> SingleTon instance;</span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">SingleTon</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="comment">// private한 생성자</span></span><br><span class="line">    &#125;</span><br><span class="line">     </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">synchronized</span> SingleTon <span class="title">getInstance</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(instance == <span class="keyword">null</span>)&#123;</span><br><span class="line">            instance = <span class="keyword">new</span> SingleTon();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> instance;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>위의 방식은 <code>private static</code>으로 인스턴스 변수를 만들고 <strong>private</strong> 생성자로 외부에서 생성할 수 있는 여지를 막았으며 <strong>synchronized</strong> 키워드를 사용해서 <code>thread-safe</code>하게 만들었다.</p>
-<p>하지만 synchronized 특성상 비교적 큰 성능 저하가 발생하므로 권장하는 방법은 아니다. synchronized 키워드는 100배 정도 성능 저하를 가져온다고 한다.</p>
+<h2 id="직렬화란">직렬화란?</h2>
 <ul>
-<li>때문에 싱글톤 패턴으로 만들어진 클래스의 인스턴스에 volatile 키워드를 사용하여 멀티 쓰레드의 가시성 문제를 해결하여 모든 객체에 대해 synchronized 키워드가 불리는 것을 막아 성능을 향상시킨다.</li>
+<li><strong>직렬화</strong>는 메모리 내에 존재하는 정보를 보다 쉽게 전송 및 전달하기 위해 byte 코드 형태로 나열하는 것이다. 여기서 메모리 내에 존재하는 정보는 즉 객체를 말한다.</li>
+<li>JVM(Java Virtual Machine)의 메모리에 상주 되어있는 객체 데이터를 바이트 형태로 변환하는 기술</li>
 </ul>
-<p><code>2. Thread safe lazy initialization + Double-checked locking</code></p>
-<p>게으른 초기화의 성능 저하를 완화시키는 방법</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SingleTon</span> </span>&#123;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">volatile</span> <span class="keyword">static</span> SingleTon instance;</span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">SingleTon</span><span class="params">()</span></span>&#123;&#125;</span><br><span class="line">     </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> SingleTon <span class="title">getInstance</span><span class="params">()</span></span>&#123;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span>(instance == <span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">synchronized</span> (SingleTon.class) &#123;</span><br><span class="line">                <span class="keyword">if</span>(instance == <span class="keyword">null</span>)</span><br><span class="line">                    instance = <span class="keyword">new</span> SingleTon();</span><br><span class="line">            &#125;</span><br><span class="line"> </span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> instance;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>getInstance()에 synchronized를 사용하는 것이 아니라 첫 번째 if문으로 인스턴스의 존재 여부를 체크하고 두 번째 if문에서 다시 한 번 체크할 때 <strong>동기화</strong>시켜서 인스턴스를 생성하므로 <code>thread-safe</code>하면서도 처음 생성 이후에 synchronized 블록을 타지 않기 때문에 성능 저하를 완화했다. 이렇게 volatile 키워드를 사용하는 것과 두 번 체크하는 기법을 <strong>double-checked locking</strong>이라고 한다.</p>
-<p>그러나 완벽한 방법은 아니다. 이 방법은 메소드에서 <code>synchronized</code>를 빼면서 동기화 오버헤드를 줄여보고자 하는 의도로 설계된 방법이다. instance가 null인지 체크하고 null일 경우에만 동기화 블록에 진입하게 된다. 그래서 최초 객체가 생성된 이후로는 동기화 블록에 진입하지 않기 때문에 효율적인 방법이라고 생각할 수 있다.</p>
-<p>하지만 아주 안좋은 케이스로 정상 동작하지 않을 수 있다. 예를 들어, Thread A와 Thread B가 있다고 하자. Thread A가 instance의 생성을 완료하기 전에 메모리 공간에 할당이 가능하기 때문에(static이기 때문에 Class가 로딩될 때 메모리에 할당됨) Thread B가 할당된 것을 보고 instance를 사용하려고 하나 생성과정이 모두 끝난 상태가 아니기 때문에 오동작할 수 있다는 것이다. 물론 이런 확률은 적겠지만 혹시 모를 문제를 생각하여 사용하지 않는 것이 좋다.</p>
-<p><code>3. Initialization on demand holder idiom (holder에 의한 초기화)</code></p>
-<p>클래스안에 클래스(Holder)를 두어 JVM의 Class loader 매커니즘과 Class가 로드되는 시점을 이용한 방법이다.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Something</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Something</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">LazyHolder</span> </span>&#123;</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> Something INSTANCE = <span class="keyword">new</span> Something();</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Something <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> LazyHolder.INSTANCE;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>개발자가 직접 동기화 문제에 대해 코드를 작성하고 문제를 회피하려 한다면 프로그램 구조가 그만큼 복잡해지고 비용 문제가 생길 수 있고 특히 정확하지 못한 경우가 많다.(100%가 아닐 수 있다…ㅎ)</p>
-<p>그런데 위의 3번 방법은 JVM의 클래스 초기화 과정에서 보장되는 원자적 특성을 이용하여 싱글톤의 초기화 문제에 대한 책임을 JVM에게 떠넘긴다.</p>
-<p>holder 안에 선언된 INSTANCE가 static이기 때문에 클래스 로딩 시점에 한번만 호출될 것이며 final 키워드를 사용해 다시 값이 할당되지 않도록 만든 방법이다.</p>
-<p><strong>로직을 설명하면 다음과 같다.</strong></p>
-<p>위의 Something 클래스에는 LazyHolder 클래스의 변수가 없기 대문에 Something 클래스 로딩시 LazyHolder 클래스를 초기화하지 않는다.</p>
-<p>LazyHolder 클래스는 Something 클래스의 <code>getInstance()</code> 메소드에서 LazyHolder.INSTANCE를 참조하는 순간 Class가 로딩되며 초기화가 진행된다. Class를 로딩하고 초기화하는 시점은 <code>thread-safe</code>를 보장하기 때문에 volatile이나 synchronized 같은 키워드가 없어도 thread-safe 하면서 성능도 보장하는 아주 훌륭한 방법이라고 할 수 있다.</p>
-<p><strong>가장 많이 사용하고 일반적인 방법이다.</strong></p>
-<h2 id="java-volatile이란">Java volatile이란??</h2>
-<p>멀티 쓰레드 환경에서 싱글톤을 문제 없이 구현하는 방법 중에 하나로 나왔던 Double-checked locking 즉, DCL 방법이 있었다. 물론 좋은 방법은 아니었지만 여기서 나온 <code>volatile</code>라는 키워드가 궁금했다.</p>
-<p><strong>Java volatile이란?</strong></p>
+<p>따라서 직렬화는 주로 객체들을 통째로 파일로 저장하거나 전송하고 싶을 때 사용한다. 나는 안드로이드 앱 개발을 할 때 액티비티간의 데이터를 전달할 때 인텐트를 사용하고 이 인텐트에 전달할 데이터를 추가한다.</p>
+<p>복잡한 클래스의 객체를 이동하려는 경우에는 Serializable 또는 Parcelabe을 사용하여 직렬화하여 인텐트에 추가해서 데이터를 이동하면 된다.</p>
+<h2 id="역직렬화란">역직렬화란?</h2>
 <ul>
-<li><code>volatile</code> 키워드는 Java 변수를 Main Memory에 저장하겠다라는 것을 명시하는 것이다.</li>
-<li>매번 변수의 값을 Read할 때마다 CPU cache에 저장된 값이 아닌 Main Memory에서 읽는 것이다.</li>
-<li>또한 변수의 값을 Write할 때마다 Main Memory에까지 작성하는 것이다.</li>
+<li>byte로 변환된 Data를 원래대로 Object나 Data로 변환하는 기술을 역직렬화라고 한다.</li>
+<li>직렬화된 바이트 형태의 데이터를 객체로 변환해서 JVM으로 상주시키는 형태</li>
 </ul>
-<p><strong>왜(Why) 필요할까?</strong></p>
-<img src="/img/Java_volatile.png" width="500" height="300">
+<h2 id="serializable">Serializable</h2>
+<p>Java에서는 Value Object를 쉽게 직렬화 하기위해 <strong>Serializable</strong>이라는 interface가 있다. 이는 Marker Interface로서 단순히 implement하는 것만으로도 JVM에게 직렬화가 가능하다는 것을 알려주기 때문에 사용하는게 매우 쉬운 편이다.</p>
+<p>Serializable은 Android SDK가 아닌 표준 Java의 인터페이스이다.</p>
+<p>이 인터페이스를 구현한 클래스의 객체는 이제 한 액티비티에서 다른 액티비티로 이동할 준비가 된다. 다음 코드를 보자.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.Serializable;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Person</span> <span class="keyword">implements</span> <span class="title">Serializable</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String firstName;</span><br><span class="line">    <span class="keyword">private</span> String lastName;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> age;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Person</span><span class="params">(String firstName, String lastName, <span class="keyword">int</span> age)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.firstName = firstName;</span><br><span class="line">        <span class="keyword">this</span>.lastName = lastName;</span><br><span class="line">        <span class="keyword">this</span>.age = age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getFirstName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> firstName;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setFirstName</span><span class="params">(String firstName)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.firstName = firstName;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getLastName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> lastName;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setLastName</span><span class="params">(String lastName)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.lastName = lastName;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getAge</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setAge</span><span class="params">(<span class="keyword">int</span> age)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.age = age;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Serializable은 해당 클래스가 직렬화 대상이라고 알려주기만 할뿐 어떠한 메소드도 가지지 않는 단순한 <strong>마커 인터페이스</strong>이므로 사용자는 매우 쉽게 사용할 수 있다.</p>
+<p>사용방법이 쉽다는 것은 곧 시스템적인 비용이 비싸다는 것을 의미한다.</p>
+<p><strong>Serializable</strong>은 내부에서 <code>Reflection</code>을 사용하여 직렬화를 처리한다. Reflection은 프로세스 동작 중에 사용되며 처리 과정 중에 많은 추가 객체를 생성한다. 이 많은 쓰레기들은 가비지 컬렉터의 타깃이 되고 가비지 컬렉터의 과도한 동작으로 인하여 성능 저하 및 배터리 소모가 발생한다.</p>
+<h2 id="parcelable">Parcelable</h2>
+<p><strong>Parcelable</strong>은 직렬화를 위한 또 다른 인터페이스이다. Serializable과는 달리 표준 Java가 아닌 Android SDK의 인터페이스이다.</p>
+<p>Parcelabledms Reflection을 사용하지 않도록 설계되엇다. Serializable과는 달리 직렬화 처리 방법을 사용자가 명시적으로 작성하기 때문에 자동으로 처리하기 위한 Reflection이 필요없다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> android.os.Parcel;</span><br><span class="line"><span class="keyword">import</span> android.os.Parcelable;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Person</span> <span class="keyword">implements</span> <span class="title">Parcelable</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String firstName;</span><br><span class="line">    <span class="keyword">private</span> String lastName;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> age;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Person</span><span class="params">(String firstName, String lastName, <span class="keyword">int</span> age)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.firstName = firstName;</span><br><span class="line">        <span class="keyword">this</span>.lastName = lastName;</span><br><span class="line">        <span class="keyword">this</span>.age = age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getFirstName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> firstName;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setFirstName</span><span class="params">(String firstName)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.firstName = firstName;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getLastName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> lastName;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setLastName</span><span class="params">(String lastName)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.lastName = lastName;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getAge</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setAge</span><span class="params">(<span class="keyword">int</span> age)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.age = age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">describeContents</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">writeToParcel</span><span class="params">(Parcel dest, <span class="keyword">int</span> flags)</span> </span>&#123;</span><br><span class="line">        dest.writeString(<span class="keyword">this</span>.firstName);</span><br><span class="line">        dest.writeString(<span class="keyword">this</span>.lastName);</span><br><span class="line">        dest.writeInt(<span class="keyword">this</span>.age);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="title">Person</span><span class="params">(Parcel in)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.firstName = in.readString();</span><br><span class="line">        <span class="keyword">this</span>.lastName = in.readString();</span><br><span class="line">        <span class="keyword">this</span>.age = in.readInt();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> Parcelable.Creator&lt;Person&gt; CREATOR = <span class="keyword">new</span> Parcelable.Creator&lt;Person&gt;() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> Person <span class="title">createFromParcel</span><span class="params">(Parcel source)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> Person(source);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> Person[] newArray(<span class="keyword">int</span> size) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> Person[size];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>마커 인터페이스인 Serializable과는 달리 <strong>Parcelable</strong>은 구현해야 하는 필수 메소드를 포함하기 때문에 클래스에 <code>보일러 플레이트</code> 코드가 추가된다. 이는 클래스를 이해하기 어렵고 새로운 기능을 추가하기 힘들게 만든다. 또한 코드의 추가로 클래스가 복잡해질수록 유지 보수가 어려워지는 원인이 된다.</p>
+<p>Parcelable의 사용법은 조금 어렵다. 필수적으로 정의해야 하는 메소드가 두 가지가 있다.</p>
+<p><strong>describeContent()</strong></p>
 <ul>
-<li>volatile 변수를 사용하고 있지 않는 멀티 쓰레드 애플리케이션에서는 Task를 수행하는 동안 성능 향상을 위해서 Main Memory에서 읽은 변수 값을 CPU cache에 저장하게 된다.</li>
-<li>만약에 멀티 쓰레드 환경에서 <strong>Thread 변수 값을 읽어올 때</strong> 각각의 CPU에 저장된 값이 다르기 때문에 <strong>변수 값 불일치 문제</strong>가 발생하게 된다.</li>
+<li>Parcel 객체에 내용을 기술한다. FileDescriptor 같은 특별한 객체가 들어가면 이 부분을 통해서 알려줘야 한다. 보통은 0을 리턴한다.</li>
 </ul>
-<h3 id="example">Example</h3>
-<p>SharedObject를 공유하는 두 개의 Thread가 있다.</p>
+<p><strong>writeToParcel(Parcel out, int flag)</strong></p>
 <ul>
-<li>Thread-1는 counter 값을 더하고 읽는 연산을 한다.(Read&amp;Write)</li>
-<li>Thread-2는 counter 값을 읽기만 한다.(Only Read)</li>
+<li>직렬화시 container 역할을 하는 Parcel안에 데이터를 넣는 작업을 한다.</li>
 </ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SharedObject</span></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span> counter = <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>Thread-1는 counter 값을 증가시키고 있지만 CPU cache에만 반영되어 있고 실제로 Main Memory에는 반영이 되지 않는다. 그렇기 때문에 Thread-2는 counter 값을 계속 읽어오지만 0을 가져오는 문제가 발생한다.(변수 값의 불일치 문제)</p>
-<img src="/img/java_volatile2.png" width="500" height="300">
-<p><strong>어떻게(How) 해결할까??</strong></p>
+<p>이 두가지 메소드를 정의해야함과 동시에 <code>CREATOR</code>라는 static field(정적 필드)를 반드시 가지고 있어야 한다. 이는 선언과 동시에 초기화 되어야 한다. <strong>CREATOR 객체는 나중에 역직렬화 시 사용된다.</strong></p>
+<p>CREATOR 구현에는 다음의 두 가지 메소드를 구현해야 한다.</p>
+<p><strong>createFromParcel(Parcel source)</strong></p>
 <ul>
-<li><code>volatile</code> 키워드를 추가하게 되면 Main Memory에 값을 저장하고 읽어오기 때문에 <strong>변수 값 불일치 문제</strong>를 해결할 수 있다.</li>
+<li>parcel된 데이터를 다시 원래대로 객체로 변환시켜 주는 작업을 한다.</li>
 </ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SharedObject</span></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">volatile</span> <span class="keyword">int</span> counter = <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>이러한 <code>volatile</code> 키워드는 멀티 쓰레드 환경에서 하나의 Thread만 read&amp;write 하고 나머지 Thread가 read하는 상황에서 <strong>가장 최신의 값을 보장</strong>한다.</p>
-<p>그렇다면 항상 volatile이 옳은 방법일까??<br>
-아래의 예시를 확인해보자.</p>
+<p><strong>newArray(int size)</strong></p>
 <ul>
-<li>Thread-1이 값을 읽어 1을 추가하는 연산을 진행한다.
-<ul>
-<li>추가하는 연산을 했지만 아직 Main Memory에 반영되기 전 상황이다.</li>
+<li>전달하는 객체가 배열일 경우 즉, Parcel.createTypeArray()를 호출했을 때 불리며 배열을 다시 할당하기 위해 사용한다.</li>
 </ul>
-</li>
-<li>Thread-2이 값을 읽어 1을 추가하는 연산을 진행한다.
-<ul>
-<li>추가하는 연산을 했지만 아직 Main Memory에 반영되기 전 상황이다.</li>
-</ul>
-</li>
-<li>두 개의 Thread가 1을 추가하는 연산을 하여 최종 결과가 2가 되어야 하는 상황이지만 각각 결과를 Main Memory에 반영하게 된다면 1만 남는 상황이 발생하게 된다.</li>
-<li><strong>하나의 Thread가 아닌 여러 Thread가 write하는 상황에서는 적합하지 않다.</strong></li>
-<li>여러 Thead가 write하는 상황이라면 <code>synchronized</code>를 통해 변수 read &amp; write의 원자성(atomic)을 보장해야 한다.</li>
-</ul>
-<p><strong>volatile 성능은?</strong></p>
-<ul>
-<li><code>volatile</code>는 변수의 read와 write를 Main Memory에서 진행하게 된다.</li>
-<li>CPU cache보다 Main Memory가 비용이 더 크기 때문에 <strong>변수 값 불일치</strong>를 보장해야 하는 경우에만 volatile를 사용하는 것이 좋다.</li>
-</ul>
-<p><strong>요약</strong></p>
-<ul>
-<li><code>volatile</code> : Main Memory에 값을 read &amp; write 하는 키워드</li>
-<li>상황?
-<ul>
-<li><strong>하나의 Thread만 write하고 나머지 Thread가 read하는 상황인 경우</strong></li>
-<li>변수의 값이 최신의 값으로 읽어와야 하는경우(최신의 값을 보장)</li>
-</ul>
-</li>
-<li>주의할 점 : 성능에 어느 정도 영향을 줄 수 있다.
-<ul>
-<li>이유 : CPU cache보다 Main Memory 접근이 비용이 더 크기 때문이다.</li>
-</ul>
-</li>
-</ul>
+<p>parcelable은 이러한 분해와 조립을 돕는다. 이 과정에서 순서가 있고 직렬화될 변수들을 직접 세팅하여 빠른 속도를 낸다.</p>
+<p>Serializable이 시스템 비용을 발생한다면 Parcelable은 구현과 유지, 보수에 드는 사용자의 노력을 비용으로 지불해야 한다.</p>
+<h2 id="parcelable-vs-serializable">Parcelable VS Serializable</h2>
+<p>인터넷에서는 Parcelable과 Serializable을 비교하는 정보들을 많이 찾을 수 있다. 인터넷에서 쉽게 접할 수 있는 접근법과 다른 접근법이 존재하기에 여기에 적으려고 한다. 이 글의 참고는 아래에 적어놓았다.</p>
+<ol>
+<li>Parcelable이 Serializable보다 빠르다.</li>
+</ol>
+<img src="/img/parcelable_vs_serializable_speed.png" width="500" height="300">
+<p>많이 볼 수 있는 위의 결과는 Parcelable이 Serializable보다 10배 이상 빠르다는 것을 보여준다. 일부분도 그렇게 생각한다고 한다.</p>
+<ol start="2">
+<li>다른 의견</li>
+</ol>
+<p>두번째 의견은 <strong>기본 사용법에 의한 Serializable</strong>은 Parcelable보다 느리다는 것이다. 이 말의 뜻을 잘 살펴보면 다음과 같다.</p>
+<p>Parcelable은 위에서 설명한 것처럼 하나의 클래스 객체만을 위한 특별한 사용자 정의 코드를 작성해야만 한다. 사용자가 정의한 코드의 도움으로 <strong>Parcelable</strong>은 Serializable과는 달리 쓰레기를 생성할 이유가 없고 그 결과 성능도 더 좋다.</p>
+<p>그러나 <strong>기본 사용법에 의한 Serializable</strong>은 Java의 자동 직렬화 프로세스를 사용한다. 이 과정은 분명 Parcelable과 같은 수고로움은 없지만 처리 과정에서 많은 쓰레기를 만들어낸다. 따라서 더 나쁜 결과를 보여주게 된다.</p>
+<p>지금부터 조금 다른 방법으로 Serializable을 사용해 볼 것이다. Serializable에서 자동으로 처리되는 직렬화 <strong>프로세스는 사용자가 구현한 writeObject(), readObject() 메소드로 대체될 수 있다.</strong> 사용자가 구현한 직렬화 메소드와 함께 Serializable 접근 방식을 사용하려면 다음의 메소드를 반드시 구현해야 한다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">writeObject</span><span class="params">(java.io.ObjectOutputStream out)</span></span></span><br><span class="line"><span class="function">    <span class="keyword">throws</span> IOException</span>;</span><br><span class="line">    </span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">readObject</span><span class="params">(java.io.ObjectInputStream in)</span></span></span><br><span class="line"><span class="function">    <span class="keyword">throws</span> IOException, ClassNotFoundException</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">readObjectNoData</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    <span class="keyword">throws</span> ObjectStreamException</span>;</span><br></pre></td></tr></table></figure>
+<p>마치 Parcelable의 사용법처럼 Serializable의 writeObject()와 readObject() 메소드에는 해당 클래스에 맞는 처리 로직을 포함시킬 수 있다. 제대로 수행된다면 기본 사용법에 의한 Serializable 방식에서 발생하는 쓰레기가 더 이상 생성되지 않을 것이다.</p>
+<p>이 글 원본 작성자가 테스트한 결과는 놀랍다고 한다. 특정 클래스 처리 로직을 구현한 Serializable은 Parcelable보다 쓰기 속도가 3배 이상, 읽기의 경우 1.6배 더 빠르다고 한다.</p>
+<h2 id="잠깐">잠깐!</h2>
+<p>기본 사용법에 의한 Serializable보다 Parcelable이 빠르다고 했다. 그 이유를 살펴보면 Serializable은 내부적으로 <strong>리플렉션</strong>을 사용해서 이로 인해 많은 오브젝트 생성과 그에 따라 잦은 GC의 동작으로 인해 애플리케이션의 성능을 낮추는 배터리를 소모한다.</p>
+<p>그렇다면 Parcelable은 왜 더 빠른 것일까??</p>
+<p>Parcelable은 IPC(프로세스간 통신)을 이용하기 때문이다. 프로세스들 사이에서 서로 데이터를 주고 받는 것을 <code>IPC</code>라고 한다. 프로세스간의 메모리 영역은 서로 공유할 수 없기에 Parcelable 인터페이스는 커널 메모리를 통해 데이터를 다른 프로세스로 전달하는 통로를 만들어준다.</p>
+<img src="/img/parcelable_IPC.png" width="500" height="300">
+<h2 id="잠깐">잠깐!</h2>
+<p>위에서 등장하는 보일러플레이트 코드는 무엇일까???</p>
+<p>IT 업계에서 <strong>보일러 플레이트</strong>는 변경없이 재사용할 수 있는 저작품을 의미하며 보일러 플레이트 코드는 재사용이 가능한 코드를 의미한다.</p>
+<p>이 보일러 플레이트라는 단어는 철강 업계에서 유래되었는데 증기 보일러 내에 사용되는 커다란 압연 강판을 보일러 플레이트라고 불었으며 “강철처럼 튼튼하다.” &quot;반복적으로 재사용이 가능할 정도로 강력하다&quot;라는 의미가 있다고 한다.</p>
 <h2 id="참고">참고</h2>
 <ul>
-<li><a href="https://jeong-pro.tistory.com/86" target="_blank" rel="noopener">싱글톤 패턴(Singleton pattern)을 쓰는 이유와 문제점</a></li>
-<li><a href="https://medium.com/@joongwon/multi-thread-%ED%99%98%EA%B2%BD%EC%97%90%EC%84%9C%EC%9D%98-%EC%98%AC%EB%B0%94%EB%A5%B8-singleton-578d9511fd42" target="_blank" rel="noopener">Multi Thread 환경에서의 올바른 Singleton</a></li>
-<li><a href="http://superfelix.tistory.com/83" target="_blank" rel="noopener">http://superfelix.tistory.com/83</a></li>
-<li><a href="https://nesoy.github.io/articles/2018-06/Java-volatile" target="_blank" rel="noopener">Java volatile이란?</a></li>
+<li><a href="https://aroundck.tistory.com/3114" target="_blank" rel="noopener">[Java] writeObject 와 readObject 는 무엇인가?</a> - 참고해야할 자료 즉, 추후 공부해야할 내용들</li>
+<li><a href="https://medium.com/udacity-android-nanodegree/android-parcelable-vs-serializable-f2d7d2f4a2a" target="_blank" rel="noopener">Android : Parcelable vs Serializable</a></li>
+<li><a href="https://medium.com/@limgyumin/parcelable-vs-serializable-%EC%A0%95%EB%A7%90-serializable%EC%9D%80-%EB%8A%90%EB%A6%B4%EA%B9%8C-bc2b9a7ba810" target="_blank" rel="noopener">Parcelable vs Serializable , 정말 Serializable은 느릴까?</a></li>
 </ul>
 
                     
@@ -1449,7 +1281,7 @@ View Lifecycle을 보면 뷰를 다시 그리도록 유도하는 <code>invalidat
                     
                         <p>
                             <a
-                                href="/2019/01/04/Android-What-is-Singleton-Pattern/#post-footer"
+                                href="/2019/01/03/Android-What-is-serialization/#post-footer"
                                 class="postShorten-excerpt_link link"
                                 aria-label=""
                             >

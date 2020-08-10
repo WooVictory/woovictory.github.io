@@ -273,114 +273,6 @@
                     
                         <a
                             class="link-unstyled"
-                            href="/2019/01/17/Android-MVP-Step5/"
-                            aria-label=": [안드로이드] MVP 따라하기 5"
-                        >
-                            [안드로이드] MVP 따라하기 5
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2019-01-17T09:32:11+09:00">
-	
-		    Jan 17, 2019
-    	
-    </time>
-    
-        <span>in </span>
-        
-    <a class="category-link" href="/categories/Android/">Android</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <p>이번에는 참고하는 블로그의 태환님께서 영상 올리신걸 참고하여 Presenter를 분리하는 방법을 배웠다.</p>
-<p>이를 기반으로 코틀린 주요 코드를 작성했지만, 현재(2019.01.30) 자바를 이용해 프로젝트를 진행하고 있고, MVP를 적용해야 하기 때문에 한 번 더 공부를 해서 주요 코드를 작성하고자 한다.</p>
-<h2 id="java의-주요-코드">Java의 주요 코드</h2>
-<p><strong>MainContractor 정의</strong></p>
-<p>MainContractor는 View와 Presenter에 대한 인터페이스를 정의한다. 이해하는데 용이하게 하기 위한 용도이다.</p>
-<ul>
-<li>View 인터페이스에는 Presenter로부터 가공된 데이터를 받고 UI를 갱신하는 로직이 필요하다.</li>
-<li>Presenter 인터페이스에는 View로부터 이벤트를 받고 데이터를 가공하는 로직이 필요하다. 그리고 View로 데이터를 넘겨줘야 한다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">MainContractor</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">interface</span> <span class="title">View</span></span>&#123;</span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">addItems</span><span class="params">(ArrayList&lt;ImageItem&gt; list, Boolean isClear)</span></span>;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">notifyAdapter</span><span class="params">()</span></span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">interface</span> <span class="title">Presenter</span></span>&#123;</span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">attachView</span><span class="params">(View view)</span></span>;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">detachView</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">setSampleImageData</span><span class="params">(SampleImageData data)</span></span>;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">loadItems</span><span class="params">(Context context, Boolean isClear)</span></span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>MainPresenter 주요 코드</strong></p>
-<ul>
-<li>Presenter는 View를 들고 있는다. View에게 가공된 데이터를 넘기기 위해서 View를 들고 있는 것이다. 또한, 여기서는 데이터를 세팅하는 과정까지 포함하고 있다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> MainContractor.View view;</span><br><span class="line"><span class="keyword">private</span> SampleImageData sampleImageData;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">attachView</span><span class="params">(MainContractor.View view)</span></span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.view = view;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Overrid</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">detachView</span><span class="params">()</span></span>&#123;</span><br><span class="line">    view = <span class="keyword">null</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setSampleImageData</span><span class="params">(SampleImageData sampleImageData)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.sampleImageData = sampleImageData;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>MainPresenter의 loadItems 코드</strong></p>
-<ul>
-<li>그리고 loadItems는 View에서 Presenter의 loadItems 함수를 호출한다. 그러면 Presenter에서는 이미지 데이터를 가져와서 view의 addItems와 notifyAdapter 함수를 호출함으로써 View에게 update된 데이터를 넘겨준다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">loadItems</span><span class="params">(Context context, Boolean isClear)</span> </span>&#123;</span><br><span class="line">      ArrayList&lt;ImageItem&gt; imageItemList = sampleImageData.getSampleList(context, <span class="number">10</span>);</span><br><span class="line">      view.addItems(imageItemList, isClear);</span><br><span class="line">      view.notifyAdapter();</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
-<p><strong>MainActivity 주요 코드</strong></p>
-<ul>
-<li>MainActivity에서는 Presenter를 들고 있다. 그리고 Presenter의 loadItems 함수를 호출한다. 그러면 Presenter에서는 데이터를 가공하고 View에게 전달하는 로직을 가지고 있다. 아래는 loadItems()를 호출하는 부분이다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mMainPresenter = <span class="keyword">new</span> MainPresenter();</span><br><span class="line">mMainPresenter.attachView(MainActivity.<span class="keyword">this</span>);</span><br><span class="line"></span><br><span class="line">mMainPresenter.setSampleImageData(SampleImageData.getInstance());</span><br><span class="line"></span><br><span class="line">mMainPresenter.loadItems(<span class="keyword">this</span>, <span class="keyword">false</span>);</span><br></pre></td></tr></table></figure>
-<p><strong>UI 갱신을 위한 주요 코드</strong></p>
-<ul>
-<li>UI 갱신을 위한 부분은 addItems()와 notifyAdapter() 부분이다. 이 함수는 결국 Presenter에 loadItems()를 호출하고 Presenter가 View에게 데이터를 전달하고 View에서 UI 갱신이 일어나는 과정이다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addItems</span><span class="params">(ArrayList&lt;ImageItem&gt; items, <span class="keyword">boolean</span> isClear)</span> </span>&#123;</span><br><span class="line">	 <span class="keyword">if</span> (isClear) &#123;</span><br><span class="line">			 imageAdapter.clear();</span><br><span class="line">	 &#125;</span><br><span class="line">	 imageAdapter.setImageItems(items);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">notifyAdapter</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	 imageAdapter.notifyDataSetChanged();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="kotlin의-주요-코드">Kotlin의 주요 코드</h2>
-<p><strong>MainContract 정의</strong><br>
-Kotlin에서 사용 가능한 interface 정의를 다음과 같이 한다. var view, var ImageData를 정의한다.</p>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">MainContract</span></span>&#123;</span><br><span class="line">    <span class="class"><span class="keyword">interface</span> <span class="title">View</span></span>&#123;</span><br><span class="line">        <span class="comment">// View의 UI 갱신을 위한 메소드</span></span><br><span class="line">        <span class="function"><span class="keyword">fun</span> <span class="title">updateItems</span><span class="params">(items : <span class="type">ArrayList</span>&lt;<span class="type">ImageItem</span>&gt;, isClear : <span class="type">Boolean</span>)</span></span></span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">fun</span> <span class="title">notifyAdapter</span><span class="params">()</span></span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">interface</span> <span class="title">Presenter</span></span>&#123;</span><br><span class="line">        <span class="keyword">var</span> view : view</span><br><span class="line">        <span class="keyword">var</span> imageDat : SampleImageData</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Model에 접근하기 위한 메소드</span></span><br><span class="line">        <span class="function"><span class="keyword">fun</span> <span class="title">loadItems</span><span class="params">(context : <span class="type">Context</span>, isClear : <span class="type">Boolean</span>)</span></span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>MainPresenter 정의</strong><br>
-그리고 <code>lateinit</code>을 통해서 변수를 선언한다.<br>
-자바에서는 이때 setView/getView가 자동으로 생성된다.</p>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">lateinit</span> <span class="keyword">override</span> <span class="keyword">var</span> view: MainContract.View</span><br><span class="line"><span class="keyword">lateinit</span> <span class="keyword">override</span> <span class="keyword">var</span> imageData: ImageData</span><br></pre></td></tr></table></figure>
-<p>그리고 loadItems을 아래와 같이 생성한다. updateItems와 notifyAdapter을 각각 호출해주어서 UI를 갱신한다.</p>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">loadItems</span><span class="params">(context: <span class="type">Context</span>, isClear: <span class="type">Boolean</span>)</span></span> &#123;</span><br><span class="line">    imageData.getSampleList(context, <span class="number">10</span>).let &#123;</span><br><span class="line">        view.updateItems(it, isClear)</span><br><span class="line">        view.notifyAdapter()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>MainActivity 정의</strong></p>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">privaet <span class="keyword">lateinit</span> <span class="keyword">var</span> presenter : MainPresenter</span><br><span class="line"></span><br><span class="line"><span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreate</span><span class="params">(savedInstancesState: <span class="type">Bundle</span>?)</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    presenter = MainPresenter().apply&#123;</span><br><span class="line">        view = <span class="keyword">this</span><span class="symbol">@MainActivity</span></span><br><span class="line">        imageData = SampleImageData</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    presenter.loadItems(context, <span class="literal">false</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>그리고 presenter로부터 View에 대한 콜백을 다음과 같이 처리한다.</p>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">updateItems</span><span class="params">(items: <span class="type">ArrayList</span>&lt;<span class="type">ImageItem</span>&gt;, isClear: <span class="type">Boolean</span>)</span></span> &#123;</span><br><span class="line">    imageAdapter?.apply &#123;</span><br><span class="line">        <span class="keyword">if</span> (isClear) &#123;</span><br><span class="line">            imageList?.clear()</span><br><span class="line">        &#125;</span><br><span class="line">        imageList = items</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">notifyAdapter</span><span class="params">()</span></span> &#123;</span><br><span class="line">    imageAdapter?.notifyDataSetChanged()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="느낀점">느낀점</h2>
-<p>MVP로 나아가기 위해서 조금씩 걸어가고 있다. 하지만 아직 어려운 건 사실이다. 익숙해지기 위해서는 더 많이 코드를 짜보고 생각을 해봐야 할 것 같다.</p>
-<p>MVC가 보기에는 편하다. 몇 줄 적지 않았던 코드는 길게 늘어났고, 클래스도 많아졌다. 아직 MVP라고 하기엔 거리가 멀지만 단순히 생각해보면 Activity에서 Model을 분리했다?? 라는데 아니라고 보일지도 모른다. 그래도 최소한 View/Model 간의 결합도를 낮출 수 있고, View/Model에 대한 테스트도 가능하다.</p>
-<h2 id="참고">참고</h2>
-<ul>
-<li><a href="https://thdev.tech/androiddev/2016/12/23/Android-MVP-Three/" target="_blank" rel="noopener">Android MVP 무작정 따라하기 - Presenter 분리하기(동영상)</a></li>
-</ul>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2019/01/17/Android-MVP-Step5/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
                             href="/2019/01/16/Android-MVP-Step4/"
                             aria-label=": [안드로이드] MVP 따라하기 4"
                         >
@@ -980,65 +872,6 @@ RelativeLayout이 Linear나 ConstraintLayout보다 <code>onMeasure()</code> 함�
                     
                         <a
                             class="link-unstyled"
-                            href="/2019/01/13/DesignPattern-Bridge/"
-                            aria-label=": [디자인 패턴] 브릿지 패턴"
-                        >
-                            [디자인 패턴] 브릿지 패턴
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2019-01-13T23:40:31+09:00">
-	
-		    Jan 13, 2019
-    	
-    </time>
-    
-        <span>in </span>
-        
-    <a class="category-link" href="/categories/Design-Pattern/">Design Pattern</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h2 id="브릿지-패턴">브릿지 패턴</h2>
-<p>구현부에서 추상층을 분리하여 각자 독립적으로 변형이 가능하고 확장이 가능하도록 한다. 즉, 기능과 구현에 대해서 두 개를 별도의 클래스로 구현을 한다.</p>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2019/01/13/DesignPattern-Bridge/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
                             href="/2019/01/07/Android-For-Interview-4/"
                             aria-label=": [안드로이드] 안드로이드 면접 4"
                         >
@@ -1391,6 +1224,195 @@ Looper로부터 받은 Message를 실행, 처리하거나 다른 쓰레드로부
         
     </article>
     
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2019/01/06/Android-View-Functions/"
+                            aria-label=": [안드로이드] View 함수"
+                        >
+                            [안드로이드] View 함수
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2019-01-06T16:13:04+09:00">
+	
+		    Jan 06, 2019
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/Android/">Android</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <p>안드로이드 앱 개발을 하면서 layout이나 button 같은 UI 관련 클래스들은 모두 View를 상속 받아서 생성된다. 이 중에 ViewGroup은 button이나 ImageView 같은 것과는 다르게 자식 뷰를 가질 수 있으며 이를 배치하는 역할을 한다.</p>
+<p>자신만의 button이나 view를 만들고 싶다면 View 클래스를 상속받아서 필요한 메소드를 오버라이드 하면된다.</p>
+<p>자신만의 layout을 만들고 싶다면 ViewGroup 클래스를 상속받아서 필요한 메소드들을 오버라이드 하면된다.</p>
+<ul>
+<li>Custom View는 View 클래스를 상속하여 만든다.</li>
+<li>Custom Layout은 ViewGroup 클래스를 상속하여 만든다.</li>
+</ul>
+<h2 id="view가-그려지는-과정">View가 그려지는 과정</h2>
+<p>뷰는 포커스를 얻으면 레이아웃을 그리도록 요청한다. 이때 레이아웃의 계층 구조 중 루트 뷰를 제공해야 한다. 따라서 그리기는 루트노드에서 시작되어 트리를 따라 전위 순회 방식으로 그려진다. [전위 순회 방식 : 루트-&gt;왼쪽-&gt;오른쪽] 부모 뷰는 자식 뷰가 그려지기 전에(즉, 자식 뷰 뒤에) 그려지며 형제 뷰는 전위 방식에 따라 순서대로 그려진다. 레이아웃을 그리는 과정은 <strong>측정</strong>(measure) 단계와 <strong>레이아웃</strong>(layout) 단계를 통해 그려지게 된다.</p>
+<p><strong>measure(int widthMeasureSpec, int heightMeasureSpec)</strong></p>
+<p>부모 노드에서 자식 노드를 경유하며 실행되며, 뷰의 크기를 알아내기 위해 호출된다. 이것은 뷰의 크기를 측정하는 것은 아니며 실제 크기 측정은 <code>onMeasure(int, int)</code>를 통해 이루어진다. measure(int, int)의 내부에서 onMeasure(int, int)를 호출함으로써 뷰의 크기를 알아낸다. 측정 과정에서는 부모 뷰와 자식 뷰간의 크기 정보를 전달하기 위해 2가지의 클래스를 사용한다.</p>
+<ol>
+<li>ViewGroup.LayoutParams</li>
+</ol>
+<p>자식 뷰가 부모 뷰에게 자신이 어떻게 측정되고 위치를 정할지 요청하는데 사용된다. ViewGroup의 sub class에 따라 다른 ViewGroup.LayoutParams의 sub class가 존재할 수 있다. 예를 들어 ViewGroup의 sub class인 <code>RelativeLayout</code>의 경우 자신만의 ViewGroup.LayoutParams의 sub class는 자식 뷰를 수평적으로 또는 수직적으로 가운데 정렬을 할 수 있는 능력이 있다.</p>
+<ul>
+<li>숫자</li>
+<li>MATCH_PARENT</li>
+<li>WRAP_CONTENT</li>
+</ul>
+<ol start="2">
+<li>ViewGroup.MeasureSpec</li>
+</ol>
+<p>부모 뷰가 자식 뷰에게 요구 사항을 전달하는데 사용된다.</p>
+<ul>
+<li>UNSPECIFIED : 부모 뷰는 자식 뷰가 원하는 치수대로 결정한다.</li>
+<li>EXACTLY : 부모 뷰가 자식 뷰에게 정확한 크기를 강요한다.</li>
+<li>AT MOST : 부모 뷰가 자식 뷰에게 최대 크기를 강요한다.</li>
+</ul>
+<p><strong>layout(int l, int t, int r, int b)</strong></p>
+<p>부모 노드에서 자식 노드를 경유하며 실행되며 뷰와 자식 뷰들의 크기와 위치를 할당할 때 사용된다. <code>measure(int, int)</code>에 의해 각 뷰에 저장된 크기를 사용하여 위치를 지정한다. 내부적으로 <code>onLayout()</code>을 호출하고 onLayout()에서 실제 뷰의 위치를 할당하는 구조로 되어있다.</p>
+<p>measure()와 layout() 함수는 내부적으로 각각 onMeasure()와 onLayout() 함수를 호출한다. 이것은 final로 선언된 measure()와 layout() 대신 onMeasure()와 onLayout()을 구현(override)할 것을 장려하기 위해서이다.</p>
+<p>뷰의 measure()함수가 반환할때, 뷰의 getMeasureWidth()와 getMeasureHeight()값이 설정된다. 만약 자식 뷰 측정값의 합이 너무 크거나 작을 경우 다시 <code>measure()</code> 함수를 호출하여 크기를 재측정한다.</p>
+<h2 id="view-lifecycle">View Lifecycle</h2>
+<img src="/img/android_view_method.png" width="400" height="300">
+<ol>
+<li>Constructor<br>
+모든 뷰는 생성자에서부터 출발한다. 생성자에서 초기화를 진행하고, default 값을 설정한다. 뷰는 초기설정을 쉽게 세팅하기 위해서 <code>AttributeSet</code>이라는 인터페이스를 지원한다. 먼저, attrs.xml 파일을 만들고 이것을 부름으로써 뷰의 설정값을 쉽게 설정할 수 있다.<br>
+<img src="/img/android_view_attrs.png" width="700" height="300"></li>
+</ol>
+<ol start="2">
+<li>onAttachedToWindow<br>
+부모 뷰가 <code>addView(childView)</code> 함수를 호출하고 나서 자식 뷰는 윈도우에 붙게 된다.(attached) 이때부터 뷰의 id를 통해 접근할 수 있다.</li>
+</ol>
+<ol start="3">
+<li>onMeasure<br>
+뷰의 크기를 측정하는 단계이다. 매우 중요한 단계이며, 대부분의 경우 레이아웃에 맞게 특정크기를 가져야 한다. 여기에는 두 단계의 과정이 있다.</li>
+</ol>
+<p>(1) 뷰가 원하는 사이즈를 계산한다.<br>
+(2) <code>MeasureSpec</code>에 따라 크기와 mode를 가져온다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onMeasure</span><span class="params">(<span class="keyword">int</span> widthMeasureSpec, <span class="keyword">int</span> heightMeasureSpec)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> widthMode = MeasureSpec.getMode(widthMeasureSpec);</span><br><span class="line">        <span class="keyword">int</span> widthSize = MeasureSpec.getSize(widthMeasureSpec);</span><br><span class="line">        <span class="keyword">int</span> heightMode = MeasureSpec.getMode(heightMeasureSpec);</span><br><span class="line">        <span class="keyword">int</span> heightSize = MeasureSpec.getSize(heightMeasureSpec);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li><code>MeasureSpec</code>의 mode를 체크하여 뷰의 크기를 적용한다.</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> width;</span><br><span class="line"><span class="keyword">if</span> (widthMode == MeasureSpec.EXACTLY) &#123;</span><br><span class="line">  width = widthSize;</span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (widthMode == MeasureSpec.AT_MOST) &#123;</span><br><span class="line">  width = Math.min(desiredWidth, widthSize);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  width = desiredWidth;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li>onLayout<br>
+이 단계에서 뷰의 크기와 위치를 할당한다.</li>
+</ol>
+<ol start="5">
+<li>onDraw<br>
+뷰를 실제로 그리는 단계이다. <code>Canvas</code>와 <code>Paint</code>객체를 사용하면 필요한 것을 그리게 된다. Canvas 객체는 onDraw 함수의 파라미터로 제공된다. <strong>Canvas 객체를 이용하여 뷰의 모양을 그리고 Paint 객체를 이용하여 뷰의 색을 그린다.</strong></li>
+</ol>
+<img src="/img/android_view_onDraw.png" width="700" height="300">
+<p>여기서 주의할 점은 <strong><code>onDraw()</code> 함수를 호출시 많은 시간이 소요된다는 점이다.</strong> Scroll 또는 Swipe 등을 할 경우 뷰는 다시 onDraw()와 onLayout() 함수를 다시 호출하게 된다. 따라서 함수 내에서 객체 할당을 피하고 한 번 할당된 객체를 재사용할 것을 권장한다.</p>
+<img src="/img/android_view_ondraw2.png" width="700" height="300">
+<img src="/img/android_view_ondraw3.png" width="700" height="300">
+<ol start="6">
+<li>View Update<br>
+View Lifecycle을 보면 뷰를 다시 그리도록 유도하는 <code>invalidate()</code>와 <code>requestLayout()</code> 함수를 볼 수 있다. 이것은 런타임에 뷰를 다시 그릴 수 있게 한다. 각각의 사용 용도는 아래와 같다.</li>
+</ol>
+<ul>
+<li>invalidate() : 단순히 뷰를 다시 그릴 때 사용한다. 예를 들어 뷰의 text 또는 color가 변경되거나 touch interactivity가 발생할 때 onDraw() 함수를 재호출하면서 뷰를 업데이트한다.</li>
+<li>requestLayout() : onMeasure() 부터 다시 뷰를 그린다. 뷰의 사이즈가 변경될 때 그것을 다시 측정해야 하기 때문에 Lifecycle을 <code>onMeasure()</code> 부터 순회하면서 뷰를 그린다.</li>
+</ul>
+<ol start="7">
+<li>Animation<br>
+뷰의 animation은 frame 단위의 프로세스이다. 예를 들어 뷰가 점점 커질 때 뷰를 한 단계씩 차례대로 커지도록 할 것이다. 그리고 각 단계마다 invalidate()를 호출하여 뷰를 그릴 것이다. 대표적으로 애니메이션에 사용하는 클래스는 <code>ValueAnimator</code>이다.</li>
+</ol>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2019/01/06/Android-View-Functions/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-right">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2019/01/04/Java-What-is-Marker-interface/"
+                            aria-label=": [Java] 마커인터페이스"
+                        >
+                            [Java] 마커인터페이스
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2019-01-04T15:35:44+09:00">
+	
+		    Jan 04, 2019
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/Java/">Java</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-excerpt">
+                    <p>직렬화할 때 사용하는 방법 중에 Serializable과 Parcelable 두 개가 있다.<br>
+그 중에서 Serializable을 공부하던 중 이것이 마커 인터페이스라고 부르는 것을 보았다.<br>
+그래서 생긴 의문은 도대체 <strong>마커 인터페이스</strong>는 무엇인가</p>
+                    
+                        <a
+                            href="/2019/01/04/Java-What-is-Marker-interface/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [Java] 마커인터페이스"
+                        >
+                            Continue reading
+                        </a>
+                        
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
     <div class="pagination-bar">
     <ul class="pagination">
         
@@ -1417,7 +1439,7 @@ Looper로부터 받은 Message를 실행, 처리하거나 다른 쓰레드로부
             </a>
           </li>
         
-        <li class="pagination-number">page 14 of 26</li>
+        <li class="pagination-number">page 14 of 25</li>
     </ul>
 </div>
 
