@@ -6,24 +6,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="VictoryWoo">
-    <title>자바 :: Priority Queue? - VictoryWoo</title>
+    <title>[Java] Priority Queue - VictoryWoo</title>
     <meta name="author" content="VictoryWoo">
     
     
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg"},"articleBody":"이번에는 Priority Queue에 대해서 공부를 해보았습니다.\nPriority Queue\n일반적으로 Queue라는 자료구조는 선입선출(First-In-First-Out)의 대기열 규칙을 갖고 있습니다. 즉, 큐에 삽입될 때의 시간이 큐에서의 순서를 결정하게 됩니다.\n그러나 우선순위 큐는 입력 시간이 아닌 다른 조건으로 큐내에서의 순서를 결정할 수 있는데, 이 때 List에서 배운 Comparator 인터페이스가 큐 내에서의 순서를 결정하는 역할을 하게 됩니다.\n사용법\n\nimport.java.util.PriorityQueue를 import하여 사용합니다.\n\n사용법은 Queue와 동일한 메소드를 사용합니다.\n12345// 기본 생성자. 객체의 기본 비교 CompareTo를 사용한다. PriorityQueue&lt;Integer&gt; pa = new PriorityQueue&lt;Integer&gt;();// 기본 배열크기, 비교함수를 인자로 받는 생성자.PriorityQueue&lt;Integer&gt; pa = new PriorityQueue&lt;Integer&gt;();\n메소드\n삽입 - offer,add\n큐에 새로운 데이터를 삽입하는 작업을 의미하며, 이는 리스트의 끝 부분을 가리키는 rear에서 발생하며 데이터가 삽입될 때 하나 증가시킨 후 새로운 데이터를 삽입합니다.\n제거 - poll,remove\n큐에서 데이터를 제거하는 작업을 의미하며 이는 항상 front에서 발생합니다. front값이 rear를 추월하게 되면 더이상 제거할 데이터가 없는 상태 즉, 자료가 하나도 없는 빈 큐를 의미합니다.\npoll은 큐가 비어있다면 null을 반환\nremove는 큐가 비어있다면 예외 발생\n읽기 - peek,element\n큐에서 front가 가리키는 데이터를 읽는 작업을 peek이라 합니다. 데이터를 제거하지 않고 읽는 작업만 수행하므로 front값을 변경시키지 않습니다.\npeek은 큐가 비어있다면 null을 반환\nelement은 큐가 비어있다면 예외 발생\n사용\n12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758PriorityQueue&lt;Prisoner&gt; pq = new PriorityQueue&lt;Prisoner&gt;();\t\tPrisoner ps1 = new Prisoner(&quot;박보검&quot;,20);Prisoner ps2 = new Prisoner(&quot;하정우&quot;,3);Prisoner ps3 = new Prisoner(&quot;이준기&quot;,50);Prisoner ps4 = new Prisoner(&quot;강하늘&quot;,10);Prisoner ps5 = new Prisoner(&quot;박서준&quot;,2);\t\tpq.offer(ps1);pq.offer(ps2);pq.offer(ps3);pq.offer(ps4);pq.offer(ps5);System.out.println(&quot;사이즈:&quot;+pq.size());\t\t\twhile(!pq.isEmpty())&#123;\t\tPrisoner prisoner = pq.poll();\t\tSystem.out.println(prisoner.name);\t&#125;\t\t\t\tSystem.out.println(&quot;----------Reverse&quot;);\t\tPriorityQueue&lt;Prisoner&gt; reversedPriorityQueue = new PriorityQueue&lt;Prisoner&gt;(pq.size(), Collections.reverseOrder());reversedPriorityQueue.addAll(pq);\t\t\twhile(!reversedPriorityQueue.isEmpty())&#123;\t\tPrisoner prisoner2 = reversedPriorityQueue.poll();\t\tSystem.out.println(prisoner2.name);\t&#125;\t&#125;&#125;class Prisoner implements Comparable&lt;Prisoner&gt;&#123;\tString name;\tint weight;\t\tpublic Prisoner(String name, int weight)&#123;\t\tthis.name = name;\t\tthis.weight = weight;\t&#125;\t@Override\tpublic int compareTo(Prisoner ps) &#123;\t\tif(this.weight&gt;ps.weight)&#123;\t\t\treturn 1;\t\t&#125;else if(this.weight&lt;ps.weight)&#123;\t\t\treturn -1;\t\t&#125;\t\treturn 0;\t&#125;\t// 이 상태는 오름차순인데, \t// Comparable을 구현하고, compareTo 메소드를 사용해서 내림차순을 구현하려면\t// return 하는 값을 바꾸면 된다. 1 대신에 -1을 -1 대신에 1을!!&#125;\n우선순위 큐에서 값을 poll()이라는 함수를 통해서 꺼내게 되면 가장 작은 값부터 꺼낼 수 있게 됩니다.\n그 이유는 우선순위 큐는 내부적으로 Natural Ordering에 따라서 정렬하는 큐이기 때문입니다.\n12345678PriorityQueue&lt;Integer&gt; pQueue = new PriorityQueue&lt;Integer&gt;();        for (int i =10; i&gt;0; i--)&#123;      pQueue.add(i);&#125;System. out .println(pQueue.peek());\n실제로 위의 예를 실행해보면 peek() 메소드를 통해서 head 에 있는 값을 가져오는데, 10이 아니라 1을 가져오는 것을 확인할 수 있습니다. 그것은 Priority Queue가 natural Ordering에 따라서 정렬하기 때문에 가장 작은 값이 head 부분에 위치하는 것을 알 수 있습니다.\n그리고 Priority Queue는 Null을 허용하지 않습니다. Natural Ordering에 기초하고 있기 때문에 정렬할 수 없는 Null은 허용하지 않습니다.\n","dateCreated":"2018-03-19T17:11:16+09:00","dateModified":"2020-04-22T16:47:07+09:00","datePublished":"2018-03-19T17:11:16+09:00","description":"","headline":"자바 :: Priority Queue?","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://woovictory.github.io/2018/03/19/JavaCollectionPriorityQueue/"},"publisher":{"@type":"Organization","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg","logo":{"@type":"ImageObject","url":"Victory.jpeg"}},"url":"https://woovictory.github.io/2018/03/19/JavaCollectionPriorityQueue/","keywords":"Java"}</script>
-    <meta name="description" content="이번에는 Priority Queue에 대해서 공부를 해보았습니다. Priority Queue 일반적으로 Queue라는 자료구조는 선입선출(First-In-First-Out)의 대기열 규칙을 갖고 있습니다. 즉, 큐에 삽입될 때의 시간이 큐에서의 순서를 결정하게 됩니다. 그러나 우선순위 큐는 입력 시간이 아닌 다른 조건으로 큐내에서의 순서를 결정할 수 있는데">
-<meta name="keywords" content="Java">
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg"},"articleBody":"이번에는 Priority Queue에 대해서 공부를 해보았습니다.\n\nPriority Queue\n일반적으로 Queue라는 자료구조는 선입선출(First-In-First-Out)의 대기열 규칙을 갖고 있습니다. 즉, 큐에 삽입될 때의 시간이 큐에서의 순서를 결정하게 됩니다.\n그러나 우선순위 큐는 입력 시간이 아닌 다른 조건으로 큐내에서의 순서를 결정할 수 있는데, 이 때 List에서 배운 Comparator 인터페이스가 큐 내에서의 순서를 결정하는 역할을 하게 됩니다.\n사용법\n\nimport.java.util.PriorityQueue를 import하여 사용합니다.\n\n사용법은 Queue와 동일한 메소드를 사용합니다.\n12345// 기본 생성자. 객체의 기본 비교 CompareTo를 사용한다. PriorityQueue&lt;Integer&gt; pa = new PriorityQueue&lt;Integer&gt;();// 기본 배열크기, 비교함수를 인자로 받는 생성자.PriorityQueue&lt;Integer&gt; pa = new PriorityQueue&lt;Integer&gt;();\n메소드\n삽입 - offer,add\n큐에 새로운 데이터를 삽입하는 작업을 의미하며, 이는 리스트의 끝 부분을 가리키는 rear에서 발생하며 데이터가 삽입될 때 하나 증가시킨 후 새로운 데이터를 삽입합니다.\n제거 - poll,remove\n큐에서 데이터를 제거하는 작업을 의미하며 이는 항상 front에서 발생합니다. front값이 rear를 추월하게 되면 더이상 제거할 데이터가 없는 상태 즉, 자료가 하나도 없는 빈 큐를 의미합니다.\npoll은 큐가 비어있다면 null을 반환\nremove는 큐가 비어있다면 예외 발생\n읽기 - peek,element\n큐에서 front가 가리키는 데이터를 읽는 작업을 peek이라 합니다. 데이터를 제거하지 않고 읽는 작업만 수행하므로 front값을 변경시키지 않습니다.\npeek은 큐가 비어있다면 null을 반환\nelement은 큐가 비어있다면 예외 발생\n사용\n12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758PriorityQueue&lt;Prisoner&gt; pq = new PriorityQueue&lt;Prisoner&gt;();\t\tPrisoner ps1 = new Prisoner(&quot;박보검&quot;,20);Prisoner ps2 = new Prisoner(&quot;하정우&quot;,3);Prisoner ps3 = new Prisoner(&quot;이준기&quot;,50);Prisoner ps4 = new Prisoner(&quot;강하늘&quot;,10);Prisoner ps5 = new Prisoner(&quot;박서준&quot;,2);\t\tpq.offer(ps1);pq.offer(ps2);pq.offer(ps3);pq.offer(ps4);pq.offer(ps5);System.out.println(&quot;사이즈:&quot;+pq.size());\t\t\twhile(!pq.isEmpty())&#123;\t\tPrisoner prisoner = pq.poll();\t\tSystem.out.println(prisoner.name);\t&#125;\t\t\t\tSystem.out.println(&quot;----------Reverse&quot;);\t\tPriorityQueue&lt;Prisoner&gt; reversedPriorityQueue = new PriorityQueue&lt;Prisoner&gt;(pq.size(), Collections.reverseOrder());reversedPriorityQueue.addAll(pq);\t\t\twhile(!reversedPriorityQueue.isEmpty())&#123;\t\tPrisoner prisoner2 = reversedPriorityQueue.poll();\t\tSystem.out.println(prisoner2.name);\t&#125;\t&#125;&#125;class Prisoner implements Comparable&lt;Prisoner&gt;&#123;\tString name;\tint weight;\t\tpublic Prisoner(String name, int weight)&#123;\t\tthis.name = name;\t\tthis.weight = weight;\t&#125;\t@Override\tpublic int compareTo(Prisoner ps) &#123;\t\tif(this.weight&gt;ps.weight)&#123;\t\t\treturn 1;\t\t&#125;else if(this.weight&lt;ps.weight)&#123;\t\t\treturn -1;\t\t&#125;\t\treturn 0;\t&#125;\t// 이 상태는 오름차순인데, \t// Comparable을 구현하고, compareTo 메소드를 사용해서 내림차순을 구현하려면\t// return 하는 값을 바꾸면 된다. 1 대신에 -1을 -1 대신에 1을!!&#125;\n우선순위 큐에서 값을 poll()이라는 함수를 통해서 꺼내게 되면 가장 작은 값부터 꺼낼 수 있게 됩니다.\n그 이유는 우선순위 큐는 내부적으로 Natural Ordering에 따라서 정렬하는 큐이기 때문입니다.\n12345678PriorityQueue&lt;Integer&gt; pQueue = new PriorityQueue&lt;Integer&gt;();        for (int i =10; i&gt;0; i--)&#123;      pQueue.add(i);&#125;System. out .println(pQueue.peek());\n실제로 위의 예를 실행해보면 peek() 메소드를 통해서 head 에 있는 값을 가져오는데, 10이 아니라 1을 가져오는 것을 확인할 수 있습니다. 그것은 Priority Queue가 natural Ordering에 따라서 정렬하기 때문에 가장 작은 값이 head 부분에 위치하는 것을 알 수 있습니다.\n그리고 Priority Queue는 Null을 허용하지 않습니다. Natural Ordering에 기초하고 있기 때문에 정렬할 수 없는 Null은 허용하지 않습니다.\n","dateCreated":"2018-03-19T17:11:16+09:00","dateModified":"2020-08-10T21:51:23+09:00","datePublished":"2018-03-19T17:11:16+09:00","description":"이번에는 Priority Queue에 대해서 공부를 해보았습니다.","headline":"[Java] Priority Queue","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://woovictory.github.io/2018/03/19/JavaCollectionPriorityQueue/"},"publisher":{"@type":"Organization","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg","logo":{"@type":"ImageObject","url":"Victory.jpeg"}},"url":"https://woovictory.github.io/2018/03/19/JavaCollectionPriorityQueue/","keywords":"Java, Priority Queue"}</script>
+    <meta name="description" content="이번에는 Priority Queue에 대해서 공부를 해보았습니다.">
+<meta name="keywords" content="Java,Priority Queue">
 <meta property="og:type" content="blog">
-<meta property="og:title" content="자바 :: Priority Queue?">
+<meta property="og:title" content="[Java] Priority Queue">
 <meta property="og:url" content="https://woovictory.github.io/2018/03/19/JavaCollectionPriorityQueue/index.html">
 <meta property="og:site_name" content="VictoryWoo">
-<meta property="og:description" content="이번에는 Priority Queue에 대해서 공부를 해보았습니다. Priority Queue 일반적으로 Queue라는 자료구조는 선입선출(First-In-First-Out)의 대기열 규칙을 갖고 있습니다. 즉, 큐에 삽입될 때의 시간이 큐에서의 순서를 결정하게 됩니다. 그러나 우선순위 큐는 입력 시간이 아닌 다른 조건으로 큐내에서의 순서를 결정할 수 있는데">
+<meta property="og:description" content="이번에는 Priority Queue에 대해서 공부를 해보았습니다.">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2020-04-22T07:47:07.964Z">
+<meta property="og:updated_time" content="2020-08-10T12:51:23.095Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="자바 :: Priority Queue?">
-<meta name="twitter:description" content="이번에는 Priority Queue에 대해서 공부를 해보았습니다. Priority Queue 일반적으로 Queue라는 자료구조는 선입선출(First-In-First-Out)의 대기열 규칙을 갖고 있습니다. 즉, 큐에 삽입될 때의 시간이 큐에서의 순서를 결정하게 됩니다. 그러나 우선순위 큐는 입력 시간이 아닌 다른 조건으로 큐내에서의 순서를 결정할 수 있는데">
+<meta name="twitter:title" content="[Java] Priority Queue">
+<meta name="twitter:description" content="이번에는 Priority Queue에 대해서 공부를 해보았습니다.">
     
     
         
@@ -275,7 +275,7 @@
         <div class="post-header main-content-wrap text-left">
     
         <h1 class="post-title">
-            자바 :: Priority Queue?
+            [Java] Priority Queue
         </h1>
     
     
@@ -301,6 +301,7 @@
     <div class="post-content markdown">
         <div class="main-content-wrap">
             <p>이번에는 <code>Priority Queue</code>에 대해서 공부를 해보았습니다.</p>
+<a id="more"></a>
 <h2 id="priority-queue">Priority Queue</h2>
 <p>일반적으로 Queue라는 자료구조는 <code>선입선출(First-In-First-Out)</code>의 대기열 규칙을 갖고 있습니다. 즉, 큐에 삽입될 때의 시간이 큐에서의 순서를 결정하게 됩니다.<br>
 그러나 <code>우선순위 큐</code>는 입력 시간이 아닌 다른 조건으로 큐내에서의 순서를 결정할 수 있는데, 이 때 <strong>List</strong>에서 배운 <code>Comparator</code> 인터페이스가 큐 내에서의 순서를 결정하는 역할을 하게 됩니다.</p>
@@ -339,7 +340,7 @@
             <div class="post-footer-tags">
                 <span class="text-color-light text-small">TAGGED IN</span><br/>
                 
-    <a class="tag tag--primary tag--small t-link" href="/tags/Java/">Java</a>
+    <a class="tag tag--primary tag--small t-link" href="/tags/Java/">Java</a> <a class="tag tag--primary tag--small t-link" href="/tags/Priority-Queue/">Priority Queue</a>
 
             </div>
         
@@ -366,9 +367,9 @@
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2018/03/08/java-collection-framework/"
-                    data-tooltip="Java :: Collection Framework"
-                    aria-label="NEXT: Java :: Collection Framework"
+                    href="/2018/03/02/Android-ActivityLifeCycle/"
+                    data-tooltip=" [Android] 4대 컴포넌트"
+                    aria-label="NEXT:  [Android] 4대 컴포넌트"
                 >
                     
                         <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
@@ -495,9 +496,9 @@
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2018/03/08/java-collection-framework/"
-                    data-tooltip="Java :: Collection Framework"
-                    aria-label="NEXT: Java :: Collection Framework"
+                    href="/2018/03/02/Android-ActivityLifeCycle/"
+                    data-tooltip=" [Android] 4대 컴포넌트"
+                    aria-label="NEXT:  [Android] 4대 컴포넌트"
                 >
                     
                         <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
