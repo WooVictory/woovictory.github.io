@@ -273,6 +273,129 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2019/01/24/Etc-Git-Issue-Use/"
+                            aria-label=": 4일차 [Git] Issue 탭 이용하기"
+                        >
+                            4일차 [Git] Issue 탭 이용하기
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2019-01-24T01:00:24+09:00">
+	
+		    Jan 24, 2019
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/Git/">Git</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <p>부스트 캠프를 하면서 오늘이 4일차이다. 지금까지 배운 것은 데일리 스크럼을 하면서 오늘의 상태와 할 것들을 상기하는 시간을 갖는다. 정말 간단하게 하면서 5~10분 정도로 진행한다.</p>
+<p>그리고 항상 어제 저녁에 작성했던 <strong>snippet</strong>을 보면서 어제는 어떤 일을 했고, 오늘은 어떤 일을 할지 다시 한번 생각한다.</p>
+<p><strong>snippet</strong></p>
+<p>[오늘 완료 업무]</p>
+<ul>
+<li>기능 정의서 세분화</li>
+<li>WBS 파일 git 업로드</li>
+<li>팀 Repository issue 탭 추가</li>
+</ul>
+<p>[내일 업무]</p>
+<ul>
+<li>피드백 반영</li>
+<li>안드로이드 기본 구조 세팅</li>
+</ul>
+<p>위와 같은 업무들을 작성한다. 보통 스니펫은 6시 퇴근이라고 가정한다면 5시? 정도에 회의를 통해서 스니펫을 공유하는 작업을 거친다. 우리는 지금 슬랙에 채널을 이용해서 공유하고 있다.</p>
+<p>그 다음으로는 Github을 이용한 협업 능력이다. 일단 지금까지 Github을 사용하면서 나는 Github flow를 바탕으로 협업을 진행했다. 그리고 부스트 캠프를 통해서 Git flow를 알게 되었고, 공부도 진행했다. 공부하면서 느낀 점은 Git은 정말 지옥이라는 점과 많은 명령어가 존재한다는 점이다. [Git에 대한 공부는 앞에 포스팅을 참고하면 된다. 제목이 #일차가 붙은 것들이다.]</p>
+<p>어떤 회사에서는 <code>Jira</code> 라는 애자일 프로세스 툴을 사용해서 이슈를 관리하고 이슈마다 나오는 티켓? 번호를 기준으로 해서 피쳐를 나누고 개발을 한다고 한다. 하지만, 유료이고 설치가 조금 까다롭다고 해서 우리는 Jira를 사용하지 않고 다른 방법을 사용하기로 했다.</p>
+<h2 id="issue-발행">Issue 발행</h2>
+<p>Issue는 모든 것이 이슈라고 불릴 수 있다. 새로운 추가될 기능, 개선 해야할 기능, 버그 등등 모든 것이 이슈라고 볼 수 있다. 모든 활동 내역에 대해서 이슈를 등록하고 그 이슈 기반으로 작업을 하게 된다.</p>
+<p>우리는 Github의 issue 탭을 사용해서 이를 기반으로 feature 브랜치를 생성해서 작업할 예정이다.</p>
+<h3 id="issue-template">Issue Template</h3>
+<p>이슈 템플릿을 사용해서 형식을 지정하여 사용할 수 있다. .github/ 디렉토리 밑에 ISSUE_TEMPLATE.md 파일에 템플릿을 지정해서 사용할 수 있다. 우리는 issue 템플릿은 사용하지 않는다.</p>
+<h2 id="issue-작업">Issue 작업</h2>
+<p>다음 예제의 사진을 통해서 등록된 issue를 살펴보자.</p>
+<img src="/img/github_issue.png" width="500" height="200">
+<ul>
+<li>Assignees : 해당 작업의 담당자</li>
+<li>Labels : 해당 작업의 성격을 지정한다.</li>
+<li>Milestone : 해당 작업이 속한 파트</li>
+</ul>
+<img src="/img/github_milestone.png" width="500" height="200">
+<p>다른 것들은 이해하기 쉽지만 Milestone은 생소하다. Milestone은 이번 출시 버전이 1.0.0일 경우 해당 버전이든 이슈(작업) 기능 강화, 새 기능추가, 버그 기타 등등 모든 이슈를 Version 1.0.0 Milestone이라는 항목에 추가하면 위 그림처럼 Version 1.0.0에 대한 전체적인 상황을 한 눈에 볼 수가 있는 장점이 있다.</p>
+<p><strong>1. Issue 생성</strong></p>
+<p>일단, 우리는 먼저 Github의 issue 탭에 들어가서 <strong>기능 정의서</strong>를 기반으로 issue를 생성한다. 이슈는 <code>스토리_기능</code>의 형태로 이슈를 생성했다. 기본 기능들을 미리 이슈 탭을 이용해서 기능을 정리한 것이다. 이슈를 생성할 때 자동으로 번호가 발급되는데 이 <strong>번호</strong>를 사용해서 feature 브랜치를 생성할 것이다.</p>
+<p><strong>2. 브랜치 생성</strong></p>
+<p>이제 발급된 이슈 번호를 기준으로 <strong>feature</strong> 브랜치를 생성하면 된다. Git flow에 따라서 develop 브랜치에서 feature 브랜치를 딴다.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git checkout -b feature_#033_util_sharedpreference develop</span><br></pre></td></tr></table></figure>
+<p>위의 명령어는 develop으로부터 feature_#033_util_sharedpreference라는 브랜치를 생성하고 그 브랜치로 이동하는 것을 의미한다.</p>
+<p><strong>3. 작업 수행 후 commit</strong></p>
+<p>코드를 수정하거나 클래스를 만드는 등의 작업을 수행하고 커밋을 해준다.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git commit -a -m &quot;#003_feat_쉐어드 프리퍼런스 구현&quot;</span><br></pre></td></tr></table></figure>
+<p>위의 명령어는 git add와 git commit을 합친 형태이다. 메시지도 위와 같은 형식을 지켜서 작성한다.</p>
+<p><strong>4. 원격 저장소로 push 작업</strong></p>
+<p>이제 commit도 완료했으니 원격 저장소(origin)으로 push를 하면 된다.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git push origin feature_#033_util_sharedpreference</span><br></pre></td></tr></table></figure>
+<p><strong>5. PR &amp; Merge</strong></p>
+<p>이제 Merge를 해달라는 Pull Request를 작성한다.</p>
+<img src="/img/github_PR.png" width="500" height="200">
+<ul>
+<li>PR의 이름은 Feature #033 util SharedPreference로 작성한다.</li>
+<li>내용은 PR Template을 이용하여 개요와 작업 사항, 사용 방법 등을 작성한다.</li>
+<li>그리고 작성자와 라벨을 달고 리뷰어를 설정한 뒤 PR를 날린다.</li>
+<li>코드 리뷰를 받는다.</li>
+<li>수정 사항이 있다면 코드를 수정하고 다시 push를 날린다.</li>
+<li>여기서 <code>resolved #이슈번호</code>로 작성하면 merge될 때 해당 issue는 자동으로 삭제된다.(아주 간편한 기능!!!)</li>
+</ul>
+<img src="/img/github_PR2.png" width="500" height="200">
+<ul>
+<li>그러면 수정 사항에 대해서 링크가 나오고 위와 같이 답글을 달아준다.</li>
+<li>그리고 코드 리뷰가 완료되고 리뷰어가 approve를 해주면 자신이 merge를 한다.</li>
+<li>그리고 해당 브랜치는 더는 필요가 없다고 판단되면 Delete branch 버튼을 통해서 Remote에 있는 브랜치 삭제 해주면 된다.</li>
+</ul>
+<h2 id="참고">참고</h2>
+<ul>
+<li><a href="https://www.popit.kr/github%EB%A1%9C-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8-%EA%B4%80%EB%A6%AC%ED%95%98%EA%B8%B0-part1-%EC%9D%B4%EC%8A%88-%EB%B0%9C%EA%B8%89-%EB%B6%80%ED%84%B0-%EC%BD%94%EB%93%9C%EB%A6%AC%EB%B7%B0%EA%B9%8C/" target="_blank" rel="noopener">GitHub로 프로젝트 관리하기 Part1 - 이슈 발급 부터 코드리뷰까지</a></li>
+</ul>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2019/01/24/Etc-Git-Issue-Use/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2019/01/23/Etc-Git-Flow-2/"
                             aria-label=": 3일차 [Git] Git-Flow"
                         >
@@ -1449,114 +1572,6 @@ Presenter에서 Adapter의 데이터를 저장하고 불러오는 모든 부분�
         
     </article>
     
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2019/01/17/Android-MVP-Step5/"
-                            aria-label=": [안드로이드] MVP 따라하기 5"
-                        >
-                            [안드로이드] MVP 따라하기 5
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2019-01-17T09:32:11+09:00">
-	
-		    Jan 17, 2019
-    	
-    </time>
-    
-        <span>in </span>
-        
-    <a class="category-link" href="/categories/Android/">Android</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <p>이번에는 참고하는 블로그의 태환님께서 영상 올리신걸 참고하여 Presenter를 분리하는 방법을 배웠다.</p>
-<p>이를 기반으로 코틀린 주요 코드를 작성했지만, 현재(2019.01.30) 자바를 이용해 프로젝트를 진행하고 있고, MVP를 적용해야 하기 때문에 한 번 더 공부를 해서 주요 코드를 작성하고자 한다.</p>
-<h2 id="java의-주요-코드">Java의 주요 코드</h2>
-<p><strong>MainContractor 정의</strong></p>
-<p>MainContractor는 View와 Presenter에 대한 인터페이스를 정의한다. 이해하는데 용이하게 하기 위한 용도이다.</p>
-<ul>
-<li>View 인터페이스에는 Presenter로부터 가공된 데이터를 받고 UI를 갱신하는 로직이 필요하다.</li>
-<li>Presenter 인터페이스에는 View로부터 이벤트를 받고 데이터를 가공하는 로직이 필요하다. 그리고 View로 데이터를 넘겨줘야 한다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">MainContractor</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">interface</span> <span class="title">View</span></span>&#123;</span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">addItems</span><span class="params">(ArrayList&lt;ImageItem&gt; list, Boolean isClear)</span></span>;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">notifyAdapter</span><span class="params">()</span></span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">interface</span> <span class="title">Presenter</span></span>&#123;</span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">attachView</span><span class="params">(View view)</span></span>;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">detachView</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">setSampleImageData</span><span class="params">(SampleImageData data)</span></span>;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">loadItems</span><span class="params">(Context context, Boolean isClear)</span></span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>MainPresenter 주요 코드</strong></p>
-<ul>
-<li>Presenter는 View를 들고 있는다. View에게 가공된 데이터를 넘기기 위해서 View를 들고 있는 것이다. 또한, 여기서는 데이터를 세팅하는 과정까지 포함하고 있다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> MainContractor.View view;</span><br><span class="line"><span class="keyword">private</span> SampleImageData sampleImageData;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">attachView</span><span class="params">(MainContractor.View view)</span></span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.view = view;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Overrid</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">detachView</span><span class="params">()</span></span>&#123;</span><br><span class="line">    view = <span class="keyword">null</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setSampleImageData</span><span class="params">(SampleImageData sampleImageData)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.sampleImageData = sampleImageData;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>MainPresenter의 loadItems 코드</strong></p>
-<ul>
-<li>그리고 loadItems는 View에서 Presenter의 loadItems 함수를 호출한다. 그러면 Presenter에서는 이미지 데이터를 가져와서 view의 addItems와 notifyAdapter 함수를 호출함으로써 View에게 update된 데이터를 넘겨준다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">loadItems</span><span class="params">(Context context, Boolean isClear)</span> </span>&#123;</span><br><span class="line">      ArrayList&lt;ImageItem&gt; imageItemList = sampleImageData.getSampleList(context, <span class="number">10</span>);</span><br><span class="line">      view.addItems(imageItemList, isClear);</span><br><span class="line">      view.notifyAdapter();</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
-<p><strong>MainActivity 주요 코드</strong></p>
-<ul>
-<li>MainActivity에서는 Presenter를 들고 있다. 그리고 Presenter의 loadItems 함수를 호출한다. 그러면 Presenter에서는 데이터를 가공하고 View에게 전달하는 로직을 가지고 있다. 아래는 loadItems()를 호출하는 부분이다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mMainPresenter = <span class="keyword">new</span> MainPresenter();</span><br><span class="line">mMainPresenter.attachView(MainActivity.<span class="keyword">this</span>);</span><br><span class="line"></span><br><span class="line">mMainPresenter.setSampleImageData(SampleImageData.getInstance());</span><br><span class="line"></span><br><span class="line">mMainPresenter.loadItems(<span class="keyword">this</span>, <span class="keyword">false</span>);</span><br></pre></td></tr></table></figure>
-<p><strong>UI 갱신을 위한 주요 코드</strong></p>
-<ul>
-<li>UI 갱신을 위한 부분은 addItems()와 notifyAdapter() 부분이다. 이 함수는 결국 Presenter에 loadItems()를 호출하고 Presenter가 View에게 데이터를 전달하고 View에서 UI 갱신이 일어나는 과정이다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addItems</span><span class="params">(ArrayList&lt;ImageItem&gt; items, <span class="keyword">boolean</span> isClear)</span> </span>&#123;</span><br><span class="line">	 <span class="keyword">if</span> (isClear) &#123;</span><br><span class="line">			 imageAdapter.clear();</span><br><span class="line">	 &#125;</span><br><span class="line">	 imageAdapter.setImageItems(items);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">notifyAdapter</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	 imageAdapter.notifyDataSetChanged();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="kotlin의-주요-코드">Kotlin의 주요 코드</h2>
-<p><strong>MainContract 정의</strong><br>
-Kotlin에서 사용 가능한 interface 정의를 다음과 같이 한다. var view, var ImageData를 정의한다.</p>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">MainContract</span></span>&#123;</span><br><span class="line">    <span class="class"><span class="keyword">interface</span> <span class="title">View</span></span>&#123;</span><br><span class="line">        <span class="comment">// View의 UI 갱신을 위한 메소드</span></span><br><span class="line">        <span class="function"><span class="keyword">fun</span> <span class="title">updateItems</span><span class="params">(items : <span class="type">ArrayList</span>&lt;<span class="type">ImageItem</span>&gt;, isClear : <span class="type">Boolean</span>)</span></span></span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">fun</span> <span class="title">notifyAdapter</span><span class="params">()</span></span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">interface</span> <span class="title">Presenter</span></span>&#123;</span><br><span class="line">        <span class="keyword">var</span> view : view</span><br><span class="line">        <span class="keyword">var</span> imageDat : SampleImageData</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Model에 접근하기 위한 메소드</span></span><br><span class="line">        <span class="function"><span class="keyword">fun</span> <span class="title">loadItems</span><span class="params">(context : <span class="type">Context</span>, isClear : <span class="type">Boolean</span>)</span></span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>MainPresenter 정의</strong><br>
-그리고 <code>lateinit</code>을 통해서 변수를 선언한다.<br>
-자바에서는 이때 setView/getView가 자동으로 생성된다.</p>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">lateinit</span> <span class="keyword">override</span> <span class="keyword">var</span> view: MainContract.View</span><br><span class="line"><span class="keyword">lateinit</span> <span class="keyword">override</span> <span class="keyword">var</span> imageData: ImageData</span><br></pre></td></tr></table></figure>
-<p>그리고 loadItems을 아래와 같이 생성한다. updateItems와 notifyAdapter을 각각 호출해주어서 UI를 갱신한다.</p>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">loadItems</span><span class="params">(context: <span class="type">Context</span>, isClear: <span class="type">Boolean</span>)</span></span> &#123;</span><br><span class="line">    imageData.getSampleList(context, <span class="number">10</span>).let &#123;</span><br><span class="line">        view.updateItems(it, isClear)</span><br><span class="line">        view.notifyAdapter()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>MainActivity 정의</strong></p>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">privaet <span class="keyword">lateinit</span> <span class="keyword">var</span> presenter : MainPresenter</span><br><span class="line"></span><br><span class="line"><span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreate</span><span class="params">(savedInstancesState: <span class="type">Bundle</span>?)</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    presenter = MainPresenter().apply&#123;</span><br><span class="line">        view = <span class="keyword">this</span><span class="symbol">@MainActivity</span></span><br><span class="line">        imageData = SampleImageData</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    presenter.loadItems(context, <span class="literal">false</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>그리고 presenter로부터 View에 대한 콜백을 다음과 같이 처리한다.</p>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">updateItems</span><span class="params">(items: <span class="type">ArrayList</span>&lt;<span class="type">ImageItem</span>&gt;, isClear: <span class="type">Boolean</span>)</span></span> &#123;</span><br><span class="line">    imageAdapter?.apply &#123;</span><br><span class="line">        <span class="keyword">if</span> (isClear) &#123;</span><br><span class="line">            imageList?.clear()</span><br><span class="line">        &#125;</span><br><span class="line">        imageList = items</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">notifyAdapter</span><span class="params">()</span></span> &#123;</span><br><span class="line">    imageAdapter?.notifyDataSetChanged()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="느낀점">느낀점</h2>
-<p>MVP로 나아가기 위해서 조금씩 걸어가고 있다. 하지만 아직 어려운 건 사실이다. 익숙해지기 위해서는 더 많이 코드를 짜보고 생각을 해봐야 할 것 같다.</p>
-<p>MVC가 보기에는 편하다. 몇 줄 적지 않았던 코드는 길게 늘어났고, 클래스도 많아졌다. 아직 MVP라고 하기엔 거리가 멀지만 단순히 생각해보면 Activity에서 Model을 분리했다?? 라는데 아니라고 보일지도 모른다. 그래도 최소한 View/Model 간의 결합도를 낮출 수 있고, View/Model에 대한 테스트도 가능하다.</p>
-<h2 id="참고">참고</h2>
-<ul>
-<li><a href="https://thdev.tech/androiddev/2016/12/23/Android-MVP-Three/" target="_blank" rel="noopener">Android MVP 무작정 따라하기 - Presenter 분리하기(동영상)</a></li>
-</ul>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2019/01/17/Android-MVP-Step5/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
     <div class="pagination-bar">
     <ul class="pagination">
         
@@ -1634,7 +1649,7 @@ Kotlin에서 사용 가능한 interface 정의를 다음과 같이 한다. var v
 
         
         
-<div id="cover" style="background-image:url('/assets/images/cover-v1.2.0.jpg');"></div>
+<div id="cover" style="background-image:url('/assets/images/color_blue.jpeg');"></div>
         <!--SCRIPTS-->
 <script src="/assets/js/jquery.js"></script>
 <script src="/assets/js/jquery.fancybox.js"></script>

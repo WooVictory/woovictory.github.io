@@ -273,6 +273,140 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2020/03/27/Android-Room-Concept/"
+                            aria-label=": [Android] Room 개념편"
+                        >
+                            [Android] Room 개념편
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2020-03-27T14:22:06+09:00">
+	
+		    Mar 27, 2020
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/Android/">Android</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <p>Room 내용에 대해 정리한 포스팅의 클릭수와 노출수가 상당히 높았다. 그래서 필자가 정리한 내용을 보니 Room에 필요한 내용이 정리되어있지만, 잘 정리되어 있다는 느낌을 받지는 못했다.</p>
+<p>필자는 Room에 관한 내용을 더 깔끔하게 정리하여 이 글을 읽는 분들이 더 쉽게 이해할 수 있게 하기 위해 글을 다시 작성하려 한다.</p>
+<p><strong>Android Architecture Components</strong>(이하 AAC) 중 하나인 Room의 개념에 대해 알아보는 포스팅이다.</p>
+<h3 id="orm">ORM</h3>
+<ul>
+<li>먼저, ORM이 무엇인지 알 필요가 있다.</li>
+<li>ORM은 <strong>Objectg Relational Mapping</strong>으로 데이터베이스와 객체 지향 프로그래밍 언어간의 호환되지 않는 데이터를 변환하는 프로그래밍 기법으로 <code>DB 테이블과 매핑되는 객체를 만들고 그 객체에서 DB를 관리하는 것을 의미한다.</code></li>
+</ul>
+<h3 id="room">Room</h3>
+<ul>
+<li><code>Room</code>은 ORM 기반의 라이브러리이다.</li>
+<li>SQLite 위에 추상화 계층을 제공하여 SQLite의 기능을 최대한 활용하는 동시에 데이터베이스에 원활하게 접근할 수 있도록 고안된 라이브러리이다.</li>
+</ul>
+<h4 id="사용법">사용법</h4>
+<p><strong>1) Gradle 설정 (androidX 기준)</strong></p>
+<ul>
+<li>version은 사용하는 시점에 최신 버전을 사용하면 된다.</li>
+</ul>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">dependencies &#123;</span><br><span class="line">    <span class="keyword">def</span> room_version = <span class="string">"2.1.0-alpha03"</span></span><br><span class="line"></span><br><span class="line">    implementation <span class="string">"androidx.room:room-runtime:$room_version"</span></span><br><span class="line">    annotationProcessor <span class="string">"androidx.room:room-compiler:$room_version"</span> <span class="comment">// use kapt for Kotlin</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// optional - RxJava support for Room</span></span><br><span class="line">    implementation <span class="string">"androidx.room:room-rxjava2:$room_version"</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// optional - Guava support for Room, including Optional and ListenableFuture</span></span><br><span class="line">    implementation <span class="string">"androidx.room:room-guava:$room_version"</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// optional - Coroutines support for Room</span></span><br><span class="line">    implementation <span class="string">"androidx.room:room-coroutines:$room_version"</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// Test helpers</span></span><br><span class="line">    testImplementation <span class="string">"androidx.room:room-testing:$room_version"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>2) Room의 구성요소</strong></p>
+<ul>
+<li>
+<p><code>Database</code></p>
+<ul>
+<li>Database 접근 지점을 제공하며 DAO를 관리한다.</li>
+<li>Annotaion 내에 사용할 Entity 목록을 배열로 작성해야 한다.</li>
+</ul>
+</li>
+<li>
+<p><code>DAO</code></p>
+<ul>
+<li>Database에 접근하는데 사용되는 메소드들을 포함하며, Annotation으로 관리된다.</li>
+<li>Select, Insert, Delete 등 데이터를 쓰거나 읽을 때 사용한다.</li>
+</ul>
+</li>
+<li>
+<p><code>Entity</code></p>
+<ul>
+<li>Database 내의 테이블을 의미한다.</li>
+</ul>
+</li>
+</ul>
+<img src="/img/room_st.png" width="400" height="300">
+<p><strong>[Database의 특징]</strong></p>
+<ul>
+<li>Database 접근 지점을 제공하며, DAO를 관리한다.</li>
+<li>클래스에 <code>@Database</code> 어노테이션을 붙이며, 아래의 조건을 만족해야 한다.
+<ul>
+<li>RoomDatabase 클래스를 상속받는 추상 클래스여야 한다.</li>
+<li>어노테이션 내에 Database에 들어갈 Entity 목록을 배열로 포함해야 한다.</li>
+<li>파라미터가 0개인 추상 메소드를 포함하고 @Dao 어노테이션된 클래스를 반환한다. 이를 통해 RoomDatabase에게 관리 권한을 위임하여 직접적으로 접근하는 것을 막는다.</li>
+</ul>
+</li>
+<li>Runtime에 Room.databaseBuilder()를 호출해 데이터베이스 인스턴스를 얻을 수 있다.</li>
+<li><strong>인스턴스를 만드는 과정을 많은 비용이 든다. 하지만 접근은 자주하기 때문에 문서에서는 싱글톤 패턴을 이용해 만드는 것을 권장하고 있다.</strong></li>
+</ul>
+<p><strong>[DAO(Data Access Object)의 특징]</strong></p>
+<ul>
+<li>Database에 접근하는데 사용되는 메소드들을 갖고 있으며, 어노테이션으로 관리된다.</li>
+<li>SELECT, INSERT, DELETE 등 데이터를 읽거나 쓸 때 사용한다.</li>
+<li>LiveData를 사용하면 Observable Query를 이용할 수 있다.</li>
+<li><code>@DAO</code> 어노테이션을 활용하며, <code>interface</code> or <code>abstract class</code>로 작성해야 한다.</li>
+</ul>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Dao</span></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">UserDao</span></span>&#123;</span><br><span class="line">	<span class="meta">@Query(<span class="meta-string">"SELECT * FROM user"</span>)</span></span><br><span class="line">	<span class="function"><span class="keyword">fun</span> <span class="title">getUsers</span><span class="params">()</span></span>: List&lt;UserEntity&gt;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Insert</span></span><br><span class="line">	<span class="function"><span class="keyword">fun</span> <span class="title">insert</span><span class="params">(user: <span class="type">UserEntity</span>)</span></span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>[Entity 특징]</strong></p>
+<ul>
+<li>Database 내의 테이블을 의미한다. 이름을 지정할 수도 있고, 지정하지 않을 경우 default 값으로 클래스의 이름이 Entity의 이름으로 지정되며, 대소문자를 구분하지 않는다.</li>
+<li>컬럼 값도 위의 규칙과 동일하다.</li>
+<li>관련 필드 집합을 Entity들로 정의한다.</li>
+<li>각 Entity에 대해 항목을 보관하기 위해 연결된 데이터베이스 객체 내에 테이블이 생성된다.</li>
+<li>필드를 유지하려면 Room은 필드에 접근할 수 있어야 한다. 따라서 필드를 public으로 만들거나 getter/setter를 제공할 수 있어야 한다. 그렇지 않고 private으로 필드를 만든다면 에러가 발생한다.</li>
+</ul>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Entity</span></span><br><span class="line"><span class="keyword">data</span> <span class="class"><span class="keyword">class</span> <span class="title">UserEntity</span></span>(</span><br><span class="line">	<span class="keyword">val</span> userId: <span class="built_in">Int</span> = <span class="number">0</span>,</span><br><span class="line">	<span class="keyword">val</span> name: String=<span class="string">""</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<h2 id="참고">참고</h2>
+<ul>
+<li><a href="https://medium.com/@gus0000123/mvvm-aac-room%EC%82%AC%EC%9A%A9%EB%B2%95-1-%EA%B0%9C%EB%85%90%ED%8E%B8-59ad680ea6fe" target="_blank" rel="noopener">MVVM AAC Room사용법(1.개념편)</a></li>
+</ul>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2020/03/27/Android-Room-Concept/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2020/03/07/Android-Mockito-Advanced/"
                             aria-label=": [Android] Mockito 심화편"
                         >
@@ -1405,184 +1539,6 @@ Subcomponent Module에서 맞는 타입을 못찾으면 상위 Component -&gt; M
         
     </article>
     
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2019/09/14/RxJava-Chap07-3/"
-                            aria-label=": [RxJava] Chap07. 디버깅 - 흐름 제어"
-                        >
-                            [RxJava] Chap07. 디버깅 - 흐름 제어
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2019-09-14T23:23:20+09:00">
-	
-		    Sep 14, 2019
-    	
-    </time>
-    
-        <span>in </span>
-        
-    <a class="category-link" href="/categories/RxJava/">RxJava</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="흐름-제어">흐름 제어</h1>
-<ul>
-<li>흐름 제어는 Observable이 데이터를 발행하는 속도와 옵저버가 데이터를 받아서 처리하는 속도 사이의 차이가 발생할 때 사용하는 함수이다.</li>
-<li>RxJava는 Observable이 데이터의 흐름을 push하는 방식으로 동작하기 때문에 위의 문제에 대해서 대처할 수 있어야 한다.</li>
-</ul>
-<h2 id="sample">sample()</h2>
-<ul>
-<li>특정한 시간 동안 가장 최근에 발행한 데이터만 걸러준다. <strong>즉, 최근에 발행된 데이터만 넘겨주고 나머지는 무시한다.</strong></li>
-<li>해당 시간에는 아무리 많은 데이터가 들어와도 해당 구간의 마지막 데이터만 발행하고 나머지는 무시한다.</li>
-</ul>
-<img src="/img/sample.png" width="500" height="200">
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SchedulerSupport</span>(SchedulerSupport.COMPUTATION)</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> Observable&lt;T&gt; <span class="title">sample</span><span class="params">(<span class="keyword">long</span> period, TimeUnit unit)</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> Observable&lt;T&gt; <span class="title">sample</span><span class="params">(<span class="keyword">long</span> period, TimeUnit unit, <span class="keyword">boolean</span> emitLast)</span></span></span><br></pre></td></tr></table></figure>
-<ul>
-<li><code>emitLast</code> 인자는 sample() 함수의 데이터 발행이 완료되지 않고 마지막에 데이터가 남아 있을 때, 해당 데이터를 발행할 것인지 결정한다. true로 설정하면 마지막 데이터를 발행한다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">sampleTest</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        String[] data = &#123;<span class="string">"1"</span>, <span class="string">"7"</span>, <span class="string">"2"</span>, <span class="string">"3"</span>, <span class="string">"6"</span>&#125;;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 시간 측정용.</span></span><br><span class="line">        CommonUtils.exampleStart();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 앞의 4개의 데이터는 100ms 간격으로 발행.</span></span><br><span class="line">        Observable&lt;String&gt; earlySource = Observable.fromArray(data)</span><br><span class="line">                .take(<span class="number">4</span>)</span><br><span class="line">                .zipWith(Observable.interval(<span class="number">100L</span>, TimeUnit.MILLISECONDS),</span><br><span class="line">                        (a, b) -&gt; a);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 마지막 데이터는 300ms 후에 발행.</span></span><br><span class="line">        Observable&lt;String&gt; lateSource = Observable.just(data[<span class="number">4</span>])</span><br><span class="line">                .zipWith(Observable.interval(<span class="number">300L</span>, TimeUnit.MILLISECONDS),</span><br><span class="line">                        (a, b) -&gt; a);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 2개의 Observable 을 결합하고 300ms 로 샘플링.</span></span><br><span class="line">        Observable&lt;String&gt; source = Observable.concat(earlySource, lateSource)</span><br><span class="line">                .sample(<span class="number">300L</span>, TimeUnit.MILLISECONDS);</span><br><span class="line"></span><br><span class="line">        source.subscribe(Log::it);</span><br><span class="line"></span><br><span class="line">        CommonUtils.sleep(<span class="number">1000</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 결과</span></span><br><span class="line">RxComputationThreadPool-<span class="number">1</span> | <span class="number">552</span> | value = <span class="number">7</span></span><br><span class="line">RxComputationThreadPool-<span class="number">1</span> | <span class="number">849</span> | value = <span class="number">3</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li>먼저, 100ms 간격으로 data 배열에 있는 데이터 4개를 발행한다. 그리고 마지막 데이터인 6을 300ms 후에 발행한다.</li>
-<li>또한 내가 원하는 특정 시간 후에 발행하기 위해 concat() 함수를 호출해 2개의 데이터 흐름(Observable)을 결합했다. 이렇게 전체 데이터 흐름을 세부 데이터 흐름으로 나누면 코드의 가독성이 좋아진다.</li>
-<li>sample() 함수는 300ms 간격으로 수행한다. 매 300ms 마다 가장 최근에 들어온 값만 최종적으로 발행한다.</li>
-<li>처음에 데이터를 발행하기 위해 약간의 지연 시간이 있어서(100ms+a) 다이어그램을 보면 시작할 때 약간의 간격이 있음을 볼 수 있다. 다음 데이터 발행이 3XXms이기 때문에 300ms일 때는 가장 최근 데이터가 이전에 발행했던 7이 되는 것이다.(처음 기준!)</li>
-<li>마지막 인자를 true로 설정하면 마지막 데이터를 발행한다. 기본값이 false이다.</li>
-</ul>
-<h2 id="buffer">buffer()</h2>
-<ul>
-<li>일정 시간 동안 데이터를 모아두었다가 한꺼번에 발행해준다.</li>
-<li>따라서 넘치는 데이터 흐름을 제어할 필요가 있을 때 활용한다. 컴퓨터의 버퍼 같은 기능을 한다.</li>
-</ul>
-<img src="/img/buffer.png" width="500" height="200">
-<ul>
-<li>처음에 빨,노,초 원을 발행하면 그것을 모아서 List 객체에 전달해준다. 그 다음 다시 하늘,파,보 원이 모이면 그것을 모아서 한 번에 발행해준다. 매우 단순한 로직이다.</li>
-<li>함수의 원형은 다음과 같다.
-<ul>
-<li>기본적으로 스케줄러 없이 현재 스레드에서 동작하며 입력되는 값을 count에 저장된 수만큼 모아서 List<t>에 한꺼번에 발행한다.</t></li>
-</ul>
-</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SchedulerSupport</span>(SchedulerSupport.NONE)</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> Observable&lt;List&lt;T&gt;&gt; buffer(<span class="keyword">int</span> count)</span><br></pre></td></tr></table></figure>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">bufferSample</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        String[] data = &#123;<span class="string">"1"</span>, <span class="string">"2"</span>, <span class="string">"3"</span>, <span class="string">"4"</span>, <span class="string">"5"</span>, <span class="string">"6"</span>&#125;;</span><br><span class="line">        CommonUtils.exampleStart();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 앞의 3개는 100ms 간격으로 발행.</span></span><br><span class="line">        Observable&lt;String&gt; earlySource = Observable.fromArray(data)</span><br><span class="line">                .take(<span class="number">3</span>)</span><br><span class="line">                .zipWith(Observable.interval(<span class="number">100L</span>, TimeUnit.MILLISECONDS),</span><br><span class="line">                        (a, b) -&gt; a);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 가운데 1개는 300ms 후에 발행.</span></span><br><span class="line">        Observable&lt;String&gt; middleSource = Observable.just(data[<span class="number">3</span>])</span><br><span class="line">                .zipWith(Observable.interval(<span class="number">300L</span>, TimeUnit.MILLISECONDS),</span><br><span class="line">                        (a, b) -&gt; a);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 마지막 2개는 100ms 후에 발행.</span></span><br><span class="line">        Observable&lt;String&gt; lataSource = Observable.just(data[<span class="number">4</span>], data[<span class="number">5</span>])</span><br><span class="line">                .zipWith(Observable.interval(<span class="number">100L</span>, TimeUnit.MILLISECONDS),</span><br><span class="line">                        (a, b) -&gt; a);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        Observable&lt;List&lt;String&gt;&gt; source = Observable.concat(earlySource, middleSource, lataSource)</span><br><span class="line">                .buffer(<span class="number">3</span>);</span><br><span class="line"></span><br><span class="line">        source.subscribe(Log::it);</span><br><span class="line">        CommonUtils.sleep(<span class="number">1000</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 결과</span></span><br><span class="line">RxComputationThreadPool-<span class="number">1</span> | <span class="number">562</span> | value = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]</span><br><span class="line">RxComputationThreadPool-<span class="number">3</span> | <span class="number">1067</span> | value = [<span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>]</span><br></pre></td></tr></table></figure>
-<ul>
-<li>buffer(3)는 데이터를 3개씩 모았다가 List<string>에 채운 후 값을 한꺼번에 발행해준다. 그래서 위의 결과를 보면 확인 가능하다.</string></li>
-<li>buffer() 함수에는 모으거나(count) 무시할(skip) 데이터 개수를 입력할 수 있다.</li>
-<li>skip 변수는 count보다 값이 커야 한다. count가 2이고 skip이 3이면 2개 데이터를 모으고 3번째 데이터 1개는 스킵한다.</li>
-<li>코드는 위와 같으면 <code>buffer(2,3)</code>으로 호출하면 아래와 같은 결과를 얻을 수 있다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">RxComputationThreadPool-<span class="number">1</span> | <span class="number">562</span> | value = [<span class="number">1</span>, <span class="number">2</span>]</span><br><span class="line">RxComputationThreadPool-<span class="number">3</span> | <span class="number">1067</span> | value = [<span class="number">4</span>, <span class="number">5</span>]</span><br></pre></td></tr></table></figure>
-<ul>
-<li>Observable에서 onNext 이벤트가 발생하면 내부 데이터는 3개가 아니라 2개 값을 모아 바로 List<string>에 채운 후 구독자에게 데이터를 발행한다.</string></li>
-</ul>
-<h2 id="throttlefirst-throttlelast">throttleFirst(), throttleLast()</h2>
-<ul>
-<li>throttle는 <strong>조절판</strong>이라는 뜻이다. 그것에 맞게 throttleFirst() 함수는 주어진 조건에서 가장 먼저 입력된 값을 발행한다. throttleLast() 함수는 주어진 조건에서 가장 마지막에 입력된 값을 발행한다.</li>
-<li>throttleFirst()와 throttleLast()는 정반대의 의미가 아니다. throttleFirst() 함수는 어떤 데이터가 입력된 후 일정 시간 동안 다른 데이터가 발행되지 못하도록 방지하지만, throttleLast() 함수는 sample() 함수처럼 고정된 시간 간격안에서 마지막 데이터만 발행한다.</li>
-<li><strong>throttleFirst()</strong> : sample() 함수와 비슷하지만 다르다. sample() 함수가 주어진 시간 동안 입력된 마지막 값을 발행한다면 <code>throttleFirst()</code> 함수는 <strong>어떤 데이터를 발행하면 지정된 시간 동안 다른 데이터를 발행하지 않도록 막는다.</strong></li>
-<li><strong>throttleLast()</strong> : sample() 함수와 기본 개념은 동일하다. 주어진 시간 동안 입력된 값 중 마지막 값을 발행한다.</li>
-</ul>
-<img src="/img/throttleFirst.png" width="500" height="200">
-<ul>
-<li>함수 원형은 다음과 같다.
-<ul>
-<li>계산 스케줄러에서 실행한다. 즉, 비동기로 동작하도록 설계된 함수다.</li>
-<li>windowDuration는 시간 간격을 지정하며 unit은 시간의 단위다.</li>
-</ul>
-</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SchedulerSupport</span>(SchedulerSupport.COMPUTATION)</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> Observable&lt;T&gt; <span class="title">throttleFirst</span><span class="params">(<span class="keyword">long</span> windowDuration, TimeUnit unit)</span></span></span><br></pre></td></tr></table></figure>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">throttleFirstSample</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        String[] data = &#123;<span class="string">"1"</span>, <span class="string">"2"</span>, <span class="string">"3"</span>, <span class="string">"4"</span>, <span class="string">"5"</span>, <span class="string">"6"</span>&#125;;</span><br><span class="line">        CommonUtils.exampleStart();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 앞의 1개는 100ms 간격으로 발행.</span></span><br><span class="line">        Observable&lt;String&gt; earlySource = Observable.just(data[<span class="number">0</span>])</span><br><span class="line">                .zipWith(Observable.interval(<span class="number">100L</span>, TimeUnit.MILLISECONDS),</span><br><span class="line">                        (a, b) -&gt; a);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 다음 1개는 300ms 후에 발행.</span></span><br><span class="line">        Observable&lt;String&gt; middlerSource = Observable.just(data[<span class="number">1</span>])</span><br><span class="line">                .zipWith(Observable.interval(<span class="number">300L</span>, TimeUnit.MILLISECONDS),</span><br><span class="line">                        (a, b) -&gt; a);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 마지막 4개는 100ms 후에 발행.</span></span><br><span class="line">        Observable&lt;String&gt; lateSource = Observable.just(data[<span class="number">2</span>], data[<span class="number">3</span>], data[<span class="number">4</span>], data[<span class="number">5</span>])</span><br><span class="line">                .zipWith(Observable.interval(<span class="number">100L</span>, TimeUnit.MILLISECONDS),</span><br><span class="line">                        (a, b) -&gt; a)</span><br><span class="line">                .doOnNext(Log::dt); <span class="comment">// 디버깅 정보 출력.</span></span><br><span class="line"></span><br><span class="line">        Observable&lt;String&gt; source = Observable.concat(earlySource, middlerSource, lateSource)</span><br><span class="line">                .throttleFirst(<span class="number">200L</span>, TimeUnit.MILLISECONDS);</span><br><span class="line"></span><br><span class="line">        source.subscribe(Log::it);</span><br><span class="line">        CommonUtils.sleep(<span class="number">1000</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 결과</span></span><br><span class="line">RxComputationThreadPool-<span class="number">1</span> | <span class="number">371</span> | value = <span class="number">1</span></span><br><span class="line">RxComputationThreadPool-<span class="number">3</span> | <span class="number">673</span> | value = <span class="number">2</span></span><br><span class="line">RxComputationThreadPool-<span class="number">4</span> | <span class="number">779</span> | debug = <span class="number">3</span></span><br><span class="line">RxComputationThreadPool-<span class="number">4</span> | <span class="number">876</span> | debug = <span class="number">4</span></span><br><span class="line">RxComputationThreadPool-<span class="number">4</span> | <span class="number">975</span> | debug = <span class="number">5</span></span><br><span class="line">RxComputationThreadPool-<span class="number">4</span> | <span class="number">975</span> | value = <span class="number">5</span></span><br><span class="line">RxComputationThreadPool-<span class="number">4</span> | <span class="number">1077</span> | debug = <span class="number">6</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li>처음 100ms가 지난 후에 1을 발행한 후, 300ms 동안 기다린 다음 2를 발행한다. 그리고 100ms 간격으로 나머지 값들을 발행한다. 마지막으로 throttleFirst() 함수를 호출해 200ms 간격으로 타임 윈도에 맨 먼저 입력된 값을 발행한다.</li>
-<li>위에서는 1,2,4,6이 다운 스트림으로 발행된다.</li>
-</ul>
-<h2 id="window">window()</h2>
-<ul>
-<li>groupBy() 함수와 개념적으로 비슷하다.</li>
-<li>throttleFirst()나 sample() 함수처럼 내가 처리할 수 있는 일부의 값들만 받아들일 수 있다. 흐름 제어 기능에 groupBy() 함수와 비슷한 별도의 Observable 분리 기능을 모두 갖추었다고 생각하면 된다.</li>
-</ul>
-<img src="/img/window.png" width="500" height="200">
-<ul>
-<li>count를 인자로 받는다. 예를 들어, 3을 인자로 받으면 앞으로 데이터 3개가 발행될 때마다 새로운 Observable을 생성하겠다는 뜻이다.</li>
-<li>함수의 원형은 다음과 같다.
-<ul>
-<li>현재 스레드를 그대로 활용한다. 왜 그런지 window() 함수의 다른 변형을 비교하면 알 수 있다.</li>
-</ul>
-</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SchedulerSupport</span>(SchedulerSupport.NONE)</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> Observable&lt;Observable&lt;T&gt;&gt; window(<span class="keyword">long</span> count)</span><br></pre></td></tr></table></figure>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SchedulerSupport</span>(SchedulerSupport.COMPUTATION)</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> Observable&lt;Observable&lt;T&gt;&gt; window(</span><br><span class="line">    <span class="keyword">long</span> timespan, <span class="keyword">long</span> timeskip, TimeUnit unit</span><br><span class="line">)&#123; </span><br><span class="line">    <span class="comment">// 생략.</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>count만을 인자로 갖는 window() 함수는 입력된 값을 그대로 발행하기 때문에 비동기 작업이라고 보기 어렵다.</li>
-<li>위의 함수 원형에는 timespan이라는 시간 동안 입력된 값 중에서 일부를 무시하는 기능을 포함한다.</li>
-<li>어떤 필터링 작업을 해줘야 하기 때문에 계산 스케줄러를 활용하게 된다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">windowSample</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        String[] data = &#123;<span class="string">"1"</span>, <span class="string">"2"</span>, <span class="string">"3"</span>, <span class="string">"4"</span>, <span class="string">"5"</span>, <span class="string">"6"</span>&#125;;</span><br><span class="line"></span><br><span class="line">        CommonUtils.exampleStart();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 앞의 3개는 100ms 간격으로 발행.</span></span><br><span class="line">        Observable&lt;String&gt; earlySource = Observable.fromArray(data)</span><br><span class="line">                .take(<span class="number">3</span>)</span><br><span class="line">                .zipWith(Observable.interval(<span class="number">100L</span>, TimeUnit.MILLISECONDS),</span><br><span class="line">                        (a, b) -&gt; a);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 가운데 1개는 300ms 후에 발행.</span></span><br><span class="line">        Observable&lt;String&gt; middleSource = Observable.just(data[<span class="number">3</span>])</span><br><span class="line">                .zipWith(Observable.interval(<span class="number">300L</span>, TimeUnit.MILLISECONDS),</span><br><span class="line">                        (a, b) -&gt; a);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 마지막 2개는 100ms 후에 발행.</span></span><br><span class="line">        Observable&lt;String&gt; lateSource = Observable.just(data[<span class="number">4</span>], data[<span class="number">5</span>])</span><br><span class="line">                .zipWith(Observable.interval(<span class="number">100L</span>, TimeUnit.MILLISECONDS),</span><br><span class="line">                        (a, b) -&gt; a);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 데이터 3개씩 모아서 새로운 Observable 생성.</span></span><br><span class="line">        Observable&lt;Observable&lt;String&gt;&gt; source = Observable.concat(earlySource, middleSource, lateSource)</span><br><span class="line">                .window(<span class="number">3</span>);</span><br><span class="line"></span><br><span class="line">        source.subscribe(observable -&gt; &#123;</span><br><span class="line">            Log.dt(<span class="string">"New Observable Started!!"</span>);</span><br><span class="line">            observable.subscribe(Log::it);</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">        CommonUtils.sleep(<span class="number">1000</span>);</span><br><span class="line">        CommonUtils.exampleComplete();</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 결과</span></span><br><span class="line">RxComputationThreadPool-<span class="number">1</span> | <span class="number">365</span> | debug = New Observable Started!!</span><br><span class="line">RxComputationThreadPool-<span class="number">1</span> | <span class="number">366</span> | value = <span class="number">1</span></span><br><span class="line">RxComputationThreadPool-<span class="number">1</span> | <span class="number">461</span> | value = <span class="number">2</span></span><br><span class="line">RxComputationThreadPool-<span class="number">1</span> | <span class="number">560</span> | value = <span class="number">3</span></span><br><span class="line">RxComputationThreadPool-<span class="number">2</span> | <span class="number">861</span> | debug = New Observable Started!!</span><br><span class="line">RxComputationThreadPool-<span class="number">2</span> | <span class="number">861</span> | value = <span class="number">4</span></span><br><span class="line">RxComputationThreadPool-<span class="number">3</span> | <span class="number">963</span> | value = <span class="number">5</span></span><br><span class="line">RxComputationThreadPool-<span class="number">3</span> | <span class="number">1062</span> | value = <span class="number">6</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li>window() 함수의 인자로 3을 넣었다. 처음에 Observable을 생성하고 3개의 데이터를 전달받으면 새로운 Observable을 다시 생성하여 값을 발행한다.</li>
-<li>1 값을 발행할 때와 4 값을 발행할 때 각각 새로운 Observable이 생성되었다.</li>
-</ul>
-<h2 id="debounce">debounce()</h2>
-<ul>
-<li>빠르게 연속 이벤트를 처리하는 흐름 제어 함수다.</li>
-<li>안드로이드와 같은 UI 기반의 프로그래밍에서는 유용하게 활용할 수 있다.</li>
-<li>예를 들어, 버튼을 빠르게 누르는 상황에서 마지막에 누른 이벤트만 처리해야할 때 간단하게 적용할 수 있다. RxJava를 이용하지 않는다면 마지막에 버튼을 누른 시간을 멤버 변수에 저장하고 일정 시간 동안 if문으로 예외 처리해야 하기 때문에 매우 번거롭고 실수할 가능성도 크다.</li>
-</ul>
-<img src="/img/debounce.png" width="500" height="200">
-<ul>
-<li>첫 번째 원은 지정한 시간 간격 안에 들어왔고 다른 이벤트는 없어서 그대로 발행되었다. 두 번째 원의 경우 시간 간격 안에 세 번째 원이 다시 들어왔으므로 두 번째가 아닌 세 번째 원을 발행한다. 마지막도 마찬가지다.</li>
-<li>함수의 원형은 다음과 같다.
-<ul>
-<li>계산 스케줄러에서 동작한다.</li>
-<li><strong>어떤 이벤트가 입력되고 timeout에서 지정한 시간 동안 추가 이벤트가 발생하지 않으면 마지막 이벤트를 최종적으로 발행한다.</strong></li>
-</ul>
-</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SchedulerSupport</span>(SchedulerSupport.COMPUTATION)</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> Observable&lt;T&gt; <span class="title">debounce</span><span class="params">(<span class="keyword">long</span> timeout, TimeUnit unit)</span></span></span><br></pre></td></tr></table></figure>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">debounceSample</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        String[] data = &#123;<span class="string">"1"</span>, <span class="string">"2"</span>, <span class="string">"3"</span>, <span class="string">"5"</span>&#125;;</span><br><span class="line">        Observable&lt;String&gt; source = Observable.concat(</span><br><span class="line">                Observable.timer(<span class="number">100L</span>, TimeUnit.MILLISECONDS).map(i -&gt; data[<span class="number">0</span>]),</span><br><span class="line">                Observable.timer(<span class="number">300L</span>, TimeUnit.MILLISECONDS).map(i -&gt; data[<span class="number">1</span>]),</span><br><span class="line">                Observable.timer(<span class="number">100L</span>, TimeUnit.MILLISECONDS).map(i -&gt; data[<span class="number">2</span>]),</span><br><span class="line">                Observable.timer(<span class="number">300L</span>, TimeUnit.MILLISECONDS).map(i -&gt; data[<span class="number">3</span>])</span><br><span class="line">        ).debounce(<span class="number">200L</span>, TimeUnit.MILLISECONDS);</span><br><span class="line"></span><br><span class="line">        source.subscribe(Log::i);</span><br><span class="line">        CommonUtils.sleep(<span class="number">1000</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 결과</span></span><br><span class="line">RxComputationThreadPool-<span class="number">2</span> | value = <span class="number">1</span></span><br><span class="line">RxComputationThreadPool-<span class="number">2</span> | value = <span class="number">3</span></span><br><span class="line">RxComputationThreadPool-<span class="number">2</span> | value = <span class="number">5</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li>데이터를 발행하는 부분이 특이하다. 각각의 시간 간격이 서로 다르기 때문에 concat() 함수를 활용해 각가 데이터를 발행했다.</li>
-<li>timer() 함수는 이벤트를 한 번만 발생시키고 완료하기 때문에 concat()과 timer() 함수의 조합은 유용하다.</li>
-<li>debounce()를 활용해 어떤 이벤트가 입력되고 지정된 timeout인 200ms 안에 더 이상의 이벤트가 없으면 마지막에 입력된 값을 발행한다.</li>
-<li>여기서 이해가 잘 안되었던 부분이 있었다. 결과를 예상해봤을 때, 1,2,5라고 생각했지만 아니었다. <strong>왜냐면 정의 자체가 어떤 이벤트가 입력되고 나서 timout 내에 더 이상의 이벤트가 없으면 마지막 이벤트를 발행하는 것이다.</strong> 그러니까 어떤 이벤트가 입력되고 나서 timout 내에 이벤트가 있는지 찾는 것이다. 그래서 결과는 1,3,5가 맞다.</li>
-</ul>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2019/09/14/RxJava-Chap07-3/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
     <div class="pagination-bar">
     <ul class="pagination">
         
@@ -1660,7 +1616,7 @@ Subcomponent Module에서 맞는 타입을 못찾으면 상위 Component -&gt; M
 
         
         
-<div id="cover" style="background-image:url('/assets/images/cover-v1.2.0.jpg');"></div>
+<div id="cover" style="background-image:url('/assets/images/color_blue.jpeg');"></div>
         <!--SCRIPTS-->
 <script src="/assets/js/jquery.js"></script>
 <script src="/assets/js/jquery.fancybox.js"></script>

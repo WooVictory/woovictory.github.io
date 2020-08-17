@@ -273,6 +273,88 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2019/01/19/Android-MVP-Step9/"
+                            aria-label=": [안드로이드] MVP 따라하기 9"
+                        >
+                            [안드로이드] MVP 따라하기 9
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2019-01-19T13:40:29+09:00">
+	
+		    Jan 19, 2019
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/Android/">Android</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <p>이번에는 MVP 패턴에서 사용할 수 있는 다양한 Model을 살펴보겠다.</p>
+<h2 id="model이란">Model이란?</h2>
+<p>Model은 Data를 말한다. 단순 데이터가 아닌 데이터를 관리/수집/수정 등을 하게 되는 부분이다. 데이터를 Cache해야 한다면 이 모델에서 Cache 할 수도 있고, 그냥 단순 데이터 전달만 할 수도 있다.</p>
+<h2 id="google-architecture의-model">Google Architecture의 Model</h2>
+<p>Google Architecture는 아래와 같은 그림으로 설명할 수 있다.</p>
+<img src="/img/mvp_model_01.png" width="600" height="300">
+<p>각각의 역할은 아래와 같다.</p>
+<ul>
+<li>Respositroy : Remote/Local을 구분하며, Memory cache를 포함</li>
+<li>Remote : 서버를 통한 데이터를 불러온다.</li>
+<li>Local : 단말기 상의 SQL, Realm 등을 통한 데이터를 불러온다.</li>
+</ul>
+<h2 id="구현한-모델은">구현한 모델은?</h2>
+<p>현재까지 MVP에서 정의한 모델은 단순 리턴을 하며, Model만 구분을 해두었다. 싱글톤을 통해서 데이터 클래스에 접근하도록 만들었다. 데이터 형태에 따서 여러 개가 만들어질 수도, 단일 클래스로 생성될 수도 있다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SampleImageData</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">SampleImageData</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> SampleImageData sampleImageData;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> SampleImageData <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (sampleImageData == <span class="keyword">null</span>) &#123;</span><br><span class="line">            sampleImageData = <span class="keyword">new</span> SampleImageData();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> sampleImageData;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> ArrayList&lt;ImageItem&gt; <span class="title">getImages</span><span class="params">(Context context, <span class="keyword">int</span> size)</span> </span>&#123;</span><br><span class="line">        ArrayList&lt;ImageItem&gt; items = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        <span class="comment">// 생략</span></span><br><span class="line">        <span class="keyword">return</span> items;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>위와 같이 자바로 하나의 클래스에 싱글톤으로 만들 수 있다. 가장 기본적인 형태의 모델이다. 코틀린으로 작성할 경우 Object로 작성하면 된다.</p>
+<h2 id="presenter에서는">Presenter에서는</h2>
+<p>위에서 작성한 모델은 Presenter에서 세팅하는 주체는 <strong>View</strong>이다. Presenter 초기화하는 대상이 View이기 때문에 View를 초기화함과 동시에 Model을 초기화하게 된다.</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">presenter = MainPresenter().apply &#123;</span><br><span class="line">		view = <span class="keyword">this</span><span class="symbol">@MainActivity</span></span><br><span class="line">		imageData = ImageData</span><br><span class="line">		adapterModel = imageAdapter</span><br><span class="line">		adapterView = imageAdapter</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>위와 같이 초기화를 진행하고, Presenter에서 다음과 같이 사용하게 된다. getItems()를 토애서 데이터를 불러오고 이를 사용하게 된다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">loadItems</span><span class="params">(Context context, <span class="keyword">boolean</span> isClear)</span> </span>&#123;</span><br><span class="line">    ArrayList&lt;ImageItem&gt; items = sampleImageData.getImages(context, <span class="number">10</span>);</span><br><span class="line">    <span class="keyword">if</span> (isClear) &#123;</span><br><span class="line">        adapterModel.clearItem();</span><br><span class="line">    &#125;</span><br><span class="line">    adapterModel.addItems(items);</span><br><span class="line">    adapterView.notifyAdapter();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="참고">참고</h2>
+<ul>
+<li><a href="https://thdev.tech/androiddev/2016/12/29/Android-MVP-Model-One/" target="_blank" rel="noopener">Android MVP 무작정 따라하기 - Model 정의하기</a></li>
+</ul>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2019/01/19/Android-MVP-Step9/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2019/01/18/Android-MVP-Step8/"
                             aria-label=": [안드로이드] MVP 따라하기 8"
                         >
@@ -1231,144 +1313,6 @@ RelativeLayout이 Linear나 ConstraintLayout보다 <code>onMeasure()</code> 함�
         
     </article>
     
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2019/01/07/Android-For-Interview-4/"
-                            aria-label=": [안드로이드] 안드로이드 면접 4"
-                        >
-                            [안드로이드] 안드로이드 면접 4
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2019-01-07T14:26:19+09:00">
-	
-		    Jan 07, 2019
-    	
-    </time>
-    
-        <span>in </span>
-        
-    <a class="category-link" href="/categories/Android/">Android</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <ol>
-<li><a href="#%EC%95%88%EB%93%9C%EB%A1%9C%EC%9D%B4%EB%93%9C-%EB%B0%B1%EA%B7%B8%EB%9D%BC%EC%9A%B4%EB%93%9C">안드로이드 백그라운드</a></li>
-<li><a href="https://woovictory.github.io/2018/03/02/Android-ActivityLifeCycle/">액티비티 생명주기</a></li>
-<li><a href="https://woovictory.github.io/2019/01/02/Android-What-Is-Fragment/">프래그먼트 생명주기</a></li>
-<li><a href="#Content-Provider-VS-Content-Resolver">Content Provider VS Content Resolver</a></li>
-</ol>
-<h2 id="안드로이드-백그라운드">안드로이드 백그라운드</h2>
-<p>안드로이드 UI는 기본적으로 싱글 스레드 모델로 작동하므로, 이 영향을 고려해서 개발하지 않으면 애플리케이션의 성능이 저하될 수 있다. 따라서 메인 스레드에서 긴 작업을 하는 것을 피하기 위해 여분의 스레드를 사용해야 한다. 다른 스레드에서 UI 스레드로 접근할 수 있도록 안드로이드에서 제공하는 스레드 간 통신 방법을 알아보자.</p>
-<p><strong># 소개</strong><br>
-안드로이드의 애플리케이션을 실행하면 시스템은 메인 액티비티를 메모리로 올려 프로세스를 만들며, 이 때 메인 스레드가 자동으로 생성된다. 메인 스레드는 안드로이드의 주요 컴포넌트를 실행하는 곳이자 UI를 그리거나 갱신하는 일을 담당할 수 있는 유일한 스레드이므로 이를 <code>UI 스레드</code>라고 부른다.</p>
-<p>안드로이드 화면을 구성하는 뷰나 뷰 그룹을 하나의 스레드에서만 담당하는 원칙을 <strong>싱글 스레드 모델</strong>이라고 한다. 싱글 스레드 모델의 규칙은 다음과 같다.</p>
-<ol>
-<li>메인 스레드(UI 스레드)를 블럭하지 말 것.</li>
-<li>안드로이드 UI 툴킷은 오직 UI 스레드에서만 접근할 수 있도록 할 것.</li>
-</ol>
-<p>이런 싱글 스레드 모델의 영향을 고려하지 않으면 애플리케이션의 성능이 저하될 수 있다. 긴 시간이 걸리는 작업을 메인 스레드에서 담당하면 애플리케이션의 반응성이 낮아질 수 있고, 급기야 사용자의 불편함을 방지하고자 시스템이 애플리케이션을 ANR 상태로 전환시킬 수도 있다.</p>
-<p><strong>따라서 시간이 걸리는 작업을 하는 코드는 여분의 스레드를 사용하여 메인 스레드에서 분리해야 하고, 자연스럽게 메인 스레드와 다른 스레드가 통신하는 방법이 필요하게 된다.</strong></p>
-<p>다른 스레드에서 메인 스레드로 접근하기 위해 <strong>Looper</strong>와 <strong>Handler</strong>를 사용할 수 있으며, 안드로이드는 Java의 Thread를 좀 더 쉽게 사용할 수 있도록 래핑한 <code>HandlerThread</code>. 더 나아가 Thread나 Message Loop 등의 작동 원리를 크게 고려하지 않고도 사용이 가능한 <code>AsyncTask</code> 등의 클래스를 제공한다. 그럼 먼저 Thread-Looper-Handler의 개념을 이해하고 다음 내용을 알아보자.</p>
-<h2 id="looper와-handler의-사용-목적">Looper와 Handler의 사용 목적</h2>
-<p>왜 안드로이드는 메인 스레드에서만 UI 작업이 가능하도록 제한할까? 메인 스레드가 아닌 스레드가 병렬적으로 실행되고 있을 때, 메인 스레드와 다른 스레드, 두 개 이상의 스레드가 동시에 같은 텍스트 뷰에 setText()를 시도하는 경우를 생각하면 간단하다.</p>
-<img src="/img/android_thread_reason.png" width="400" height="300">
-<p>위의 그림처럼 둘 중 어느 스레드의 setText()가 적용될지 예측할 수 없고, 사용자는 둘 중 하나의 값만을 볼 수 있어 다른 한 스레드의 결과는 버려진다. 이같이 두 개 이상의 스레드를 사용할 때의 동기화 이슈를 차단하기 위해서 Looper와 Handler를 사용하게 된다.</p>
-<h2 id="looper와-handler의-작동-원리">Looper와 Handler의 작동 원리</h2>
-<p><code>안드로이드 면접 3</code>에서도 살펴보았지만, 더 보도록 하겠다. 먼저 스레드와 Looper, Handler가 어떻게 작동하는지 보자. 메인 스레드는 내부적으로 <code>Looper</code>를 가지며 그 안에는 <strong>Message Queue</strong>가 포함된다. Message Queue는 스레드가 다른 스레드나 혹은 자기 자신으로부터 전달받은 Message를 기본적으로 FIFO(선입선출) 형식으로 보관하는 Queue이다.</p>
-<p><strong>Looper</strong>는 Message Queue에서 Message나 Runnable 객체를 차례로 꺼내 Handler가 처리하도록 전달한다. <strong>Handler</strong>는 Looper로부터 받은 Message를 실행, 처리하거나 다른 스레드로부터 메시지를 받아서 Message Queue에 넣는 역할을 하는 스레드 간의 통신 장치이다.</p>
-<img src="/img/android_looper_handler.png" width="400" height="300">
-<h2 id="handler">Handler</h2>
-<p>Handler는 스레드의 Message Queue와 연계하여 Message나 Runnable 객체를 받거나 처리하여 스레드 간의 통신을 할 수 있도록 한다. Handler 객체는 하나의 스레드와 해당 스레드의 Message Queue에 종속된다. 새로 Handler 객체를 만든 경우 이를 만든 스레드와 해당 스레드의 Message Queue에 바인드 된다.</p>
-<p>다른 스레드가 특정 스레드에게 메시지를 전달하려면 특정 스레드에 속한 Handler의 post나 sendMessage 등의 메소드를 호출하면 된다. 앞서 Message Queue는 전달받은 Message를 선입선출 형식으로 보관한다고 설명했지만, 전달 시점에 다른 메소드를 사용하여 Queue의 맨 위로 보내거나 원하는 만큼 Message나 Runnable 객체의 전송을 지연시킬 수도 있다. 자주 쓰이는 Handler의 메소드는 아래 글을 참고하자.</p>
-<p><a href="https://academy.realm.io/kr/posts/android-thread-looper-handler/?w=1" target="_blank" rel="noopener">참고 글</a></p>
-<p>외부, 혹은 자기 스레드로부터 받은 메시지를 어떤 식으로 처리할지는 <code>handleMessage()</code> 메소드를 구현하여 정리한다. <code>sendMessage()</code>나 <code>post()</code>로 특정 Handler에게 메시지를 전달할 수 있고, 재귀적인 호출도 가능하므로 딜레이를 이용한 타이머나 스케줄링 역할도 할 수 있어 편리하다.</p>
-<h2 id="looper와-message-queue">Looper와 Message Queue</h2>
-<p>Looper는 무한히 루프를 돌며 자신이 속한 스레드의 Message Queue에 들어온 Message나 Runnable 객체를 차례로 꺼내서 이를 처리할 Handler에 전달하는 역할을 한다. 메인 스레드는 Looper가 기본적으로 생성돼 있지만, 새로 생성한 스레드는 기본적으로 Looper를 가지고 있지 않고, 단지 run 메소드만 실행한 후 종료하기 때문에 메시지를 받을 수 없다.</p>
-<p>따라서 기본 스레드에서 메시지를 전달받으려면 <code>prepare()</code> 메소드를 통해 <strong>Looper</strong>를 생성하고, loop() 메소드를 통해 Looper가 무한히 루프를 돌며 Message Queue에 쌓인 Message나 Runnable 객체를 꺼내 Handler에 전달하도록 한다. 이렇게 활성화된 Looper는 quit()이나 quitSafely() 메소드로 중단할 수 있다. quit() 메소드가 호출되면 Looper는 즉시 종료되고, quitSafely() 메소드가 호출되면 현재 Message Queue에 쌓인 메시지들을 처리한 후 종료된다.</p>
-<img src="/img/android_looper_message_queue.png" width="400" height="300">
-<h2 id="message와-runnable">Message와 Runnable</h2>
-<p><strong>Message</strong><br>
-Message란 스레드 간 통신할 내용을 담는 객체이자 Queue에 들어갈 일감의 단위로 Handler를 통해 보낼 수 있다. 일반적으로 Message가 필요할 때 새 Message 객체를 생성하면 성능 이슈가 생길 수 있으므로 안드로이드가 시스템에 만들어 둔 <strong>Message Pool</strong>의 객체를 재사용한다. obtain() 메소드는 빈 Message 객체를, obtain(Handler h, int what …)은 목적 Handler와 다른 인자들을 담은 Message 객체를 리턴한다.</p>
-<p><strong>Runnable</strong><br>
-새 스레드는 Thread() 생성자로 만들어서 내부적으로 run()을 구현하던지, Thread(Runnable runnable) 생성자로 만들어서 Runnable 인터페이스를 구현한 객체를 생성하여 전달하던지 둘 중 하나의 방법으로 스레드를 만들 수 있다. 후자에서 사용하는 것이 <strong>Runnable</strong>로 스레드의 run() 메소드를 분리한 것이다. 따라서 Runnable 인터페이스는 run() 추상 메소드를 가지고 있으므로 상속받은 클래스는 run() 코드를 반드시 구현해야 한다. 앞서 언급한대로 Message가 int나 Object 같이 <strong>스레드 간 통신할 내용</strong>을 담는다면 Runnable은 실행할 run()메소드와 그 내부에서 실행될 코드를 담는다는 차이점이 있다.</p>
-<h2 id="handlerthread">HandlerThread</h2>
-<p>Looper에서 언급했듯이 안드로이드의 스레드는 Java의 스레드를 사용하기 때문에 안드로이드에서 도입한 Looper를 기본으로 가지지 않는다는 불편함이 있다. 이같은 불편함을 개선하기 위해 생성할 때 Looper를 자동으로 보유한 클래스를 제공하는데, 이것이 바로 <code>HandlerThread</code>이다. HandlerThread는 일반적인 스레드를 확장한 클래스로 내부에 반복해서 루프를 도는 <strong>Looper</strong>를 가진다. 자동으로 Looper 내부의 Message Queue도 생성되므로 이를 통해 스레드로 Message나 Runnable을 전달받을 수 있다.</p>
-<h2 id="asynctask">AsyncTask</h2>
-<p><code>AsyncTask</code>는 스레드나 메시지 루프 등의 작동 원리를 잘 몰라도 하나의 클래스에서 UI 작업과 background 작업을 쉽게 할 수 있도록 안드로이드에서 제공하는 클래스이다. <strong>캡슐화</strong>가 잘되어 있기 때문에 사용시 코드 가독성이 증대되는 장점이 있으며, 태스크 스케줄을 관리할 수 있는 콜백 메소드를 제공하고 필요할 때 쉽게 UI 갱신도 가능하며 작업 취소도 쉽다. 따라서 리스트에 보여주기 위한 데이터 다운로드 등 UI와 관련된 독립된 작업을 실행할 경우 <code>AsyncTask</code>로 간단하게 구현할 수 있다.</p>
-<img src="/img/android_AsyncTask.png" width="400" height="300">
-<center>AsyncTask 구조</center>
-<p>그러나 AsyncTask를 사용해서 스케줄링할 수 있는 작업 수의 제한이 있고, 몇 초 정도의 짧은 작업에서만 이상적으로 동작한다는 한계가 있다. 또한, 안드로이드의 버전 별로 병렬 처리 동작이 다르므로 허니콤 이후 버전에서 멀티 스레드로 병렬적인 동작을 원한다면 AsyncTask를 실행할 때 <code>AsyncTask.THREAD_POOL_EXECUTOR</code> 스케줄러를 지정해야 한다.</p>
-<p>한편, 앞서 살펴본 Handler와 Looper를 사용한다면 동작 원리를 고려해야 하며 구현을 직접해야 하고 코드가 복잡해져서 가독성을 저해한다는 단점이 있지만 그만큼 개발 범위가 자유롭다. 또한 UI 스레드에서만 작업하지 않아도 되므로 보다 많은 자율성을 가지고 코드를 제어하기를 원한다면 Handler나 HandlerThread 사용을 고려해보는 것도 좋다.</p>
-<p>무엇을 사용할지는 개발자가 어떤 기준을 가지고 개발하는지에 따라 다르다. 그럼에도 나는 AsyncTask를 사용할 것 같다. 왜냐하면 핸들러는 스레드 안에서 실행되어야 할 코드와 UI 접근을 위한 코드가 각각 다른 위치에서 구현을 한다. 그러므로 가독성이 떨어진다.</p>
-<p>하지만, <code>AsyncTask</code>는 하나의 클래스 안에 스레드로 동작하는 부분과 화면을 갱신하는 부분을 함께 구현해놓을 수 있다. 이 때문에 스레드를 사용하는 하나의 작업단위가 하나의 클래스로 만들어질 수 있게 되므로 가독성이 훨씬 좋아지게 된다.</p>
-<p>간단한 예제는 아래 블록를 참고하자^0^<br>
-<a href="https://one-delay.tistory.com/29?category=766130" target="_blank" rel="noopener">AsyncTask 예제</a></p>
-<h2 id="content-provider-vs-content-resolver">Content Provider VS Content Resolver</h2>
-<ul>
-<li>
-<p>Content Provider : 어플리케이션 내에서 사용할 수 있는 데이터를 <strong>공유</strong>하기 위한 컴포넌트<br>
-ex) 연락처, 이미지 등(카카오톡)</p>
-</li>
-<li>
-<p>Content Resolver : 앱이 Content Provider를 접근할 때에는 Content Resolver를 통해서 접근하게 됨. 기본적으로 <strong>CRUD</strong> 함수들 제공 -&gt; 다른 앱의 데이터베이스를 조작할 수 있음<br>
-ex) contentResolver.query()</p>
-</li>
-</ul>
-<h2 id="xml-기반-레이아웃이-중요한-이유">XML 기반 레이아웃이 중요한 이유</h2>
-<p>동작을 제어하는 코드로부터 분리시킬 수 있고, UI의 구조를 시각화하기 더 쉽기 때문이다. 소스로 레이아웃을 작성했다면, 레이아웃을 변경할 때마다 재컴파일 해야 하는 번거로움이 있다.</p>
-<h2 id="manifest">Manifest</h2>
-<p>애플리케이션에 대한 필수적인 정보를 안드로이드 플랫폼에 알려준다. 모든 안드로이드 앱은 반드시 AndroidManifest.xml 파일을 자신의 루트 디렉토리에 가지고 있어야 한다.</p>
-<h2 id="vector-vs-bitmap">Vector Vs Bitmap</h2>
-<ul>
-<li>
-<p>Vector : 리사이징이 되어도 전혀 깨지지 않는다. 모든 해상도에서 자유자재로 활용할 수 있기 때문에 특정 해상도에 제한되어 있지 않다는 것이 핵심 ex)SVG</p>
-</li>
-<li>
-<p>Bitmap : 픽셀로 구성되어 있다. 자유자재로 바꿀 수가 없고 움직일 수도 없다. ex)PNG, JPEG</p>
-</li>
-</ul>
-<h2 id="참고">참고</h2>
-<ul>
-<li><a href="https://academy.realm.io/kr/posts/android-thread-looper-handler/?w=1" target="_blank" rel="noopener">안드로이드 백그라운드 잘 다루기 Thread, Looper, Handler</a></li>
-<li><a href="https://one-delay.tistory.com/29?category=766130" target="_blank" rel="noopener">[Android] AsyncTask</a></li>
-</ul>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2019/01/07/Android-For-Interview-4/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
     <div class="pagination-bar">
     <ul class="pagination">
         
@@ -1445,7 +1389,7 @@ ex) contentResolver.query()</p>
 
         
         
-<div id="cover" style="background-image:url('/assets/images/cover-v1.2.0.jpg');"></div>
+<div id="cover" style="background-image:url('/assets/images/color_blue.jpeg');"></div>
         <!--SCRIPTS-->
 <script src="/assets/js/jquery.js"></script>
 <script src="/assets/js/jquery.fancybox.js"></script>

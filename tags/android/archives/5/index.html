@@ -273,6 +273,85 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2019/06/25/Android-RecyclerView-BottomSpace/"
+                            aria-label=": [Android] RecyclerView Bottom padding"
+                        >
+                            [Android] RecyclerView Bottom padding
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2019-06-25T20:30:17+09:00">
+	
+		    Jun 25, 2019
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/Android/">Android</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <p>Android에서 RecyclerView의 사용은 거의 필수라고 할 수 있다. 왜냐하면 리스트를 보여주는 화면은 대부분의 앱에 존재할 것이기 때문이다. 이번 글은 간단하다. 리싸이클러뷰를 사용하는 사람이라면 글을 읽는데 어려움이 없을 것이다. 사실, 몰라도 볼 수 있다. 그만큼 간단한 글이다.</p>
+<h2 id="recyclerview">RecyclerView</h2>
+<p>리싸이클러뷰는 리스트 화면을 구성하는데 효율적이다. 이유는 View를 재활용하기 때문이다. 화면을 작성하고 보면 리스트의 제일 하단 공간이 아래와 바짝 붙어있는 경우를 본 적이 있을 것이다. 이를 해결하기 위한 방법은 내가 할 수 있는 것 중에서는 두 가지가 있다.</p>
+<ul>
+<li>ItemDecoration 클래스를 만들어서 마지막 아이템일 경우 공간을 추가하는 방법</li>
+<li>RecyclerView 자체에 padding을 주는 방법</li>
+</ul>
+<p>첫 번째 방법은 <code>addDecoration</code> 키워드를 가지고 검색해보면 답을 구할 수 있다. 이 방법은 추후에 설명하도록 하겠다. 이것보다 훨씬 간단한 두 번째 방법을 설명하겠다. 두 번째 방법 그대로 padding을 RecyclerView에 추가하면 어떻게 될까??</p>
+<p>내가 원하는 것처럼 바닥과 공간이 떨어진다. 하지만, 스크롤이 되는 위치도 그만큼 떨어지게 된다. 즉 RecyclerView를 자식으로 가지는 부모 뷰에 꽉 차지 않는 것이다. 이를 해결하기 위해서는 다음의 한 줄을 추가하면 간단하게 해결된다</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">android:clipToPadding="false"</span><br></pre></td></tr></table></figure>
+<p>공식 문서의 내용을 보면 다음과 같다.</p>
+<blockquote>
+<p>Defines whether the ViewGroup will clip its children and resize (but not clip) any EdgeEffect to its padding, if padding is not zero. This property is set to true by default.</p>
+</blockquote>
+<p><strong>해석해보면 패딩이 0이 아닌 경우에는 ViewGroup이 자신의 자식 뷰의 영역을 자르고 EdgeEffect의 크기를 조정(clip)할지 여부를 규정한다. 이 속성은 기본적으로 true로 설정되어 있다.</strong></p>
+<p>기본적으로 패딩값이 설정되어 있다면 ViewGroup은 자신의 자식 뷰의 영역을 자르고 EdgeEffect(사용자가 2D 공간에서 콘텐츠 경계를 넘어 스크롤할 때 스크롤 가능한 위젯의 가장자리에서 사용하는 그래픽 효과를 말한다.)의 크기를 조정한다. 이 속성을 false로 설정한다는 것은 EdgeEffect의 크기를 조정하지 않는다. 따라서 스크롤 가능한 위젯의 가장자리에서 사용하는 그래픽 효과는 부모 뷰에 맞도록 설정이 된다는 걸 뜻한다.</p>
+<p>그래서 스크롤할 때 부모 뷰에서 떨어지지 않고 내가 원하는 동작을 할 수 있다. 이것은 나의 해석과 생각이 담겨 있다. 그래서 사실이 아닐 수도 있다. 질문이나 틀린 점이 있다면 알려주면 피드백 반영해서 수정하도록 하겠습니다.</p>
+<h2 id="참고">참고</h2>
+<ul>
+<li><a href="https://developer.android.com/reference/android/view/ViewGroup.html#attr_android:clipToPadding" target="_blank" rel="noopener">Android Developer clipToPadding</a></li>
+<li><a href="https://developer.android.com/reference/android/widget/EdgeEffect" target="_blank" rel="noopener">Android Developer EdgeEffect</a></li>
+</ul>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2019/06/25/Android-RecyclerView-BottomSpace/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2019/06/24/Android-Progressbar-tip/"
                             aria-label=": [Android] 로딩시 어떻게 할 것인가?"
                         >
@@ -1303,155 +1382,6 @@ A/B/C/D 4개의 화면이 있고, 언제든 로그인만 호출할 수 있다. �
         
     </article>
     
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2019/06/05/Android-Glide/"
-                            aria-label=": [Android] Glide 삽질 과정"
-                        >
-                            [Android] Glide 삽질 과정
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2019-06-05T16:28:28+09:00">
-	
-		    Jun 05, 2019
-    	
-    </time>
-    
-        <span>in </span>
-        
-    <a class="category-link" href="/categories/Android/">Android</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <p>안드로이드 앱에서 이미지를 보여주는 화면이 많다. 서버로부터 받은 url 이미지를 보여줘야 할 때도 있고, local에 저장해뒀다가 보여줘야 하는 경우도 있다. 오늘 이야기할 내용은 Glide를 사용해서 <strong>SVG</strong> 이미지를 화면에 보여주는 과정에서 내가 겪은 삽집을 풀도록 하겠다.</p>
-<p>먼저, SVG 이미지가 무엇인지 알아보자.</p>
-<h2 id="svg-vs-png">SVG VS PNG</h2>
-<p>SVG는 <strong>Scalable Vector Graphics</strong>의 약자이다.<br>
-JPEG, PNG처럼 그래픽 포맷 중 하나이다. SVG는 벡터 기반으로 리사이징이 되어도 깨지지 않는다는 장점을 가지고 있다. 즉, 모든 해상도에서 자유자재로 활용할 수 있기 때문에 특정 해상도에 제한되어 있지 않다.</p>
-<p><strong>장점</strong></p>
-<ol>
-<li>특정 사이즈에 구애받지 않는다.</li>
-</ol>
-<p>즉, 위에서 언급했듯이 어느 해상도에서든 pixelate 되지 않는다. SVG는 어떤 사이즈로든 그 모습 그대로 유지된다. 그렇기 때문에 사이즈별로 아이콘을 모두 생성해서 개발자에게 넘겨줄 필요가 없다. SVG 파일 하나로 모든 해상도를 대응할 수 있다.</p>
-<ol start="2">
-<li>작은 파일 사이즈</li>
-</ol>
-<p>비트맵 이미지(PNG, JPEG) 같은 경우 파일 크기를 결정하는 주요 요소는 <strong>해상도</strong>이다. 예를 들어 5000x5000 픽셀 이미지는 항상 500x500보다 파일 사이즈가 크다.<br>
-반면, SVG 그래픽 같은 경우 파일의 크기를 결정하는 주요 요소는 바로 <strong>복잡도</strong>이다. Path가 비교적 적은 간단한 이미지는 PNG, JPEG 보다 파일 사이즈가 적을 수도 있지만 이미지를 구성하는 요소의 복잡도(레이어가 많다든지 특정 효과가 많다드지)에 따라서 파일 사이즈가 커진다. 하지만, 이런 용량 문제는 SVG Optimizing이라는 것을 하게 되면 어느 정도 해결이 된다. 작은 파일 사이즈로 인해 로딩 시간도 줄어든다는 장점 또한 있다.</p>
-<h2 id="bitmap과-svg-구성요소">Bitmap과 SVG 구성요소</h2>
-<ul>
-<li>비트맵 그래픽 : Raster Graphics(픽셀 기반)</li>
-</ul>
-<p>대표적인 포맷은 JPEG, PNG이다. 이들은 픽셀로 구성되어 있다. 예를 들어, 2x2 픽셀인 비트맵 이미지는 총 4px로 구성되어 있다. 개개인에 대한 픽셀들은 자유자재로 바꿀 수가 없고 움직일 수도 없다. 그렇기 때문에 100% 이상으로 이미지를 확대하면 Pixelate가 된다.</p>
-<ul>
-<li>SVG 그래픽 : 벡터 기반</li>
-</ul>
-<p>픽셀로 구성되어 있지 않고 작업하고 있는 그래픽에 대한 정보로 구성되어 있다. 그렇기 때문에 어떤 사이즈로든 자유자재로 늘어나는 것이 가능하다. 이러한 이유로 인해 코드로 쉽게 적용된 스타일을 수정할 수 있다. 예를 들어 동그라미의 보더 값을 6에서 8로 바꾼다던지 색상을 그레이에서 블랙으로 바꾼다던지 또는 사이즈를 변경한다던지 등이다.</p>
-<p>위와 같은 장점이 있기 때문에 현재 진행하고 있는 프로젝트에서 PNG보다는 SVG를 채택해서 사용하려고 노력 중이다.</p>
-<p>디자이너가 주는 이미지는 일러스트로 그리거나 어떤 작업을 거친 후에 주는 것이 많다. 이러한 이미지들은 대부분 용량이 크다.</p>
-<p>용량이 큰 이미지를 내가 사용하는 imageView에 그냥 세팅을 해서 보여준다면 OOM(Out Of Memory)를 겪게 될 것이다. 이미지의 용량이 커서 사용하고 있는 메모리에 로드할 수 없기 때문이다.</p>
-<p>이 문제를 해결하는 방법은 여러 가지가 있는데, 그 중에 나는 편리하게 처리하기 위해서 Glide 라이브러리르 사용했다. 이미지 로드를 하기 위한 라이브러리는 이외에도 Picasso, Fresco 등이 있다. 나는 이 중 Glide가 사용 경험도 있고 편해서 선택을 했다.</p>
-<p>이미지 로딩 라이브러리 중 Picasso와 Glide 비교에 관한 글이다. <a href="https://woovictory.github.io/2019/01/03/Android-ImageLoadingLibrary/">[안드로이드] Image Loading Library</a></p>
-<h2 id="glide">Glide</h2>
-<p>이미지 로딩 라이브러리 중 하나로써 Glide는 많은 개발자들이 사용한다. 이유는 사용법이 간편하고 다양한 기능을 지원하기 때문이다.</p>
-<p>기본 사용법은 다음과 같다.</p>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">setImageBackground</span><span class="params">()</span></span>&#123;</span><br><span class="line">    Glide.with(context)</span><br><span class="line">        .load(R.drawable.image_error)</span><br><span class="line">        .into(imageView)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>이제 내가 원하는 svg 이미지를 glide를 통해 적용해보려고 한다. 나는 png나 svg나 어차피 이미지이기 때문에 똑같은 방식으로 적용하면 될 것이라고 생각했다.</p>
-<img src="/img/68.jpeg" width="500" height="200">
-<p>인생은 쉽지 않다. 쉽게 될 것이라고 생각했던 것은 큰 오산이었다… 그래서 구글의 힘을 빌려보기로 했다.<br>
-<strong>android glide load svg</strong>로 검색한 결과 다음과 같이 스택 오버플로우에 많은 질문이 있는 것을 알 수 있었다. 역시 쉬운 것은 없다.</p>
-<img src="/img/glide_svg_load.png" width="700" height="200">
-<p>열심히 구글링을 하던 중 괜찮아 보이는 방법을 찾았다.</p>
-<ol>
-<li>라이브러리 사용</li>
-</ol>
-<ul>
-<li><a href="https://github.com/corouteam/GlideToVectorYou" target="_blank" rel="noopener">GlideToVectorYou</a> 라는 라이브러리이며 SVG 이미지를 쉽게 로드할 수 있다.</li>
-<li>구현부분을 자세히 보면 구글의 샘플 코드를 확인할 수 있다.</li>
-<li>단점 : with() 함수의 인자로 <code>activity</code> 밖에 넘기지 못한다.</li>
-</ul>
-<ol start="2">
-<li>구글의 샘플 코드 사용(구 버전)</li>
-</ol>
-<ul>
-<li>스택 오버플로우의 답변 내용을 보면 구글의 샘플 코드를 확인하라는 말을 자주 볼 수 있다.</li>
-<li>그래서 링크를 타고 들어가봤는데, 대략 4년 전에 사용되었던 방식이 있다.</li>
-<li>단점 : 구 버전이므로 현재 버전에서는 Deprecated된 함수들이 대부분이다.</li>
-</ul>
-<ol start="3">
-<li>구글의 샘플 코드 사용(최신 버전)</li>
-</ol>
-<ul>
-<li>구 버전 뿐 아니라 최신 버전에 맞게 사용할 수 있는 샘플 코드를 제공하고 있다.</li>
-<li><a href="https://github.com/bumptech/glide/tree/master/samples/svg/src/main/java/com/bumptech/glide/samples" target="_blank" rel="noopener">SVG Sample</a></li>
-</ul>
-<p>자, ‘이런게 삽질이라고?’ 라고 생각하시는 분들이 있을 수 있다.<br>
-하지만, 내가 겪은 과정은 삽질이라고 표현할 수 있다.<br>
-이유는 처음에 SVG 이미지를 그냥 로드할 수 없다는 걸 알게되었다는 점과 이를 로드하기 위해서 어떤 방식이 있는지 찾아보는 과정, 그리고 실제로 동작하는지 확인해보기 위해서 많은 시간을 들였다.</p>
-<p>구글의 샘플 코드를 보고 가장 먼저 의문이 드는 것은 <code>GlideApp</code>이다. 이게 뭘까? 직접 쳐봐도 뜨지도 않는다. 그럼 구글은 이 뜨지도 않는걸로 어떻게 해결한 것일까??</p>
-<p>해결 방법은 의외로 간단하다. build.gradle(Module:app)에 아래와 같은 의존성을 추가하면 된다.</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// glide</span><br><span class="line">implementation 'com.github.bumptech.glide:glide:4.8.0'</span><br><span class="line">implementation 'com.github.bumptech.glide:annotations:4.8.0'</span><br><span class="line">annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'</span><br><span class="line">kapt 'com.github.bumptech.glide:compiler:4.8.0'</span><br></pre></td></tr></table></figure>
-<p>버전은 4.8.0으로 했다. 최신 버전으로 했었는데, 변경하는 과정에서 Crash가 발생해서 4.8.0으로 하는 것이니 사용할 때는 최신 버전으로 해도 무방할 것 같다.</p>
-<p>그리고 Clean Project -&gt; Rebuild Project 를 하면 GlideApp이 생기는 걸 확인할 수 있다. 다음에 AppGlideModule을 상속받는 MyAppGlideModule 클래스를 생성하면 된다.</p>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@GlideModule</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyGlideModule</span> : <span class="type">AppGlideModule</span></span>() &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">registerComponents</span><span class="params">(context: <span class="type">Context</span>, glide: <span class="type">Glide</span>, registry: <span class="type">Registry</span>)</span></span> &#123;</span><br><span class="line">        registry</span><br><span class="line">            .register(SVG::<span class="class"><span class="keyword">class</span>.<span class="title">java</span>, <span class="type">PictureDrawable::class.java</span>, <span class="type">SvgDrawableTranscoder</span></span>())</span><br><span class="line">            .append(InputStream::<span class="class"><span class="keyword">class</span>.<span class="title">java</span>, <span class="type">SVG::class.java</span>, <span class="type">SvgDecoder</span></span>())</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">isManifestParsingEnabled</span><span class="params">()</span></span>: <span class="built_in">Boolean</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>SVG 클래스를 위해서 아래와 같은 의존성을 하나 더 추가해줘야 한다.</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">implementation 'com.caverock:androidsvg:1.2.1'</span><br></pre></td></tr></table></figure>
-<p>그리고 여기서 사용되는 클래스들은 다음과 같다.</p>
-<ul>
-<li><a href="https://github.com/bumptech/glide/blob/master/samples/svg/src/main/java/com/bumptech/glide/samples/svg/SvgDecoder.java" target="_blank" rel="noopener">SvgDecoder</a></li>
-<li><a href="https://github.com/bumptech/glide/blob/master/samples/svg/src/main/java/com/bumptech/glide/samples/svg/SvgDrawableTranscoder.java" target="_blank" rel="noopener">SvgDrawableTranscoder</a></li>
-<li><a href="https://github.com/bumptech/glide/blob/master/samples/svg/src/main/java/com/bumptech/glide/samples/svg/SvgSoftwareLayerSetter.java" target="_blank" rel="noopener">SvgSoftwareLayerSetter</a></li>
-</ul>
-<p><strong>1.SvgDecoder</strong></p>
-<p>link를 통해서 읽은 inputStream을 SVG 내부 표현으로 디코딩을 한다는 의미이다.<br>
-정확하지는 않지만 link 즉, url을 통해 읽어들인 다음 inputStream에 담고 이를 통해 SVG로 만든다. 만들 때는 <code>androidsvg</code> 라이브러리를 사용한다.</p>
-<p><strong>2. SvgDrawableTranscoder</strong></p>
-<p>1번에서 만든 SVG를 안드로이드에서 사용할 수 있는 <code>PictureDrawable</code>로 변환한다. 이는 Drawable 클래스를 상속받고 있기 때문에 이렇게 변환된 데이터를 안드로이드에서 사용할 수 있다.</p>
-<p><strong>3. SvgSoftwareLayerSetter</strong></p>
-<p>3번은 필수가 아닌 선택이다. 하지만, 필수적으로 사용해야 될 것 같다. 왜냐하면 리스너를 구현한 것이기 때문에 이를 통해서 내가 로드하려는 이미지가 성공적으로 로드되었는지, 실패했는지를 확인할 수 있다.</p>
-<p>이를 통해서 내가 로드하려는 SVG 이미지가 성공적으로 로드되었는지, 로드되지 않고 실패했다면 어떤 원인인지 파악할 수 있어 디버깅하는데 더 수월하다.</p>
-<p>여기까지 내가 삽질했던 과정을 설명했다. 사용되는 클래스에 대한 정확한 파악은 하지 못했지만, 어떻게 동작하는지는 이해가 되었다. 나의 이해를 바탕으로 작성한 글이기 때문에 사실과 다른 부분도 존재할 것이다. 이 부분에 대한 이견이 있다면 알려주시면 감사할 것 같다.</p>
-<h2 id="참고">참고</h2>
-<ul>
-<li><a href="https://brunch.co.kr/@dailyhotel/20" target="_blank" rel="noopener">왜 SVG로 갈아탔는가?</a></li>
-</ul>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2019/06/05/Android-Glide/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
     <div class="pagination-bar">
     <ul class="pagination">
         
@@ -1528,7 +1458,7 @@ JPEG, PNG처럼 그래픽 포맷 중 하나이다. SVG는 벡터 기반으로 �
 
         
         
-<div id="cover" style="background-image:url('/assets/images/cover-v1.2.0.jpg');"></div>
+<div id="cover" style="background-image:url('/assets/images/color_blue.jpeg');"></div>
         <!--SCRIPTS-->
 <script src="/assets/js/jquery.js"></script>
 <script src="/assets/js/jquery.fancybox.js"></script>

@@ -273,6 +273,97 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2018/04/13/BOJ1759/"
+                            aria-label=": [1759] 암호 만들기"
+                        >
+                            [1759] 암호 만들기
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2018-04-13T19:02:33+09:00">
+	
+		    Apr 13, 2018
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/algorithm/">algorithm</a>, <a class="category-link" href="/categories/algorithm/BOJ/">BOJ</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <p>문제 : <a href="https://www.acmicpc.net/problem/1759" target="_blank" rel="noopener">https://www.acmicpc.net/problem/1759</a></p>
+<p><code>Explain</code></p>
+<p>암호는 서로 다른 L개의 알파벳 소문자들로 구성되며, <strong>최소 한 개의 모음과 최소 두 개의 자음</strong>으로 구성되어 있다.<br>
+암호를 이루는 알파벳은 <strong>오름차순 정렬</strong><br>
+암호로 사용할 수 있는 문자의 종류는 C가지</p>
+<p><code>Key Point</code></p>
+<p>알파벳을 입력받은 다음</p>
+<ol>
+<li>오름차순 정렬을 먼저 한다.</li>
+<li>각각의 문자를 사용할지 말지 결정한다.</li>
+</ol>
+<blockquote>
+<p><strong>go(L, alphabet, password, index)</strong></p>
+</blockquote>
+<ul>
+<li>L : 만들어야 하는 암호의 길이</li>
+<li>alphabet : 사용할 수 있는 알파벳 배열</li>
+<li>password : 현재까지 만든 암호</li>
+<li>index : 사용할 지 말 지 결정해야 하는 알파벳의 index</li>
+</ul>
+<blockquote>
+<p><code>예외</code></p>
+</blockquote>
+<ol>
+<li>불가능한 경우 : 더 이상 사용할 알파벳 배열이 없을 경우</li>
+<li>정답을 찾은 경우 : 지금까지 만든 암호의 길이가 만들어야 하는 암호의 길이와 같을 경우</li>
+<li>다음 경우</li>
+</ol>
+<ul>
+<li>i번째 알파벳을 사용하는 경우 = <code>go(L, alphabet, password+alphabet[index], index+1)</code></li>
+<li>i번째 알파벳을 사용하지 않는 경우 = <code>go(L, alphabet, password, index+1)</code></li>
+</ul>
+<p><code>Code</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line">public class Exam1759 &#123;</span><br><span class="line">	// 자음과 모음의 개수를 check하는 배열</span><br><span class="line">	public static boolean check(String password) &#123;</span><br><span class="line">		int ja = 0; // 자음</span><br><span class="line">		int mo = 0; // 모음</span><br><span class="line">		</span><br><span class="line">		for(char word : password.toCharArray()) &#123;</span><br><span class="line">			// 문자열의 문자 각각이 자음인지 모음인지 확인하기 위한 과정</span><br><span class="line">			if(word == &apos;a&apos; || word == &apos;e&apos; || word == &apos;i&apos; || word == &apos;o&apos; || word == &apos;u&apos;) &#123; </span><br><span class="line">				mo++;</span><br><span class="line">			&#125;else &#123;</span><br><span class="line">				ja++;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		return ja&gt;=2 &amp;&amp; mo&gt;=1;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	// 재귀 함수</span><br><span class="line">	public static void go(int L, String[] alphabet, String password, int index) &#123;</span><br><span class="line"></span><br><span class="line">		// 정답을 찾은 경우</span><br><span class="line">		</span><br><span class="line">		if(L == password.length()) &#123;</span><br><span class="line">			if(check(password)) &#123;</span><br><span class="line">				System.out.println(password);</span><br><span class="line">			&#125;</span><br><span class="line">			return;</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		// 더 이상 사용할 알파벳이 없을 경우 [다 탐색을 진행한 경우]</span><br><span class="line">		</span><br><span class="line">		if(index &gt;= alphabet.length) &#123;</span><br><span class="line">			return;</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		go(L, alphabet, password+alphabet[index], index+1); // 다음의 알파벳을 사용하는 경우 [ 현재까지 만든 암호에 다음 알파벳을 이어 붙여준다.] 그리고 index 증가</span><br><span class="line">		go(L, alphabet, password, index+1); // 다음의 알파벳을 사용하지 않는 경우 [다음 알파벳을 사용하지 않으므로 현재까지 만든 암호만 넘겨준다.] 그리고 수행을 했으므로 index 증가</span><br><span class="line">		// ( 다음 알파벳은 사용하지 않았지만, 다 다음 알파벳에 대해서 진행해야 하기 때문에 index를 증가시키는 것이다. )</span><br><span class="line">		</span><br><span class="line">	&#125;</span><br><span class="line">	public static void main(String[] args) throws IOException &#123;</span><br><span class="line">		BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));</span><br><span class="line">		StringTokenizer st1 = new StringTokenizer(bf.readLine(), &quot; &quot;);</span><br><span class="line">		int L = Integer.parseInt(st1.nextToken()); // 만들어야 하는 암호의 길이 : 4</span><br><span class="line">		int C = Integer.parseInt(st1.nextToken()); // 암호로 사용할 수 있는 문자의 종류 : 6가지</span><br><span class="line">		</span><br><span class="line">		String[] alphabet = new String[C];</span><br><span class="line">		StringTokenizer st2 = new StringTokenizer(bf.readLine(), &quot; &quot;);</span><br><span class="line">		for(int i=0;i&lt;C;i++) &#123;</span><br><span class="line">			alphabet[i] = st2.nextToken();</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		Arrays.sort(alphabet); // 오름차순으로 정렬</span><br><span class="line">		</span><br><span class="line">		go(L, alphabet, &quot;&quot;, 0);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2018/04/13/BOJ1759/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2018/04/13/BOJ9095-Recursive/"
                             aria-label=": [9095] 1,2,3 더하기"
                         >
@@ -888,89 +979,6 @@ do ~ while문을 사용하지 않으면 사전순으로 첫 번째에 위치한 
         
     </article>
     
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2018/03/31/BOJ10972/"
-                            aria-label=": [10972] 다음 순열"
-                        >
-                            [10972] 다음 순열
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2018-03-31T19:55:42+09:00">
-	
-		    Mar 31, 2018
-    	
-    </time>
-    
-        <span>in </span>
-        
-    <a class="category-link" href="/categories/algorithm/">algorithm</a>, <a class="category-link" href="/categories/algorithm/BOJ/">BOJ</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <p>문제 : <a href="https://www.acmicpc.net/problem/10972" target="_blank" rel="noopener">https://www.acmicpc.net/problem/10972</a></p>
-<p><code>Explain</code></p>
-<p>1부터 N까지의 수로 이루어진 순열이 있다. 이 떄, 사전순으로 다음에 오는 순열을 구해보자!<br>
-사전순으로 가장 앞서는 순열은 오름차순으로 이루어진 순열이고, 가장 마지막에 오는 순열은 내림차순으로 이루어진 순열이다.</p>
-<p>여기서 <strong>사전순</strong>이란 N=3인 경우에 사전순으로 나열하면 아래와 같다.</p>
-<p>1,2,3<br>
-1,3,2<br>
-2,1,3<br>
-2,3,1<br>
-3,1,2<br>
-3,2,1</p>
-<p>C++에서는 <code>STL</code>의 <em>next_permutation</em>을 사용하면 되지만, <strong>Java</strong>에서는 직접 구현해서 사용하면 된다.<br>
-직접 <em>next_permutation</em> 함수를 구현해서 다음 순열을 구하면 된다.</p>
-<p><code>Key Point</code></p>
-<p>순열을 사전순으로 나열했을 때, 사전순으로 다음에 오는 순열을 찾는 방법과 똑같다.</p>
-<ol>
-<li>i는 가장 오른쪽[마지막]원소부터 시작하며 a[i-1]&lt; a[i]를 만족하는 가장 큰 i를 찾는다.<br>
-즉, 순열의 마지막 수에서 끝나는 가장 긴 감소수열을 찾아야 한다.<br>
-7 2 3 6 5 4 1<br>
-여기서는 i:6, i-1:3이 된다.</li>
-<li>j&gt;=i이면서 a[j]&gt;a[i-1]를 만족하는 즉, i-1의 오른쪽에서 i-1보다 크면서 거기서 가장 작은 수를 찾는다.</li>
-<li>a[i-1]과 a[j]를 <code>swap</code>한다.</li>
-<li>a[i]부터 순열을 뒤집는다.</li>
-</ol>
-<p><code>Code</code></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Exam10972</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">next_permutation</span><span class="params">(<span class="keyword">int</span>[] a)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">int</span> i = a.length - <span class="number">1</span>;</span><br><span class="line">		<span class="keyword">while</span>(i&gt;<span class="number">0</span> &amp;&amp; a[i-<span class="number">1</span>]&gt;=a[i]) &#123;</span><br><span class="line">			i--;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span>(i&lt;=<span class="number">0</span>) &#123;</span><br><span class="line">			<span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		<span class="keyword">int</span> j = a.length-<span class="number">1</span>;</span><br><span class="line">		<span class="keyword">while</span>(a[j]&lt;=a[i-<span class="number">1</span>]) &#123;</span><br><span class="line">			j--;</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		<span class="keyword">int</span> tmp = a[i-<span class="number">1</span>];</span><br><span class="line">		a[i-<span class="number">1</span>] = a[j];</span><br><span class="line">		a[j] = tmp;</span><br><span class="line">		</span><br><span class="line">		j = a.length-<span class="number">1</span>;</span><br><span class="line">		<span class="keyword">while</span>(i&lt;j) &#123;</span><br><span class="line">			tmp = a[i];</span><br><span class="line">			a[i] = a[j];</span><br><span class="line">			a[j] = tmp;</span><br><span class="line">			i++;</span><br><span class="line">			j--;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">		</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">		BufferedReader bf = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(System.in));</span><br><span class="line">		</span><br><span class="line">		<span class="keyword">int</span> N = Integer.parseInt(bf.readLine());</span><br><span class="line">		<span class="keyword">int</span>[] arr = <span class="keyword">new</span> <span class="keyword">int</span>[N];</span><br><span class="line">		StringTokenizer st = <span class="keyword">new</span> StringTokenizer(bf.readLine(), <span class="string">" "</span>);</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;N;i++) &#123;</span><br><span class="line">			arr[i] = Integer.parseInt(st.nextToken());</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		<span class="keyword">if</span>(next_permutation(arr)) &#123;</span><br><span class="line">			<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;N;i++) &#123;</span><br><span class="line">				System.out.print(arr[i]+<span class="string">" "</span>);</span><br><span class="line">			&#125;</span><br><span class="line">			System.out.println();</span><br><span class="line">		&#125;<span class="keyword">else</span> &#123;</span><br><span class="line">			System.out.println(<span class="string">"-1"</span>);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2018/03/31/BOJ10972/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
     <div class="pagination-bar">
     <ul class="pagination">
         
@@ -1048,7 +1056,7 @@ do ~ while문을 사용하지 않으면 사전순으로 첫 번째에 위치한 
 
         
         
-<div id="cover" style="background-image:url('/assets/images/cover-v1.2.0.jpg');"></div>
+<div id="cover" style="background-image:url('/assets/images/color_blue.jpeg');"></div>
         <!--SCRIPTS-->
 <script src="/assets/js/jquery.js"></script>
 <script src="/assets/js/jquery.fancybox.js"></script>
