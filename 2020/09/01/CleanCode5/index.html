@@ -1,0 +1,754 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="VictoryWoo">
+    <title>[CleanCode] 5장. 형식 맞추기 - VictoryWoo</title>
+    <meta name="author" content="VictoryWoo">
+    
+    
+        <link rel="icon" href="https://woovictory.github.io/assets/images/develop.ico">
+    
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg"},"articleBody":"Prologue\n프로그래머라면 형식을 깔끔하게 맞춰 코드를 짜야 한다. 코드 형식을 맞추기 위해 간단한 규칙을 정하고 그 규칙을 따라야 한다. 팀으로 일한다면 팀이 합의해 규칙을 정하고 모두가 따라야 한다.\n\nSubject\n형식을 맞추는 목적\n\n코드 형식은 중요하다. 너무나도 중요하므로 융통성 없이 맹목적으로 따르면 안된다.\n코드 형식은 의사소통의 일환이다. 의사소통은 전문 개발자의 일차적인 의무다.\n오늘 구현한 코드의 가독성은 앞으로 바뀔 코드의 품질에 지대한 영향을 미친다. 오랜 시간이 지나 원래 코드의 흔적을 찾아보기 어려울 정도로 바뀌어도 맨 처음 잡아놓은 구현 스타일과 가독성 수준은 유지보수 용이성과 확장성에 계속 영향을 미친다. 원래 코드는 사라질지라도 개발자의 스타일과 규율은 사라지지 않는다.\n\n적절한 행 길이를 유지하라\n\n500줄을 넘지 않고 대부분 200줄 정도인 파일로도 커다란 시스템을 구축할 수 있다.(책의 그림 5.1 참고!)\n일반적으로 큰 파일보다 작은 파일이 이해하기 쉽다.\n\n[신문 기사처럼 작성하라]\n\n이름은 간단하면서도 설명이 가능하게 짓는다.\n이름만 보고도 올바른 모듈을 살펴보고 있는지 아닌지를 판단할 정도로 신경 써서 짓는다.\n소스 파일 첫 부분은 고차원 개념과 알고리즘을 설명한다. 아래로 내려갈수록 의도를 세세하게 묘사한다.\n마지막에는 가장 저차원 함수와 세부 내역이 나온다.\n신문의 대다수 기사는 아주 짧다. 어떤 기사는 조금 길더라도 한 면을 채우는 기사는 없다. 이게 신문이 읽을만한 이유이다.\n\n[개념은 빈 행으로 분리하라]\n\n거의 모든 코드는 왼쪽에서 오른쪽으로 그리고 위에서 아래로 읽힌다.\n각 행은 수식이나 절을 나타내고, 일련의 행 묶음은 완결된 생각 하나를 표현한다.\n생각 사이는 빈 행을 넣어 분리해야 마땅하다.\n일반적으로 패키지 선언부, import문, 각 함수 사이에 빈 행이 들어간다. 너무도 간단한 규칙이지만, 코드의 세로 레이아웃에 심오한 영향을 미친다. 빈 행은 새로운 개념을 시작한다는 시각적 단서다. 코드를 읽어 내려가다 보면 빈 행 바로 다음 줄에 눈길이 멈춘다.\n빈 행을 빼면 코드가 암호처럼 보인다.\n\n[세로 밀집도]\n\n줄바꿈이 개념을 분리한다면 세로 밀집도는 연관성을 의미한다.\n즉, 서로 밀접한 코드 행은 세로로 가까이에 놓여야 한다는 뜻이다.\n\n1234567891011121314public class ReporterConfig&#123;    /**    * 리포터 리스너의 클래스 이름.    */    private String m_className;        /**    * 리포터 리스너의 속성.    */    private List&lt;Property&gt; m_properties = new ArrayList&lt;Property&gt;();    public void addProperty(Property property)&#123;        m_properties.add(property);    &#125;&#125;\n\n위의 코드는 주석으로 두 인스턴스 변수를 떨어트려 놓았다. 이로 인해 머리와 눈을 더 움직여야 한다.\n\n1234567public class ReporterConfig&#123;    private String m_className;    private List&lt;Property&gt; m_properties = new ArrayList&lt;Property&gt;();    public void addProperty(Property property)&#123;        m_properties.add(property);    &#125;&#125;\n\n위의 코드가 훨씬 읽기 쉽다. 코드가 한눈에 들어온다.\n머리나 눈을 움직일 필요가 거의 없다.\n\n[수직 거리]\n\n시스템이 무엇을 하는지 이해하고 싶은데, 이 조각 저 조각이 어디에 있는지 찾고 기억하느라 시간과 노력을 소모한다.\n서로 밀접한 개념은 세로로 가까이 둬야 한다는 규칙을 보았다. 물론 두 개념이 서로 다른 파일에 속한다면 규칙이 통하지 않는다. 하지만, 타당한 근거가 없다면 서로 밀접한 개념은 한 파일에 속해야 마땅하다.\n이게 바로 protected 변수를 피해야 하는 이유 중 하나이다.\n같은 파일에 속할 정도로 밀접한 두 개념은 세로 거리로 연관성을 표현한다.\n연관성이란 한 개념을 이해하는 데 다른 개념이 중요한 정도이다. 연관성이 깊은 두 개념이 멀리 떨어져 있으면 코드를 읽는 사람이 소스 파일과 클래스를 여기저기 뒤지게 되어 번거롭다.\n\n\n변수 선언\n\n\n변수는 사용하는 위치에 최대한 가까이 선언한다.\n루프를 제어하는 변수는 흔히 루프 문 내부에 선언한다.\n\n\n인스턴스 변수\n\n\n인스턴스 변수는 클래스 맨 처음에 선언한다.\n변수 간에 세로로 거리를 두지 않는다.\n잘 설계한 클래스는 많은 클래스 메소드가 인스턴스 변수를 사용하기 때문이다.\n변수 선언을 어디서 찾을지 모두가 알고 있어야 한다.\n\n\n종속 함수\n\n\n한 함수가 다른 함수를 호출한다면 두 함수는 세로로 가까이 배치한다.\n또한, 가능하다면 호출하는 함수를 호출ㄷ괴는 함수보다 먼저 배치한다. 그러면 프로그램이 자연스럽게 읽힌다.\n규칙을 일관적으로 적용한다면 독자는 방금 호출한 함수가 잠시 후에 정의되리라는 사실을 예측한다. 이를 통해 호출되는 함수를 찾기가 쉬워지며, 모듈 전체의 가독성도 높아진다.\n\n\n개념적 유사성\n\n","dateCreated":"2020-09-01T01:23:23+09:00","dateModified":"2020-09-03T01:49:54+09:00","datePublished":"2020-09-01T01:23:23+09:00","description":"Prologue\n프로그래머라면 형식을 깔끔하게 맞춰 코드를 짜야 한다. 코드 형식을 맞추기 위해 간단한 규칙을 정하고 그 규칙을 따라야 한다. 팀으로 일한다면 팀이 합의해 규칙을 정하고 모두가 따라야 한다.","headline":"[CleanCode] 5장. 형식 맞추기","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://woovictory.github.io/2020/09/01/CleanCode5/"},"publisher":{"@type":"Organization","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg","logo":{"@type":"ImageObject","url":"Victory.jpeg"}},"url":"https://woovictory.github.io/2020/09/01/CleanCode5/","keywords":"클린 코드, CleanCode, 형식 맞추기"}</script>
+    <meta name="description" content="Prologue 프로그래머라면 형식을 깔끔하게 맞춰 코드를 짜야 한다. 코드 형식을 맞추기 위해 간단한 규칙을 정하고 그 규칙을 따라야 한다. 팀으로 일한다면 팀이 합의해 규칙을 정하고 모두가 따라야 한다.">
+<meta name="keywords" content="클린 코드,CleanCode,형식 맞추기">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="[CleanCode] 5장. 형식 맞추기">
+<meta property="og:url" content="https://woovictory.github.io/2020/09/01/CleanCode5/index.html">
+<meta property="og:site_name" content="VictoryWoo">
+<meta property="og:description" content="Prologue 프로그래머라면 형식을 깔끔하게 맞춰 코드를 짜야 한다. 코드 형식을 맞추기 위해 간단한 규칙을 정하고 그 규칙을 따라야 한다. 팀으로 일한다면 팀이 합의해 규칙을 정하고 모두가 따라야 한다.">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2020-09-02T16:49:54.424Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="[CleanCode] 5장. 형식 맞추기">
+<meta name="twitter:description" content="Prologue 프로그래머라면 형식을 깔끔하게 맞춰 코드를 짜야 한다. 코드 형식을 맞추기 위해 간단한 규칙을 정하고 그 규칙을 따라야 한다. 팀으로 일한다면 팀이 합의해 규칙을 정하고 모두가 따라야 한다.">
+    
+    
+        
+    
+    
+        <meta property="og:image" content="https://woovictory.github.io/assets/images/Victory.jpeg"/>
+    
+    
+    
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/all.css">
+    <link rel="stylesheet" href="/assets/css/jquery.fancybox.css">
+    <link rel="stylesheet" href="/assets/css/thumbs.css">
+    <link rel="stylesheet" href="/assets/css/tranquilpeak.css">
+    <!--STYLES END-->
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-125410253-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-125410253-1');
+    </script>
+
+
+    
+
+    
+        
+    
+</head>
+
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+        
+            
+        
+    
+
+<header id="header" data-behavior="2">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a
+            class="header-title-link"
+            href="/ "
+            aria-label=""
+        >
+            VictoryWoo
+        </a>
+    </div>
+    
+        
+            <a
+                class="header-right-picture "
+                href="#about"
+                aria-label="Open the link: /#about"
+            >
+        
+        
+            <img class="header-picture" src="/assets/images/Victory.jpeg" alt="Author&#39;s picture"/>
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+
+        
+    
+
+<nav id="sidebar" data-behavior="2">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a
+                    href="/#about"
+                    aria-label="Read more about the author"
+                >
+                    <img class="sidebar-profile-picture" src="/assets/images/Victory.jpeg" alt="Author&#39;s picture"/>
+                </a>
+                <h4 class="sidebar-profile-name">VictoryWoo</h4>
+                
+                    <h5 class="sidebar-profile-bio"><p>기록을 통해 사람들과 공유하는 것을 좋아합니다.</p>
+</h5>
+                
+            </div>
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/"
+                            
+                            rel="noopener"
+                            title="Home"
+                        >
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-categories"
+                            
+                            rel="noopener"
+                            title="Categories"
+                        >
+                        <i class="sidebar-button-icon fa fa-bookmark" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Categories</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-tags"
+                            
+                            rel="noopener"
+                            title="Tags"
+                        >
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Tags</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link open-algolia-search"
+                            href="#search"
+                            
+                            rel="noopener"
+                            title="Search"
+                        >
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Search</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="#about"
+                            
+                            rel="noopener"
+                            title="About"
+                        >
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://github.com/WooVictory"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="GitHub"
+                        >
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://www.facebook.com/WooVictory"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Facebook"
+                        >
+                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Facebook</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://www.linkedin.com/profile/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="LinkedIn"
+                        >
+                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">LinkedIn</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/jhsw0375@gmail.com"
+                            
+                            rel="noopener"
+                            title="Mail"
+                        >
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="2"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            [CleanCode] 5장. 형식 맞추기
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2020-09-01T01:23:23+09:00">
+	
+		    Sep 01, 2020
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/Book/">Book</a>, <a class="category-link" href="/categories/Book/CleanCode/">CleanCode</a>
+
+
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <h3 id="prologue">Prologue</h3>
+<p>프로그래머라면 형식을 깔끔하게 맞춰 코드를 짜야 한다. 코드 형식을 맞추기 위해 간단한 규칙을 정하고 그 규칙을 따라야 한다. 팀으로 일한다면 팀이 합의해 규칙을 정하고 모두가 따라야 한다.</p>
+<a id="more"></a>
+<h2 id="subject">Subject</h2>
+<h3 id="형식을-맞추는-목적">형식을 맞추는 목적</h3>
+<ul>
+<li>코드 형식은 <strong>중요하다</strong>. 너무나도 중요하므로 융통성 없이 맹목적으로 따르면 안된다.</li>
+<li>코드 형식은 의사소통의 일환이다. 의사소통은 전문 개발자의 일차적인 의무다.</li>
+<li>오늘 구현한 코드의 가독성은 앞으로 바뀔 코드의 품질에 지대한 영향을 미친다. 오랜 시간이 지나 원래 코드의 흔적을 찾아보기 어려울 정도로 바뀌어도 맨 처음 잡아놓은 구현 스타일과 가독성 수준은 유지보수 용이성과 확장성에 계속 영향을 미친다. 원래 코드는 사라질지라도 개발자의 스타일과 규율은 사라지지 않는다.</li>
+</ul>
+<h3 id="적절한-행-길이를-유지하라">적절한 행 길이를 유지하라</h3>
+<ul>
+<li>500줄을 넘지 않고 대부분 200줄 정도인 파일로도 커다란 시스템을 구축할 수 있다.(책의 그림 5.1 참고!)</li>
+<li>일반적으로 큰 파일보다 작은 파일이 이해하기 쉽다.</li>
+</ul>
+<p><code>[신문 기사처럼 작성하라]</code></p>
+<ul>
+<li>이름은 간단하면서도 설명이 가능하게 짓는다.</li>
+<li>이름만 보고도 올바른 모듈을 살펴보고 있는지 아닌지를 판단할 정도로 신경 써서 짓는다.</li>
+<li>소스 파일 첫 부분은 고차원 개념과 알고리즘을 설명한다. 아래로 내려갈수록 의도를 세세하게 묘사한다.</li>
+<li>마지막에는 가장 저차원 함수와 세부 내역이 나온다.</li>
+<li>신문의 대다수 기사는 아주 짧다. 어떤 기사는 조금 길더라도 한 면을 채우는 기사는 없다. 이게 신문이 읽을만한 이유이다.</li>
+</ul>
+<p><code>[개념은 빈 행으로 분리하라]</code></p>
+<ul>
+<li>거의 모든 코드는 왼쪽에서 오른쪽으로 그리고 위에서 아래로 읽힌다.</li>
+<li>각 행은 수식이나 절을 나타내고, 일련의 행 묶음은 완결된 생각 하나를 표현한다.</li>
+<li>생각 사이는 빈 행을 넣어 분리해야 마땅하다.</li>
+<li>일반적으로 패키지 선언부, import문, 각 함수 사이에 빈 행이 들어간다. 너무도 간단한 규칙이지만, 코드의 세로 레이아웃에 심오한 영향을 미친다. 빈 행은 새로운 개념을 시작한다는 시각적 단서다. 코드를 읽어 내려가다 보면 빈 행 바로 다음 줄에 눈길이 멈춘다.</li>
+<li>빈 행을 빼면 코드가 암호처럼 보인다.</li>
+</ul>
+<p><code>[세로 밀집도]</code></p>
+<ul>
+<li>줄바꿈이 개념을 분리한다면 세로 밀집도는 연관성을 의미한다.</li>
+<li>즉, 서로 밀접한 코드 행은 세로로 가까이에 놓여야 한다는 뜻이다.</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ReporterConfig</span></span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">    * 리포터 리스너의 클래스 이름.</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    <span class="keyword">private</span> String m_className;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">    * 리포터 리스너의 속성.</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    <span class="keyword">private</span> List&lt;Property&gt; m_properties = <span class="keyword">new</span> ArrayList&lt;Property&gt;();</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addProperty</span><span class="params">(Property property)</span></span>&#123;</span><br><span class="line">        m_properties.add(property);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>위의 코드는 주석으로 두 인스턴스 변수를 떨어트려 놓았다. 이로 인해 머리와 눈을 더 움직여야 한다.</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ReporterConfig</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String m_className;</span><br><span class="line">    <span class="keyword">private</span> List&lt;Property&gt; m_properties = <span class="keyword">new</span> ArrayList&lt;Property&gt;();</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addProperty</span><span class="params">(Property property)</span></span>&#123;</span><br><span class="line">        m_properties.add(property);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>위의 코드가 훨씬 읽기 쉽다. 코드가 한눈에 들어온다.</li>
+<li>머리나 눈을 움직일 필요가 거의 없다.</li>
+</ul>
+<p><code>[수직 거리]</code></p>
+<ul>
+<li>시스템이 무엇을 하는지 이해하고 싶은데, 이 조각 저 조각이 어디에 있는지 찾고 기억하느라 시간과 노력을 소모한다.</li>
+<li>서로 밀접한 개념은 세로로 가까이 둬야 한다는 규칙을 보았다. 물론 두 개념이 서로 다른 파일에 속한다면 규칙이 통하지 않는다. 하지만, 타당한 근거가 없다면 서로 밀접한 개념은 한 파일에 속해야 마땅하다.</li>
+<li>이게 바로 protected 변수를 피해야 하는 이유 중 하나이다.</li>
+<li>같은 파일에 속할 정도로 밀접한 두 개념은 세로 거리로 연관성을 표현한다.</li>
+<li><strong>연관성</strong>이란 한 개념을 이해하는 데 다른 개념이 중요한 정도이다. 연관성이 깊은 두 개념이 멀리 떨어져 있으면 코드를 읽는 사람이 소스 파일과 클래스를 여기저기 뒤지게 되어 번거롭다.</li>
+</ul>
+<ol>
+<li>변수 선언</li>
+</ol>
+<ul>
+<li>변수는 사용하는 위치에 최대한 가까이 선언한다.</li>
+<li>루프를 제어하는 변수는 흔히 루프 문 내부에 선언한다.</li>
+</ul>
+<ol start="2">
+<li>인스턴스 변수</li>
+</ol>
+<ul>
+<li>인스턴스 변수는 클래스 맨 처음에 선언한다.</li>
+<li>변수 간에 세로로 거리를 두지 않는다.</li>
+<li>잘 설계한 클래스는 많은 클래스 메소드가 인스턴스 변수를 사용하기 때문이다.</li>
+<li><strong>변수 선언을 어디서 찾을지 모두가 알고 있어야 한다.</strong></li>
+</ul>
+<ol start="3">
+<li>종속 함수</li>
+</ol>
+<ul>
+<li>한 함수가 다른 함수를 호출한다면 두 함수는 세로로 가까이 배치한다.</li>
+<li>또한, 가능하다면 호출하는 함수를 호출ㄷ괴는 함수보다 먼저 배치한다. 그러면 프로그램이 자연스럽게 읽힌다.</li>
+<li>규칙을 일관적으로 적용한다면 독자는 방금 호출한 함수가 잠시 후에 정의되리라는 사실을 예측한다. 이를 통해 호출되는 함수를 찾기가 쉬워지며, 모듈 전체의 가독성도 높아진다.</li>
+</ul>
+<ol start="4">
+<li>개념적 유사성</li>
+</ol>
+
+            
+
+
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">TAGGED IN</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/CleanCode/">CleanCode</a> <a class="tag tag--primary tag--small t-link" href="/tags/클린-코드/">클린 코드</a> <a class="tag tag--primary tag--small t-link" href="/tags/형식-맞추기/">형식 맞추기</a>
+
+            </div>
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2020/09/07/SimpleMemo/"
+                    data-tooltip="[출시] Simple 메모장"
+                    aria-label="PREVIOUS: [출시] Simple 메모장"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2020/07/29/Memo-Privacy/"
+                    data-tooltip="[Memo] 개인정보 처리 방침"
+                    aria-label="NEXT: [Memo] 개인정보 처리 방침"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="Share this post"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://woovictory.github.io/2020/09/01/CleanCode5/"
+                    title="Share on Facebook"
+                    aria-label="Share on Facebook"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://woovictory.github.io/2020/09/01/CleanCode5/"
+                    title="Share on Twitter"
+                    aria-label="Share on Twitter"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://woovictory.github.io/2020/09/01/CleanCode5/"
+                    title="Share on Google+"
+                    aria-label="Share on Google+"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a
+                        class="post-action-btn btn btn--default"
+                        href="#disqus_thread"
+                        aria-label="Leave a comment"
+                    >
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+                <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2020 VictoryWoo. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="2">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2020/09/07/SimpleMemo/"
+                    data-tooltip="[출시] Simple 메모장"
+                    aria-label="PREVIOUS: [출시] Simple 메모장"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2020/07/29/Memo-Privacy/"
+                    data-tooltip="[Memo] 개인정보 처리 방침"
+                    aria-label="NEXT: [Memo] 개인정보 처리 방침"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="Share this post"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://woovictory.github.io/2020/09/01/CleanCode5/"
+                    title="Share on Facebook"
+                    aria-label="Share on Facebook"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://woovictory.github.io/2020/09/01/CleanCode5/"
+                    title="Share on Twitter"
+                    aria-label="Share on Twitter"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://woovictory.github.io/2020/09/01/CleanCode5/"
+                    title="Share on Google+"
+                    aria-label="Share on Google+"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a
+                        class="post-action-btn btn btn--default"
+                        href="#disqus_thread"
+                        aria-label="Leave a comment"
+                    >
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="2">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://woovictory.github.io/2020/09/01/CleanCode5/"
+                        aria-label="Share on Facebook"
+                    >
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Share on Facebook</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://twitter.com/intent/tweet?text=https://woovictory.github.io/2020/09/01/CleanCode5/"
+                        aria-label="Share on Twitter"
+                    >
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Share on Twitter</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://plus.google.com/share?url=https://woovictory.github.io/2020/09/01/CleanCode5/"
+                        aria-label="Share on Google+"
+                    >
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>Share on Google+</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+    
+        
+    
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <img id="about-card-picture" src="/assets/images/Victory.jpeg" alt="Author&#39;s picture"/>
+        
+            <h4 id="about-card-name">VictoryWoo</h4>
+        
+            <div id="about-card-bio"><p>기록을 통해 사람들과 공유하는 것을 좋아합니다.</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>Android Developer</p>
+
+            </div>
+        
+        
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/color_blue.jpeg');"></div>
+        <!--SCRIPTS-->
+<script src="/assets/js/jquery.js"></script>
+<script src="/assets/js/jquery.fancybox.js"></script>
+<script src="/assets/js/thumbs.js"></script>
+<script src="/assets/js/tranquilpeak.js"></script>
+<!--SCRIPTS END-->
+
+
+    
+        <script>
+          var disqus_config = function() {
+            this.page.url = 'https://woovictory.github.io/2020/09/01/CleanCode5/';
+              
+            this.page.identifier = '2020/09/01/CleanCode5/';
+              
+          };
+          (function() {
+            var d = document, s = d.createElement('script');
+            var disqus_shortname = 'https-woovictory-github-io';
+            s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+          })();
+        </script>
+    
+
+
+
+
+    </body>
+</html>

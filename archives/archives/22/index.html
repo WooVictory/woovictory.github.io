@@ -10,6 +10,8 @@
     <meta name="author" content="VictoryWoo">
     
     
+        <link rel="icon" href="https://woovictory.github.io/assets/images/develop.ico">
+    
     
     <script type="application/ld+json">{}</script>
     <meta property="og:type" content="blog">
@@ -263,6 +265,139 @@
                         ">
                 
     <section class="postShorten-group main-content-wrap">
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2018/08/09/open-tutorials-5/"
+                            aria-label=": 생활코딩 :: 템플릿"
+                        >
+                            생활코딩 :: 템플릿
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2018-08-09T13:59:53+09:00">
+	
+		    Aug 09, 2018
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/Node-js/">Node.js</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h1 id="템플릿-엔진이란-무엇인가">템플릿 엔진이란 무엇인가?</h1>
+<hr>
+<ul>
+<li>
+<p>정적인 방법과 동적인 방법의 장/단점을 가지고 있습니다.</p>
+<ul>
+<li>정적인 파일만 서비스한다면 필요없지만, <strong>동적인 결과를 정적인 파일에 담기 위해 사용합니다.</strong></li>
+<li>풀어 설명하자면, 자바스크립트 코드로 연산된 결과를 변수에 넣고 변수를 뷰 파일에서도 사용할 수 있게끔 합니다.</li>
+</ul>
+</li>
+<li>
+<p>템플릿 엔진을 사용하는 이유</p>
+<ul>
+<li>클라이언트 요청에 따라 웹 페이지에 들어가는 내용(결과)이 달라질 수 있어서 정적인 부분과 동적인 부분을 따로 하기위해 사용합니다.</li>
+</ul>
+</li>
+<li>
+<p><code>app.js</code> 내 html 코드를 쓰지 않아도 됩니다.</p>
+</li>
+<li>
+<p>뷰 파일과 자바스크립트 코드를 한 파일에 정의하지 않고 <strong>따로 따로</strong> 사용할 수 있습니다.</p>
+</li>
+<li>
+<p>자바스크립트로 연산된 결과를 뷰 파일에 쉽게 넣을 수 있습니다.</p>
+</li>
+<li>
+<p>템플릿 엔진 중 <code>Jade</code>를 사용합니다.</p>
+</li>
+<li>
+<p>템플릿 엔진을 이용하면 <strong>짧은 코드로 장황한 HTML 코드를 만들어 낼 수 있는 기능</strong>을 제공합니다.</p>
+</li>
+<li>
+<p>템플릿 엔진 안에서 <strong>변수</strong>도 사용할 수 있다.</p>
+</li>
+</ul>
+<h1 id="express와-함께-템플릿-엔진-사용">Express와 함께 템플릿 엔진 사용</h1>
+<hr>
+<p>Express는 템플릿 엔진 기능이 없기 때문에 사용하기 위해서 템플릿 엔진을 설치해서 express와 연결한 다음에 사용하면 됩니다.</p>
+<p>'npm install jade --save’를 통해 모듈을 설치합니다.</p>
+<p>이를 통해 <strong>node_modules</strong> 폴더에 Jade가 추가되고, <strong>package.json</strong> 파일에 Jade가 dependencies 항목으로 추가됩니다.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> express = <span class="built_in">require</span>(<span class="string">'express'</span>);</span><br><span class="line"><span class="keyword">var</span> app = express();</span><br><span class="line">app.set(<span class="string">'view engine'</span>,<span class="string">'jade'</span>);</span><br><span class="line">app.set(<span class="string">'views'</span>, <span class="string">'./views'</span>);</span><br><span class="line"><span class="comment">// 위의 한 줄을 생략해도 express 기본적으로 views라는 디렉토리를 찾도록 설정되어 있습니다.</span></span><br><span class="line"></span><br><span class="line">app.get(<span class="string">'/template'</span>,<span class="function"><span class="keyword">function</span>(<span class="params">req, res</span>)</span>&#123;</span><br><span class="line">    res.render(<span class="string">'temp'</span>);</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>view engine : 약속되어 있는 이름</li>
+<li>jade : 템플릿 엔진</li>
+</ul>
+<p>express의 application에게 <code>jade</code>라는 템플릿 엔진을 set합니다.</p>
+<p>우리가 설치한 jade라고 하는 템플릿 엔진과 우리가 지금 만들고 있는 애플리케이션 프레임워크인 express를 연결합니다.</p>
+<p>그리고 <code>views</code>라는 폴더를 생성해줍니다. 앞으로의 jade 파일은 이 디렉토리에 저장합니다. (템플릿 엔진들의 템플릿 파일을 views라는 파일에 넣습니다.)</p>
+<ul>
+<li>‘/template/’ 경로를 통해서 들어온 사용자에게 함수가 실행되면서 temp라는 템플릿 파일을 웹 페이지로 렌더링해서 전송한다는 뜻입니다.</li>
+<li>템플릿 엔진의 코드에 따라서 만들어진 템플릿 파일을 읽어옵니다.</li>
+<li>temp라는 파일은 <strong>views</strong> 폴더에 위치합니다.</li>
+</ul>
+<p>response 즉, 응답으로 temp를 render하게 되면 express는 내부적으로 위쪽에 정의해놓은 views라고 하는 디렉토리에서 우리가 템플리세 엔진으로 jade를 정해놓았기 때문에 jade의 확장자인 temp.jade라는 파일을 찾아서 그 파일에 있는 내용을 jade의 문법에 따라서 해석한 후에 결과를 가져오고 그것을 사용자에게 response하는 코드입니다.</p>
+<h1 id="jade-문법">Jade 문법</h1>
+<hr>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">html</span><br><span class="line">    head</span><br><span class="line">    body</span><br><span class="line">        h1 Hello Jade</span><br><span class="line">        ul</span><br><span class="line">            - for(var i=0;i<span class="tag">&lt;<span class="name">5;i++)</span></span></span><br><span class="line"><span class="tag">                <span class="attr">li</span> <span class="attr">coding</span></span></span><br><span class="line"><span class="tag">        </span></span><br><span class="line"><span class="tag">        <span class="attr">div</span>= <span class="string">time</span> // <span class="attr">jade</span>의 변수</span></span><br></pre></td></tr></table></figure>
+<p>들여쓰기를 통해서 head 태그와 body 태그를 html 태그 안에 넣을 수 있습니다. 하지만, 웹 페이지에서 소스보기를 통해서 확인하면 코드의 가독성이 떨어지고 이쁘지 않은 모습을 볼 수 있습니다. 이럴 때는 <code>app.locals.pretty = true;</code>라는 코드를 추가해주면 이쁘게 바뀐 모습을 확인할 수 있습니다.</p>
+<p>반복적인 작업을 할 때는 <strong>for문</strong>을 이용하면 되는데, 이는 화면에 출력하는 코드가 아니고 <strong>프로그래밍적</strong>으로 제어하기 위한 코드입니다. 이러한 코드는 앞에 <code>-</code>라는 <strong>Jade</strong> 안에서 약속되어 있는 특수 기호를 붙이면 jade는 -를 보고 for가 화면에 출력되는 것이 아니라는 것을 알게 됩니다. for는 Jade 안에서 반복문으로 사용됩니다.</p>
+<p>Html을 작성하는 것이 훨씬 더 간결하게 가능해집니다. 그리고 동시에 프로그래머블하다는 특성을 가지게 됩니다.</p>
+<p>time이라는 변수로 현재 시간을 넣기 위해서는 jade 안에서 가능한 것이 아니고 jade를 사용하는 express 쪽에서 변수 값을 주입해주어야 합니다.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">app.get(<span class="string">'/template'</span>,<span class="function"><span class="keyword">function</span>(<span class="params">req, res</span>)</span>&#123;</span><br><span class="line">    res.render(<span class="string">'temp'</span>, &#123;<span class="attr">time</span>: <span class="built_in">Date</span>()&#125;);</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p><strong>render</strong> 함수의 두 번째 인자로 객체를 전달합니다. time이라는 객체가 render에 의해서 temp.jade라고 하는 template에 흘러들어가게 됩니다. 그러면 temp가 가리키고 있는 temp.jade는 내부적으로 time이라는 변수를 사용할 수 있게 됩니다. 우리가 넘긴 변수 값이 jade 파일 안에서 사용될 수 있습니다. 변수의 값은 여러 개가 전달될 수 있으며, <strong>Jade</strong> 파일에서 명시된 것과 <strong>동일한 이름</strong>을 사용해야 합니다.</p>
+<h1 id="정리">정리</h1>
+<hr>
+<p>먼저, 'npm install jade --save’를 통해서 사용할 템플릿 엔진인 <strong>Jade</strong>를 설치합니다.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> express = <span class="built_in">require</span>(<span class="string">'express'</span>);</span><br><span class="line"><span class="keyword">var</span> app = express();</span><br><span class="line"></span><br><span class="line">app.set(<span class="string">'view engine'</span>, <span class="string">'jade'</span>);</span><br><span class="line">app.set(<span class="string">'views'</span>, <span class="string">'./views'</span>);</span><br><span class="line">app.get(<span class="string">'/template'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">req, res</span>)</span>&#123;</span><br><span class="line">    res.render(<span class="string">'temp'</span>, &#123;<span class="attr">time</span> : <span class="built_in">Date</span>(), <span class="attr">_title</span> : <span class="string">'Jade'</span>&#125;);</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>설치된 jade와 express를 연결하기 위해서 위의 코드를 통해서 환결 설정을 해줍니다.</li>
+<li>그리고 우리가 어떤 특정한 템플릿을 사용하고 싶다면,
+<ul>
+<li><code>temp.jade</code>를 사용하고 싶다면 <strong>res</strong>가 가지고 있는 메소드 중에서 <strong>render</strong>라는 메소드를 호출하면서 첫 번째 인자로 그 템플릿의 이름을 전달해주면 render가 내부적으로 템플릿을 읽어서 그 템플릿 엔진의 문법에 따라서 해석한 다음에 사용자에게 response 해줍니다.</li>
+<li>만약에 템플릿에 데이터를 주입하고 싶다면, 객체를 정의해서 그 객체의 프로퍼티 값으로 원하는 값을 전달하면 그 템플릿 엔진에서는 <code>= time</code>과 같이 문법을 통해서 변수의 값을 화면에 출력할 수 있습니다.</li>
+</ul>
+</li>
+</ul>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2018/08/09/open-tutorials-5/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
     
     
     <article class="postShorten postShorten--thumbnailimg-bottom">
@@ -1560,77 +1695,6 @@ JavaScript를 사용한 것이 단점이 될 수도 있습니다. C/C++로 개�
         
     </article>
     
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2018/06/08/BOJ11723/"
-                            aria-label=": [11723] 집합"
-                        >
-                            [11723] 집합
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2018-06-08T14:35:26+09:00">
-	
-		    Jun 08, 2018
-    	
-    </time>
-    
-        <span>in </span>
-        
-    <a class="category-link" href="/categories/algorithm/">algorithm</a>, <a class="category-link" href="/categories/algorithm/BOJ/">BOJ</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <p>한 동안 졸업 작품과 다른 것들로 인해서 바빠서 알고리즘을 풀지 못했다… 이런 나를 반성하면서 다시 꾸준하게 알고리즘을 풀면서 공부해야겠다!!</p>
-<h2 id="문제-httpswwwacmicpcnetproblem11723">문제 : <a href="https://www.acmicpc.net/problem/11723" target="_blank" rel="noopener">https://www.acmicpc.net/problem/11723</a></h2>
-<p><code>Explain</code></p>
-<p>비어있는 공집합 S가 있고, 문제에 나온 명령어가 주어졌을 때 명령어에 따라 연산을 진행한다.</p>
-<blockquote>
-<p>입력 : 첫 줄에 수행하는 연산의 수인 M이 주어진다. (1&lt;=M&lt;=3,000,000)</p>
-</blockquote>
-<blockquote>
-<p>출력 : check 연산이 주어질 때마다, 출력한다.</p>
-</blockquote>
-<p><code>Key Points</code></p>
-<p>간단하게 <code>비트 마스크</code>를 이용하여 문제를 풀어보았다. 비트 마스크를 이용하여 문제에 원하는 추가, 삭제, 검색 등을 구현할 수 있다.</p>
-<p>문제에서 집합에 추가하는 수인 x의 범위가 1&lt;=x&lt;=20이다. 하지만, 비트 마스크는 0 ~ N-1 까지의 수를 저장하고 있기 때문에 문제를 풀기 위해서는 입력 받은 수 모두 1을 빼주어서 0 ~ 19 로 맞추고 문제를 풀면 된다.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.BufferedReader;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.io.InputStreamReader;</span><br><span class="line"><span class="keyword">import</span> java.util.StringTokenizer;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BOJ11723</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> NumberFormatException, IOException </span>&#123;</span><br><span class="line">		</span><br><span class="line">		</span><br><span class="line">		<span class="comment">// 내가 배운 비트마스크는 0~N-1 까지의 수를 저장하고 있기 때문에</span></span><br><span class="line">		<span class="comment">// 이 문제를 풀기 위해서는 입력으로 받은 수를 모두 1을 빼주고 0~19로 만든 다음에 구현하면 된다.</span></span><br><span class="line">		<span class="comment">// 왜냐하면 문제에서 집합에 추가할 수 있는 x의 범위가 1~20이기 때문에 내가 배운 비트마스크의 범위인 0~N-1을 맞추기 위해서</span></span><br><span class="line">		<span class="comment">// 입력받은 집합에서 1씩 빼주어 0~19 사이의 범위로 맞춘다.</span></span><br><span class="line">		</span><br><span class="line">		</span><br><span class="line">		BufferedReader bf = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(System.in));</span><br><span class="line">		<span class="keyword">int</span> N = <span class="number">20</span>;</span><br><span class="line">		<span class="keyword">int</span> s = <span class="number">0</span>; <span class="comment">// 처음에 비어있는 집합 생성</span></span><br><span class="line">		<span class="keyword">int</span> M = Integer.parseInt(bf.readLine()); <span class="comment">// test_case</span></span><br><span class="line">		StringBuilder sb = <span class="keyword">new</span> StringBuilder();</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;M;i++) &#123;</span><br><span class="line">			StringTokenizer st = <span class="keyword">new</span> StringTokenizer(bf.readLine(), <span class="string">" "</span>);</span><br><span class="line">			String command = st.nextToken();</span><br><span class="line">			</span><br><span class="line">			<span class="keyword">if</span>(command.equals(<span class="string">"add"</span>)) &#123;</span><br><span class="line">				<span class="keyword">int</span> x = Integer.parseInt(st.nextToken());</span><br><span class="line">				x--;</span><br><span class="line">				s = s | (<span class="number">1</span>&lt;&lt;x);</span><br><span class="line">				</span><br><span class="line">			&#125; <span class="keyword">else</span> <span class="keyword">if</span>(command.equals(<span class="string">"remove"</span>)) &#123;</span><br><span class="line">				<span class="keyword">int</span> x = Integer.parseInt(st.nextToken());</span><br><span class="line">				x--;</span><br><span class="line">				s = s &amp; ~(<span class="number">1</span>&lt;&lt;x);</span><br><span class="line">				</span><br><span class="line">			&#125; <span class="keyword">else</span> <span class="keyword">if</span>(command.equals(<span class="string">"check"</span>)) &#123;</span><br><span class="line">				<span class="keyword">int</span> x = Integer.parseInt(st.nextToken());</span><br><span class="line">				x--;</span><br><span class="line">				<span class="keyword">int</span> tmp = s &amp; (<span class="number">1</span>&lt;&lt;x);</span><br><span class="line">				<span class="keyword">if</span>(tmp !=<span class="number">0</span>) &#123;</span><br><span class="line">					sb.append(<span class="string">"1"</span>);</span><br><span class="line">					sb.append(<span class="string">"\n"</span>);</span><br><span class="line">				&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">					sb.append(<span class="string">"0"</span>);</span><br><span class="line">					sb.append(<span class="string">"\n"</span>);</span><br><span class="line">				&#125;</span><br><span class="line">				</span><br><span class="line">			&#125; <span class="keyword">else</span> <span class="keyword">if</span>(command.equals(<span class="string">"toggle"</span>)) &#123;</span><br><span class="line">				<span class="keyword">int</span> x = Integer.parseInt(st.nextToken());</span><br><span class="line">				x--;</span><br><span class="line">				s = s ^ (<span class="number">1</span>&lt;&lt;x);</span><br><span class="line">			&#125; <span class="keyword">else</span> <span class="keyword">if</span>(command.equals(<span class="string">"all"</span>)) &#123;</span><br><span class="line">				s = (<span class="number">1</span>&lt;&lt;N) - <span class="number">1</span>;</span><br><span class="line">			&#125; <span class="keyword">else</span> <span class="keyword">if</span>(command.equals(<span class="string">"empty"</span>)) &#123;</span><br><span class="line">				s = <span class="number">0</span>;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		System.out.println(sb.toString());</span><br><span class="line">		</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2018/06/08/BOJ11723/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
     <div class="pagination-bar">
     <ul class="pagination">
         
@@ -1657,7 +1721,7 @@ JavaScript를 사용한 것이 단점이 될 수도 있습니다. C/C++로 개�
             </a>
           </li>
         
-        <li class="pagination-number">page 22 of 25</li>
+        <li class="pagination-number">page 22 of 26</li>
     </ul>
 </div>
 
