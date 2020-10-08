@@ -373,7 +373,7 @@
     </article>
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -405,53 +405,17 @@
 
             </div>
             
-                <div class="postShorten-content">
+                <div class="postShorten-excerpt">
                     <p>이번에는 Android에서 RecyclerView를 사용할 때, 각 아이템의 ClickListener를 다는 방법에 대해서 설명하려고 한다. 여러가지 방법이 있겠지만, 이번에는 Kotlin의 특징 중 하나인 <strong>함수를 매개변수로 넘길 수 있다는 특징</strong>을 사용하려고 한다.</p>
-<p>필자가 진행 중인 프로젝트의 일부 코드를 기반으로 설명할 예정이다.</p>
-<h2 id="구현">구현</h2>
-<ol>
-<li>먼저, MainFragment에서 RecyclerView를 사용할 것이다. 그리고 RecyclerView의 각 아이템을 눌렀을 때 어떤 동작을 할 것인지를 미리 정의해둔다.</li>
-</ol>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">fun</span> <span class="title">startToDetailActivity</span><span class="params">(id: <span class="type">Int</span>, message: <span class="type">String</span>)</span></span> &#123;</span><br><span class="line">        <span class="keyword">val</span> intent = Intent(context, MissionDetailActivity::<span class="class"><span class="keyword">class</span>.<span class="title">java</span>)</span></span><br><span class="line">        intent.putExtra(<span class="string">"id"</span>, id)</span><br><span class="line">        intent.putExtra(<span class="string">"completeMessage"</span>, message)</span><br><span class="line">        intent.putExtra(<span class="string">"main"</span>,<span class="string">"main"</span>)</span><br><span class="line">        startActivity(intent)</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-<p>Int 타입인 id와 String 타입인 message를 매개변수로 받는 함수이다. 이 함수는 id, message를 가지고 MissionDetailActivity로 이동하는 함수이다.</p>
-<ol start="2">
-<li>이제는 이 함수를 RecyclerView에서 사용될 Adapter에 매개변수로 넘기는 과정이 필요하다. 이 과정은 두 단계로 나눠보도록 하겠다.</li>
-</ol>
-<ul>
-<li>Adapter에서 함수를 인자로 받을 수 있도록 수정.</li>
-<li>MainFragment에서 Adapter 객체를 만들 때 위에서 만든 함수를 전달한다.</li>
-</ul>
-<p>Adapter에서 함수를 인자로 받을 수 있도록 수정해보도록 하겠다.</p>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MainMissionAdapter</span></span>(<span class="keyword">private</span> <span class="keyword">var</span> onMainMissionItemClick: (<span class="built_in">Int</span>, String) -&gt; <span class="built_in">Unit</span>) :</span><br><span class="line">    RecyclerView.Adapter&lt;MainMissionViewHolder&gt;() &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">var</span> itemsMock = ArrayList&lt;MissionFeedResponse&gt;()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreateViewHolder</span><span class="params">(parent: <span class="type">ViewGroup</span>, viewType: <span class="type">Int</span>)</span></span>: MainMissionViewHolder &#123;</span><br><span class="line">        <span class="keyword">val</span> binding = ItemListMainMissionBinding.inflate(</span><br><span class="line">            LayoutInflater.from(parent.context)</span><br><span class="line">            , parent, <span class="literal">false</span></span><br><span class="line">        )</span><br><span class="line">        <span class="keyword">return</span> MainMissionViewHolder(binding, onMainMissionItemClick)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 생략.</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>MainMissionAdapter의 기본 생성자를 호출하면서 <code>(Int, String) -&gt; Unit</code>을 확인할 수 있다. 이는 Int, String을 인자로 받고 반환값이 없는 함수를 의미한다. 따라서 Int, String을 인자로 받고 반환값이 없는 함수를 매개변수를 받겠다는 의미이다.</p>
-<p>그리고 <strong>onCreateViewHodler</strong>에서 <strong>MainMissionViewHolder</strong>에 매개변수로 받은 <code>onMainMissionItemClick</code> 함수를 넘기고 있다. ViewHolder는 위의 남은 단계가 끝나고 살펴볼 예정이다.</p>
-<p>그러면 MainFragment에서 함수를 전달해보도록 하자. 함수를 전달할 때는 람다식을 사용할 수 있다. 이유는 익명 함수이기 때문에 람다식을 이용해서 가독성을 높이고 쉽게 처리할 수 있기 때문이다.</p>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mainMissionAdapter = MainMissionAdapter &#123; id, message -&gt;</span><br><span class="line">            startToDetailActivity(id, message)</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
-<p>초기화 하는 코드이다. MainMissionAdapter의 인자로 id, message를 받는 익명함수가 전달되어야 하기 때문에 람다식을 통해서 id, message를 넘겨 받는다. 이는 위에서 구현해놓은 <code>startToDetailActivity()</code> 함수의 매개변수로 넘겨줘야 한다.</p>
-<p>이것은 실제로 값을 받는 코드가 아니다. 이렇게 값을 받을 것이다라고 선언만 해놓은 것이지 아직 코드가 실행되지 않는다.<br>
-어떻게 보면 <strong>startToDetailActivity</strong> 함수를 Adapter에 넘기는 것이다. 이 함수는 위치는 MainFragment에 존재하는 것이고 이 함수의 호출을 대신하기 위해서 함수를 넘기는 것이다.</p>
-<p>따라서 함수를 넘긴다는 것의 의미는 실제로 이 함수를 넘기는 것이 아니라 원하는 값을 얻어 이 함수에 담아서 호출하기 위함이다. 그래서 Adapter에서 ViewHolder로 넘기면 ViewHolder에서 <strong>onMainMissionItemClick</strong> 이라는 익명 함수를 받는다. 코드를 먼저 보도록 하자.</p>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MainMissionViewHolder</span></span>(</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">val</span> binding: ItemListMainMissionBinding</span><br><span class="line">    , <span class="keyword">private</span> <span class="keyword">val</span> onMainMissionItemClick: (<span class="built_in">Int</span>, String) -&gt; <span class="built_in">Unit</span></span><br><span class="line">) : RecyclerView.ViewHolder(binding.root) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">onBind</span><span class="params">(item: <span class="type">MissionFeedResponse</span>)</span></span> &#123;</span><br><span class="line">        binding.item = item</span><br><span class="line">        binding.executePendingBindings()</span><br><span class="line"></span><br><span class="line">        binding.itemMainImage.setOnClickListener &#123;</span><br><span class="line">            onMainMissionItemClick.invoke(item.mission.id, item.mission.category.completeMessage)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>ViewHolder에서 필자가 원하는 아이템에 <strong>setOnClickListener</strong>를 통해서 클릭 리스너를 달아준다. 그리고 그 안에서 <code>onMainMissionItemClick.invoke()</code>를 호출함으로써 넘겨받은 함수를 대신 호출할 수 있도록 해준다. <strong>invoke()</strong> 함수가 함수를 대신 호출하는 의미를 가진듯 하다.</p>
-<p>그래서 여기서 호출하게 되면 MainFragment에서 정의했던 startToDetailActivity() 함수가 호출되고 원하는 동작을 할 수 있게 된다.</p>
-<p>내가 원하는 값을 인자로 받는 부분은 ViewHolder에서 이루어지게 되고 실제 함수는 MainFragment에 존재한다. 그리고 호출도 이 함수를 호출하게 되는 것이다.</p>
-<p>설명을 두서없이 하였다. 다음에 Kotlin의 사용자 정의 get(), set()을 통해 변경된 코드로 다시 한번 설명하도록 하겠다. 그 때는 더 깔끔하게 글을 쓰도록 할 예정이다. 마지막으로 이 글을 쓴 목적은 코틀린스럽게 코드를 작성하고자 하는 사람들이 영어로 된 자료말고 이 자료를 통해서 더 쉽게 해당 지식을 얻어갔으면 하는 바램에서 작성하게 되었다.</p>
-
                     
+                        <a
+                            href="/2019/07/05/Android-RecyclerView-ClickListener-kotlin/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [Android] RecyclerView ClickListener"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2019/07/05/Android-RecyclerView-ClickListener-kotlin/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             
@@ -460,7 +424,7 @@
     </article>
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -492,45 +456,17 @@
 
             </div>
             
-                <div class="postShorten-content">
+                <div class="postShorten-excerpt">
                     <p>Android에서 RecyclerView의 사용은 거의 필수라고 할 수 있다. 왜냐하면 리스트를 보여주는 화면은 대부분의 앱에 존재할 것이기 때문이다. 이번 글은 간단하다. 리싸이클러뷰를 사용하는 사람이라면 글을 읽는데 어려움이 없을 것이다. 사실, 몰라도 볼 수 있다. 그만큼 간단한 글이다.</p>
-<h2 id="recyclerview">RecyclerView</h2>
-<p>리싸이클러뷰는 리스트 화면을 구성하는데 효율적이다. 이유는 View를 재활용하기 때문이다. 화면을 작성하고 보면 리스트의 제일 하단 공간이 아래와 바짝 붙어있는 경우를 본 적이 있을 것이다. 이를 해결하기 위한 방법은 내가 할 수 있는 것 중에서는 두 가지가 있다.</p>
-<ul>
-<li>ItemDecoration 클래스를 만들어서 마지막 아이템일 경우 공간을 추가하는 방법</li>
-<li>RecyclerView 자체에 padding을 주는 방법</li>
-</ul>
-<p>첫 번째 방법은 <code>addDecoration</code> 키워드를 가지고 검색해보면 답을 구할 수 있다. 이 방법은 추후에 설명하도록 하겠다. 이것보다 훨씬 간단한 두 번째 방법을 설명하겠다. 두 번째 방법 그대로 padding을 RecyclerView에 추가하면 어떻게 될까??</p>
-<p>내가 원하는 것처럼 바닥과 공간이 떨어진다. 하지만, 스크롤이 되는 위치도 그만큼 떨어지게 된다. 즉 RecyclerView를 자식으로 가지는 부모 뷰에 꽉 차지 않는 것이다. 이를 해결하기 위해서는 다음의 한 줄을 추가하면 간단하게 해결된다</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">android:clipToPadding="false"</span><br></pre></td></tr></table></figure>
-<p>공식 문서의 내용을 보면 다음과 같다.</p>
-<blockquote>
-<p>Defines whether the ViewGroup will clip its children and resize (but not clip) any EdgeEffect to its padding, if padding is not zero. This property is set to true by default.</p>
-</blockquote>
-<p><strong>해석해보면 패딩이 0이 아닌 경우에는 ViewGroup이 자신의 자식 뷰의 영역을 자르고 EdgeEffect의 크기를 조정(clip)할지 여부를 규정한다. 이 속성은 기본적으로 true로 설정되어 있다.</strong></p>
-<p>기본적으로 패딩값이 설정되어 있다면 ViewGroup은 자신의 자식 뷰의 영역을 자르고 EdgeEffect(사용자가 2D 공간에서 콘텐츠 경계를 넘어 스크롤할 때 스크롤 가능한 위젯의 가장자리에서 사용하는 그래픽 효과를 말한다.)의 크기를 조정한다. 이 속성을 false로 설정한다는 것은 EdgeEffect의 크기를 조정하지 않는다. 따라서 스크롤 가능한 위젯의 가장자리에서 사용하는 그래픽 효과는 부모 뷰에 맞도록 설정이 된다는 걸 뜻한다.</p>
-<p>그래서 스크롤할 때 부모 뷰에서 떨어지지 않고 내가 원하는 동작을 할 수 있다. 이것은 나의 해석과 생각이 담겨 있다. 그래서 사실이 아닐 수도 있다. 질문이나 틀린 점이 있다면 알려주면 피드백 반영해서 수정하도록 하겠습니다.</p>
-<h2 id="참고">참고</h2>
-<ul>
-<li><a href="https://developer.android.com/reference/android/view/ViewGroup.html#attr_android:clipToPadding" target="_blank" rel="noopener">Android Developer clipToPadding</a></li>
-<li><a href="https://developer.android.com/reference/android/widget/EdgeEffect" target="_blank" rel="noopener">Android Developer EdgeEffect</a></li>
-</ul>
-
                     
+                        <a
+                            href="/2019/06/25/Android-RecyclerView-BottomSpace/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [Android] RecyclerView Bottom padding"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2019/06/25/Android-RecyclerView-BottomSpace/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             
@@ -539,7 +475,7 @@
     </article>
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -571,51 +507,17 @@
 
             </div>
             
-                <div class="postShorten-content">
+                <div class="postShorten-excerpt">
                     <p>안드로이드 개발을 하다보면 ScrollView 안에 RecyclerView를 넣어야 하는 경우가 생긴다. 이럴 때, <code>NestedScrollView</code>를 사용하면 된다. 이름처럼 중첩된 스크롤뷰라는 뜻이다. 필자는 NestedScrollView를 아주 유용하게 사용한다. 사용하는 상황은 다음과 같다.</p>
-<ul>
-<li>RecyclerView이 있는데 다른 형태의 뷰가 보여질 때</li>
-<li>타이틀이 있고 아래에 리스트 목록이 보일 때</li>
-</ul>
-<p>두 가지 경우는 거의 비슷하다. 첫 번째 경우는 사실 ViewType을 다르게 하여 RecyclerView를 구성할 수도 있다. 하지만, 이 부분이 조금 번거롭다면 NestedScrollView를 사용하는 것도 하나의 방법이다.</p>
-<h2 id="issue">issue</h2>
-<p>이제 필자가 겪은 문제를 말하려고 한다. 서론이 길었다. 위에서 두 번째 경우를 구현해야 하는 상황이 있었다. <strong>NestedScrollView는 ScrollView와 마찬가지로 내부에 ViewGroup을 하나만 가질 수 있다.</strong> 그래서 LinearLayout을 두고 그 안에 타이틀을 보여주는 TextView와 리스트를 나타내는 RecyclerView를 두었다.</p>
-<p>그런데 경우에 따라서 이 NestedScrollView가 자기 멋대로 밑으로 스크롤이 내려갈 때가 있다. 처음에는 이유를 몰랐다. 그래서 구글링을 해보면서 찾아봤다. 이유는 뷰가 그려지면서 안에 넣어둔 또 다른 ScrollView(즉, 여기서는 RecyclerView)에 포커스가 잡히면서 타이틀이 보이지 않는 것이었다.</p>
-<p>그래서 이 포커스를 어떻게 없앨까 찾아보았다. 포커스만 없앤다면 뷰가 그려지면서 RecyclerView에 포커스되는 상황이 없어지고 스크롤이 제멋대로 내려가지 않을테니 말이다. 바로 다음의 한줄만 추가하면 된다.</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">android:descendantFocusability="blocksDescendants"</span><br></pre></td></tr></table></figure>
-<p><strong>무슨 속성일까?</strong></p>
-<ul>
-<li><code>descendantFocusability</code> : <strong>ViewGroup 내에서 포커스를 맞출 때 ViewGroup과 그의 하위 뷰의 관계를 설정한다.</strong> 여기서 하위 뷰란 자식 뷰를 의미한다.</li>
-<li><code>blocksDescendants</code> : 해당 뷰 그룹의 하위 뷰가 포커스를 받지 못하게 하는 옵션이다.</li>
-</ul>
-<p><strong>어디에 정의할까?</strong></p>
-<p>ScrollView의 자식 뷰에 설정하면 된다. 스크롤뷰는 자식 뷰를 하나만 가지기 때문에 LinearLayout에 설정하면 된다.</p>
-<p><strong>xml 코드</strong></p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">androidx.core.widget.NestedScrollView</span></span></span><br><span class="line"><span class="tag">                <span class="attr">android:layout_width</span>=<span class="string">"0dp"</span></span></span><br><span class="line"><span class="tag">                <span class="attr">android:layout_height</span>=<span class="string">"0dp"</span></span></span><br><span class="line"><span class="tag">                <span class="attr">app:layout_constraintStart_toStartOf</span>=<span class="string">"parent"</span></span></span><br><span class="line"><span class="tag">                <span class="attr">app:layout_constraintEnd_toEndOf</span>=<span class="string">"parent"</span></span></span><br><span class="line"><span class="tag">                <span class="attr">app:layout_constraintTop_toBottomOf</span>=<span class="string">"@id/achieveAppBar"</span></span></span><br><span class="line"><span class="tag">                <span class="attr">app:layout_constraintBottom_toBottomOf</span>=<span class="string">"parent"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">            <span class="tag">&lt;<span class="name">LinearLayout</span></span></span><br><span class="line"><span class="tag">                    <span class="attr">android:descendantFocusability</span>=<span class="string">"blocksDescendants"</span></span></span><br><span class="line"><span class="tag">                    <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></span></span><br><span class="line"><span class="tag">                    <span class="attr">android:layout_height</span>=<span class="string">"match_parent"</span></span></span><br><span class="line"><span class="tag">                    <span class="attr">android:orientation</span>=<span class="string">"vertical"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">                <span class="tag">&lt;<span class="name">TextView</span></span></span><br><span class="line"><span class="tag">                        <span class="attr">android:layout_marginStart</span>=<span class="string">"@dimen/margin_24dp"</span></span></span><br><span class="line"><span class="tag">                        <span class="attr">android:layout_marginTop</span>=<span class="string">"@dimen/margin_16dp"</span></span></span><br><span class="line"><span class="tag">                        <span class="attr">android:layout_width</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">                        <span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">                        <span class="attr">android:text</span>=<span class="string">"@string/text_my_page_achieve_list_title"</span></span></span><br><span class="line"><span class="tag">                        <span class="attr">style</span>=<span class="string">"@style/SubTitleHeaderStyle"</span></span></span><br><span class="line"><span class="tag">                /&gt;</span></span><br><span class="line"></span><br><span class="line">                <span class="tag">&lt;<span class="name">androidx.recyclerview.widget.RecyclerView</span></span></span><br><span class="line"><span class="tag">                        <span class="attr">android:id</span>=<span class="string">"@+id/achieveListRv"</span></span></span><br><span class="line"><span class="tag">                        <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></span></span><br><span class="line"><span class="tag">                        <span class="attr">android:layout_height</span>=<span class="string">"match_parent"</span></span></span><br><span class="line"><span class="tag">                        <span class="attr">android:overScrollMode</span>=<span class="string">"never"</span></span></span><br><span class="line"><span class="tag">                        <span class="attr">android:layout_marginTop</span>=<span class="string">"@dimen/margin_24dp"</span>/&gt;</span></span><br><span class="line"></span><br><span class="line">            <span class="tag">&lt;/<span class="name">LinearLayout</span>&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;/<span class="name">androidx.core.widget.NestedScrollView</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<h2 id="결론">결론</h2>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">android:descendantFocusability="blocksDescendants"</span><br></pre></td></tr></table></figure>
-<p>정리하면, 위의 설정은 NestedScrollView 안의 자식 뷰(하위 뷰)가 포커스를 가져가는 현상을 막아준다. 즉, NestedScrollView 안에 있는 RecyclerView가 포커스를 가져가지 않는다. 따라서 NestedScrollView는 원하던 대로 포커스를 받고 스크롤이 내려가는 현상도 방지할 수 있다.</p>
-<h2 id="참고">참고</h2>
-<ul>
-<li><a href="https://bonoogi.postype.com/post/657336" target="_blank" rel="noopener">NestedScrollView가 보여질 때 제멋대로 스크롤 되는 문제</a></li>
-<li><a href="https://stackoverflow.com/questions/34329707/nestedscrollview-scrolls-to-top-on-recyclerview-resized" target="_blank" rel="noopener">NestedScrollView scrolls to top on Recyclerview resized</a></li>
-</ul>
-
                     
+                        <a
+                            href="/2019/06/24/Android-NestedScrollview-issue/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [Android] NestedScrollView Issue"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2019/06/24/Android-NestedScrollview-issue/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             
@@ -624,7 +526,7 @@
     </article>
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -656,180 +558,17 @@
 
             </div>
             
-                <div class="postShorten-content">
+                <div class="postShorten-excerpt">
                     <p>신입 개발자를 위한 <a href="https://github.com/WooVictory/Ready-For-Tech-Interview" target="_blank" rel="noopener">Repository</a>를 만들었습니다. 공부한 내용을 정리 중이니 도움이 되신다면 와서 Star를 눌러주시면 감사하겠습니다.</p>
-<p>우리가 사용하는 앱 중에서 가장 많이 등장하는 것은 무엇일까?? 그 중의 하나는 바로 리스트라고 해도 과언이 아닐 것이다. 사용자에게 리스트 즉, 목록을 보여주는 것이 가장 많이 등장한다. 그렇다면 이 리스트를 구현하는 방법에는 무엇이 있을까??</p>
-<h2 id="listview">ListView</h2>
-<p>ListView는 이름에서도 알 수 있듯이 리스트 즉, 목록을 구현하는데 사용된다. ListView는 안드로이드에 임베디드 되어 있는 코드로 동작하며, API level 1부터 존재했다.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> View <span class="title">getView</span><span class="params">(<span class="keyword">final</span> <span class="keyword">int</span> position, View convertView, ViewGroup parent)</span> </span>&#123;</span><br><span class="line">    Holder holder = <span class="keyword">new</span> Holder();</span><br><span class="line">    View rowView = inflater.inflate(R.layout.item_list, <span class="keyword">null</span>);</span><br><span class="line">    holder.tv = (TextView) rowView.findViewById(R.id.text);</span><br><span class="line">    holder.img = (ImageView) rowView.findViewById(R.id.image);</span><br><span class="line">    holder.tv.setText(result[position]);</span><br><span class="line">    holder.img.setImageResource(imageId[position]);</span><br><span class="line">    rowView.setOnClickListener(<span class="keyword">new</span> OnClickListener() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View v)</span> </span>&#123;</span><br><span class="line">            <span class="comment">// TODO Auto-generated method stub</span></span><br><span class="line">            Toast.makeText(context, <span class="string">"You Clicked "</span> + result[position], Toast.LENGTH_LONG).show();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="keyword">return</span> rowView;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>위의 형태는 가장 일반적인 ListView의 getView() 접근 방법이다. 하지만 위와 같이 동작하게 되면 getView() 즉, ListView의 <strong>재사용성이 떨어지게 된다.</strong></p>
-<p>재사용이라는게 getView()는 현재 화면상에 아이템이 보일 때 호출되는 함수이다. 예를 들어, 아이템이 20개가 있고 이를 스크롤한다고 가정하면 스크롤 시에도 getView() 함수는 계속해서 호출된다.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Holder holder = <span class="keyword">new</span> Holder();</span><br><span class="line">View rootView = inflater.inflate(R.layout.item_list, <span class="keyword">null</span>)</span><br></pre></td></tr></table></figure>
-<p>또한, 위의 코드는 별도의 null 처리가 없으므로 스크롤을 할 때마다 inflate를 통해서 View의 create가 발생하고 findViewById도 함께 호출된다. [이러한 부분들이 비효율적이다.] 리스트의 특성상 하나의 View만 있으면 이 View가 연속적으로 사용이 가능한 형태가 만들어지면 되는데 ListView는 이러한 것이 강제적이지 않아서 힘들다.</p>
-<p>그래서 <code>ViewHolder</code>의 개념이 등장하게 된다. 구글의 권장 사항이라 강제적이지는 않다. <strong>다만 위와 같이 inflate와 findViewById를 리스트뷰에서 연속적으로 발생시키면 메모리와 성능에 악영향을 미칠 수 있다.</strong> 그래서 ViewHolder 패턴을 사용하는 것을 권장한다.</p>
-<h3 id="listview에-viewholder-패턴을-적용한다면">ListView에 ViewHolder 패턴을 적용한다면?</h3>
-<p>아래는 ViewHolder 패턴을 적용한 코드이다. convertView == null일 경우에만 inflate와 findViewById가 호출되어 view가 생성된다. 그리고 rootView의 setTag를 호출하여 생성된 ViewHolder를 임시 저장해둔다.</p>
-<p>메모리에 문제가 없다면 최초 1회만 생성되고 이후 else 문을 통해서 getTag()를 호출하여 ViewHolder를 꺼내와서 ViewHolder에 접근이 가능한 형태가 만들어지게 된다.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> View <span class="title">getView</span><span class="params">(<span class="keyword">final</span> <span class="keyword">int</span> position, View convertView, ViewGroup parent)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 최초에 convertView가 null이므로, inflate를 처리한다</span></span><br><span class="line">    <span class="keyword">if</span> (convertView == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="comment">// 전역으로 생성한 rootView에 inflate</span></span><br><span class="line">        rootView = inflater.inflate(R.layout.item_list, <span class="keyword">null</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// ViewHolder을 생성</span></span><br><span class="line">        Holder holder = <span class="keyword">new</span> Holder();</span><br><span class="line">        holder.tv = (TextView) rowView.findViewById(R.id.text);</span><br><span class="line">        holder.img = (ImageView) rowView.findViewById(R.id.image);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// setTag : holder 임시 저장</span></span><br><span class="line">        rootView.setTag(holder);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// rootView에 convertView를 셋팅</span></span><br><span class="line">        rootView = convertView;</span><br><span class="line">        <span class="comment">// rootView에서 holder을 꺼내온다</span></span><br><span class="line">        holder = (Holder) rootView.getTag();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    holder.tv.setText(result[position]);</span><br><span class="line">    holder.img.setImageResource(imageId[position]);</span><br><span class="line">    rowView.setOnClickListener(<span class="keyword">new</span> OnClickListener() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View v)</span> </span>&#123;</span><br><span class="line">            <span class="comment">// TODO Auto-generated method stub</span></span><br><span class="line">            Toast.makeText(context, <span class="string">"You Clicked "</span> + result[position], Toast.LENGTH_LONG).show();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="keyword">return</span> rootView;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>위와 같이 구현하는 것이 ListView에 ViewHolder 패턴을 적용하는 것이라고 보면 된다. 하지만 강제적이지 않아서 구현하는 것이 귀찮은 작업이 된다.</p>
-<p>그리고 커스텀이 많고 하나의 리스트에 다양한 ViewHolder를 만들기가 쉽지 않다. 예를 들면 다음과 같은 경우이다.</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">사진이 포함된 ViewHolder</span><br><span class="line">텍스트만 있는 ViewHolder</span><br><span class="line">오른쪽이 스크롤 되는 ListView가 포함된 ViewHolder</span><br></pre></td></tr></table></figure>
-<p>물론 우리는 ViewHolder 패턴을 이해하고 만들면 괜찮지만, 대부분의 개발자들은 귀찮을 것을 싫어한다… ㅎㅎ [내 생각^.^] 그래서 구글은 귀찮음을 해소하기 위해 RecyclerView라는 것을 만들어서 내놓았다.</p>
-<h2 id="listview의-장단점">ListView의 장/단점</h2>
-<p><strong>장점</strong></p>
-<ul>
-<li>ListView는 간단하게 리스트를 만드는 부분에 있어서는 장점을 가지고 있다. [ex) 텍스트만 있는 리스트]</li>
-<li>간단한 아이템 형태를 만드는 경우에는 빠르게 적용이 가능한 ArrayAdapter를 제공한다.</li>
-</ul>
-<p><strong>단점</strong></p>
-<ul>
-<li>아이템의 애니메이션 처리가 쉽지 않다.</li>
-<li>리스트에는 한 개 이상의 View가 필요한 경우가 있지만 커스텀으로 작업하기 쉽지 않다.</li>
-<li>ViewHolder 패턴을 강제적으로 사용하지 않으므로 고비용의 findViewById가 매번 호출될 수 있다.</li>
-</ul>
-<h2 id="recyclerview">RecyclerView</h2>
-<p>롤리팝(5.0) 버전이 ListView보다 유연하고 성능이 향상된 RecyclerView와 함께 발표되었다. 기존의 ListView는 커스터마이징 하기에 힘들었고, 구조적인 문제로 성능상의 문제도 있어다.</p>
-<p>RecyclerView는 ListView의 문제를 해결하기 위해 개발자에게 더 다양한 형태로 커스터마이징 할 수 있도록 제공되었다. RecyclerView와 ListView의 가장 큰 차이점은 LayoutManager와 ViewHolder 패턴의 의무적인 사용, Item에 대한 뷰의 변형이나 애니메이션할 수 있는 개념이 추가된 것이다.</p>
-<p><strong>Create Lists</strong></p>
-<p>creating Lists and Cards에 정의된 List 표현이다.</p>
-<img src="/img/android_recyclerview.png" width="500" height="300">
-<p>widget인 RecyclerView는 LayoutManager를 통해서 View를 그리는 방법을 정의한다. RecyclerView.Adapter에서는 Data의 ViewHolder 정의에 따라서 UI가 선택되고 이를 표현하게 된다.</p>
-<ul>
-<li>강제적인 ViewHolder의 적용으로 View의 <strong>재사용</strong>을 가능하게 해준다.</li>
-<li>많은 데이터를 리스트 형태로 제공이 가능하다.</li>
-<li>RecyclerView.ItemAnimator을 이용하여 Item의 Animator를 이용할 수 있다.</li>
-<li>LayoutManager를 통해서 아이템의 배치 방법을 다양하게 적용할 수 있다.</li>
-</ul>
-<p><strong>주요 클래스</strong></p>
-<ul>
-<li>Adapter : 기존의 ListView에서 사용하는 Adapter와 같은 개념으로 데이터와 아이템에 대한 View 생성</li>
-<li>ViewHolder : 재활용 View에 대한 모든 서브 뷰를 보유</li>
-<li>LayoutManager : 아이템 항목을 어떻게 배치하는가를 결정</li>
-<li>ItemDecoration : 아이템 항목에서 서브뷰에 대한 처리</li>
-<li>ItemAnimation : 아이템 항목이 추가, 삭제되거나 정렬될 때 애니메이션 처리를 할 수 있다.</li>
-</ul>
-<ol>
-<li>Adapter</li>
-</ol>
-<p>리스트뷰는 데이터가 어디서 왔느냐에 따라 BaseAdapter를 상속한 ArrayAdapter(배열로부터 데이터를 가져올 때 사용), CursorAdapter(DB로부터 데이터를 가져올 때 사용), SimpleAdapter(XMl 등으로부터 가져올 때 사용)를 구분하여 사용한다.</p>
-<p>하지만 RecyclerView는 Universal한 Adapter를 사용하여 데이터 소스를 처리한다. 이것은 리싸이클러뷰의 <strong>유연성</strong>을 보여준다. 다음의 3가지 인터페이스를 구현해야 한다.</p>
-<ul>
-<li>onCreateViewHolder(ViewGroup parent, int viewType) : 뷰 홀더를 생성하고 뷰를 붙여주는 부분이다.</li>
-<li>onBindViewHolder(CustomViewHolder holder, int position) : 재활용 되는 뷰가 호출하여 실행되는 메소드, 뷰 홀더를 전달하고 어댑터는 position의 데이터를 결합시킨다.</li>
-<li>getItemCount() : 데이터의 개수 반환</li>
-</ul>
-<p>getItemCount() -&gt; onCreateViewHolder() -&gt; onBindViewHolder() 순으로 호출된다.</p>
-<p>리스트뷰가 사용했던 getView() 메소드는 매번 호출되면서 null 처리를 해주는 귀찮은 작업을 해줘야했다면, onCreateViewHolder는 새롭게 생성될 때만 호출된다.</p>
-<ol start="2">
-<li>ViewHolder</li>
-</ol>
-<p>리스트뷰에서는 뷰홀더 패턴을 권장했다. UI를 수정할 때마다 부르는 findViewById()를 뷰홀더 패턴을 이용해 한번만 호출함으로써 리스트뷰의 지연을 초래하는 무거운 연산을 줄여주었다. 이 문제를 리싸이클러뷰에서는 뷰홀더 패턴을 항상 사용하도록(강제하도록) 함으로써 해결했다.</p>
-<p>하지만 실제로 앱의 퍼포먼스를 향상시켜주지만 최신의 디바이스는 뷰홀더 패턴을 사용하지 않은 리스트뷰나 리싸이클러뷰의 성능 차이는 미세하다.</p>
-<p><strong>단지 차이점은 리싸이클러뷰는 뷰홀더 패턴이 강제되는 것일 뿐이다.</strong> 이전의 리스트뷰는 선택적이었지만 성능 차이가 너무 컸기 때문에 변화된 것으로 생각된다. 간과하기 쉬운 중요한 점은 뷰홀더 패턴을 사용한 리스트뷰와 리싸이클러뷰의 성능은 같다.</p>
-<ol start="3">
-<li>LayoutManager</li>
-</ol>
-<p>리스트뷰는 수직 스크롤만 가능하다. 리스트뷰를 수평으로 사용할 수는 없었다. 그것을 구현하기 위한 몇가지 방법이 있지만 리스트뷰는 그렇게 동작하도록 디자인 되지 않았다고 한다.</p>
-<p>그러나 이제 리싸이클러뷰에서는 수직뿐만 아니라 수평 스크롤 또한 지원한다. 뿐만 아니라 더 다양한 타입의 리스트들을 지원하고, 커스텀할 수 있도록 해준다. 많은 타입의 리스트를 사용학 위해서 LayoutManager를 사용하면 된다.</p>
-<blockquote>
-<p>LayoutManager의 종류</p>
-</blockquote>
-<ol>
-<li>LinearLayoutManager</li>
-</ol>
-<ul>
-<li>Vertical(가로) / Horizontal(세로) 형태로 아이템을 배치한다.</li>
-</ul>
-<ol start="2">
-<li>GridLayoutManager</li>
-</ol>
-<ul>
-<li>한 줄에 1개 이상의 이미지를 표시할 수 있지만 아이템의 크기는 줄의 첫 번째 아이템의 크기에 따라서 달라질 수 있다.(고정시에는 모두 고정)</li>
-</ul>
-<ol start="3">
-<li>StaggeredGridLayoutManager</li>
-</ol>
-<ul>
-<li>그리드 형태의 아이템에 크기를 다양하게 적용할 수 있다.</li>
-</ul>
-<ol start="4">
-<li>Custom LayoutManager</li>
-</ol>
-<ul>
-<li>3개의 레이아웃 매니저를 상속받아 구현할 수 있다.</li>
-</ul>
-<ol start="4">
-<li>Item Decoration</li>
-</ol>
-<p>리스트뷰에서는 XML에 파라미터를 추가함으로써 쉽게 divide할 수 있었다. 리싸이클러뷰에서는 RecyclerView.ItemDecoration 클래스를 통해 divider를 원하는 아이템에 추가할 수 있도록 되었다. 조금 복잡해졌지만 동적인 데코레이팅이 가능해졌다.</p>
-<ol start="5">
-<li>Item Animator</li>
-</ol>
-<p>Material Design에 대해 조명된 이후로 리스트에서의 애니메이션을 무궁무진한 가능성을 가지게 되었다. 리스트뷰에서는 아이템의 삽입이나 삭제에 특별한 애니메이션이 없었다.</p>
-<p>하지만 리싸이클러뷰에서는 RecyclerView.ItemAnimator 클래스를 통해 애니메이션을 핸들링 할 수 있게 되었다. 이 클래스를 통해서 아이템의 삽입, 삭제, 이동에 대한 커스터마이징이 가능하고, 또한 DefaultItemAnimator가 제공되므로 커스터마이징이 필요 없이 사용할 수도 있다.</p>
-<p>notifyItemChanged(int position), notifyItemInserted(int position), notifyItemRemoved(int position)을 ItemAnimator을 통해 특정 아이템에 대한 애니메이션을 발생시킬 수 있습니다.</p>
-<ol start="6">
-<li>클릭 이벤트 처리</li>
-</ol>
-<p>터치 이벤트를 통해 사용자가 아이템을 클릭했는지 롱클릭 했는지를 직접처리</p>
-<p>RecycleView.OnItemTouchListener은 리싸이클러뷰의 터치 이벤트를 감지한다. 좀 복잡하지만 개발자에게 터치 이벤트를 인터셉트하는 제어권한을 주게 되었다.</p>
-<p>안드로이드 공식 문서에서는 터치 이벤트를 인터셉트함으로서 리싸이클러뷰에게 전달하기 전에 조작함으로써 유용하게 사용될 수 있다고 한다.(ListView에서 아이템을 클릭시 콜백 받을 수 있는 리스너는 RecyclerViewd에는 존재하지 않음.)</p>
-<p>즉, RecyclerView에는 Click 이벤트에 대한 처리를 자체적으로 할 수 없다. 그래서 onClickListener를 달아줘야 하는 문제가 발생한다.</p>
-<p>내가 사용하는 방법으로는 RecyclerView를 사용하는 액티비티에서 View.OnClickListener를 상속받고 그 액티비티의 Context를 RecyclerView.Adapter에서 만든 함수에게 넘긴다.</p>
-<p>이 함수는 액티비티에서 받은 Context(여기에 View.OnClickListener이 포함되어 있음)를 Adapter 클래스의 View.OnClickListener 타입의 변수인 ItemClick을 초기화한다.</p>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">onItemClikc</span><span class="params">(l : <span class="type">View</span>.<span class="type">OnClickListener</span>)</span></span>&#123;</span><br><span class="line">    ItemClick = l</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>그러면 Adapter는 ClickListener 정보를 받아서 onCreateViewHolder에서 만든 View를 리턴하기 전에 그 View에게 onClickListener를 붙여주면 된다.</p>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreateViewHolder</span><span class="params">(parent: <span class="type">ViewGroup</span>, viewType: <span class="type">Int</span>)</span></span>: HomeFilterViewHolder &#123;</span><br><span class="line">     <span class="keyword">var</span> view = LayoutInflater</span><br><span class="line">         .from(parent.context).inflate(R.layout.home_course_filter_list, parent, <span class="literal">false</span>)</span><br><span class="line"></span><br><span class="line">     view.setOnClickListener(onItemClick)</span><br><span class="line">     <span class="keyword">return</span> HomeFilterViewHolder(view)</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
-<ol start="7">
-<li>DiffUtil</li>
-</ol>
-<p><code>DiffUtil</code>은 데이터의 변화를 감지하여 뷰를 갱신하는 클래스이다. areItemsTheSame, areContentsTheSame, getChangedPayload 등을 오버라이딩하여 데이터간 변화를 감지한다.</p>
-<p>RecyclerView.Adapter에서 notifyItemMoved, notifyItemRangeChanged, notifyItemRangeInserted, notifyItemRangeRemoved 등이 호출되면 DiffUtil에서 해당 범위의 데이터의 변화를 감지하고 뷰를 선택적으로 갱신함으로써 비용이 큰 notifyDataSetChanged 대신 효율적으로 사용될 수 있다.</p>
-<p>추가적인 DiffUtil 클래스의 메소드를 확인하고 싶다면 아래 글을 참고하자.<br>
-<a href="https://medium.com/sopt/do-it-sopt-android-seminar-4-beb2d9245a4b" target="_blank" rel="noopener">about RecyclerView</a></p>
-<h2 id="정리">정리</h2>
-<p>그럼 간단하게 ListView와 RecyclerView의 차이점을 표 형식으로 정리해서 보겠다. 아래의 표는 블로그를 참고했으며 참고 링크는 아래에 적어놓았다.</p>
-<img src="/img/android_diff_listview_recyclerview.png" width="500" height="300">
-<p><strong>다음 세가지를 비교/정리</strong></p>
-<ul>
-<li>
-<p>ListView<br>
-리스트뷰에서는 BaseAdapter를 상속받은 ArrayAdapter나 CursorAdapter 등을 사용한다.<br>
-ViewHolder 패턴을 선택적으로 구현하기 때문에 구현하지 않는 경우 각각의 View를 그릴 때마다 findViewById()를 호출하기 때문에 성능 저하 문제가 발생한다.<br>
-getView() 메소드에서 뷰를 그릴 때마다 findViewById()를 매번 호출하여 성능이 저하된다.</p>
-</li>
-<li>
-<p>ListView+ViewHolder<br>
-리스트뷰에서 ViewHolder 패턴을 구현한다면 성능에 관해서는 RecyclerView와 비슷하지만 기존의 ListView는 뷰 커스텀 작업에 대한 유연성이 떨어진다.</p>
-</li>
-<li>
-<p>RecyclerView<br>
-리싸이클러뷰는 ViewHolder 패턴의 사용을 강제하고 Adapter 클래스를 직접 구현하기 때문에 뷰 커스텀 작업에 대한 유연성이 ListView보다 더욱 쉽고 편하다.</p>
-</li>
-</ul>
-<h2 id="참고">참고</h2>
-<ul>
-<li><a href="http://crystal-k.tistory.com/16" target="_blank" rel="noopener">리사이클러 뷰 RecyclerView 정리</a></li>
-<li><a href="http://itmining.tistory.com/12" target="_blank" rel="noopener">[안드로이드] RecyclerView란? (RecyclerView와 ListView 차이)</a></li>
-<li><a href="http://armful-log.tistory.com/27" target="_blank" rel="noopener">[안드로이드] RecyclerView ( ListView와 차이 )</a></li>
-<li><a href="http://virusworld.tistory.com/90" target="_blank" rel="noopener">Android - ViewHolder 패턴</a></li>
-</ul>
-
                     
+                        <a
+                            href="/2019/01/03/Android-Diff-of-ListView-and-RecyclerView/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [안드로이드] ListView vs RecyclerView"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2019/01/03/Android-Diff-of-ListView-and-RecyclerView/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             

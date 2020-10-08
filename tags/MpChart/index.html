@@ -267,7 +267,7 @@
     <section class="postShorten-group main-content-wrap">
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -299,93 +299,17 @@
 
             </div>
             
-                <div class="postShorten-content">
+                <div class="postShorten-excerpt">
                     <p>MpAndroidChart는 그래프 라이브러리 중 하나이다. 가장 널리 알려져 있고, Github의 star가 가장 많은 그래프 라이브러리이다. 라이브러리를 선택할 때 중요하게 생각해야 할 점 중의 하나로는 <code>star</code>가 많은 것을 선택하라고 한다. 그 이유는 star가 많은 것은 그만큼 오픈 소스 라이브러리 활동이 활발하여 오류에 대한 수정이나 기능 추가 같은 활동들이 활발하기 때문이라고 한다. 그래서 나는 안드로이드에서 그래프를 그리기 위해 <strong>MpAndroidChart</strong> 라이브러리를 사용했다.</p>
-<h2 id="종류">종류</h2>
-<p>종류는 Github에서도 확인할 수 있듯이 엄청 다양하다. 그 중에서 나는 <strong>LineChart</strong>를 이용해서 원하는 데이터를 표현하려고 했다. 한국말로는 꺾은선 그래프라고도 하며, 이를 이용해서 데이터를 간단하게 표시할 수 있다.</p>
-<p>LineaChart 말고도 다양한 그래프들이 존재한다. 예를 들면, BarChart, PieChart 등등이 있다.</p>
-<h2 id="삽질-후기">삽질 후기</h2>
-<p>그렇다면 내가 원하는 데이터를 그래프에 표시하기 위해서 삽질했던 후기를 정리하고자 한다.</p>
-<p>##1. 데이터 생성**</p>
-<p>그래프에서 표현하고자 하는 데이터를 생성해야 한다. 데이터는 <strong>Entry</strong>라고 하는 라이브러리에서 제공하는 타입으로 만들면 된다. 기본적으로 x, y의 Float(실수)형 데이터를 넣어서 만들 수 있다.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">List&lt;Entry&gt; entires = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">entries.add(<span class="keyword">new</span> Entry(<span class="number">0</span>,<span class="number">1f</span>));</span><br><span class="line">entries.add(<span class="keyword">new</span> Entry(<span class="number">1</span>,<span class="number">2f</span>));</span><br><span class="line">entries.add(<span class="keyword">new</span> Entry(<span class="number">2</span>,<span class="number">3f</span>));</span><br><span class="line">entries.add(<span class="keyword">new</span> Entry(<span class="number">3</span>,<span class="number">4f</span>));</span><br></pre></td></tr></table></figure>
-<ul>
-<li>entries를 이용해 LineDataSet을 생성한다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">LineDataSet lineDataSet = <span class="keyword">new</span> LineDataSet(entries, <span class="string">"Emotion"</span>);</span><br><span class="line"><span class="comment">// entries와 지정할 label을 생성자에 넘겨준다.</span></span><br><span class="line"></span><br><span class="line">lineDataSet.setLineWidth(<span class="number">2</span>); <span class="comment">// 선 굵기</span></span><br><span class="line">lineDataSet.setCircleRadius(<span class="number">6</span>); <span class="comment">// 곡률</span></span><br><span class="line">lineDataSet.setCircleColor(ContextCompat.getColor(mContext, R.color.graphColor)); <span class="comment">// LineChart에서 Line Circle Color 설정</span></span><br><span class="line">lineDataSet.setCircleHoleColor(ContextCompat.getColor(mContext, R.color.graphColor)); <span class="comment">// LineChart에서 Line Hole Circle Color 설정</span></span><br><span class="line">lineDataSet.setColor(ContextCompat.getColor(mContext, R.color.graphColor)); <span class="comment">// LineChart에서 Line Color 설정</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 그리고 기타 설정 등도 할 수 있다.</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li>LineDataSet을 담는 LineData를 만들어준다. 여러 개의 라인 데이터가 들어갈 수 있다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">LineData lineData = <span class="keyword">new</span> LineData(lineDataSet);</span><br><span class="line"><span class="comment">// 라인 데이터의 텍스트 컬러 / 사이즈를 설정할 수 있다.</span></span><br><span class="line"><span class="comment">// 물론 나는 사용하지 않았다.</span></span><br><span class="line">lineData.setValueTextColor(ContextCompat.getColor(getContext(), R.color.black));</span><br><span class="line">lineData.setValueTextSize(<span class="number">9</span>);</span><br></pre></td></tr></table></figure>
-<ul>
-<li>또한, 추가적으로 x축, y축에 대한 label과 텍스트, 갯수 등을 설정할 수 있다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// x축 설정</span></span><br><span class="line">view.setLineData(lineData);</span><br><span class="line">xAxis = view.getXAxis(); <span class="comment">// x축에 대한 정보를 View로부터 받아온다.</span></span><br><span class="line">xAxis.setPosition(XAxis.XAxisPosition.BOTTOM); <span class="comment">// x축 표시에 대한 위치 설정으로 아래쪽에 위치시킨다.</span></span><br><span class="line">xAxis.setTextColor(R.color.black); <span class="comment">// x축 텍스트 컬러 설정</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li>y축에 대한 설정은 왼쪽과 오른쪽 따로 제공하고 있기 때문에 각각 가져와서 사용하지 않는 방향은 비활성화 하는 것이 좋다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// y축 설정</span></span><br><span class="line"></span><br><span class="line">yLAxis = view.getYLeftAxis(); <span class="comment">// y축 왼쪽 데이터 가져오기.</span></span><br><span class="line">yLAxis.setTextColor(R.color.black); <span class="comment">// y축 텍스트 컬러 설정</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// y축 오른쪽 비활성화</span></span><br><span class="line">yRAxis = view.getYRightAxis();</span><br><span class="line">yRAxis.setDrawLabels(<span class="keyword">false</span>);</span><br><span class="line">yRAxis.setDrawAxisLine(<span class="keyword">false</span>);</span><br><span class="line">yRAxis.setDrawGridLines(<span class="keyword">false</span>);</span><br></pre></td></tr></table></figure>
-<ul>
-<li>위에는 기본적인 설정과 같다. 그리고 구글에 검색하면 쉽게 찾아볼 수 있는 글이다. 이제 x축과 y축을 사용하고 싶은 데이터로 custom하게 사용하는 방법을 정리하려고 한다.</li>
-<li>먼저, x축에 내가 원하는 요일들을 설정하기 위해서 아래와 같은 클래스를 만들어준다. IAxisValueFormatter 인터페이스를 구현한다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GraphAxisValueFormatter</span> <span class="keyword">implements</span> <span class="title">IAxisValueFormatter</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String[] mValues;</span><br><span class="line">    <span class="comment">// 생성자 초기화</span></span><br><span class="line">    GraphAxisValueFormatter(String[] values)&#123;</span><br><span class="line">        <span class="keyword">this</span>.values = values;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getFormattedValue</span><span class="params">(<span class="keyword">float</span> value, AxisBase axis)</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> mValues[(<span class="keyword">int</span>) value];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>위와 같은 클래스를 만든다. 그리고 아래와 같이 custom 클래스를 지정하여줌으로써 x축의 데이터를 재가공한다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">xAxis.setValueFormatter(<span class="keyword">new</span> GraphAxisValueFormatter(mDays));</span><br><span class="line"><span class="comment">// mDays는 요일을 가지고 있는 String 배열</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li>그렇다면 y축의 데이터를 재가공하기 위해서는 어떻게 하면될까?? 방법은 x축과 똑같다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GraphYAxisValueFormatter</span> <span class="keyword">implements</span> <span class="title">IAxisValueFormatter</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String[] mEmojis;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 생성자 초기화</span></span><br><span class="line">    GraphYAxisValueFormatter(String[] values) &#123;</span><br><span class="line">        <span class="keyword">this</span>.mEmojis = values;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getFormattedValue</span><span class="params">(<span class="keyword">float</span> value, AxisBase axis)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> mEmojis[(<span class="keyword">int</span>) value];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>y축의 데이터를 재가공하기 위해서 custom하게 만든 클래스를 지정하면 된다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yLAxis.setValueFormatter(<span class="keyword">new</span> GraphYAxisValueFormatter(mEmojis));</span><br><span class="line"><span class="comment">// mEmojis는 이모지를 가지고 있는 배열</span></span><br></pre></td></tr></table></figure>
-<p><strong>2. y축 데이터 재가공</strong></p>
-<ol>
-<li>
-<p>y축에 icon 삽입<br>
-y축의 데이터를 재가공 하기 위해서 일단 y축의 이미지를 넣어야 한다는 생각으로 접근을 했다. 그래서 구글링을 통해서 MpAndroidChart에 이미지 혹은 icon을 삽입한 그래프를 찾아보았다. 일단, LineChart는 찾아볼 수 없었고, BarChart, PieChart에서는 손가락 안에 꼽을 수 있을 정도로 발견할 수 있었다.</p>
-</li>
-<li>
-<p>라이브러리 커스텀<br>
-그래서 라이브러리를 파헤쳐서 커스텀을 해보자는 마음을 먹었다. (어리석은 생각이었다.) 그래서 BarChart를 통해 이미지를 넣은 것을 보고 이를 토대로 LineChart를 커스텀하기로 마음을 먹었지만, LineChart에서는 이미지를 그릴 수 있는 메소드를 찾지 못했다.</p>
-</li>
-<li>
-<p>y축 데이터에 이모지에 대한 유니코드 삽입<br>
-두 개의 방법이 실패하고 제일 처음 생각했지만, 위에서 언급하지 않았던 방법인 이모지에 대한 유니코드 값을 넣어서 간단하게 구현해보는 방법이다. 처음에 이모지에 대한 유니코드를 넣어서 확인해보았는데, 적용이 되지 않아서 실패라고 생각을 했었다. 하지만, 갓자이너 여자친구의 도움으로 다른 사이트를 알았다.</p>
-</li>
-</ol>
-<p>이 사이트에서 이모지에 대한 유니코드 값을 얻어서 그래프의 y축에 데이터를 재가공하였더니 이모지가 정상적으로 들어가는 것을 확인할 수 있었다. :)</p>
-<p><strong>3. 중복과 간격 문제</strong></p>
-<p>위의 2번까지의 과정을 해결하고 나니 내가 원하는 데이터로 재가공하여 그래프를 표현할 수 있게 되었다. 하지만, y축의 이모지 데이터가 중복해서 나오는 현상을 마주하게 되었다…</p>
-<p>이 문제는 도대체 왜 그러는 것일까라는 의문을 가지고 구글링을 하고 커스텀을 위한 Class에서 return 하기 전에 로그 값을 찍는데 value가 float이라서 <strong>int</strong>로 캐스팅하는 과정에서 값이 손실되어서 같은 인덱스가 여러 번 참조되어 중복되는 것이라고 판단을 하게 되었다.</p>
-<p>그래서 이를 해결할 수 있는 방법이 무엇이 있을까 생각해보고 이 라이브러이의 <code>issue</code> 탭에서 실마리를 찾아보고자 했다. 아니나 다를까 비슷한 문제를 직면한 사람을 찾을 수 있었다. 또한, 이에 대한 답변도 존재했다.</p>
-<p>답변은 다음과 같았다. y축의 Max / Min 값을 지정하고 증가 간격(세분성) 설정을 true로 지정하고 세분 간격을 1.0f로 설정해주었다. 그리고 빌드를 해보니 내가 원하는 것처럼 이모지가 하나씩 증가하면서 나타나는 것을 확인할 수 있었다.</p>
-<h2 id="느낀점">느낀점</h2>
-<p>외부 라이브러리를 사용할 때는 정말로 star가 많은 것을 사용하자. 분명 내가 직면한 문제를 먼저 경험한 개발자들이 있을 것이다. issue 탭에서 문제와 답을 찾을 수 있으니 포기는 휴지통에 버리자.</p>
-<h2 id="참고">참고</h2>
-<ul>
-<li><a href=""></a></li>
-<li><a href=""></a></li>
-</ul>
-
                     
+                        <a
+                            href="/2019/01/29/Android-MpAndroidChart/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": 8일차 [안드로이드] MpAndroidChart"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2019/01/29/Android-MpAndroidChart/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             

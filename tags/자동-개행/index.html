@@ -267,7 +267,7 @@
     <section class="postShorten-group main-content-wrap">
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -299,68 +299,17 @@
 
             </div>
             
-                <div class="postShorten-content">
+                <div class="postShorten-excerpt">
                     <p>안드로이드에서 EditText는 거의 필수적인 존재라고 봐도 무방할 것 같다. 자주 사용하지만, 매번 필요한 기능을 검색해보기 때문에 유용한 기능들을 정리하려고 포스팅하게 되었다.</p>
-<h2 id="기능">기능</h2>
-<ul>
-<li><code>maxLength</code> : EditText에 작성할 수 있는 최대 길이를 지정한다.</li>
-<li><code>singleLine</code> : 이 기능은 true/false로 설정할 수 있으며, false로 설정하게 되면 EditText의 오른쪽 면에 닿으면 줄바꿈이 된다.</li>
-<li><code>scrollHorizontally</code> : 이 기능도 마찬가지로 true/false로 설정할 수 있으며, false로 설정하게 되면 EditText의 길이가 오른쪽으로 길어져도 좌우 스크롤이 안된다. 필자는 <strong>singleLine</strong>과 <strong>scrollHorizontally</strong> 속성을 함께 사용하였다.</li>
-<li><code>inputType</code> : 키보드의 형태를 지정할 수 있다. 숫자만으로 구성된 키보드를 띄울 수도 있고, e-mail 입력을 할 수 있도록 그에 맞는 키보드를 띄울 수 있다. 공식 문서를 참고하면 잘 정리되어있다.</li>
-<li><code>imeOptions</code> : 키보드의 완료 버튼을 지정할 수 있다. 아무 값도 지정하지 않았다면 줄바꿈이 되어 있을 것이다. 필자는 완료를 위해서 <strong>actionDone</strong>으로 지정했다.</li>
-<li><code>style</code> : EditText의 커서 색상이나 백그라운드 등을 바꾸고 싶다면 style을 작성해서 EditText에 지정해주면 된다.</li>
-</ul>
-<p>추가적으로 생각이 나는 부분은 이 포스팅에 계속해서 올릴 예정이다.</p>
-<p><strong>[2020.02.19 내용 추가]</strong></p>
-<p>이번에 추가하는 부분은 함수라기 보다는 개발하면서 알게 된 방법 중 하나이다.<br>
-정말 간단하고, 읽는데 1분도 안걸린다.</p>
-<p>어떤 글에 대해 <code>수정</code> 버튼을 누르기 전에는 글을 수정할 수 없다. 하지만, 어떤 액션을 했을 경우, 글을 수정할 수 있도록 하기 위해서 EditText의 <strong>enabled</strong> 속성을 이용했다. 또한, drawable에 파일을 생성해 selector 같이 만들었다.</p>
-<ol>
-<li>drawable에 파일을 만든다</li>
-</ol>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span><br><span class="line"><span class="tag">&lt;<span class="name">selector</span> <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">item</span> <span class="attr">android:color</span>=<span class="string">"@android:color/holo_orange_dark"</span> <span class="attr">android:state_enabled</span>=<span class="string">"false"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">item</span> <span class="attr">android:color</span>=<span class="string">"@android:color/black"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">selector</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<ol start="2">
-<li>EditText의 textColor에 drawable 파일을 연결한다.</li>
-</ol>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">EditText</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:id</span>=<span class="string">"@+id/et_title"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_width</span>=<span class="string">"0dp"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_height</span>=<span class="string">"50dp"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:background</span>=<span class="string">"@android:color/white"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:enabled</span>=<span class="string">"false"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:gravity</span>=<span class="string">"center_vertical"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:hint</span>=<span class="string">"@string/label_title"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:paddingStart</span>=<span class="string">"@dimen/space_16"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:paddingEnd</span>=<span class="string">"@dimen/space_8"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:text</span>=<span class="string">"@&#123;vm.memo.title&#125;"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:textColor</span>=<span class="string">"@drawable/selector_et"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">app:layout_constraintEnd_toEndOf</span>=<span class="string">"parent"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">app:layout_constraintStart_toStartOf</span>=<span class="string">"parent"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">app:layout_constraintTop_toBottomOf</span>=<span class="string">"@id/toolbar"</span> /&gt;</span></span><br></pre></td></tr></table></figure>
-<p><strong>[2020.03.30 추가]</strong></p>
-<h2 id="자동-개행하기">자동 개행하기</h2>
-<p>필자는 EditText를 사용해 글을 입력 받는데, 오른쪽 면에 닿았을 때 자동 개행이 되기를 원했다. 그래서 <code>android:scrollHorizontally=&quot;false&quot;</code>를 설정하고 <code>android:inputType=&quot;text&quot;</code>로 설정했었다.</p>
-<p>하지만, 자동 개행은 적용되지 않았다. 구글링을 해 본 결과 왜 되지 않는가에 대해서는 나오지 않았다. 필자가 생각하기로는 text로 설정함으로써 scrollHorizontally 속성이 제대로 적용되지 않는 것으로 판단이 되었다.</p>
-<p>여기까지가 근거 없는 이유였다. 역시나 구글링을 더 해보니 이유를 생각할 수 있었다. EditText의 inputType 속성에 대해서 검색하고 찾아봤다. 그 중 필자가 사용했던 <code>android:inputType=&quot;text&quot;</code>는 다음과 같은 의미를 갖고 있다.</p>
-<ul>
-<li><code>android:inputType=&quot;text&quot;</code> : none과 같으나 줄바꿈이 불가능하다.</li>
-<li><code>android:inputType=&quot;none&quot;</code> : 다른 특징이 없는 기본 EditText. 입력 폼 안에 줄 바꿈이 가능하다.</li>
-</ul>
-<p>그렇다. <strong>text</strong> 설정으로 인해서 줄바꿈이 되지 않는다. 때문에 scrollHorizontally 설정을 바꾼다하더라도 자동 개행이 되지 않았던 것이다. 이제 속성의 정확한 의미를 알았기 때문에 inputType 값을 설정하지 않아도 되고 설정해도 된다. 필자는 다음과 같이 설정했다.</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">EditText</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:id</span>=<span class="string">"@+id/et_content"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_width</span>=<span class="string">"0dp"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_height</span>=<span class="string">"200dp"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_marginStart</span>=<span class="string">"@dimen/space_16"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_marginTop</span>=<span class="string">"@dimen/space_8"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_marginEnd</span>=<span class="string">"@dimen/space_16"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:background</span>=<span class="string">"@drawable/bg_et_content"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:gravity</span>=<span class="string">"top|start"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:hint</span>=<span class="string">"@string/hint_content"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:inputType</span>=<span class="string">"textMultiLine"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:maxHeight</span>=<span class="string">"250dp"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:padding</span>=<span class="string">"@dimen/space_16"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:scrollHorizontally</span>=<span class="string">"false"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:text</span>=<span class="string">"@&#123;vm.memo.content&#125;"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:textColor</span>=<span class="string">"@drawable/selector_et"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:theme</span>=<span class="string">"@style/EditTextStyle"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">app:layout_constraintEnd_toEndOf</span>=<span class="string">"parent"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">app:layout_constraintStart_toStartOf</span>=<span class="string">"parent"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">app:layout_constraintTop_toBottomOf</span>=<span class="string">"@id/et_title"</span> /&gt;</span></span><br></pre></td></tr></table></figure>
-<p><strong>[inputType 속성]</strong></p>
-<ul>
-<li><code>textMultiLine</code> : 입력 폼에 줄 바꿈이 가능하다. 따로 설정하지 않으면 단일 줄의 텍스트로 제한된다.</li>
-<li><code>scrollHorizontally</code> : 자동으로 줄이 바뀌고 enter 엔터키를 누르면 다음줄로 이동한다.</li>
-</ul>
-<p>또한 <a href="https://youeye.tistory.com/119" target="_blank" rel="noopener">쎄씨’s</a>님의 블로그에 inputType에 대해서 정리되어 있으니 가서 확인해보는 것도 좋다. 공식 문서가 사실 더 좋다!</p>
-<h2 id="참고">참고</h2>
-<ul>
-<li><a href="https://m.blog.naver.com/PostView.nhn?blogId=websearch&amp;logNo=220400070845&amp;proxyReferer=https%3A%2F%2Fwww.google.com%2F" target="_blank" rel="noopener">[안드로이드] EditText 의 disable 텍스트 색상 설정하는 방법</a></li>
-<li><a href="https://m.blog.naver.com/PostView.nhn?blogId=invister&amp;logNo=40150491344&amp;proxyReferer=https%3A%2F%2Fwww.google.com%2F" target="_blank" rel="noopener">android 안드로이드 edittext 자동 줄바꿈</a></li>
-</ul>
-
                     
+                        <a
+                            href="/2019/07/04/Android-EditTextFunction/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [Android] EditText 유용한 기능"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2019/07/04/Android-EditTextFunction/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             

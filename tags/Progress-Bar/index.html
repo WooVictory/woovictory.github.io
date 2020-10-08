@@ -267,7 +267,7 @@
     <section class="postShorten-group main-content-wrap">
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -299,46 +299,17 @@
 
             </div>
             
-                <div class="postShorten-content">
+                <div class="postShorten-excerpt">
                     <p>안드로이드 개발에서 서버로부터 데이터를 불러올 때, 네트워크 상황이 좋지 않다면 금방 불러올 수 없을 것이다. 시간이 어느 정도 걸린다. 또한, 불러오는 데이터 중 사진, 영상이 많거나 데이터의 양이 많다면 시간이 오래 걸린다.</p>
-<p>이처럼 시간이 오래 걸리는 작업을 아무런 동작 없이 그냥 냅두면 사용자는 빈 화면을 보다가 갑자기 나타난 화면에 좋지 않은 경험을 할 것이다. 그래서 이를 해결하기 위한 방법은 내가 생각했을 때는 두가지가 있다.</p>
-<ul>
-<li>Progress Bar를 이용한 로딩</li>
-<li><a href="https://github.com/elye/loaderviewlibrary" target="_blank" rel="noopener">loaderViewLibrary</a>를 사용하는 방법</li>
-</ul>
-<p>아마도 이 글은 두 Part로 나뉘어서 쓸 것 같다. 이번에는 <code>Progress Bar</code>를 이용한 로딩 방법을 다뤄보고 다음에는 <code>loaderViewLibrary</code>를 이용한 방법을 다룰 예정이다.</p>
-<h2 id="progressbar">Progressbar</h2>
-<p>사용방법은 정말 간단하다. 그냥 xml에 정의해서 사용하면 된다. 아래 xml 코드를 보자.</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">ProgressBar</span></span></span><br><span class="line"><span class="tag">           <span class="attr">android:id</span>=<span class="string">"@+id/loading"</span></span></span><br><span class="line"><span class="tag">           <span class="attr">android:layout_width</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">           <span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">           <span class="attr">android:layout_marginBottom</span>=<span class="string">"8dp"</span></span></span><br><span class="line"><span class="tag">           <span class="attr">app:layout_constraintBottom_toBottomOf</span>=<span class="string">"parent"</span></span></span><br><span class="line"><span class="tag">           <span class="attr">app:layout_constraintEnd_toEndOf</span>=<span class="string">"parent"</span></span></span><br><span class="line"><span class="tag">           <span class="attr">app:layout_constraintStart_toStartOf</span>=<span class="string">"parent"</span></span></span><br><span class="line"><span class="tag">           <span class="attr">app:layout_constraintTop_toTopOf</span>=<span class="string">"parent"</span> /&gt;</span></span><br></pre></td></tr></table></figure>
-<p>이렇게 정의하면 빨간색의 ProgressBar를 볼 수 있다. 원형이 기본 형태인 것 같다. 색상도 빨간색이 기본으로 설정되어 있다. 하지만, 이 빨간색은 여러분이 개발하고 있는 앱의 색상과 맞지 않을 것이다. 그래서 변경하려는 사람이 많다. 필자도 변경하려고 구글링을 좀 해봤다.</p>
-<p>여러 방법이 있지만, 가장 단순한 방법은 다음 코드 한 줄을 추가하는 것이다.</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">android:indeterminateTint=&quot;@color/fe_fu_main&quot;</span><br></pre></td></tr></table></figure>
-<p>이 속성이 무엇인지는 <a href="https://developer.android.com/reference/android/widget/ProgressBar.html#attr_android:indeterminateTint" target="_blank" rel="noopener">Android Developer</a> 문서에 설명되어 있다. 사진을 아래와 같이 첨부했다.</p>
-<img src="/img/android_progress_color_change.png" width="700" height="200">
-<p>해석해보면 ProgressBar에 적용할 색상이라고 한다. indeterminate가 뭔지 몰랐는데 <strong>불확정의</strong>라는 뜻을 가진다. ProgressBar가 불확정에서 확정으로 되는 동안 로딩하기 위해 쓰이는 것이라 이런 이름을 붙이지 않았을까 추측해본다. (물론 나의 생각!!)</p>
-<p>저 속성을 통해서 원하는 색상을 지정하면 사용자가 원하는 색상을 사용할 수 있다. 직접 drawable 파일을 만들어서 커스텀하는 방법도 있는데, 이는 디자인 자체에서 조금 다르면 커스텀해서 사용해도 좋을 것 같다. 다음의 스택 오버플로우 질문을 보면 답변에 두 방식 모두 나와있다. -&gt; <a href="https://stackoverflow.com/questions/5337613/how-to-change-color-in-circular-progress-bar/17785769" target="_blank" rel="noopener">https://stackoverflow.com/questions/5337613/how-to-change-color-in-circular-progress-bar/17785769</a></p>
-<h2 id="사용해보기">사용해보기</h2>
-<h2 id="참고">참고</h2>
-<ul>
-<li><a href="https://developer.android.com/reference/android/widget/ProgressBar.html#attr_android:indeterminateTint" target="_blank" rel="noopener">Android Developer</a></li>
-<li><a href="https://stackoverflow.com/questions/5337613/how-to-change-color-in-circular-progress-bar/17785769" target="_blank" rel="noopener">https://stackoverflow.com/questions/5337613/how-to-change-color-in-circular-progress-bar/17785769</a></li>
-</ul>
-
                     
+                        <a
+                            href="/2019/06/24/Android-Progressbar-tip/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [Android] 로딩시 어떻게 할 것인가?"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2019/06/24/Android-Progressbar-tip/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             

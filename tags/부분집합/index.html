@@ -267,7 +267,7 @@
     <section class="postShorten-group main-content-wrap">
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -299,46 +299,18 @@
 
             </div>
             
-                <div class="postShorten-content">
+                <div class="postShorten-excerpt">
                     <p>백준에 있는 문제 중 1182번을 풀면서 부분집합에 대한 내용이 나와서 간단하게 정리하려고 한다.</p>
 <p>예를 들어 배열 [1,2,3]이 있다고 가정하자. 그러면 부분집합은 아래와 같다.</p>
-<p>[1]<br>
-[2]<br>
-[3]<br>
-[1,2]<br>
-[1,3]<br>
-[2,3]<br>
-[1,2,3]</p>
-<p>부분 집합을 구할 수 있는 방법은 조합을 이용한 방법이 있고 재귀를 이용한 방법이 있다. 이번에는 후자인 재귀에 대해서만 알아보도록 하겠다.</p>
-<p>두 가지 경우를 생각해보면 된다.</p>
-<ol>
-<li>현재 인덱스를 포함하는 경우</li>
-<li>현재 인덱스를 포함하지 않는 경우</li>
-</ol>
-<p>위의 두 가지 경우를 visited 배열에 방문했는지 체크함으로써 분기시킬 수 있다. 두 가지 경우에 대해서 모두 확인한 후에 현재 인덱스가 n이 되면 출력한다.</p>
-<p>출력할 때는 visited 배열의 값이 true인 원소들만 출력한다.<br>
-코드는 아래와 같다.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> n = <span class="number">3</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">boolean</span>[] visited = <span class="keyword">new</span> <span class="keyword">boolean</span>[n];</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span>[] arr = &#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>&#125;;</span><br><span class="line">        getSet(arr, <span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">getSet</span><span class="params">(<span class="keyword">int</span>[] arr, <span class="keyword">int</span> index)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (index == n) &#123;</span><br><span class="line">            print(arr);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        visited[index] = <span class="keyword">false</span>;</span><br><span class="line">        getSet(arr, index + <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">        visited[index] = <span class="keyword">true</span>;</span><br><span class="line">        getSet(arr, index + <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">(<span class="keyword">int</span>[] arr)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; arr.length; i++) &#123;</span><br><span class="line">            <span class="keyword">if</span>(visited[i])&#123;</span><br><span class="line">                System.out.print(arr[i]+<span class="string">" "</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 결과</span></span><br><span class="line"><span class="number">3</span> </span><br><span class="line"><span class="number">2</span> </span><br><span class="line"><span class="number">2</span> <span class="number">3</span> </span><br><span class="line"><span class="number">1</span> </span><br><span class="line"><span class="number">1</span> <span class="number">3</span> </span><br><span class="line"><span class="number">1</span> <span class="number">2</span> </span><br><span class="line"><span class="number">1</span> <span class="number">2</span> <span class="number">3</span></span><br></pre></td></tr></table></figure>
-<h2 id="참고">참고</h2>
-<ul>
-<li><a href="https://bcp0109.tistory.com/17" target="_blank" rel="noopener">부분집합 PowerSet (Java)</a></li>
-</ul>
-
                     
+                        <a
+                            href="/2019/05/24/Algorithm-Set/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [알고리즘] 부분집합"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2019/05/24/Algorithm-Set/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             

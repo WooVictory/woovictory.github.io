@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="VictoryWoo">
-    <title>Tag: Unit Test - VictoryWoo</title>
+    <title>Tag: Unit test - VictoryWoo</title>
     <meta name="author" content="VictoryWoo">
     
     
@@ -16,7 +16,7 @@
     <script type="application/ld+json">{}</script>
     <meta property="og:type" content="blog">
 <meta property="og:title" content="VictoryWoo">
-<meta property="og:url" content="https://woovictory.github.io/tags/Unit-Test/index.html">
+<meta property="og:url" content="https://woovictory.github.io/tags/Unit-test/index.html">
 <meta property="og:site_name" content="VictoryWoo">
 <meta property="og:locale" content="en">
 <meta name="twitter:card" content="summary">
@@ -267,7 +267,7 @@
     <section class="postShorten-group main-content-wrap">
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -275,17 +275,17 @@
                     
                         <a
                             class="link-unstyled"
-                            href="/2020/03/07/Android-Mockito-Advanced/"
-                            aria-label=": [Android] Mockito 심화편"
+                            href="/2020/03/04/Android-Test/"
+                            aria-label=": [Android] Test 개념"
                         >
-                            [Android] Mockito 심화편
+                            [Android] Test 개념
                         </a>
                     
                 </h1>
                 <div class="postShorten-meta">
-    <time datetime="2020-03-07T01:08:22+09:00">
+    <time datetime="2020-03-04T20:22:26+09:00">
 	
-		    Mar 07, 2020
+		    Mar 04, 2020
     	
     </time>
     
@@ -299,113 +299,17 @@
 
             </div>
             
-                <div class="postShorten-content">
-                    <p>이번에는 심화편이다.<br>
-이 글을 읽기 전에 <a href="https://woovictory.github.io/2020/03/06/Android-Mockito/">기본편</a>을 먼저 보고 오면 좋다.</p>
-<h2 id="gradle">Gradle</h2>
-<ul>
-<li>Mockito는 기본적으로 Java 기반의 라이브러리이다.</li>
-<li>그렇기 때문에 Kotlin을 함께 사용하면 모호한 부분이 존재하기 마련이다.</li>
-<li>예를 들면 다음과 같은 구문들이 있다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PersonTest</span></span>&#123;</span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">mockTest</span><span class="params">()</span></span>&#123;</span><br><span class="line">        Person p = mock(Person.class);</span><br><span class="line">        assertTrue(p!=<span class="keyword">null</span>);</span><br><span class="line"></span><br><span class="line">        when(p.getName()).thenReturn(<span class="string">"VictoryWoo"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>여기서 <code>when</code>문을 보면 그냥 쓰였다.</li>
-<li>이는 자바이기 때문에 그대로 쓰이지만 코틀린에서는 다음과 같이 쓰인다.</li>
-</ul>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">PersonTest</span></span>&#123;</span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">personMockTest</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">val</span> p: Person = mock(Person::<span class="class"><span class="keyword">class</span>.<span class="title">java</span>)</span></span><br><span class="line">        assertTrue(p != <span class="literal">null</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        `<span class="keyword">when</span>`(p.name).thenReturn(<span class="string">"VictoryWoo"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>표현이 다르다. when의 앞뒤로 `가 붙는다.</li>
-<li>자바와 코틀린을 사용할 때, 구문이 맞지 않아서 생기는 문제이다. 크게 신경 쓰이지 않을 수도 있지만, 필자는 신경이 쓰인다.</li>
-<li>이뿐만 아니라, 앞서 말했던 Kotlin에서는 모든 클래스가 기본적으로 final로 선언되어 있어 Mockito는 기본적으로 Mocking을 할 수 없는 등의 여러 문제가 있다.</li>
-<li>그래서 Niek Haarman이라는 분이 유지 및 관리하는 <code>mockito-kotlin</code> 라이브러리를 사용하면 깔끔하게 해결할 수 있다.</li>
-</ul>
-<h2 id="mockito-kotlin"><a href="https://github.com/nhaarman/mockito-kotlin" target="_blank" rel="noopener">Mockito-Kotlin</a></h2>
-<p>app/build.gradle 파일에 아래와 같이 추가하면 된다.</p>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">testImplementation <span class="string">'org.mockito:mockito-inline:2.21.0'</span></span><br><span class="line">testImplementation <span class="string">"com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0"</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li>첫 번째는 Mockito-Kotlin 의존성이다.</li>
-<li>두 번째는 Kotlin의 클래스는 기본이 final이기 때문에 mockito-inline을 추가해주어 open 클래스로 매번 선언해야 하는 번거로움을 제거한다.</li>
-</ul>
-<h2 id="mock-객체-만들기">Mock 객체 만들기</h2>
-<ul>
-<li><strong>mockito-kotlin</strong>에서는 mock을 생성할 때, 더이상 클래스를 파라미터로 전달할 필요가 없다. 코틀린의 특성처럼 타입을 유추할 수 있다면 생략이 가능하다.</li>
-<li>또한, p2처럼 타입을 추론할 수 없다면 아래와 같이 &lt;&gt; 안에 타입을 명시해준다.</li>
-</ul>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> p: Person = mock()</span><br><span class="line"><span class="keyword">val</span> p2 = mock&lt;Person&gt;()</span><br></pre></td></tr></table></figure>
-<h2 id="stubbing"># Stubbing</h2>
-<ul>
-<li><code>Stub</code> : 토막, 꽁초, 남은 부분, 몽당연필이라는 뜻으로 dummy 객체가 마치 실제로 동작하는 것처럼 보이도록 만들어놓은 것을 말한다.</li>
-</ul>
-<p>위키피디아에서는 test stub을 아래와 같이 정의한다.</p>
-<blockquote>
-<p>Test stubs provide <strong>canned answers</strong> to calls made during the test, usually not responding at all to anything outside what’s programmed in for the test.</p>
-</blockquote>
-<ul>
-<li><strong>스텁은 &quot;canned answer&quot;를 호출한 쪽에 제공한다는 것이다.</strong></li>
-<li><code>canned answer</code> : 미리 준비된 답변은 일반적인 질문에 대한 미리 정해진 답변이라는 뜻이다. 즉, stub은 실제 코드나 아직 준비되지 못한 코드를 미리 정해진 답변으로 가장하는 매커니즘이다.</li>
-</ul>
-<h2 id="stub-특징"># Stub 특징</h2>
-<ul>
-<li>dummy 객체가 실제로 동작하는 것처럼 보이게 만들어 놓은 객체</li>
-<li>실제 코드나 아직 준비되지 못한 코드의 행동을 가장하는 행위</li>
-<li>호출자를 실제 구현물로부터 격리시키는 목적으로 사용가능</li>
-<li><strong>인터페이스 or 기본클래스가 최소한으로 구현된 상태</strong></li>
-<li><strong>테스트에서 호출된 요청에 대해 미리 준비해둔 결과를 제공한다.</strong></li>
-</ul>
-<h2 id="stub이-주로-사용되는-경우"># Stub이 주로 사용되는 경우</h2>
-<ul>
-<li>구현이 되지 않은 함수나 라이브러리에서 제공하는 함수를 사용하고자 할때</li>
-<li>함수가 반환하는 값을 임의로 생성하고 싶을때</li>
-<li>복잡한 논리 흐름을 가지는 경우, 테스트를 단순화하고 싶을때</li>
-<li>의존성을 가지는 유닛의 응답을 모사하여 독립적인 시험 수행을 하고자할 때</li>
-</ul>
-<h2 id="test-stub을-사용하여-얻을-수-있는-이점"># Test Stub을 사용하여 얻을 수 있는 이점</h2>
-<ul>
-<li>의존하는 것에 대하여 독립적으로 개발/테스트가 가능하다.
-<ul>
-<li>Interface만 존재하는 것을 Stub으로 개발하고 테스트할 수 있다.</li>
-</ul>
-</li>
-<li>촘촘한 테스트가 가능하다.
-<ul>
-<li>Stub으로 다양한 응답결과 케이스를 만들어 테스트할 수 있다.</li>
-</ul>
-</li>
-</ul>
-<ul>
-<li>mockito-kotlin은 when을 쓰지 않고 whenever를 사용한다.</li>
-</ul>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> p : Person = mock()</span><br><span class="line">whenever(p.name).thenReturn(<span class="string">"VIC"</span>)</span><br></pre></td></tr></table></figure>
-<ul>
-<li>위의 식처럼 stubbing을 하거나 혹은 람다식을 사용할 수도 있다.</li>
-</ul>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> p: Person = mock &#123;</span><br><span class="line">    on &#123; name &#125; doReturn <span class="string">"LEE"</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">assertTrue(<span class="string">"LEE"</span> == p.name) <span class="comment">// 테스트 통과.</span></span><br></pre></td></tr></table></figure>
-<h2 id="mockito-다양한-함수">Mockito 다양한 함수</h2>
-<p>Mockito에서 자주 사용되거나 유용한 함수들에 대해서 알아볼 것이다.</p>
-<p>더 자세한 내용은 <a href="https://aroundck.tistory.com/5851" target="_blank" rel="noopener">돼지왕 왕돼지 놀이터</a> 블로그 글을 참고하면 될 것 같다.</p>
-<h2 id="참고">참고</h2>
-<ul>
-<li><a href="https://beomseok95.tistory.com/296" target="_blank" rel="noopener">Mockito-Kotlin 알아보기</a></li>
-<li><a href="https://beomseok95.tistory.com/294" target="_blank" rel="noopener">Test Stub이란 ?</a></li>
-<li><a href="https://jdm.kr/blog/222" target="_blank" rel="noopener">mockito 사용법(mockito usage)</a></li>
-</ul>
-
+                <div class="postShorten-excerpt">
+                    <p>Test Code를 짜는 것은 중요하다. 하지만 짜려는 습관이 없다보니 계속해서 Test Code를 짜지 않고 개발하는 습관이 들었다. 최근에 Test Code에 관심을 가지게 되어 공부를 하고 테스트 코드를 짜보려고 한다.</p>
                     
+                        <a
+                            href="/2020/03/04/Android-Test/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [Android] Test 개념"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2020/03/07/Android-Mockito-Advanced/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             

@@ -267,7 +267,7 @@
     <section class="postShorten-group main-content-wrap">
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -299,100 +299,17 @@
 
             </div>
             
-                <div class="postShorten-content">
+                <div class="postShorten-excerpt">
                     <p>Room 내용에 대해 정리한 포스팅의 클릭수와 노출수가 상당히 높았다. 그래서 필자가 정리한 내용을 보니 Room에 필요한 내용이 정리되어있지만, 잘 정리되어 있다는 느낌을 받지는 못했다.</p>
-<p>필자는 Room에 관한 내용을 더 깔끔하게 정리하여 이 글을 읽는 분들이 더 쉽게 이해할 수 있게 하기 위해 글을 다시 작성하려 한다.</p>
-<p><strong>Android Architecture Components</strong>(이하 AAC) 중 하나인 Room의 개념에 대해 알아보는 포스팅이다.</p>
-<h3 id="orm">ORM</h3>
-<ul>
-<li>먼저, ORM이 무엇인지 알 필요가 있다.</li>
-<li>ORM은 <strong>Objectg Relational Mapping</strong>으로 데이터베이스와 객체 지향 프로그래밍 언어간의 호환되지 않는 데이터를 변환하는 프로그래밍 기법으로 <code>DB 테이블과 매핑되는 객체를 만들고 그 객체에서 DB를 관리하는 것을 의미한다.</code></li>
-</ul>
-<h3 id="room">Room</h3>
-<ul>
-<li><code>Room</code>은 ORM 기반의 라이브러리이다.</li>
-<li>SQLite 위에 추상화 계층을 제공하여 SQLite의 기능을 최대한 활용하는 동시에 데이터베이스에 원활하게 접근할 수 있도록 고안된 라이브러리이다.</li>
-</ul>
-<h4 id="사용법">사용법</h4>
-<p><strong>1) Gradle 설정 (androidX 기준)</strong></p>
-<ul>
-<li>version은 사용하는 시점에 최신 버전을 사용하면 된다.</li>
-</ul>
-<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">dependencies &#123;</span><br><span class="line">    <span class="keyword">def</span> room_version = <span class="string">"2.1.0-alpha03"</span></span><br><span class="line"></span><br><span class="line">    implementation <span class="string">"androidx.room:room-runtime:$room_version"</span></span><br><span class="line">    annotationProcessor <span class="string">"androidx.room:room-compiler:$room_version"</span> <span class="comment">// use kapt for Kotlin</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// optional - RxJava support for Room</span></span><br><span class="line">    implementation <span class="string">"androidx.room:room-rxjava2:$room_version"</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// optional - Guava support for Room, including Optional and ListenableFuture</span></span><br><span class="line">    implementation <span class="string">"androidx.room:room-guava:$room_version"</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// optional - Coroutines support for Room</span></span><br><span class="line">    implementation <span class="string">"androidx.room:room-coroutines:$room_version"</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// Test helpers</span></span><br><span class="line">    testImplementation <span class="string">"androidx.room:room-testing:$room_version"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>2) Room의 구성요소</strong></p>
-<ul>
-<li>
-<p><code>Database</code></p>
-<ul>
-<li>Database 접근 지점을 제공하며 DAO를 관리한다.</li>
-<li>Annotaion 내에 사용할 Entity 목록을 배열로 작성해야 한다.</li>
-</ul>
-</li>
-<li>
-<p><code>DAO</code></p>
-<ul>
-<li>Database에 접근하는데 사용되는 메소드들을 포함하며, Annotation으로 관리된다.</li>
-<li>Select, Insert, Delete 등 데이터를 쓰거나 읽을 때 사용한다.</li>
-</ul>
-</li>
-<li>
-<p><code>Entity</code></p>
-<ul>
-<li>Database 내의 테이블을 의미한다.</li>
-</ul>
-</li>
-</ul>
-<img src="/img/room_st.png" width="400" height="300">
-<p><strong>[Database의 특징]</strong></p>
-<ul>
-<li>Database 접근 지점을 제공하며, DAO를 관리한다.</li>
-<li>클래스에 <code>@Database</code> 어노테이션을 붙이며, 아래의 조건을 만족해야 한다.
-<ul>
-<li>RoomDatabase 클래스를 상속받는 추상 클래스여야 한다.</li>
-<li>어노테이션 내에 Database에 들어갈 Entity 목록을 배열로 포함해야 한다.</li>
-<li>파라미터가 0개인 추상 메소드를 포함하고 @Dao 어노테이션된 클래스를 반환한다. 이를 통해 RoomDatabase에게 관리 권한을 위임하여 직접적으로 접근하는 것을 막는다.</li>
-</ul>
-</li>
-<li>Runtime에 Room.databaseBuilder()를 호출해 데이터베이스 인스턴스를 얻을 수 있다.</li>
-<li><strong>인스턴스를 만드는 과정을 많은 비용이 든다. 하지만 접근은 자주하기 때문에 문서에서는 싱글톤 패턴을 이용해 만드는 것을 권장하고 있다.</strong></li>
-</ul>
-<p><strong>[DAO(Data Access Object)의 특징]</strong></p>
-<ul>
-<li>Database에 접근하는데 사용되는 메소드들을 갖고 있으며, 어노테이션으로 관리된다.</li>
-<li>SELECT, INSERT, DELETE 등 데이터를 읽거나 쓸 때 사용한다.</li>
-<li>LiveData를 사용하면 Observable Query를 이용할 수 있다.</li>
-<li><code>@DAO</code> 어노테이션을 활용하며, <code>interface</code> or <code>abstract class</code>로 작성해야 한다.</li>
-</ul>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Dao</span></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">UserDao</span></span>&#123;</span><br><span class="line">	<span class="meta">@Query(<span class="meta-string">"SELECT * FROM user"</span>)</span></span><br><span class="line">	<span class="function"><span class="keyword">fun</span> <span class="title">getUsers</span><span class="params">()</span></span>: List&lt;UserEntity&gt;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Insert</span></span><br><span class="line">	<span class="function"><span class="keyword">fun</span> <span class="title">insert</span><span class="params">(user: <span class="type">UserEntity</span>)</span></span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>[Entity 특징]</strong></p>
-<ul>
-<li>Database 내의 테이블을 의미한다. 이름을 지정할 수도 있고, 지정하지 않을 경우 default 값으로 클래스의 이름이 Entity의 이름으로 지정되며, 대소문자를 구분하지 않는다.</li>
-<li>컬럼 값도 위의 규칙과 동일하다.</li>
-<li>관련 필드 집합을 Entity들로 정의한다.</li>
-<li>각 Entity에 대해 항목을 보관하기 위해 연결된 데이터베이스 객체 내에 테이블이 생성된다.</li>
-<li>필드를 유지하려면 Room은 필드에 접근할 수 있어야 한다. 따라서 필드를 public으로 만들거나 getter/setter를 제공할 수 있어야 한다. 그렇지 않고 private으로 필드를 만든다면 에러가 발생한다.</li>
-</ul>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Entity</span></span><br><span class="line"><span class="keyword">data</span> <span class="class"><span class="keyword">class</span> <span class="title">UserEntity</span></span>(</span><br><span class="line">	<span class="keyword">val</span> userId: <span class="built_in">Int</span> = <span class="number">0</span>,</span><br><span class="line">	<span class="keyword">val</span> name: String=<span class="string">""</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
-<h2 id="참고">참고</h2>
-<ul>
-<li><a href="https://medium.com/@gus0000123/mvvm-aac-room%EC%82%AC%EC%9A%A9%EB%B2%95-1-%EA%B0%9C%EB%85%90%ED%8E%B8-59ad680ea6fe" target="_blank" rel="noopener">MVVM AAC Room사용법(1.개념편)</a></li>
-</ul>
-
                     
+                        <a
+                            href="/2020/03/27/Android-Room-Concept/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [Android] Room 개념편"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2020/03/27/Android-Room-Concept/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             

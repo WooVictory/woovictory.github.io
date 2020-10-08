@@ -369,7 +369,7 @@
     </article>
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -401,118 +401,20 @@
 
             </div>
             
-                <div class="postShorten-content">
+                <div class="postShorten-excerpt">
                     <ol>
 <li><a href="https://woovictory.github.io/2019/04/21/What-is-MVVM/">[Android] MVVM Part.1</a></li>
 <li><a href="https://woovictory.github.io/2019/04/21/What-is-MVVM/">[Android] MVVM Part.2</a></li>
 </ol>
-<p>MVVM에 대한 이해가 부족해 보충하고자 조금 더 공부하며 정리를 하고자 한다.</p>
-<p>안드로이드 개발을 처음 시작한다면 하나의 액티비티에 모든 코드를 넣어서 개발을 할 것이다. 이렇게 되면 시간이 지날수록 액티비티는 무거워지고 많은 일을 담당하게 될 것이다. 그로 인해 수정이나 유지보수하기가 힘들어진다. 이처럼 비구조적이고 유지보수가 어려운 코드를 스파게티 코드라고 하는데, 나의 첫 프로젝트도 기가 막힌 스파게티 코드였다.</p>
-<p>스파게티 코드를 줄이고 이쁜 코드를 만들기 위해 디자인 패턴 공부의 필요성을 느끼게 되었다. 수업 시간에 들은 디자인 패턴을 잘 숙지해둘 걸 하는 후회가 밀려온다. 기억이 잘 나지 않기 때문이다…ㅜ</p>
-<p>아무튼 디자인 패턴은 차근차근 공부하기로 하고 MVVM에 대한 글을 쓰면서 내가 알고 있는 개념도 정리하려고 두 번째 글을 쓰게 되었다. 첫 번째 글은 MVP와 MVVM의 차이에 대한 설명과 어떤 점이 좋은지에 대해 간략하게 설명하고 있다.</p>
-<h2 id="mvvm-패턴">MVVM 패턴</h2>
-<p>액티비티에 기능을 붙이다보면 액티비티가 무거워지거나 혹은 종속성이 너무 강해 테스트가 힘들고 유지보수가 어려워진다. 이러한 고민을 해결하기 위해 Architecture 패턴이 등장했고 그 중 하나가 이번에 살펴볼 MVVM이다. MVVM은 View - ViewModel - Model을 이용해 각각의 역할을 분리하여 가독성과 재사용성을 높인 Architecture 패턴이다.</p>
-<p><strong>MVC와 MVV 차이점</strong></p>
-<p>기존 MVC(Model - View - Controller) 구조에서는 액티비티가 컨트롤러의 역할을 했으며, 뷰와 연결되어 사용자와 상호작용도 하고 모델과 연결되어 데이터도 처리했다. 즉, 뷰와 모델 사이에서 중재자 역할을 했다.</p>
-<p>MVVM에서는 뷰에서 뷰모델로, 뷰모델에서 모델로 작업을 처리하며, 뷰에서 모델을 직접 참조하지 않는다. 대신 뷰에서 뷰모델을 관찰하여 데이터의 변경 사항을 감지한다.</p>
-<img src="/img/mvc_mvvm_diff.png" width="600" height="200">
-<p>예를 들어보자. 유저가 목록에 새로운 아이템을 추가했다.</p>
-<p>MVC에서는 컨트롤러가 유저의 클릭 액션을 확인하고, 모델에 데이터를 갱신하도록 요청한다. 그리고 뷰에도 화면을 업데이트하라고 요청을 해야 한다. 이 경우 액티비티가 해야 할 일이 너무 많다. 까닥하면 DB만 갱신되고 화면은 갱신되지 않는 경우도 있다.</p>
-<p>MVVM에서도 뷰가 유저의 클릭 액션을 확인하지만, 뷰에서 곧바로 DB에 접근하지 않는다. 말 그대로 뷰이기 때문에 UI를 갱신하는 역할에 충실하다. 대신 뷰모델을 참조하고, 뷰모델에서는 다시 모델에서 정리된 데이터를 참조한다. 또, 뷰는 뷰모델은 <strong>관찰(Observe)</strong> 한다. DB에 새로운 아이템을 추가한 후에 화면을 업데이트 하라고 직접 명령하지 않아도 된다. 뷰에서는 이미 뷰모델을 관찰하고 있기 때문에 데이터의 변화를 알아차리고 자동으로 화면을 갱신한다.</p>
-<p><strong>MVVM의 장점</strong></p>
-<ol>
-<li><strong>뷰가 데이터를 실시간으로 관찰한다.</strong></li>
-</ol>
-<p>LiveData 즉, Observer 패턴을 이용하기 때문에 데이터베이스를 관찰하고 자동으로 UI를 갱신한다. 직접 뷰를 바꿔주는 번거로움도 없으며 데이터와 불일치할 확률이 줄어든다.</p>
-<ol start="2">
-<li><strong>생명주기로부터 안전하다. 메모리 누수 방지!</strong></li>
-</ol>
-<p>AAC의 뷰모델을 통해 데이터를 참조하기 때문에 액티비티/프래그먼트의 생명주기를 따르지 않는다. 즉, 액티비티/프래그먼트의 생명주기 동안 계속 살아있고, onDestroy()가 호출될 때 사라지게 된다.</p>
-<p>화면 회전과 같이 액티비티가 파괴된 후에 재구성되어도 뷰모델이 데이터를 홀드하고 있기 때문에 영향을 받지 않는다. 또한, 뷰가 활성화되어있을 경우에만 작동하기 때문에 불필요한 메모리 사용을 줄일 수 있다.</p>
-<ol start="3">
-<li><strong>역할 분리!</strong></li>
-</ol>
-<p>UI, 비즈니스 로직, 모델이 기능별로 모듈화 되어 있어서 역할 별로 분리가 되어있다. 이로 인해서 테스트 코드를 작성하는게 한결 수월해진다. 이처럼 모듈화가 잘 되어 있다면 다음과 같은 상황에서 수정이 쉽다.</p>
-<ul>
-<li>내장 DB를 통째로 바꾸고 싶다고 할 때, 뷰나 다른 코드에 깊게 종속되어 있지 않기 때문에 DB만 교체하면 된다.</li>
-<li>뷰모델과 뷰는 1:N 관계를 갖기 때문에 뷰모델에 하나의 메소드를 구현하고 A 액티비티나 B 액티비티, 여러 뷰에서 호출해 사용하기 때문에 재사용이 가능하다.</li>
-</ul>
-<h2 id="aac">AAC</h2>
-<p>구글은 Android Architecture Component 이하 AAC를 제공한다. AAC는 앱 구조를 더 튼튼하고 테스트에 용이하고, 유지보수성이 뛰어나게 만들도록 도와주는 라이브러리의 모음이다. 조금 더 모듈화된 코딩을 돕기 위해 Databinding, LiveData, ViewModel 등의 유용한 라이브러리를 제공하며, 이러한 라이브러리를 사용해 MVVM 패턴을 조금 더 쉽게 구성할 수 있다.</p>
-<img src="/img/mvvm_detail.png" width="600" height="200">
-<p>위의 이미지에서 MVVM의 구성 요소로 역할을 나눠보자.</p>
-<ul>
-<li>View : 초록색(UI)</li>
-<li>ViewModel: 파란색</li>
-<li>Model : 노란색(Repository), Room Database</li>
-</ul>
-<p><strong>View</strong></p>
-<ul>
-<li>UI를 담당하는 액티비티, 프래그먼트를 의미한다.</li>
-<li>화면에 무엇을 그릴지 결정하고 사용자와 상호작용한다.</li>
-<li>보통 데이터의 변화를 감지하기 위한 옵저버를 가지고 있다.</li>
-</ul>
-<p><strong>ViewModel</strong></p>
-<ul>
-<li>UI를 위한 데이터를 가지고 있으며, 구성이 변경되어도 살아남는다.(ex. 화면 회전, 언어 변경 등)</li>
-<li>AsyncTask는 액티비티나 프래그먼트의 생명 주기에서 자유로울 수 없지만, 뷰모델은 뷰와 분리되어 있기 때문에 액티비티가 Destory 되었다가 다시 Create 되어도 종료되지 않고 데이터를 여전히 유지하고 있다.</li>
-</ul>
-<p><strong>LiveData</strong></p>
-<ul>
-<li>관찰(Observable)이 가능한 데이터 홀더 클래스이다.</li>
-<li>뷰에서 뷰모델의 Live Data를 관찰하게 되면 데이터가 변경될 때 내부적으로 자동으로 알려주게 된다.</li>
-<li>또한, Live Data는 액티비티나 프래그먼트의 생명 주기를 인지한다. 즉, 액티비티가 활성화되어 있을 때에만 UI 변경 등의 기능을 동작하게 되고, Destory된 상태에서는 동작하지 않기 때문에 Memory Leak의 발생을 줄여준다.</li>
-</ul>
-<p><strong>Repository</strong></p>
-<ul>
-<li>뷰 모델과 상호작용하기 위해 잘 정리된 데이터 API를 들고 있는 클래스이다.</li>
-<li>앱에 필요한 데이터, 즉 내장 데이터베이스나 외부 웹 서버 등에서 데이터를 가져온다.</li>
-<li>따라서 뷰모델은 DB나 서버에 직접 접근하지 않고, Repository에 접근하는 것으로 앱의 데이터를 관리한다.</li>
-</ul>
-<h2 id="결론">결론</h2>
-<p>MVVM에 대해 처음에는 이해하기가 너무 어려웠다. 왜냐하면 간단한 기능을 가진 앱을 만들더라도 많은 클래스가 필요하고, 프로젝트의 패키지 구조가 복잡해지기 때문이다.</p>
-<p>또한, 인터넷 상에 존재하는 대부분의 MVVM 예제는 DI가 적용된 것들이 많다. MVVM도 처음에 어려운데 DI까지 함께 한다면 정말 머리가 깨질 수도 있다.</p>
-<p>그래서 나는 Koin을 사용한 MVVM 예제를 찾았고 이를 많이 참고했다. Dagger2에 비해서 접근하기가 훨씬 쉬우며, 사용법도 간단해서 금방 배울 수 있다고 생각한다.</p>
-<p>아래는 내가 공부하면서 참고했던 Sample 프로젝트의 출처이다.</p>
-<ul>
-<li>
-<ol>
-<li><a href="https://deque.tistory.com/108" target="_blank" rel="noopener">Android Kotlin MVVM패턴으로 간단한 검색 앱 만들기 - 1. BaseView, BaseViewModel을 작성하여 MVVM의 토대 만들기</a></li>
-</ol>
-</li>
-<li>
-<ol start="2">
-<li><a href="https://kaidroid.me/post/android-mvvm-viewmodel-livedata-databinding/" target="_blank" rel="noopener">Android MVVM 패턴, ViewModel, LiveData, Databinding을 이용해 간단한 Toy App 만들기</a></li>
-</ol>
-</li>
-<li>
-<ol start="3">
-<li><a href="https://black-jin0427.tistory.com/138" target="_blank" rel="noopener">[Android, MVVM] ViewModel, LiveData, DataBinding, Koin 을 사용한 MVVM</a></li>
-</ol>
-</li>
-</ul>
-<p>그래도 위의 프로젝트를 참고해서 구조를 익히고 따라해서 만들고 직접 간단하게라도 적용해본다면 MVVM에 대한 이해가 될 것이라고 생각한다. 나도 위의 3 프로젝트를 직접 따라해보면서 코딩해봤고, 혼자서 분석도 해봤다.</p>
-<p>그래서 지금 진행 중인 프로젝트에 MVVM을 적용하고 있다. 아직 어려운 부분이 좀 많지만 그때 그때 구글링을 통해서 해결하고 있다. 이런 해결 과정도 정리해놓으면 좋을 것 같다. 아무튼, 모두 화이팅!(나도!)</p>
-<h2 id="참고">참고</h2>
-<ul>
-<li><a href="https://blog.yena.io/studynote/2019/03/16/Android-MVVM-AAC-1.html" target="_blank" rel="noopener">[Android] MVVM &amp; 안드로이드 아키텍쳐 컴포넌트 시작하기</a></li>
-</ul>
-
                     
+                        <a
+                            href="/2019/06/10/Android-MVVM/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [Android] MVVM Part.2"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2019/06/10/Android-MVVM/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             
@@ -929,7 +831,7 @@ A/B/C/D 4개의 화면이 있고, 언제든 로그인만 호출할 수 있다. �
     </article>
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -961,115 +863,17 @@ A/B/C/D 4개의 화면이 있고, 언제든 로그인만 호출할 수 있다. �
 
             </div>
             
-                <div class="postShorten-content">
+                <div class="postShorten-excerpt">
                     <p>안드로이드 앱에서 이미지를 보여주는 화면이 많다. 서버로부터 받은 url 이미지를 보여줘야 할 때도 있고, local에 저장해뒀다가 보여줘야 하는 경우도 있다. 오늘 이야기할 내용은 Glide를 사용해서 <strong>SVG</strong> 이미지를 화면에 보여주는 과정에서 내가 겪은 삽집을 풀도록 하겠다.</p>
-<p>먼저, SVG 이미지가 무엇인지 알아보자.</p>
-<h2 id="svg-vs-png">SVG VS PNG</h2>
-<p>SVG는 <strong>Scalable Vector Graphics</strong>의 약자이다.<br>
-JPEG, PNG처럼 그래픽 포맷 중 하나이다. SVG는 벡터 기반으로 리사이징이 되어도 깨지지 않는다는 장점을 가지고 있다. 즉, 모든 해상도에서 자유자재로 활용할 수 있기 때문에 특정 해상도에 제한되어 있지 않다.</p>
-<p><strong>장점</strong></p>
-<ol>
-<li>특정 사이즈에 구애받지 않는다.</li>
-</ol>
-<p>즉, 위에서 언급했듯이 어느 해상도에서든 pixelate 되지 않는다. SVG는 어떤 사이즈로든 그 모습 그대로 유지된다. 그렇기 때문에 사이즈별로 아이콘을 모두 생성해서 개발자에게 넘겨줄 필요가 없다. SVG 파일 하나로 모든 해상도를 대응할 수 있다.</p>
-<ol start="2">
-<li>작은 파일 사이즈</li>
-</ol>
-<p>비트맵 이미지(PNG, JPEG) 같은 경우 파일 크기를 결정하는 주요 요소는 <strong>해상도</strong>이다. 예를 들어 5000x5000 픽셀 이미지는 항상 500x500보다 파일 사이즈가 크다.<br>
-반면, SVG 그래픽 같은 경우 파일의 크기를 결정하는 주요 요소는 바로 <strong>복잡도</strong>이다. Path가 비교적 적은 간단한 이미지는 PNG, JPEG 보다 파일 사이즈가 적을 수도 있지만 이미지를 구성하는 요소의 복잡도(레이어가 많다든지 특정 효과가 많다드지)에 따라서 파일 사이즈가 커진다. 하지만, 이런 용량 문제는 SVG Optimizing이라는 것을 하게 되면 어느 정도 해결이 된다. 작은 파일 사이즈로 인해 로딩 시간도 줄어든다는 장점 또한 있다.</p>
-<h2 id="bitmap과-svg-구성요소">Bitmap과 SVG 구성요소</h2>
-<ul>
-<li>비트맵 그래픽 : Raster Graphics(픽셀 기반)</li>
-</ul>
-<p>대표적인 포맷은 JPEG, PNG이다. 이들은 픽셀로 구성되어 있다. 예를 들어, 2x2 픽셀인 비트맵 이미지는 총 4px로 구성되어 있다. 개개인에 대한 픽셀들은 자유자재로 바꿀 수가 없고 움직일 수도 없다. 그렇기 때문에 100% 이상으로 이미지를 확대하면 Pixelate가 된다.</p>
-<ul>
-<li>SVG 그래픽 : 벡터 기반</li>
-</ul>
-<p>픽셀로 구성되어 있지 않고 작업하고 있는 그래픽에 대한 정보로 구성되어 있다. 그렇기 때문에 어떤 사이즈로든 자유자재로 늘어나는 것이 가능하다. 이러한 이유로 인해 코드로 쉽게 적용된 스타일을 수정할 수 있다. 예를 들어 동그라미의 보더 값을 6에서 8로 바꾼다던지 색상을 그레이에서 블랙으로 바꾼다던지 또는 사이즈를 변경한다던지 등이다.</p>
-<p>위와 같은 장점이 있기 때문에 현재 진행하고 있는 프로젝트에서 PNG보다는 SVG를 채택해서 사용하려고 노력 중이다.</p>
-<p>디자이너가 주는 이미지는 일러스트로 그리거나 어떤 작업을 거친 후에 주는 것이 많다. 이러한 이미지들은 대부분 용량이 크다.</p>
-<p>용량이 큰 이미지를 내가 사용하는 imageView에 그냥 세팅을 해서 보여준다면 OOM(Out Of Memory)를 겪게 될 것이다. 이미지의 용량이 커서 사용하고 있는 메모리에 로드할 수 없기 때문이다.</p>
-<p>이 문제를 해결하는 방법은 여러 가지가 있는데, 그 중에 나는 편리하게 처리하기 위해서 Glide 라이브러리르 사용했다. 이미지 로드를 하기 위한 라이브러리는 이외에도 Picasso, Fresco 등이 있다. 나는 이 중 Glide가 사용 경험도 있고 편해서 선택을 했다.</p>
-<p>이미지 로딩 라이브러리 중 Picasso와 Glide 비교에 관한 글이다. <a href="https://woovictory.github.io/2019/01/03/Android-ImageLoadingLibrary/">[안드로이드] Image Loading Library</a></p>
-<h2 id="glide">Glide</h2>
-<p>이미지 로딩 라이브러리 중 하나로써 Glide는 많은 개발자들이 사용한다. 이유는 사용법이 간편하고 다양한 기능을 지원하기 때문이다.</p>
-<p>기본 사용법은 다음과 같다.</p>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">setImageBackground</span><span class="params">()</span></span>&#123;</span><br><span class="line">    Glide.with(context)</span><br><span class="line">        .load(R.drawable.image_error)</span><br><span class="line">        .into(imageView)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>이제 내가 원하는 svg 이미지를 glide를 통해 적용해보려고 한다. 나는 png나 svg나 어차피 이미지이기 때문에 똑같은 방식으로 적용하면 될 것이라고 생각했다.</p>
-<img src="/img/68.jpeg" width="500" height="200">
-<p>인생은 쉽지 않다. 쉽게 될 것이라고 생각했던 것은 큰 오산이었다… 그래서 구글의 힘을 빌려보기로 했다.<br>
-<strong>android glide load svg</strong>로 검색한 결과 다음과 같이 스택 오버플로우에 많은 질문이 있는 것을 알 수 있었다. 역시 쉬운 것은 없다.</p>
-<img src="/img/glide_svg_load.png" width="700" height="200">
-<p>열심히 구글링을 하던 중 괜찮아 보이는 방법을 찾았다.</p>
-<ol>
-<li>라이브러리 사용</li>
-</ol>
-<ul>
-<li><a href="https://github.com/corouteam/GlideToVectorYou" target="_blank" rel="noopener">GlideToVectorYou</a> 라는 라이브러리이며 SVG 이미지를 쉽게 로드할 수 있다.</li>
-<li>구현부분을 자세히 보면 구글의 샘플 코드를 확인할 수 있다.</li>
-<li>단점 : with() 함수의 인자로 <code>activity</code> 밖에 넘기지 못한다.</li>
-</ul>
-<ol start="2">
-<li>구글의 샘플 코드 사용(구 버전)</li>
-</ol>
-<ul>
-<li>스택 오버플로우의 답변 내용을 보면 구글의 샘플 코드를 확인하라는 말을 자주 볼 수 있다.</li>
-<li>그래서 링크를 타고 들어가봤는데, 대략 4년 전에 사용되었던 방식이 있다.</li>
-<li>단점 : 구 버전이므로 현재 버전에서는 Deprecated된 함수들이 대부분이다.</li>
-</ul>
-<ol start="3">
-<li>구글의 샘플 코드 사용(최신 버전)</li>
-</ol>
-<ul>
-<li>구 버전 뿐 아니라 최신 버전에 맞게 사용할 수 있는 샘플 코드를 제공하고 있다.</li>
-<li><a href="https://github.com/bumptech/glide/tree/master/samples/svg/src/main/java/com/bumptech/glide/samples" target="_blank" rel="noopener">SVG Sample</a></li>
-</ul>
-<p>자, ‘이런게 삽질이라고?’ 라고 생각하시는 분들이 있을 수 있다.<br>
-하지만, 내가 겪은 과정은 삽질이라고 표현할 수 있다.<br>
-이유는 처음에 SVG 이미지를 그냥 로드할 수 없다는 걸 알게되었다는 점과 이를 로드하기 위해서 어떤 방식이 있는지 찾아보는 과정, 그리고 실제로 동작하는지 확인해보기 위해서 많은 시간을 들였다.</p>
-<p>구글의 샘플 코드를 보고 가장 먼저 의문이 드는 것은 <code>GlideApp</code>이다. 이게 뭘까? 직접 쳐봐도 뜨지도 않는다. 그럼 구글은 이 뜨지도 않는걸로 어떻게 해결한 것일까??</p>
-<p>해결 방법은 의외로 간단하다. build.gradle(Module:app)에 아래와 같은 의존성을 추가하면 된다.</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// glide</span><br><span class="line">implementation 'com.github.bumptech.glide:glide:4.8.0'</span><br><span class="line">implementation 'com.github.bumptech.glide:annotations:4.8.0'</span><br><span class="line">annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'</span><br><span class="line">kapt 'com.github.bumptech.glide:compiler:4.8.0'</span><br></pre></td></tr></table></figure>
-<p>버전은 4.8.0으로 했다. 최신 버전으로 했었는데, 변경하는 과정에서 Crash가 발생해서 4.8.0으로 하는 것이니 사용할 때는 최신 버전으로 해도 무방할 것 같다.</p>
-<p>그리고 Clean Project -&gt; Rebuild Project 를 하면 GlideApp이 생기는 걸 확인할 수 있다. 다음에 AppGlideModule을 상속받는 MyAppGlideModule 클래스를 생성하면 된다.</p>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@GlideModule</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyGlideModule</span> : <span class="type">AppGlideModule</span></span>() &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">registerComponents</span><span class="params">(context: <span class="type">Context</span>, glide: <span class="type">Glide</span>, registry: <span class="type">Registry</span>)</span></span> &#123;</span><br><span class="line">        registry</span><br><span class="line">            .register(SVG::<span class="class"><span class="keyword">class</span>.<span class="title">java</span>, <span class="type">PictureDrawable::class.java</span>, <span class="type">SvgDrawableTranscoder</span></span>())</span><br><span class="line">            .append(InputStream::<span class="class"><span class="keyword">class</span>.<span class="title">java</span>, <span class="type">SVG::class.java</span>, <span class="type">SvgDecoder</span></span>())</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">isManifestParsingEnabled</span><span class="params">()</span></span>: <span class="built_in">Boolean</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>SVG 클래스를 위해서 아래와 같은 의존성을 하나 더 추가해줘야 한다.</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">implementation 'com.caverock:androidsvg:1.2.1'</span><br></pre></td></tr></table></figure>
-<p>그리고 여기서 사용되는 클래스들은 다음과 같다.</p>
-<ul>
-<li><a href="https://github.com/bumptech/glide/blob/master/samples/svg/src/main/java/com/bumptech/glide/samples/svg/SvgDecoder.java" target="_blank" rel="noopener">SvgDecoder</a></li>
-<li><a href="https://github.com/bumptech/glide/blob/master/samples/svg/src/main/java/com/bumptech/glide/samples/svg/SvgDrawableTranscoder.java" target="_blank" rel="noopener">SvgDrawableTranscoder</a></li>
-<li><a href="https://github.com/bumptech/glide/blob/master/samples/svg/src/main/java/com/bumptech/glide/samples/svg/SvgSoftwareLayerSetter.java" target="_blank" rel="noopener">SvgSoftwareLayerSetter</a></li>
-</ul>
-<p><strong>1.SvgDecoder</strong></p>
-<p>link를 통해서 읽은 inputStream을 SVG 내부 표현으로 디코딩을 한다는 의미이다.<br>
-정확하지는 않지만 link 즉, url을 통해 읽어들인 다음 inputStream에 담고 이를 통해 SVG로 만든다. 만들 때는 <code>androidsvg</code> 라이브러리를 사용한다.</p>
-<p><strong>2. SvgDrawableTranscoder</strong></p>
-<p>1번에서 만든 SVG를 안드로이드에서 사용할 수 있는 <code>PictureDrawable</code>로 변환한다. 이는 Drawable 클래스를 상속받고 있기 때문에 이렇게 변환된 데이터를 안드로이드에서 사용할 수 있다.</p>
-<p><strong>3. SvgSoftwareLayerSetter</strong></p>
-<p>3번은 필수가 아닌 선택이다. 하지만, 필수적으로 사용해야 될 것 같다. 왜냐하면 리스너를 구현한 것이기 때문에 이를 통해서 내가 로드하려는 이미지가 성공적으로 로드되었는지, 실패했는지를 확인할 수 있다.</p>
-<p>이를 통해서 내가 로드하려는 SVG 이미지가 성공적으로 로드되었는지, 로드되지 않고 실패했다면 어떤 원인인지 파악할 수 있어 디버깅하는데 더 수월하다.</p>
-<p>여기까지 내가 삽질했던 과정을 설명했다. 사용되는 클래스에 대한 정확한 파악은 하지 못했지만, 어떻게 동작하는지는 이해가 되었다. 나의 이해를 바탕으로 작성한 글이기 때문에 사실과 다른 부분도 존재할 것이다. 이 부분에 대한 이견이 있다면 알려주시면 감사할 것 같다.</p>
-<h2 id="참고">참고</h2>
-<ul>
-<li><a href="https://brunch.co.kr/@dailyhotel/20" target="_blank" rel="noopener">왜 SVG로 갈아탔는가?</a></li>
-</ul>
-
                     
+                        <a
+                            href="/2019/06/05/Android-Glide/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [Android] Glide 삽질 과정"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2019/06/05/Android-Glide/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             

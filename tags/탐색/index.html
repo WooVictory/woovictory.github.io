@@ -267,7 +267,7 @@
     <section class="postShorten-group main-content-wrap">
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -299,199 +299,23 @@
 
             </div>
             
-                <div class="postShorten-content">
-                    <h1 id="그래프-탐색"># 그래프 탐색</h1>
+                <div class="postShorten-excerpt">
+                    <h1># 그래프 탐색</h1>
 <p>그래프를 탐색하는 방법에는 널리 사용되는 두 가지 방식이 있다.</p>
 <ul>
 <li>DFS는 깊이 우선 탐색(Depth-First Search)이다.</li>
 <li>BFS는 너비 우선 탐색(Breadth-First Search)이다.</li>
 <li>먼저 <strong>그래프</strong>라는 자료구조에 대한 지식이 있어야 한다.</li>
 </ul>
-<h2 id="그래프">그래프</h2>
-<p>자료 구조의 일종이다.<br>
-그래프는 정점과 간선의 집합이다.</p>
-<p><strong>용어</strong></p>
-<ul>
-<li>정점(Vertex) : 노드라고도 부른다.</li>
-<li>간선(Edge) : 정점 간의 관계를 나타낸다.
-<ul>
-<li>두 정점을 이어준다.</li>
-<li>자기 자신을 이을 수도 있다.(루프)</li>
-<li>간선에 방향이 있기도 하고 없기도 하다.</li>
-<li>가중치가 있기도 하고 없기도 하다.</li>
-</ul>
-</li>
-<li>경로(Path) : 정점 A에서 B로 가는 경로</li>
-<li>사이클 : 정점 A에서 다시 A로 돌아오는 경로</li>
-<li>단순 경로 / 단순 사이클 : 경로/사이클에서 같은 정점을 두 번 이상 방문하지 않는 경로/사이클을 의미한다.
-<ul>
-<li>특별한 말이 없으면 일반적으로 사용하는 경로와 사이클은 단순 경로/사이클을 말한다.</li>
-</ul>
-</li>
-<li>방향 있는 그래프 : 간선에 방향이 존재한다. A -&gt; C는 있지만 C -&gt; A는 없다.</li>
-<li>방향 없는 그래프 : A - C와 같이 간선에 방향이 없다. 이는 A -&gt; C와 C -&gt; A를 나타낸다. <strong>양방향 그래프</strong>라고도 한다.</li>
-<li>간선 여러개 : 두 정점 사이에 간선이 여러 개일 수도 있다.
-<ul>
-<li>두 간선은 서로 다른 간선이다.</li>
-<li>최소 비용을 구할 때는 가중치가 적은 것을 선택하면 된다.</li>
-</ul>
-</li>
-<li>루프 : 간선의 양 끝 점이 같은 경우다. A -&gt; A</li>
-<li>가중치(Weight) : 간선에 가중치가 있는 경우를 말한다.
-<ul>
-<li>A에서 B로 이동하는 거리, 이동하는데 필요한 시간, 이동하는데 필요한 비용 등등.</li>
-<li>가중치가 없는 경우에는 1이라고 생각하면 된다.</li>
-</ul>
-</li>
-<li>차수(Degree) : 정점과 연결되어 있는 간선의 개수를 말한다.</li>
-</ul>
-<p><strong>그래프의 표현</strong></p>
-<ul>
-<li>정점 : 변수 하나로 개수를 표현하면 된다.</li>
-<li>간선 : 무엇과 무엇이 연결되어 있는지를 저장해야 한다. (그래프를 저장하는 방식.)</li>
-</ul>
-<p>그래프를 구현하는데 있어서 다음과 같은 두 가지 방식을 사용할 수 있다. 참고로 무방향 그래프를 기준으로 설명하겠다.</p>
-<ul>
-<li>그래프를 저장하는 방식
-<ol>
-<li>인접 행렬</li>
-<li>인접 리스트</li>
-</ol>
-</li>
-</ul>
-<p>먼저, 인접 행렬은 정점(V)이 N개 일때, NxN의 2차원 배열로 나타낼 수 있다.</p>
-<img src="/img/graph_array.png" width="700" height="300">
-<p>인접 행렬을 일반적으로 a라고 이름을 짓는다.<br>
-a[1][5] = 1의 의미는 정점 1과 정점 5의 간선이 연결되어 있다는 뜻이다.<br>
-무방향이기 때문에 a[5][1] 또한 1이다. 빨간색 줄을 통해서 확인할 수 있다.<br>
-인접 행렬의 값이 1이라면, 정점 간의 간선이 존재한다는 것이고, 0이라면 존재하지 않는다는 것이다.<br>
-(현재 위의 예에서는 가중치가 없지만, 가중치를 넣을 때는 1 대신 가중치를 넣으면 된다.)</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span>[][] a = <span class="keyword">new</span> <span class="keyword">int</span>[N+<span class="number">1</span>][N+<span class="number">1</span>];</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;m;i++)&#123;</span><br><span class="line">    <span class="keyword">int</span> v1 = sc.nextInt();</span><br><span class="line">    <span class="keyword">int</span> v2 = sc.nextInt();</span><br><span class="line"></span><br><span class="line">    a[v1][v2] = <span class="number">1</span>;</span><br><span class="line">    a[v2][v1] = <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>이번에는 인접 리스트를 확인해보자.</p>
-<img src="/img/graph_arraylist.png" width="700" height="300">
-<p>인접행렬은 2차원 배열의 행과 열을 통해 정점 간의 간선을 표현했는데, 인접 리스트는 이와 다르다. 1에 연결되어 있는 간선들을 A[1]에 저장하고, A[2]에는 2에 연결되어 있는 간선을 저장한다.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">ArrayList&lt;Integer&gt;[] a = (ArrayList&lt;Integer&gt;[]) <span class="keyword">new</span> ArrayList[N+<span class="number">1</span>];</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;=N;i++)&#123;</span><br><span class="line">    a[i] = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;M;i++)&#123;</span><br><span class="line">    <span class="keyword">int</span> v1 = sc.nextInt();</span><br><span class="line">    <span class="keyword">int</span> v2 = sc.nextInt();</span><br><span class="line"></span><br><span class="line">    a[v1].add(v2);</span><br><span class="line">    a[v2].add(v1);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>같은 목적이지만 배열과 리스트를 통해 다르게 저장함으로써 큰 차이를 볼 수 있다.<br>
-인접 행렬은 크기가 정점과 간선의 개수와 상관없이 정점 갯수 x 정점 갯수이기 때문에 공간 복잡도가 O(V^2)이다.<br>
-하지만, 인접 리스트는 필요한 공간만 쓰기 때문에 O(V+E)가 된다.<br>
-인접 행렬보다는 인접 리스트를 사용하는게 훨씬 효율적이다.</p>
-<h2 id="dfs"># DFS</h2>
-<p><strong>한 우물만 깊게 파다가 막히면 그제서야 돌아가서 다른 우물을 파는 성향</strong>이 있다고 할 수 있다.<br>
-모든 정점을 1번씩 방문한다.</p>
-<img src="/img/dfs_1.png" width="500" height="300">
-<ul>
-<li>먼저 정점 하나를 선택한다.</li>
-<li>그리고 <strong>그 정점의 아직 방문하지 않은 인접한 정점 중 하나를 선택해 방문</strong>한다.</li>
-<li>0이 인접한 1을 방문하면 그 다음번에는 0에 인접한 다른 정점들보다 1에 인접한 정점들이 우선적으로 방문된다.</li>
-</ul>
-<img src="/img/dfs_2.png" width="500" height="300">
-<ul>
-<li>0번 정점에서 시작한다. 인접한 정점이 여러 개라면 그 중 번호가 제일 작은 것부터 방문한다.</li>
-<li><strong>빨간색</strong>이 지금 막 방문한 노드이고 <strong>녹색</strong>은 이전에 방문한 노드, <strong>파란색</strong>은 아직 방문하지 않은 노드이다.</li>
-<li>일단 처음 방문한 0번 노드와 인접한 노드는 1,2번이다.</li>
-<li>이 중에서 더 작은 번호의 1번 노드를 방문한다.</li>
-<li>그 다음에 2번 노드를 방문하는게 아니라 주체가 바뀌어서 1번 노드의 인접한 0,3,5번 노드 중 하나를 방문할 계획이다.</li>
-<li>0번은 이미 방문했으니 3,5번 중 하나를 다음에 방문한다. 번호가 더 작은 3번 노드를 방문한다.</li>
-</ul>
-<img src="/img/dfs_3.png" width="500" height="300">
-<ul>
-<li>위의 그림처럼 더 작은 번호의 3번 노드를 방문한다. 다음에는 선택지가 하나밖에 없다. -&gt; 4번 노드</li>
-</ul>
-<img src="/img/dfs_4.png" width="500" height="300">
-<ul>
-<li>역시 선택지는 5번 노드밖에 없다.</li>
-</ul>
-<img src="/img/dfs_5.png" width="500" height="300">
-<ul>
-<li>5번 노드에서 더 이상 방문할 인접 노드가 없다. 모두 방문했기 때문.</li>
-<li>이때는 5번 노드에서 추가로 다른 노드를 방문하지 않고, 자기를 불렀던 4번 노드로 돌아가서 4번 노드의 인접한 노드들 중 아직 방문하지 않은 정점을 찾아 방문해야 한다.</li>
-<li>4번에서도 그게 없다면, 4번을 불렀던 3번으로 돌아가고 이와 같은 과정을 반복해서 0번 노드까지 돌아가게 된다.</li>
-</ul>
-<img src="/img/dfs_6.png" width="500" height="300">
-<ul>
-<li>0번 노드의 인접한 정점 중 아직 방문하지 않은 나머지 정점 2번 노드를 방문한다.</li>
-</ul>
-<img src="/img/dfs_7.png" width="500" height="300">
-<ul>
-<li>2번 노드는 마찬가지로 6번 노드를 방문한다.</li>
-</ul>
-<img src="/img/dfs_8.png" width="500" height="300">
-<ul>
-<li>6번 노드는 7번 노드를 이어서 방문한다.</li>
-<li>여기서 또 7번 노드는 더 이상 방문할 곳이 없다.</li>
-<li>이제 6번 노드로 돌아가서 6번 노드의 인접한 다른 정점인 8번 노드를 방문한다.</li>
-</ul>
-<img src="/img/dfs_9.png" width="500" height="300">
-<ul>
-<li>8번 노드를 방문하고 나면 아무리 돌아가도 더 이상 남아 있는 노드 중 방문할 정점이 없다.</li>
-<li>이러면 탐색이 종료된 것이고, <strong>시작점인 0번 노드와 직/간접적으로 연결되어 있는 모든 노드를 탐색한 것이다.</strong></li>
-</ul>
-<p>이 과정에서 만약 어떤 정점에서 더 방문할 노드가 없다면 자신을 불렀던 정점으로 돌아간다.<br>
-이걸 구현하기 위해서 <code>스택(Stack)</code>을 사용한다.</p>
-<p>방문하는 순서대로 정점을 스택에 쌓고, 방문이 끝나면 스택에서 pop하는 형태로 구현이 가능하다. 재귀 함수 또한 스택 메모리 공간에 쌓아 올려지는 구조를 띄므로 재귀 함수를 사용하여도 이것을 구현할 수 있다.</p>
-<p><strong>시간 복잡도</strong></p>
-<p>인접 행렬을 사용하는 경우 : <code>O(V^2)</code><br>
-인접 리스트를 사용하는 경우 : <code>O(V+E)</code> - 정점과 간선의 개수 합이다.</p>
-<h2 id="bfs"># BFS</h2>
-<p>역시 모든 정점을 한 번씩 순회한다.<br>
-DFS와 대립되는 성질을 갖고 있으며, 사용되는 곳도 매우 다르다.<br>
-<strong>BFS</strong> 역시 컴포넌트의 개수를 세거나 각 컴포넌트의 크기를 구하는데는 사용 가능하다.</p>
-<p>DFS가 한 우물만 계속 파다가 끝을 보고 나서야 다른 곳으로 옮기는 데 반해, BFS는 <strong>모든 곳을 똑같이 조금씩 조금씩 판다.</strong></p>
-<img src="/img/bfs_1.png" width="500" height="300">
-<ul>
-<li>dfs와 동일한 그래프를 사용한다.</li>
-<li>맨 처음에 0번 정점부터 방문을 시작한다.</li>
-</ul>
-<img src="/img/bfs_2.png" width="500" height="300">
-<ul>
-<li>DFS와 다르게 <strong>0번 정점과 인접한 정점들부터 무조건 먼저 다 방문된다.</strong></li>
-</ul>
-<img src="/img/bfs_3.png" width="500" height="300">
-<ul>
-<li>그 다음은 바로 전 단계에서 방문한 1,2번 정점들로부터 인접한 3,5,6,8번 정점들이 반드시 먼저 방문된다.</li>
-</ul>
-<img src="/img/bfs_4.png" width="500" height="300">
-<ul>
-<li>마지막으로 4,7번 정점이 방문된다.</li>
-<li>각 단계의 정점들은 그 안에서 방문 순서가 바뀔 수는 있지만, 다른 단계와는 방문 순서가 절대 뒤섞이지 않는다.</li>
-<li>0번 노드, 즉 시작점을 방문한 것을 0단계라 하고 그 다음부터 1,2,3 단계라고 부를 때, <strong>K단계에 방문하는 정점들은 시작점으로부터 최단거리가 k이다.</strong></li>
-<li>최단 거리 : 여기서는 가중치가 없으니까 A와 B의 최단거리는 A에서 B로 이동하는데 필요한 최소 개수의 간선이라고 보면 된다.</li>
-</ul>
-<p>DFS에 스택이 필요했던 것과 대조적으로 <strong>BFS는 큐가 필요하다.</strong><br>
-BFS는 먼저 방문한 노드들부터 본다.</p>
-<p>먼저 시작점을 큐에 넣고 방문했다고 표시한다.<br>
-그리고 큐가 비어있지 않을 때까지 방문을 시도한다.<br>
-큐에서 지금 나온 정점의 인접한 노드들 중 아직 방문하지 않은 애들을 다시 큐에다 넣어준다.<br>
-이런 식으로 먼저 방문한 노드들부터 차례대로 방문해 나간다.</p>
-<ul>
-<li>모든 가중치가 1인 경우에 최단 거리를 찾는 알고리즘이 된다.<br>
-최단 거리를 찾는 문제일 때, 모든 가중치가 1이라면 BFS를 사용한다.</li>
-</ul>
-<h2 id="마치며">마치며…</h2>
-<p>음, 아직 뭔가 감이 잡히진 않는다.<br>
-그래프를 탐색할 때 DFS와 BFS의 차이점은 알겠고 개념도 알겠는데 문제를 풀 때 어떻게 구현해야 하는지 잘 모르겠다.<br>
-다음 포스팅에서 직접 구현해보면서 정리해보도록 하겠다.</p>
-<h2 id="참고">참고</h2>
-<ul>
-<li><a href="https://kks227.blog.me/220785731077" target="_blank" rel="noopener">깊이 우선 탐색(Depth-First Search) (수정 2019-02-17)</a></li>
-<li><a href="https://kks227.blog.me/220785747864" target="_blank" rel="noopener">너비 우선 탐색(Breadth-First Search) (수정 2018-11-22)</a></li>
-</ul>
-
                     
+                        <a
+                            href="/2019/04/01/Algo-What-is-DFS/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [알고리즘] 그래프 탐색 Part1. 개요"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2019/04/01/Algo-What-is-DFS/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             

@@ -267,7 +267,7 @@
     <section class="postShorten-group main-content-wrap">
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -299,339 +299,21 @@
 
             </div>
             
-                <div class="postShorten-content">
+                <div class="postShorten-excerpt">
                     <p>[2020.02.11 기준으로 수정과 동시에 내용을 추가하고 있습니다.]<br>
 [2020.03.27 기준으로 글을 새롭게 작성하고 있습니다. 따라서 새로 작성되는 포스팅이 완료되면 해당 포스팅은 삭제될 예정입니다.]<br>
 작성중인 글 : <a href="https://woovictory.github.io/2020/03/27/Android-Room-Concept/">Room 개념편</a><br>
 [2020.04.25 기준 홍보 내용 추가]<br>
 현재 신입 개발자를 위한 Repository를 운영하고 있습니다. <a href="https://github.com/WooVictory/Ready-For-Tech-Interview" target="_blank" rel="noopener">💻 신입 개발자로서 준비를 하기 위해 지식을 정리하는 공간 👨‍💻</a>이며, 운영체제, 자바, 네트워크, 데이터베이스 등의 내용이 정리되어 있습니다. 계속해서 꾸준히 추가 중이니 한번씩 들러서 봐주시면 감사하겠습니다. 또한, 도움이 된다면 Star를 꾹~ 눌러주시면 저에게 큰 힘이 됩니다 :)</p>
-<p>Android Architecture Component 중 하나인 Room에 대해 알아보려고 한다.</p>
-<h3 id="orm">[ORM]</h3>
-<p>Room을 알아보기 전에 ORM이 무엇인지 살펴보자. ORM이란 Object Relational Mapping으로 데이터베이스와 객체 지향 프로그래밍 언어간의 호환되지 않는 데이터를 변환하는 프로그래밍 기법으로 <strong>DB 테이블과 매핑되는 객체를 만들고 그 객체에서 DB를 관리하는 것이다.</strong></p>
-<h3 id="room">[Room]</h3>
-<p>Room은 SQLite의 기능을 최대한 활용하는 동시에 데이터베이스를 원활하게 접근할 수 있도록 SQLite 위에 추상화 계층을 제공 라이브러리라고 생각하면 된다.</p>
-<ul>
-<li>적은 양의 정형화된 데이터를 처리하는 애플리케이션은 로컬에서 해당 데이터를 유지함으로써 큰 이점을 얻을 수 있다.
-<ul>
-<li>ex) 관련 데이터를 캐시하는 것</li>
-</ul>
-</li>
-<li>이렇게 하면 장치가 네트워크에 액세스할 수 없는 경우에도 사용자가 오프라인 상태일 때 해당 콘텐츠를 계속 탐색할 수 있다. 이후에 장치가 다시 온라인 상태가 되면 사용자가 시작한 모든 콘텐츠 변경 내용이 서버에 동기화된다.</li>
-</ul>
-<h3 id="사용해보기">[사용해보기]</h3>
-<ol>
-<li>gradle에 의존성을 추가한다.</li>
-</ol>
-<ul>
-<li><strong>먼저, build.gradle 파일의 dependencies에 추가해준다.그래야지 Room을 사용할 수 있다.</strong></li>
-<li>roomVersion은 사용하는 시점에 맞는 버전을 사용하면 된다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//room</span></span><br><span class="line">implementation <span class="string">"android.arch.persistence.room:runtime:$roomVersion"</span></span><br><span class="line">kapt <span class="string">"android.arch.persistence.room:compiler:$roomVersion"</span></span><br></pre></td></tr></table></figure>
-<h3 id="3가지-주요-컴포넌트">[3가지 주요 컴포넌트]</h3>
-<p>Room은 엔티티(Entity), 데이터 접근 객체(Data Access Object), 룸 데이터 베이스(Room Database) 이렇게 총 3가지 구성요소로 나뉜다.</p>
-<ol>
-<li><strong>Database</strong></li>
-</ol>
-<ul>
-<li>데이터베이스 홀더를 포함하고 앱의 지속적이고 관계가 있는 데이터에 대한 기본 연결을 위한 기본 액세스 지점 역할을 한다.</li>
-<li><code>@Database</code>로 어노테이션된 클래스는 다음의 조건을 만족해야 한다.
-<ul>
-<li><strong>RoomDatabase</strong>를 상속받는 클래스는 추상 클래스이어야 한다.</li>
-<li>어노테이션 내에 데이터베이스와 연관된 (즉, 데이터베이스에 들어갈 테이블) 엔티티의 목록을 포함한다.</li>
-<li>파라미터가 0개인 추상 메소드를 포함하고 @Dao로 어노테이션된 클래스를 반환한다.</li>
-</ul>
-</li>
-<li>런타임에 <code>Room.databaseBuilder() 또는 Room.inMemoryDatabaseBuilder()</code>를 호출하여 데이터베이스 인스턴스를 얻을 수 있다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// User and Book are classes annotated with @Entity.</span></span><br><span class="line"><span class="meta">@Database</span>(version = <span class="number">1</span>, entities = &#123;User.class, Book.class&#125;)</span><br><span class="line"><span class="function"><span class="keyword">abstract</span> class AppDatabase extends <span class="title">RoomDatabase</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="comment">// BookDao is a class annotated with @Dao. </span></span><br><span class="line">    <span class="function"><span class="keyword">abstract</span> <span class="keyword">public</span> BookDao <span class="title">bookDao</span><span class="params">()</span></span>; </span><br><span class="line">    <span class="comment">// UserDao is a class annotated with @Dao. </span></span><br><span class="line">    <span class="function"><span class="keyword">abstract</span> <span class="keyword">public</span> UserDao <span class="title">userDao</span><span class="params">()</span></span>; </span><br><span class="line">    <span class="comment">// UserBookDao is a class annotated with @Dao. </span></span><br><span class="line">    <span class="function"><span class="keyword">abstract</span> <span class="keyword">public</span> UserBookDao <span class="title">userBookDao</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>데이터베이스에서 쿼리를 직접 실행하는 대신 Dao 클래스를 만드는 것이 좋다. Dao 클래스를 사용하면 보다 논리적인 계층에서 데이터베이스 통신을 추상화할 수 있다. 이 계층은 직접 sql 쿼리를 실행하는 것에 비해 테스트를 더 쉽게 할 수 있다.</li>
-<li>Room은 애플리케이션이 컴파일 되는 동안 Dao 클래스의 모든 쿼리를 확인하여 쿼리 중 문제가 있는 경우 즉시 사용자에게 알려준다.</li>
-</ul>
-<ol start="2">
-<li><strong>Entity</strong></li>
-</ol>
-<ul>
-<li>데이터베이스 내에서 테이블을 나타낸다.</li>
-<li>room을 사용할 때 관련 필드 집합을 엔티티들로 정의한다.</li>
-<li>각 엔티티에 대해 항목(아이템)을 보관하기 위해 연결된 데이터베이스 객체 내에 테이블이 생성된다.</li>
-<li>데이터베이스 클래스의 엔티티 array를 통해 엔티티 클래스를 참조해야 한다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Entity</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span></span>&#123;</span><br><span class="line">    <span class="meta">@PrimaryKey</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span> id;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String firstName;</span><br><span class="line">    <span class="keyword">public</span> String lastName;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>필드를 유지하려면, 룸은 필드에 접근할 수 있어야 한다.</li>
-<li>필드를 public으로 만들거나, getter / setter를 제공할 수 있다.</li>
-<li>getter / setter method를 사용한다면 룸에서 JavaBeans 규칙을 기반으로 한다.[멤버 변수는 private형을 지정하여 선언한다.]</li>
-</ul>
-<blockquote>
-<p>주의</p>
-</blockquote>
-<p>엔티티에는 빈 생성자 (해당 DAO 클래스가 각 지속 필드를 액세스할 수 있는 경우) 또는 매개 변수에 엔티티 필드와 일치하는 유형과 이름이 포함된 생성자가 있을 수 있다. 룸은 일부 필드만 수신하는 생성자와 같이 전체 또는 부분 생성자를 사용할 수도 있다.</p>
-<p><strong>User a Primary Key</strong></p>
-<ul>
-<li>각 Entity는 최소 하나 이상의 필드를 기본키로 지정해야 한다.</li>
-<li>필드가 하나만 있는 경우에도 <code>@PrimaryKey</code> 어노테이션을 사용하여 필드에 주석을 달 필요가 있다.</li>
-<li>또한, 룸에서 엔티티에 자동으로 ID를 할당하도록 하려면 @PrimaryKey의 <strong>autoGenerate</strong> 속성을 설정할 수 있다.(기본은 false. ex: index가 자동으로 증가하는 경우와 같은)</li>
-<li>엔티티가 복합 PrimaryKey가 있는 경우 @Entity 어노테이션의 <strong>primaryKeys</strong> 속성을 사용할 수 있다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Entity</span>(primaryKeys = &#123;<span class="string">"firstName"</span>, <span class="string">"lastName"</span>&#125;)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> String firstName;</span><br><span class="line">    <span class="keyword">public</span> String lastName;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>기본적으로 룸은 클래스 이름을 데이터베이스 테이블 이름으로 사용한다.</li>
-<li>만약 테이블이 다른 이름을 가지게 하고 싶다면, @Entity 어노테이션의 <strong>tableName</strong> 속성을 설정하면 된다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Entity</span>(tableName = <span class="string">"users"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span></span>&#123;</span><br><span class="line">    <span class="comment">///</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>주의 : SQLite의 테이블 이름은 대소문자를 구분하지 않는다.</p>
-</blockquote>
-<ul>
-<li>tableName 속성과 비슷하게 룸은 필드 이름을 데이터베이스의 column 이름으로 사용한다.</li>
-<li>만약 column 이름을 다르게 하고 싶다면 <code>@ColumnInfo</code> 어노테이션을 추가하면 된다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Entity</span>(tableName = <span class="string">"users"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span></span>&#123;</span><br><span class="line">    <span class="meta">@PrimaryKey</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span> id;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ColumnInfo</span>(name = <span class="string">"first_name"</span>)</span><br><span class="line">    <span class="keyword">public</span> String firstName;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ColumnInfo</span>(name = <span class="string">"last_name"</span>)</span><br><span class="line">    <span class="keyword">public</span> String lastName;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>Ignore fields</strong></p>
-<ul>
-<li>기본적으로 룸은 엔티티에 정의된 각 필드에 대한 Column을 생성한다.</li>
-<li>엔티티에 지속하고 싶지 않은 필드가 있는 경우 <code>@Ignore</code>를 사용하여 필드에 어노테이션을 추가할 수 있다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Entity</span>(tableName = <span class="string">"users"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span></span>&#123;</span><br><span class="line">    <span class="meta">@PrimaryKey</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span> id;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String firstName;</span><br><span class="line">    <span class="keyword">public</span> String lastName;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Ignore</span></span><br><span class="line">    Bitmap picture;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>상위 엔티티에서 필드를 상속하는 경우, 일반적으로 @Entity 특성의 <strong>ignoredColumns</strong> 속성을 더 쉽게 추가해서 사용할 수 있다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Entity</span>(ignoredColumns = <span class="string">"picture"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RemoteUser</span> <span class="keyword">extends</span> <span class="title">User</span> </span>&#123;</span><br><span class="line">    <span class="meta">@PrimaryKey</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span> id;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">boolean</span> hasVpn;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>Provide table search support</strong></p>
-<p>추가 예정~~</p>
-<ol start="3">
-<li><strong>DAO(Data Access Object)</strong></li>
-</ol>
-<ul>
-<li>데이터베이스에 접근할 수 있는 메소드를 포함하며, 데이터 접근 객체이다.</li>
-<li>인터페이스로서 쿼리를 사용하는 메소드를 정의한다.</li>
-<li>룸을 사용해 앱의 데이터에 접근하려면 DAO를 사용한다.</li>
-<li>각 DAO에는 앱의 데이터베이스에 대한 추상적 액세스를 제공하는 방법이 포함되어 있으므로(interface내에 쿼리와 함께 함수만 정의) 이 Dao 객체들은 룸의 주요 구성요소를 형성한다.</li>
-<li>쿼리 builder나 직접적인 쿼리 대신 DAO 클래스를 사용하여 데이터베이스에 접근하여 데이터베이스 구조의 다양한 구성 요소를 분리할 수 있다.</li>
-<li>또한, DAO를 사용하면 애플리케이션을 테스트할 때 데이터베이스 접근을 쉽게 할 수 있다.</li>
-<li>DAO는 인터페이스 또는 추상 클래스일 수 있다.
-<ul>
-<li>추상 클래스인 경우 선택적으로 RoomDatabase를 유일한 매개 변수로 사용하는 생성자를 가질 수 있다.</li>
-<li>Room은 <strong>Compile time</strong>에 각 DAO 구현을 생성한다.</li>
-</ul>
-</li>
-</ul>
-<p><strong>Define methods for convenience</strong></p>
-<ul>
-<li>DAO 클래스를 사용하여 나타낼 수 있는 여러가지 편리한 쿼리가 있다.</li>
-</ul>
-<p><strong>1. Insert</strong></p>
-<ul>
-<li>DAO 메소드를 작성하고 @Insert로 어노테이션을 지정할 때, Room은 단일 트랜잭션의 데이터베이스에 모든 매개변수를 삽입하는 구현을 생성한다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Dao</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">MyDao</span></span>&#123;</span><br><span class="line">    <span class="meta">@Insert</span>(onConflict = OnConflictStrategy.REPLACE)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">insertUsers</span><span class="params">(User... users)</span></span>;</span><br><span class="line"></span><br><span class="line">     <span class="meta">@Insert</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">insertBothUsers</span><span class="params">(User user1, User user2)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Insert</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">insertUsersAndFriends</span><span class="params">(User user, List&lt;User&gt; friends)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>@Insert 메소드는 매개 변수를 1개만 받으면 삽입된 항목의 새 rowId인 long 타입의 값을 반환할 수 있다. 매개변수가 배열 또는 집합인 경우 Long[] 또는 List<long>을 대신 반환해야 한다.</long></li>
-<li>@Insert에 <code>onConflict</code> 속성을 지정할 수 있다.  테이블에 Entity를 삽입할 때 같은 값인 경우, <strong>충돌</strong>이 발생하는데 이 충돌을 어떻게 해결할지를 정의할 수 있다.
-<ul>
-<li>위에서는 Replace로 지정하여 충돌 발생 시 새로 들어온 데이터로 교체한다.</li>
-</ul>
-</li>
-</ul>
-<p><strong>2. update</strong></p>
-<ul>
-<li><code>update</code> 방법은 테이터베이스에서 매개 변수로 지정된 엔티티 집합을 수정한다. 각 엔티티의 기본 키와 일치하는 조회를 사용한다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Dao</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">MyDao</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Update</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">updateUsers</span><span class="params">(User... users)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>일반적으로 필요하진 않지만, update를 사용하면 데이터베이스에서 업데이트된 행 수를 나타내는 int 값을 반환할 받을 수 있다.</li>
-</ul>
-<p><strong>3. Delete</strong></p>
-<ul>
-<li><code>Delete</code> 방법은 매개 변수로 지정된 엔티티 집합을 데이터베이스에서 제거한다. 기본키를 사용하여 삭제할 엔티티를 찾는다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Dao</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">MyDao</span></span>&#123;</span><br><span class="line">    <span class="meta">@Delete</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">deleteusers</span><span class="params">(User... users)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>update와 비슷하게 삭제를 하면 데이터베이스에서 제거된 행 수를 나타내는 int 값을 반환할 수 있다.</li>
-</ul>
-<p><strong>4. Query</strong></p>
-<ul>
-<li><code>@Query</code>는 DAO 클래스에서 사용되는 주석이다.</li>
-<li>데이터베이스에서 읽기 / 쓰기 작업을 수행할 수 있다.</li>
-<li>각 @Query 메소드는 Compile time에 확인되므로 쿼리에 문제가 있으면 Runtim Error 대신 <code>Compile Error</code>가 발생한다.</li>
-<li>또한, 룸은 반환된 객체의 필드 이름이 쿼리 응답의 해당 열 이름과 일치하지 않는 경우 룸은 다음 두 가지 방법 중 하나로 경고를 표시한다.
-<ul>
-<li>일부 필드 이름만 일치하는 경우 경고를 표시한다.</li>
-<li>필드 이름이 일치하지 않으면 오류가 발생한다.</li>
-</ul>
-</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Dao</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">MyDao</span></span>&#123;</span><br><span class="line">    <span class="meta">@Query</span>(<span class="string">"SELECT * FROM user"</span>)</span><br><span class="line">    <span class="keyword">public</span> User[] loadAllUsers();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>모든 사용자를 load하는 간단한 쿼리이다.</li>
-<li>Compile time에 룸은 사용자 테이블의 모든 Column을 쿼리한다는 것을 알고 있다. 쿼리에 구문 오류가 있거나 사용자 테이블이 데이터베이스에 없는 경우, Room은 앱 컴파일 시 적절한 메시지가 포함된 오류를 표시한다.</li>
-</ul>
-<p><strong>5. Passing parameters into the query</strong></p>
-<ul>
-<li>대부분의 경우 특정 연령보다 나이가 많은 사용자만 표시하는 등의 필터링 작업을 수행하려면 매개 변수를 쿼리에 전달해야 한다.</li>
-<li>다음에서 확인할 수 있다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Dao</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">MyDao</span></span>&#123;</span><br><span class="line">    <span class="meta">@Query</span>(<span class="string">"SELECT * FROM user WHERE age &gt; :minAge"</span>)</span><br><span class="line">    <span class="keyword">public</span> User[] loadAllUsersOlderThan(<span class="keyword">int</span> minAge);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>이 쿼리를 컴파일할 때, Room은 :minAge bind 매개 변수와 minAge 메소드 매개변수를 일치시킨다. Room은 매개 변수 이름을 사용하여 매치를 수행한다. 일치하지 않는 경우 앱 컴파일 시 오류가 발생한다.</li>
-<li>다음과 같이 여러 매개변수를 전달하거나 조회에서 여러 번 참조할 수도 있다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Dao</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">MyDao</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Query</span>(<span class="string">"SELECT * FROM user WHERE age BETWEEN :minAge AND :maxAge"</span>)</span><br><span class="line">    <span class="keyword">public</span> User[] loadAllUsersBetweenAges(<span class="keyword">int</span> minAge, <span class="keyword">int</span> maxAge);</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Query</span>(<span class="string">"SELECT * FROM user WHERE first_name LIKE :search "</span> +</span><br><span class="line">           <span class="string">"OR last_name LIKE :search"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> List&lt;User&gt; <span class="title">findUserWithName</span><span class="params">(String search)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>6. Returning subsets of columns</strong></p>
-<ul>
-<li>대부분의 경우 엔티티의 몇 가지 필드만 있으면 된다.</li>
-<li>예를 들어 UI는 사용자에 대한 모든 세부 정보가 아니라 사용자의 성과 이름만 표시할 수 있다. 앱의 UI에 표시되는 열만 가져오면 리소스가 절약되고 쿼리가 더 빨리 완료된다.</li>
-<li>Room을 사용하면 결과 Column 집합을 반환될 개체로 매핑할 수 있는 쿼리에서 Java 기반 개체를 반환할 수 있다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Java Object</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">NameTuple</span> </span>&#123;</span><br><span class="line">    <span class="meta">@ColumnInfo</span>(name = <span class="string">"first_name"</span>)</span><br><span class="line">    <span class="keyword">public</span> String firstName;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ColumnInfo</span>(name = <span class="string">"last_name"</span>)</span><br><span class="line">    <span class="keyword">public</span> String lastName;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>Query 메소드에서 이 자바 객체를 사용할 수 있다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Dao</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">MyDao</span></span>&#123;</span><br><span class="line">    <span class="meta">@Query</span>(<span class="string">"SELECT first_name, last_name FROM user"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> List&lt;NameTuple&gt; <span class="title">loadFullName</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>Room은 쿼리가 first_name, last_name 열에 대한 값을 반환하고 이러한 값을 NameTuple 클래스의 필드에 매핑할 수 있음을 이해한다.</li>
-<li>따라서 룸에서 적절한 코드를 생성할 수 있다.</li>
-<li>쿼리가 너무 많은 열을 반환하거나 NameTuple 클래스에 없는 열을 반환하면 룸에 경고가 표시된다.</li>
-</ul>
-<p><strong>7. Passing a collection of arguments</strong></p>
-<ul>
-<li>일부 쿼리는 런타임까지 알 수 없는 정확한 수의 매개 변수를 사용하여 많은 매개 변수를 전달해야 할 수 있다.</li>
-<li>예를 들어, regions의 하위 집합에서 모든 사용자에 대한 정보를 검색할 수 있다.</li>
-<li>Room은 매개변수가 집합을 나타내는 시점을 파악하고 제공된 매개변수 수에 따라 런타임에 매개변수를 자동으로 확장한다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Dao</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">MyDao</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Query</span>(<span class="string">"SELECT first_name, last_name FROM user WHERE region IN (:regions)"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> List&lt;NameTuple&gt; <span class="title">loadUsersFromRegions</span><span class="params">(List&lt;String&gt; regions)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>8. Observable queries</strong></p>
-<ul>
-<li>쿼리를 수행하며 데이터가 변경될 때 앱의 UI가 자동으로 업데이트 되는 경우가 많다.</li>
-<li>이를 수행하기 위해서는 쿼리 메소드 description에 <strong>LiveData</strong> 유형의 반환 값을 사용한다.</li>
-<li>Room은 데이터베이스가 업데이트될 때 LiveData를 업데이트하는데 필요한 모든 코드를 생성한다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Dao</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">MyDao</span></span>&#123;</span><br><span class="line">    <span class="meta">@Query</span>(<span class="string">"SELECT first_name, last_name FROM user WHEHE region IN (:regions)"</span>)</span><br><span class="line">    <span class="keyword">public</span> LiveData&lt;List&lt;User&gt;&gt; loadUserFromRegionsSync(List&lt;String&gt; regions);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>9. Reactive queries with RxJava</strong></p>
-<p>추가 예정~~</p>
-<h3 id="연습해보기">[연습해보기]</h3>
-<ul>
-<li><code>Entity</code> : database의 row와 mapping되는 class. 즉, table의 구조를 나타내는데 Database에서 <strong>entities</strong> 함수를 통해 접근할 수 있다.</li>
-</ul>
-<p>@Ignore를 붙이지 않는한 DB에 지속적으로 유지된다.<br>
-entity는 empty 생성자나, 부분 field만 갖는 생성자, full field에 대한 생성자 모두를 가질 수 있다.</p>
-<ul>
-<li><code>DAO</code> : database를 접근하는 함수들이 정의되는 class or interface이다. @Database로 정의된 class는 내부에 인자가 없고 @Dao annotation이 되어 있는 class를 return하는 abstract 함수를 포함하고 있다.</li>
-</ul>
-<p>아래의 예제는 하나의 entity와 하나의 Dao를 갖는 형태이다.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// User.java</span></span><br><span class="line"><span class="meta">@Entity</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span></span>&#123;</span><br><span class="line">    <span class="meta">@PrimaryKey</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> uid;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ColumnInfo</span>(name = <span class="string">"first_name"</span>)</span><br><span class="line">    <span class="keyword">private</span> String firstName;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ColumnInfo</span>(name = <span class="string">"last_name"</span>)</span><br><span class="line">    <span class="keyword">private</span> String lastName;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 생략</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// UserDao.java</span></span><br><span class="line"><span class="meta">@Dao</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">UserDao</span></span>&#123;</span><br><span class="line">    <span class="meta">@Query</span>(<span class="string">"SELECT * FROM user"</span>) </span><br><span class="line">    <span class="function">List&lt;User&gt; <span class="title">getAll</span><span class="params">()</span></span>; </span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Query</span>(<span class="string">"SELECT * FROM user WHERE uid IN (:userIds)"</span>) </span><br><span class="line">    <span class="function">List&lt;User&gt; <span class="title">loadAllByIds</span><span class="params">(<span class="keyword">int</span>[] userIds)</span></span>;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Query</span>(<span class="string">"SELECT * FROM user WHERE first_name LIKE :first AND "</span> + <span class="string">"last_name LIKE :last LIMIT 1"</span>) </span><br><span class="line">    <span class="function">User <span class="title">findByName</span><span class="params">(String first, String last)</span></span>; </span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Insert</span> <span class="keyword">void</span> </span><br><span class="line">    insertAll(User... users); </span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Delete</span> <span class="keyword">void</span> </span><br><span class="line">    delete(User user);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// AppDatabase.java</span></span><br><span class="line"><span class="meta">@Database</span>(entities = &#123;User.class&#125;, version = <span class="number">1</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">AppDatabase</span> <span class="keyword">extends</span> <span class="title">RoomDatabase</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> UserDao <span class="title">userDao</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>위 3개의 class가 완성되면 아래와 같이 DB의 instance를 얻을 수 있다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">AppDatabase db = Roo.databaseBuilder(getApplicationContext(), AppDatabase.class, <span class="string">"database-name"</span>).build();</span><br></pre></td></tr></table></figure>
-<p><code>AppDatabase object를 생성하는 코드는 비용이 많이 들기 때문에 싱글톤으로 구현해야 한다.</code></p>
-<h2 id="entities">Entities</h2>
-<p>@Database의 annotation에 속성으로 포함된 entitiy는 실제 @Entity annotation을 붙인 class로 만들어야 한다. 이는 각 table로 생성되며, 실제 colume으로 만들고 싶지 않은 field가 있다면 <code>@Ignore</code>를 붙인다.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Entity</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span> </span>&#123;</span><br><span class="line">    <span class="meta">@PrimaryKey</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span> id;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">public</span> String firstName;</span><br><span class="line">    <span class="keyword">public</span> String lastName;</span><br><span class="line"> </span><br><span class="line">    <span class="meta">@Ignore</span></span><br><span class="line">    Bitmap picture;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>Field는 public 형태이어야 하며, private으로 할 경우 getter와 setter를 java beans convention에 따라 만들어야 한다.</p>
-<h2 id="primary-key">Primary Key</h2>
-<p>column이 하나라도 PK는 지정되어야 한다. @PrimaryKey annotation을 이용하거나 복합 PK의 경우 @Entity 속성으로 primarykeys를 이용한다.</p>
-<p>또한, Id를 autogenerate하려면 @PrimaryKey 속성에 <code>autoGenerate</code> 속성(true)을 넣는다.</p>
-<p>추가적으로 class 이름은 table 명이 된다. table 명을 바꾸고 싶다면 @Entity 속성으로 <code>tableName</code>을 넣으면 된다.</p>
-<p>만약 field 이름을 column으로 쓰고 싶지 않다면 <code>@ColumnInfo</code>로 표기해야 한다.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 복합 PK 사용시</span></span><br><span class="line"><span class="meta">@Entity</span>(primaryKeys = &#123;<span class="string">"firstName"</span>, <span class="string">"lastName"</span>&#125;)</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> String firstName;</span><br><span class="line">    <span class="keyword">public</span> String lastName;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Ignore</span></span><br><span class="line">    Bitmap picture;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 테이블 이름을 직접 지정할 때</span></span><br><span class="line"><span class="meta">@Entity</span>(tableName = <span class="string">"users"</span>)</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span></span>&#123;</span><br><span class="line">    <span class="comment">// 생략</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Column을 직접 지정할 때</span></span><br><span class="line"><span class="meta">@Entity</span>(tableName = <span class="string">"users"</span>)</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span></span>&#123;</span><br><span class="line">    <span class="meta">@PrimaryKey</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span> uid;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ColumnInfo</span>(name = <span class="string">"first_name"</span>)</span><br><span class="line">    <span class="keyword">public</span> String firstName;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ColumnInfo</span>(name = <span class="string">"last_name"</span>)</span><br><span class="line">    <span class="keyword">public</span> String lastName;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Ignore</span></span><br><span class="line">    Bitmap picture;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="indices-and-uniqueness">Indices and uniqueness</h2>
-<p>Indext는 아래와 같이 만들 수 있다.(결합 index도 생성 가능)</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Entity</span>(indices = &#123;<span class="meta">@Index</span>(<span class="string">"name"</span>),<span class="meta">@Index</span>(value = &#123;<span class="string">"last_name"</span>,<span class="string">"address"</span>&#125;)&#125;)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Users</span> </span>&#123;</span><br><span class="line">    <span class="meta">@PrimaryKey</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span> uid;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String firstName;</span><br><span class="line">    <span class="keyword">public</span> String address;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@ColumnInfo</span>(name = <span class="string">"last_name"</span>)</span><br><span class="line">    <span class="keyword">public</span> String lastName;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Ignore</span></span><br><span class="line">    Bitmap picture;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>Unique 제약 조건은 아래와 같이 표기할 수 있다.</li>
-<li>예제) 결합 조건에 대한 unique index</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Entity</span>(indices = &#123;<span class="meta">@Index</span>(value = &#123;<span class="string">"first_name"</span>, <span class="string">"last_name"</span>&#125;,</span><br><span class="line">        unique = <span class="keyword">true</span>)&#125;)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Users</span> </span>&#123;</span><br><span class="line">    <span class="meta">@PrimaryKey</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span> uid;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@ColumnInfo</span>(name = <span class="string">"first_name"</span>)</span><br><span class="line">    <span class="keyword">public</span> String firstName;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ColumnInfo</span>(name = <span class="string">"last_name"</span>)</span><br><span class="line">    <span class="keyword">public</span> String lastName;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Ignore</span></span><br><span class="line">    Bitmap picture;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>foreignKey도 설정할 수 있다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Entity</span>(foreignKeys = <span class="meta">@ForeignKey</span>(entity = User.class,</span><br><span class="line">        parentColumns = <span class="string">"id"</span>,</span><br><span class="line">        childColumns = <span class="string">"user_od"</span>))</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Book</span> </span>&#123;</span><br><span class="line">    <span class="meta">@PrimaryKey</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span> bookId;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String title;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ColumnInfo</span>(name = <span class="string">"user_id"</span>)</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span> useerId;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="nested-objects">Nested objects</h2>
-<p>Entity 클래스가 field로 object를 갖는 경우 <code>@Embeded</code>를 사용한다. 단, 해당 table에는 Embeded된 클래스의 column도 똑같은 하나의 column으로 취급된다.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Address</span></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> String street;</span><br><span class="line">    <span class="keyword">public</span> String state; <span class="keyword">public</span> String city;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@ColumnInfo</span>(name = <span class="string">"post_code"</span>) </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span> postCode;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Entity</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span></span>&#123;</span><br><span class="line">    <span class="meta">@PrimaryKey</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span> id;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String firstName;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Embeded</span></span><br><span class="line">    <span class="keyword">public</span> Address address;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>즉, 위 예제에서 User table에는 id, firstName, street, state, city, post_cde 컬럼이 존재한다. Embeded 안에서 embeded를 가질 수 있으며, 만약 column 이름이 중복되는 경우 <code>prefix</code>를 사용하여 unique하게 column 이름을 설정한다.</p>
-<h2 id="daodata-access-objectsdaos">DAO(Data Access Objects)(DAOs)</h2>
-<p>Dao는 abstract class나 interface가 될 수 있다. RoomDatabase를 인자로 받는 생성자를 만드는 경우에만 abstract class가 될 수 있다. Room은 절대로 main thread에서 query 작업을 하지 않는다. <code>allowMainThreadQueries()</code>를 호출하더라도 불가능하다.<br>
-LiveData는 return하는 비동기 query의 경우에는 가능하다.(어차피 background에서 수행되므로) - 무슨 말이지…?</p>
-<h3 id="insert">Insert</h3>
-<p>@Insert로 표기하며, single transaction으로 처리된다.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Dao</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">MyDao</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Insert</span>(onConflict = OnConflictStrategy.REPLACE)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">insertUsers</span><span class="params">(User... users)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Insert</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">insertBothUser</span><span class="params">(User user1, User user2)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Insert</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">insertUsersAndFriends</span><span class="params">(User user, List&lt;User&gt; friends)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>@Entity로 정의된 class만 인자로 받거나, 그 class의 collection 또는 array만 인자로 받을 수 있다. 또한, 인자가 하나인 경우 long type의 return(insert된 값의 rowId)을 받을 수 있고, 여러 개인 경우 long[], List<long>을 받을 수 있다.</long></p>
-<h3 id="update">Update</h3>
-<p>Update를 사용하여 Entity set을 update 한다. return 값으로 변경된 rows 수를 받을 수 있다. update는 PK 기준으로 한다.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Dao</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">MyDao</span></span>&#123;</span><br><span class="line">    <span class="meta">@Update</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">updateUsers</span><span class="params">(User... user)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="delete">Delete</h3>
-<p><code>Delete</code>를 사용하여 Entity set을 delete 한다. return 값으로 변경된 rows 수를 받을 수 있다. 삭제 key는 PK를 기준으로 한다.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Dao</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">MyDao</span></span>&#123;</span><br><span class="line">    <span class="meta">@Delete</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">deleteUsers</span><span class="params">(User... users)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="query">Query</h3>
-<p><code>@Query</code>를 사용하여 DB를 조회할 수 있다. compile time에 return되는 object의 field와 sql 결과로 나오는 column의 이름이 맞는지 확인하여 일부가 match되면 warning, match 되는게 없다면 error를 보낸다.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Dao</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">MyDao</span></span>&#123;</span><br><span class="line">    <span class="meta">@Query</span>(<span class="string">"SELECT * FROM user"</span>)</span><br><span class="line">    <span class="keyword">public</span> User[] loadAllUsers();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>select문에 parameter가 들어가야 하는 경우 아래와 같이 넣을 수 있다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Dao</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">MyDao</span></span>&#123;</span><br><span class="line">    <span class="meta">@Query</span>(<span class="string">"SELECT * FROM user WHERE age &gt; :minAge"</span>)</span><br><span class="line">    <span class="keyword">public</span> User[] loadAllUsersOlderThan(<span class="keyword">int</span> minAge);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>아래와 같이 여러 개의 parameter도 사용할 수 있다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Dao</span> <span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">MyDao</span> </span>&#123; </span><br><span class="line">    <span class="meta">@Query</span>(<span class="string">"SELECT * FROM user WHERE age BETWEEN :minAge AND :maxAge"</span>) </span><br><span class="line">    <span class="keyword">public</span> User[] loadAllUsersBetweenAges(<span class="keyword">int</span> minAge, <span class="keyword">int</span> maxAge); </span><br><span class="line"></span><br><span class="line">    <span class="meta">@Query</span>(<span class="string">"SELECT * FROM user WHERE first_name LIKE :search "</span> + <span class="string">"OR last_name LIKE :search"</span>) </span><br><span class="line">    <span class="function"><span class="keyword">public</span> List&lt;User&gt; <span class="title">findUserWithName</span><span class="params">(String search)</span></span>; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>만약 일부 컬럼만 조회하고 싶다면 따로 return class를 만들어서 요청할 수 있다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// return 받을 class를 정의</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">NameTuple</span></span>&#123;</span><br><span class="line">    <span class="meta">@ColumnInfo</span>(name = <span class="string">"first_name"</span>)</span><br><span class="line">    <span class="keyword">public</span> String firstName;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ColumnInfo</span>(name=<span class="string">"last_name"</span>) </span><br><span class="line">    <span class="keyword">public</span> String lastName;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Dao</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">MyDao</span></span>&#123;</span><br><span class="line">    <span class="meta">@Query</span>(<span class="string">"SELECT first_name, last_name FROM user"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> List&lt;NameTuple&gt; <span class="title">loadFullName</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>또한, 정해지지 않은 개수의 parameter가 넘어가야 하는 경우 아래와 같이 수행 가능하다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Dao</span> </span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">MyDao</span> </span>&#123; </span><br><span class="line">    <span class="meta">@Query</span>(<span class="string">"SELECT first_name, last_name FROM user WHERE region IN (:regions)"</span>) </span><br><span class="line">    <span class="function"><span class="keyword">public</span> List&lt;NameTuple&gt; <span class="title">loadUsersFromRegions</span><span class="params">(List&lt;String&gt; regions)</span></span>; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>기타 등등의 기능들을 포함하고 있다. 하지만, 아래는 필요에 따라 찾아보면서 기능을 사용하면 될 것 같다.</p>
-<h3 id="using-tye-converters">Using tye converters</h3>
-<p>Room은 primitive type(원시 타입 ex. int, String 등등)과 그 wrapping 타입만 지원한다. 하지만, 그 외에 type을 사용할 경우 <strong>TypeConverter</strong>를 사용하여 type을 치환해야 한다.</p>
-<p>예를 들어, DB에서는 timestamp로 되어 있고, java code에서는 Date class로 되어 있는 경우 우선 아래와 같이 <code>converter</code>를 만든다.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Converters</span></span>&#123;</span><br><span class="line">    <span class="meta">@TypeConverter</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Date <span class="title">fromTimestamp</span><span class="params">(Long value)</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> value == <span class="keyword">null</span>? <span class="keyword">null</span> : <span class="keyword">new</span> Date(value);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@TypeConverter</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Long <span class="title">dateToTimestamp</span><span class="params">(Date date)</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> date == <span class="keyword">null</span>? <span class="keyword">null</span> : date.getTime();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>이 두개의 converting 함수는 서로 converting 해주고 있다.</li>
-<li><code>@TypeConverters</code>를 이용하여 적용할 곳에 넣는다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// AppDatabase.java</span></span><br><span class="line"><span class="meta">@Database</span>(entities = &#123;User.java&#125;, version= <span class="number">1</span>)</span><br><span class="line"><span class="meta">@TypeConverters</span>(&#123;Converters.class&#125;)</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">AppDatabase</span> <span class="keyword">extends</span> <span class="title">RoomDatabase</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> UserDao <span class="title">userDao</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// User.java</span></span><br><span class="line"><span class="meta">@Entity</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span></span>&#123;</span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Date birthday;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// UserDao.java</span></span><br><span class="line"><span class="meta">@Dao</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">UserDao</span></span>&#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="meta">@Query</span>(<span class="string">"SELECT * FROM user WHERE birthday BETWEEN :from AND :to"</span>)</span><br><span class="line">    <span class="function">List&lt;User&gt; <span class="title">findUsersBornBetweenDates</span><span class="params">(Date from, Date to)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>@TypeConverter를 지정하는 위치에 따라 scope이 달라진다.</li>
-<li>예제처럼 Database에 넣으면 Dao와 entity 모두 영향을 받는다.</li>
-<li>Dao나 Entity, POJO에 넣을 수도 있고, Entity의 특정 field, Dao의 특정 method or 특정 parameter에 넣을 수 있다.</li>
-</ul>
-<h3 id="database-migration">Database migration</h3>
-<p>database migration이 필요한 경우 entity class에 수정 항목을 반영해야 한다. 또한 데이터를 날리지 않기 위해서 mirgration을 할 수 있는 방법을 제공한다.</p>
-<p>migration을 등록하면, runtime에 migration을 수행하며 정해놓은 순서대로 migration이 가능하다. migration을 등록할 때는 <strong>시작 버전과 끝 버전을 넣어야 한다.</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">Room.databaseBuilder(getApplicationContext(), MyDb.class, <span class="string">"database-name"</span>).addMigrations(MIGRATION_1_2, MIGRATION_2_3).build();</span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> Migration MIGRATION_1_2 = <span class="keyword">new</span> Migration(<span class="number">1</span>,<span class="number">2</span>)&#123;</span><br><span class="line">    <span class="meta">@Override</span> <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">migrate</span><span class="params">(SupportSQLiteDatabase database)</span> </span>&#123; </span><br><span class="line">        database.execSQL(<span class="string">"CREATE TABLE `Fruit` (`id` INTEGER, "</span> + <span class="string">"`name` TEXT, PRIMARY KEY(`id`))"</span>); </span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> Migration MIGRATION_2_3 = <span class="keyword">new</span> Migration(<span class="number">2</span>, <span class="number">3</span>) &#123; </span><br><span class="line">    <span class="meta">@Override</span> </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">migrate</span><span class="params">(SupportSQLiteDatabase database)</span> </span>&#123; </span><br><span class="line">        database.execSQL(<span class="string">"ALTER TABLE Book "</span> + <span class="string">" ADD COLUMN pub_year INTEGER"</span>); </span><br><span class="line">        &#125; </span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<ul>
-<li><code>migration 코드가 없으면 Room은 DB를 그냥 rebuild한다.</code>(기존 데이터는 날아간다.)</li>
-<li>또한, migration에 들어가는 query는 상수에 넣지말고, 직접 넣는게 migration 로직을 유지하는데더 좋다.</li>
-<li>migration이 끝나고 나면, schema에 대한 유효성을 확인을 하고, 문제가 있을 경우 mismatch된 부분에 정보를 담은 exception을 발생 시킨다.</li>
-</ul>
-<h2 id="참고">참고</h2>
-<ul>
-<li><a href="https://tourspace.tistory.com/28" target="_blank" rel="noopener">Android Architecture Components #6 - Room</a></li>
-<li><a href="https://developer.android.com/training/data-storage/room/defining-data#java" target="_blank" rel="noopener">Defining data using Room entities</a></li>
-<li><a href="https://developer.android.com/training/data-storage/room/#java" target="_blank" rel="noopener">Save data in a local database using Room</a></li>
-</ul>
-
                     
+                        <a
+                            href="/2019/01/25/Android-Room-Basic/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": 5일차 [안드로이드] Room"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2019/01/25/Android-Room-Basic/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             
@@ -1433,7 +1115,7 @@ Git-Flow에는 5가지 종류의 브랜치가 존재한다. 항상 유지되는 
     </article>
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -1465,35 +1147,18 @@ Git-Flow에는 5가지 종류의 브랜치가 존재한다. 항상 유지되는 
 
             </div>
             
-                <div class="postShorten-content">
-                    <h2 id="repository">Repository</h2>
+                <div class="postShorten-excerpt">
+                    <h2>Repository</h2>
 <p>Repository 정의는 Memory cache를 할 수 있으며, Remote/Local 데이터를 불러오게 된다. SQLite 사용 시에는 <strong>Loaders</strong> 사용으로 비동기식 데이터를 쉽게 로드할 수 있는 방법을 사용하고, RxJava 등의 방법을 사용할 수 있다. [이 경우는 이번 글에서 다루지 않는다.]</p>
-<p>변경할 Repository 형태는 구글이 설명하는 다음의 방법이다.</p>
-<img src="/img/model.png" width="600" height="300">
-<h2 id="배운-점">배운 점</h2>
-<p>Model을 생성해서 Presenter에서 Repository에 데이터를 요청하고 Repository는 Remote / Local DataSource로부터 데이터를 받아서 Repository에게 넘기고 받은 것을 다시 Presenter에 넘겨서 처리하고 있다.</p>
-<p>MVP를 처음 배울 때는 '별 거 아니네’라고 생각했다. 하지만, 리싸이클러뷰가 들어있는 하나의 화면을 작성하는데 파일은 많아지고 인터페이스 선언도 많아진다. 그러면서 상속을 받고 이곳 저곳을 왔다 갔다 한다. 너무 복잡스럽다고 생각했지만, 프로젝트의 규모가 조금 커지면 유지 보수에 훨씬 쉬울 것이라는 생각이 들었다. 인터페이스 부분만 수정하고 이를 구현하는 함수만 수정하면 되기 때문이다.</p>
-<p>그렇지만 아직 테스트 코드에 용이하다는 것은 직접 해보지 않아서 잘 모르겠다. 부캠하면서 배운다면 조금 더 알 수 있지 않을까 하는 기대를 걸어본다.</p>
-<h2 id="참고">참고</h2>
-<ul>
-<li><a href="https://thdev.tech/androiddev/2017/01/29/Android-MVP-Google-Architecture-Model/" target="_blank" rel="noopener">Android MVP 무작정 따라하기 - Google Architecture Model(영상 포함)</a></li>
-</ul>
-
                     
+                        <a
+                            href="/2019/01/19/Android-MVP-Step11/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [안드로이드] MVP 따라하기 11"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2019/01/19/Android-MVP-Step11/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             
@@ -1502,7 +1167,7 @@ Git-Flow에는 5가지 종류의 브랜치가 존재한다. 항상 유지되는 
     </article>
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -1534,70 +1199,17 @@ Git-Flow에는 5가지 종류의 브랜치가 존재한다. 항상 유지되는 
 
             </div>
             
-                <div class="postShorten-content">
+                <div class="postShorten-excerpt">
                     <p>구글 Architecture에서 설명하는 모델 정의를 살펴보려고 한다.</p>
-<ul>
-<li><a href="https://github.com/googlesamples/android-architecture/tree/todo-mvp/" target="_blank" rel="noopener">가장 기본적인 Model 정의</a></li>
-<li><a href="https://github.com/googlesamples/android-architecture/tree/todo-mvp-clean/" target="_blank" rel="noopener">Clean 코드를 위한 정의</a></li>
-</ul>
-<p>위와 같이 구분할 수 있는데 기본적인 Model을 정의해야 Clean 코드도 적용해 볼 수 있다. 그래서 이번에 Google Architecture의 가장 기본적인 Model 정의를 살펴보겠다.</p>
-<h2 id="model">Model</h2>
-<p>구글에서 설명하는 Model은 ios viper라는 개념과 동일하다고 생각하면 될 것 같다. 원래는 Google Architecture clean 코드까지 viper 적용이라고 보이지만 viper와 유사한 형태이다. Interactor에서 Google Repository 역할을 처리하게 된다.</p>
-<img src="/img/ios_viper.png" width="600" height="300">
-<p>비슷하지만 용어도 다르고, 실제 구성이 다르다…</p>
-<h2 id="google-architecture-model">Google Architecture Model</h2>
-<p>구글에서 설명하고 있는 Model 정의는 아래와 같다.</p>
-<ul>
-<li>Repository : 로컬/서버 중 어떤 데이터를 불러올지 정의하고, 메모리 캐시를 포함한다.</li>
-<li>Remote data source : 서버에서 데이터를 받아온다.</li>
-<li>Local data source : 로컬에서 데이터를 받아온다.</li>
-</ul>
-<p>가장 기본적으로는 위와 같다. 로컬/서버에서 받아오는 데이터는 Repository에서 캐시 처리할 수 있다. 필요에 따라서 캐리를 하고, 이를 Presenter에 다시 콜백을 해주게 된다. RxJava로 구성을 하면 async / await 형태로 만들어지므로 return Observable/Flowable의 형태가 만들어질 수 있다고 한다… [RxJava는 잘 모르는 내용이다.]</p>
-<p>그래서 가장 basic MVP는 아래의 그림을 가진다.</p>
-<img src="/img/todo_mvp.png" width="600" height="300">
-<p>여기에서 Repository가 왼쪽과 같이 표현될 수 있다. Presenter와 Repository 사이의 데이터를 가공할 수 있는 Loader가 추가될 수도 있고, Clean 코드를 위한 Domain Layout이 포함될 수도 있다.</p>
-<p>이런 Loader와 Domain Layout 정의는 Clean 코드를 위한 정의이다. 필요할 경우 추가하여 사용이 가능하다.</p>
-<h2 id="todo-mvp">TODO MVP</h2>
-<p>모델의 정의는 다음과 같은 형태로 생성된다.</p>
-<ul>
-<li>Presenter 생성하는 위치에서 Repositroy 생성</li>
-<li>Presenter에서 Model(Repository) 포함(setter)</li>
-<li>Presenter에서 Model(Repository) 호출</li>
-<li>Model(Repository)는 Remote/Local의 데이터를 선택하고 이를 캐시</li>
-<li>데이터 호출이 완료되면 Loader 또는 Presenter에서 세팅한 Listener에 값을 전달</li>
-</ul>
-<p>추가로 Loader의 정의는 아래와 같다.</p>
-<img src="/img/todo_mvp_loader.png" width="600" height="300">
-<h2 id="repository-interface-정의">Repository interface 정의</h2>
-<p>LoadImageCallback을 통해서 성공했을 대와 오류 났을 때를 구분하여 Listener을 추가한다. <strong>RxJava를 사용할 때는 다음이 필요하지 않다.</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">ImageSource</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">interface</span> <span class="title">LoadImageCallback</span></span>&#123;</span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">onImageLoaded</span><span class="params">(List&lt;PhotoItem&gt; photoItem)</span></span>;</span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">onDataNotAvailable</span><span class="params">()</span></span>;</span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">onLoadFai</span><span class="params">(<span class="keyword">int</span> code, String message)</span></span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">getImageItems</span><span class="params">(<span class="keyword">int</span> page, LoadImageCallback loadImageCallback)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>ImageSource를 상속받아서 Repository의 Remote/Local DataSource 구분을 하면 된다.</p>
-<h2 id="repository">Repository</h2>
-<p>Repository은 싱글톤을 통해서 생성하면 된다. 생성자를 통해 Remote/Local DataSource 생성을 하여 사용할 수 있다. kotlin에서는 object class 생성을 통해 처리할 수 있다.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ImageRepository</span> <span class="keyword">implements</span> <span class="title">ImageSource</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> ImageRemoteDataSource imageRemoteDataSource;</span><br><span class="line"></span><br><span class="line">    </span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> ImageRepository <span class="title">getInstance</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> LazyHolder.imageSampleRepository;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">ImageRepository</span><span class="params">()</span></span>&#123;</span><br><span class="line">        imageRemoteDataSource = ImageRemoteDataSource.getInstance();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">LazyHolder</span></span>&#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> ImageRepository imageSampleRepository = <span class="keyword">new</span> ImageRepository;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="remotelocal-datasource">Remote/Local DataSource</h2>
-<p>서버/로컬 데이터 소스를 정의할 수 있다. 여기에서는 Local SQLite/Realm DB를 사용하여 구성할 수 있고, Retrofit을 사용하여 서버 데이터를 불러올 수 이다. 역시 DataSource interface 상속을 통해서 정리하면 된다.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ImageRemoteDataSource</span> <span class="keyword">implements</span> <span class="title">ImageSource</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> ImageRemoteDataSource INSTANCE;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> FlickrService flickrService;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">ImageRemoteDataSource</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        flickrService = RetrofitCreator.createRetrofit().create(FlickrService.class);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> ImageRemoteDataSource <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (INSTANCE == <span class="keyword">null</span>) &#123;</span><br><span class="line">            INSTANCE = <span class="keyword">new</span> ImageRemoteDataSource();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> INSTANCE;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">getImageItems</span><span class="params">(<span class="keyword">int</span> page, <span class="keyword">final</span> LoadImageCallback loadImageCallback)</span> </span>&#123;</span><br><span class="line">      <span class="comment">// 생략</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="참고">참고</h2>
-<ul>
-<li><a href="https://thdev.tech/androiddev/2017/01/09/Android-MVP-Model-Two/" target="_blank" rel="noopener">Android MVP 무작정 따라하기 - Google Architecture의 Model</a></li>
-</ul>
-
                     
+                        <a
+                            href="/2019/01/19/Android-MVP-Step10/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [안드로이드] MVP 따라하기 10"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2019/01/19/Android-MVP-Step10/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             
@@ -1606,7 +1218,7 @@ Git-Flow에는 5가지 종류의 브랜치가 존재한다. 항상 유지되는 
     </article>
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -1638,48 +1250,17 @@ Git-Flow에는 5가지 종류의 브랜치가 존재한다. 항상 유지되는 
 
             </div>
             
-                <div class="postShorten-content">
+                <div class="postShorten-excerpt">
                     <p>이번에는 MVP 패턴에서 사용할 수 있는 다양한 Model을 살펴보겠다.</p>
-<h2 id="model이란">Model이란?</h2>
-<p>Model은 Data를 말한다. 단순 데이터가 아닌 데이터를 관리/수집/수정 등을 하게 되는 부분이다. 데이터를 Cache해야 한다면 이 모델에서 Cache 할 수도 있고, 그냥 단순 데이터 전달만 할 수도 있다.</p>
-<h2 id="google-architecture의-model">Google Architecture의 Model</h2>
-<p>Google Architecture는 아래와 같은 그림으로 설명할 수 있다.</p>
-<img src="/img/mvp_model_01.png" width="600" height="300">
-<p>각각의 역할은 아래와 같다.</p>
-<ul>
-<li>Respositroy : Remote/Local을 구분하며, Memory cache를 포함</li>
-<li>Remote : 서버를 통한 데이터를 불러온다.</li>
-<li>Local : 단말기 상의 SQL, Realm 등을 통한 데이터를 불러온다.</li>
-</ul>
-<h2 id="구현한-모델은">구현한 모델은?</h2>
-<p>현재까지 MVP에서 정의한 모델은 단순 리턴을 하며, Model만 구분을 해두었다. 싱글톤을 통해서 데이터 클래스에 접근하도록 만들었다. 데이터 형태에 따서 여러 개가 만들어질 수도, 단일 클래스로 생성될 수도 있다.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SampleImageData</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">SampleImageData</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> SampleImageData sampleImageData;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> SampleImageData <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (sampleImageData == <span class="keyword">null</span>) &#123;</span><br><span class="line">            sampleImageData = <span class="keyword">new</span> SampleImageData();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> sampleImageData;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> ArrayList&lt;ImageItem&gt; <span class="title">getImages</span><span class="params">(Context context, <span class="keyword">int</span> size)</span> </span>&#123;</span><br><span class="line">        ArrayList&lt;ImageItem&gt; items = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        <span class="comment">// 생략</span></span><br><span class="line">        <span class="keyword">return</span> items;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>위와 같이 자바로 하나의 클래스에 싱글톤으로 만들 수 있다. 가장 기본적인 형태의 모델이다. 코틀린으로 작성할 경우 Object로 작성하면 된다.</p>
-<h2 id="presenter에서는">Presenter에서는</h2>
-<p>위에서 작성한 모델은 Presenter에서 세팅하는 주체는 <strong>View</strong>이다. Presenter 초기화하는 대상이 View이기 때문에 View를 초기화함과 동시에 Model을 초기화하게 된다.</p>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">presenter = MainPresenter().apply &#123;</span><br><span class="line">		view = <span class="keyword">this</span><span class="symbol">@MainActivity</span></span><br><span class="line">		imageData = ImageData</span><br><span class="line">		adapterModel = imageAdapter</span><br><span class="line">		adapterView = imageAdapter</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>위와 같이 초기화를 진행하고, Presenter에서 다음과 같이 사용하게 된다. getItems()를 토애서 데이터를 불러오고 이를 사용하게 된다.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">loadItems</span><span class="params">(Context context, <span class="keyword">boolean</span> isClear)</span> </span>&#123;</span><br><span class="line">    ArrayList&lt;ImageItem&gt; items = sampleImageData.getImages(context, <span class="number">10</span>);</span><br><span class="line">    <span class="keyword">if</span> (isClear) &#123;</span><br><span class="line">        adapterModel.clearItem();</span><br><span class="line">    &#125;</span><br><span class="line">    adapterModel.addItems(items);</span><br><span class="line">    adapterView.notifyAdapter();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="참고">참고</h2>
-<ul>
-<li><a href="https://thdev.tech/androiddev/2016/12/29/Android-MVP-Model-One/" target="_blank" rel="noopener">Android MVP 무작정 따라하기 - Model 정의하기</a></li>
-</ul>
-
                     
+                        <a
+                            href="/2019/01/19/Android-MVP-Step9/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [안드로이드] MVP 따라하기 9"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2019/01/19/Android-MVP-Step9/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             
@@ -1688,7 +1269,7 @@ Git-Flow에는 5가지 종류의 브랜치가 존재한다. 항상 유지되는 
     </article>
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -1720,55 +1301,17 @@ Git-Flow에는 5가지 종류의 브랜치가 존재한다. 항상 유지되는 
 
             </div>
             
-                <div class="postShorten-content">
+                <div class="postShorten-excerpt">
                     <p>이번에는  8번째 시간이다. ㅎㅎ 지난번에 태환님의 동영상 강의를 보면서 AdapterContract 정의를 했고, 이어서 OnClickListener 정의를 해보려고 한다.</p>
-<h2 id="adaptercontract-view-onclicklistener-정의">AdapterContract View - OnClickListener 정의</h2>
-<p>OnClickListener 정의는 AdapterContract View에 추가 정의를 통해 간단하게 구현할 수 있다. 기존에 AdapterContact.View에는 다음과 같이 정의했다.</p>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">ImageAdapterContract</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">interface</span> <span class="title">View</span></span>&#123;</span><br><span class="line">        <span class="function"><span class="keyword">fun</span> <span class="title">notifyAdapter</span><span class="params">()</span></span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>여기에 <code>setOnClickListener(OnClickListener listener)</code> 정의를 추가함으로써 <strong>Presenter</strong>에서 바로 Adapter의 OnClickListener 이벤트를 전달받고, 이를 처리할 수 있게 된다.</p>
-<p>이유는 간단하다.</p>
-<ul>
-<li>AdapterModel / AdapterView를 Presenter에서 들고 있기 때문에 굳이 View에서 이런 이벤트를 받을 필요는 없다. 역시나 귀찮은 부분이 따르므로 아래이 그림과 같이 추가될 수 있다.</li>
-</ul>
-<img src="/img/mvp_01.png" width="600" height="300">
-<h2 id="adaptercontract-view를-통해서-초기화하는-이유는">AdapterContract View를 통해서 초기화하는 이유는??</h2>
-<p><strong>AdapterContract.View</strong>에서 OnClick을 초기화하고, 이를 ViewHolder에서 정의하는 이유는 다음과 같다.</p>
-<ul>
-<li>이미 Presenter에서 AdapterView/AdapterModel을 알고 있다.</li>
-<li>실제 View/Model을 한 번에 가지고 있는 Adapter이기 때문에 이를 굳이 View에서 처리할 필요는 없다.</li>
-</ul>
-<p>위와 같은 이유로 다시 View에서 setOnClickListener을 하고 이 이벤트를 받아서 Presenter에 넘겨서 처리를 하는 것보다는 바로 Presenter가 받아서 이를 처리하고, View 이벤트를 분리하는게 편리하기 때문이라고 한다. 그래서 이 방법은 배워보도록 하겠다.</p>
-<p>해당 View에서도 onClick 처리를 할 수 있지만, Presenter에서 onClick을 들고 있기 때문에 Presenter에서 다양한 이벤트 처리를 바로 할 수 있기 때문에 한 단계 줄여서 <strong>바로 Presenter setOnClickListener를 만들어주고</strong> 그걸 Adapter에 등록을 시켜주면 onClick이 발생을 했을 때, 이외 처리가 좀 더 간단하게 만들어질 수 있다.</p>
-<h2 id="배운-점">배운 점</h2>
-<p>Presenter가 View, adapterView, adapterModel을 가지고 있고, context도 보유하고 있으므로 여기서 onClick을 처리할 수 있는 것이다. 굳이 View에서 처리하지 않아도 된다는 뜻인 셈이다.</p>
-<p>ImageAdapterContract.View에 <code>var onClickFunc : ((Int) -&gt; Unit)?</code> 을 선언해준다. 이는 코틀린의 특성 중 하나로 변수에 바로 사용할 함수를 담는 것이다. 이렇게 하면 Adapter는 ImageAdapterContract.View를 구현하기 때문에 Adapter에서는 onClickFunc 변수를 오버라이드 한다.</p>
-<p>그리고 onBindViewHolder의 역할을 ImageViewHolder의 onBind에서 처리하고 있으므로 onClick에 대한 이벤트 처리도 <strong>ImageViewHolder</strong>에 위임하여 처리를 넘겨준다. [이 부분도 어댑터에서 진행하는 부분이다.]</p>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">onBind</span><span class="params">(item: <span class="type">ImageItem</span>, position: <span class="type">Int</span>)</span></span>&#123;</span><br><span class="line">     ImageAsync(context,imageView).execute(item.resource)</span><br><span class="line">     textView.text = item.title</span><br><span class="line">     itemView.setOnClickListener &#123;</span><br><span class="line">         onClickFunc?.invoke(position)</span><br><span class="line">         <span class="comment">// int를 변수로 넘겨줘야 하기 때문에</span></span><br><span class="line">         <span class="comment">// null이 아닌 경우를 체크하고 int인 position을 넘겨준다.</span></span><br><span class="line">     &#125;</span><br><span class="line"></span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
-<p>그러면 itemView에 대한 클릭이 발생했을 때, onClickFunc은 null이 아닌 경우를 체크하고 position을 넘겨준다. 넘어간 position은 아래와 같은 코드를 통해서 받는다.</p>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">    <span class="keyword">override</span> <span class="keyword">var</span> adapterView: ImageAdapterContract.View? = <span class="literal">null</span></span><br><span class="line">        <span class="keyword">set</span>(value) &#123;</span><br><span class="line">            field = value</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 아래 부분 중요</span></span><br><span class="line">            field?.onClickFunc = &#123; onClickListener(it)&#125;</span><br><span class="line">            <span class="comment">// 위와 같이 지정을 해주면 onClick이 발생하면 아래의 함수가 동작한다.</span></span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// onClick시 아래 함수 동작 </span></span><br><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">fun</span> <span class="title">onClickListener</span><span class="params">(position: <span class="type">Int</span>)</span></span>&#123;</span><br><span class="line">        adapterModel.getItems(position).let &#123;</span><br><span class="line">            view.showToast(it.title)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-<p>set block 안에서 position을 it으로 받아서 onClickListener 함수를 호출한다. onClickListener는 다시 adapterModel에게 getItem을 요청한다.</p>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">getItems</span><span class="params">(position: <span class="type">Int</span>)</span></span>: ImageItem = imageList[position]</span><br></pre></td></tr></table></figure>
-<p>위와 같은 로직으로 Adapter에서 onClick 이벤트를 처리할 수 있다. 조금 복잡하지만, 익숙해진다면 로직을 분리할 수 있는 장점과 결합도를 낮출 수 있을 것 같다.</p>
-<h2 id="참고">참고</h2>
-<ul>
-<li><a href="https://thdev.tech/androiddev/2016/12/29/Android-MVP-Four-Three/" target="_blank" rel="noopener">Android MVP 무작정 따라하기 - Adapter OnClick 정의하기(동영상)</a></li>
-</ul>
-
                     
+                        <a
+                            href="/2019/01/18/Android-MVP-Step8/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [안드로이드] MVP 따라하기 8"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2019/01/18/Android-MVP-Step8/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             
@@ -1777,7 +1320,7 @@ Git-Flow에는 5가지 종류의 브랜치가 존재한다. 항상 유지되는 
     </article>
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -1809,38 +1352,18 @@ Git-Flow에는 5가지 종류의 브랜치가 존재한다. 항상 유지되는 
 
             </div>
             
-                <div class="postShorten-content">
-                    <h2 id="다음을-정리">다음을 정리</h2>
+                <div class="postShorten-excerpt">
+                    <h2>다음을 정리</h2>
 <p>이전 영상을 보면서 배웠던 내용은 View -&gt; Presenter -&gt; Model -&gt; Presenter -&gt; View -&gt; Adapter을 정의하였다. 오늘은 아래 그림과 같이 View -&gt; Presenter -&gt; Model -&gt; Presenter -&gt; Adapter View/Model을 바로 갱신하게 된다. 그래서 Activity/Fragment의 View를 한 단계 더 분리하고, 이를 좀 더 편하게 관리하기 위함이다.</p>
-<img src="/img/mvp_adapter_contract.png" width="600" height="300">
-<h2 id="생각해보기">생각해보기</h2>
-<p>MVP를 공부하면서 이번에는 <strong>AdapterContract</strong>를 분리해서 그 안에 View와 Model을 만들었다. 이렇게 함으로써 View를 거쳐서 Adapter에 접근해야 하는 과정을 줄이고 Presenter에서 Adapter로 바로 update하거나 notify 하도록 함으로써 결합도를 낮출 수 있었다.</p>
-<p>하지만 내가 아직 이해가 잘 되지 않는 부분이 있다.</p>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">lateinit</span> <span class="keyword">var</span> presenter : MainPresenter</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">lateinit</span> <span class="keyword">var</span> imageAdapter : ImageAdapter</span><br><span class="line"></span><br><span class="line"><span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreate</span><span class="params">(savedInstanceState: <span class="type">Bundle</span>?)</span></span> &#123;</span><br><span class="line">    <span class="keyword">super</span>.onCreate(savedInstanceState)</span><br><span class="line">    setContentView(R.layout.activity_main)</span><br><span class="line">    setSupportActionBar(toolbar)</span><br><span class="line">    toolbar.setOnClickListener(<span class="keyword">this</span>)</span><br><span class="line"></span><br><span class="line">    imageAdapter = ImageAdapter(<span class="keyword">this</span>)</span><br><span class="line">    recycler_view.adapter = imageAdapter</span><br><span class="line"></span><br><span class="line">    presenter = MainPresenter().apply &#123;</span><br><span class="line">        view = <span class="keyword">this</span><span class="symbol">@MainActivity</span></span><br><span class="line">        imageData = SampleImageData</span><br><span class="line">        adapterModel = imageAdapter</span><br><span class="line">        adapterView = imageAdapter</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-<p>이 부분은 View에서 Presenter를 사용하는 부분이다. View에서 데이터를 Presenter에게 요청하기 위함이다. 여기서 <code>adapterModel = imageAdapter</code> 이 부분이 나한테는 관건이었다.</p>
-<p>분명 adapterModel은 MainPresenter에 정의되어 있고 타입은 ImageAdapterContract.View이다. 그런데 imageAdapter를 대입함으로써 초기화를 진행하고 있다.</p>
-<p>깊게 생각해보고 구조를 손으로 그려보니 이해가 갔다. ImageAdapter는 ImageAdapterContract.View, ImageAdapterContract.Model을 상속 받고 있다. 즉, ImageAdapterContract가 부모 또는 상위가 되는 것이고 그를 상속받는 ImageAdapter는 자식 또는 서브가 되는 것이다. 그래서 자식은 상속을 통해서 부모의 메소드를 사용할 수 있는 것처럼 부모 객체에 자식 객체를 대입함으로써 자식 객체의 메소드에 접근할 수 있는 것이라고 생각을 했다.</p>
-<p>혹시나 나의 생각이 잘못되었다면 메일이나 댓글을 부탁한다.</p>
-<h2 id="참고">참고</h2>
-<ul>
-<li><a href="https://thdev.tech/androiddev/2016/12/27/Android-MVP-Four-Two/" target="_blank" rel="noopener">Android MVP 무작정 따라하기 - Adapter Contract 정의하기 2번째(동영상)</a></li>
-</ul>
-
                     
+                        <a
+                            href="/2019/01/18/Android-MVP-Step7/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [안드로이드] MVP 따라하기 7"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2019/01/18/Android-MVP-Step7/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             

@@ -267,7 +267,7 @@
     <section class="postShorten-group main-content-wrap">
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -299,8 +299,8 @@
 
             </div>
             
-                <div class="postShorten-content">
-                    <h2 id="sharedpreference">SharedPreference</h2>
+                <div class="postShorten-excerpt">
+                    <h2>SharedPreference</h2>
 <ul>
 <li>간단한 값 저장에 DB를 사용하기에는 복잡하기 때문에 SharedPreference를 사용하면 적합하다.</li>
 <li>Key-Value 쌍으로 데이터를 저장한다.</li>
@@ -313,68 +313,15 @@
 </li>
 <li>애플리케이션이 삭제되기 전까지 보존된다. 애플리케이션이 삭제되면 저장된 정보가 날라간다.</li>
 </ul>
-<h2 id="사용법">사용법</h2>
-<ol>
-<li>객체 생성 및 데이터 저장</li>
-</ol>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">val</span> USER_NAME : String = <span class="string">"Woo"</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">val</span> pref : SharedPreference = getSharedPreference(USER_NAME, MODE_PRIVATE)</span><br><span class="line"><span class="keyword">val</span> editor : SharedPreference.Editor = pref.eidt()</span><br><span class="line">editor.putString(<span class="string">"key"</span>, <span class="string">"value"</span>)</span><br><span class="line">editor.putInt(<span class="string">"intKey"</span>,<span class="number">2</span>)</span><br><span class="line">editor.commit()</span><br></pre></td></tr></table></figure>
-<ol>
-<li>getSharedPreference()</li>
-</ol>
-<ul>
-<li>getSharedPreference() 함수를 통하여 SharedPreference 객체를 얻는다.</li>
-<li>첫 번째 인자 USER_NAME은 해당 SharedPreference의 이름이다. 특정 이름으로 생성할 수 있고 해당 이름으로 xml 파일이 생성된다.</li>
-<li>두 번째 인자는 mode이고 읽기/쓰기 권한과 관련된 mode라고 생각하면 된다.</li>
-</ul>
-<ol start="2">
-<li>editor 객체 얻기</li>
-</ol>
-<ul>
-<li>editor 객체를 통해서 데이터의 읽기, 쓰기 작업을 수행한다.</li>
-</ul>
-<ol start="3">
-<li>데이터 저장</li>
-</ol>
-<ul>
-<li>putString() : key-value 형태로 데이터를 저장한다.
-<ul>
-<li>위에서는 intKey라는 key 값으로 2라는 int형 value를 저장하고 있다.</li>
-<li>작업이 완료되었을 때는 반드시 editor.commit()을 수행한다.</li>
-</ul>
-</li>
-</ul>
-<ol start="2">
-<li>데이터 꺼내오기 및 삭제하기</li>
-</ol>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">val</span> USER_NAME : String = <span class="string">"Woo"</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">val</span> pref : SharedPreference = getSharedPreference(USER_NAME, MODE_PRIVATE)</span><br><span class="line">pref.getString(<span class="string">"key"</span>,<span class="string">""</span>)</span><br></pre></td></tr></table></figure>
-<ul>
-<li>위의 코드에서는 getString()을 통해서 원하는 데이터를 Key 값을 이용해서 찾아 꺼낼 수 있다.</li>
-<li>그리고 해당 Key로 저장된 값이 없다면 default로 지정한 &quot; &quot; 값이 꺼내지게 된다.</li>
-</ul>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">val</span> USER_NAME : String = <span class="string">"Woo"</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">val</span> pref : SharedPreference = getSharedPreference(USER_NAME, MODE_PRIVATE)</span><br><span class="line"><span class="keyword">val</span> editor : SharedPreference.Editor = pref.eidt()</span><br><span class="line">pref.remove(<span class="string">"key"</span>)</span><br><span class="line">pref.clear()</span><br><span class="line">pref.commit()</span><br></pre></td></tr></table></figure>
-<ul>
-<li>pref.remove() : Key값으로 삭제할 데이터를 찾아서 삭제한다.</li>
-<li>pref.clear() : USER_NAME으로 된 객체의 모든 정보(데이터)를 삭제한다.</li>
-</ul>
-<p>이렇게 SharePreference를 사용하면 간단한 데이터를 저장하야 사용할 수 있고 자동 로그인과 같은 기능을 구현할 수 있다. 즉, 간단한 값을 저장하여 계속 유지되도록 하고 싶을 때 사용하기 좋다.</p>
-<p>저는 SharedPreference를 Object 즉, static하게 만들어서 어디서든 접근할 수 있도록 사용하고 있다. 이렇게 구현해야 저장한 값을 어디서든 불러와서 사용할 수 있기 때문이다.</p>
-<h2 id="추가-객체-저장하기">추가 - 객체 저장하기</h2>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 데이터 저장</span></span><br><span class="line"><span class="keyword">var</span> mPref : SharedPreference = getPreference(MODE_PRIVATE)</span><br><span class="line"><span class="keyword">var</span> eidtor : SharedPreference.Editor = mPref.editor()</span><br><span class="line"><span class="keyword">var</span> gson = Gson()</span><br><span class="line"><span class="keyword">var</span> json : String = gson.toJson(MyObject) <span class="comment">// gsont을 json 형식으로 변환</span></span><br><span class="line">editor.putString(<span class="string">"MyObject"</span>, json) <span class="comment">// json 객체 저장</span></span><br><span class="line">editor.commit()</span><br><span class="line"></span><br><span class="line"><span class="comment">// 데이터 꺼내오기</span></span><br><span class="line"><span class="keyword">var</span> gson = Gson()</span><br><span class="line"><span class="keyword">var</span> json : String = mPref.getString(<span class="string">"MyObject"</span>,<span class="string">""</span>)</span><br><span class="line"><span class="keyword">var</span> obj : MyObject = gson.fromJson(json, MyObject::<span class="class"><span class="keyword">class</span>.<span class="title">java</span>)</span></span><br><span class="line"><span class="comment">// fromJson 함수를 통해서 json 객체를 꺼내와서 MyObject 클래스의 형태처럼 gson으로 저장한다.</span></span><br></pre></td></tr></table></figure>
                     
+                        <a
+                            href="/2019/01/02/Android-SharedPreference/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [안드로이드] SharedPreference"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2019/01/02/Android-SharedPreference/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             
