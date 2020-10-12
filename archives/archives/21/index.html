@@ -275,6 +275,79 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2018/10/03/BOJ1076/"
+                            aria-label=": [1076] 저항"
+                        >
+                            [1076] 저항
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2018-10-03T16:18:29+09:00">
+	
+		    Oct 03, 2018
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/algorithm/">algorithm</a>, <a class="category-link" href="/categories/algorithm/BOJ/">BOJ</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <p>문제 : <a href="https://www.acmicpc.net/problem/1076" target="_blank" rel="noopener">https://www.acmicpc.net/problem/1076</a></p>
+<h1 id="풀이-방법">풀이 방법</h1>
+<hr>
+<ol>
+<li>첫 번째 접근 방법</li>
+</ol>
+<p>처음에는 Map이라는 자료구조를 사용해야 한다는 느낌을 받았지만, 조금 복잡하게 생각을 했었습니다. 아마도 문제의 패턴을 몰랐기 때문일 것입니다. 그래서 저는 값과 곱을 가지는 Class를 만들어서 이 클래스 타입의 ArrayList를 만들려고 시도했습니다. 하지만, 이렇게 되면 인덱스로 원소에 접근을 해야하는 문제와 시간 복잡도가 커질 수 있는 문제가 발생하여 비효율적임을 알게 되었습니다.</p>
+<ol start="2">
+<li>두 번째 접근 방법</li>
+</ol>
+<p>이번에는 다른 방식을 생각했습니다. 값과 곱의 규칙을 찾아내어 Class를 따로 만들 필요가 없음을 알았습니다. <code>10^값 = 곱</code> 이라는 규칙을 찾아 냈습니다. 쉽게 설명하면 값이 0일 때, 곱은 1 값이 1일 때, 곱은 10, 값이 2일 때, 곱은 100 … 이런 규칙성을 찾을 수 있었고, Map이라는 자료 구조에 String을 키로 하고, Integer를 값으로 하는 Map을 생성했고, 데이터를 넣어놓았습니다.</p>
+<p>그리고 문제에서 입력은 3개 뿐이므로, 반복문을 통해 입력을 받기보다는 바로 받아서 처리하는 것이 효율적이라고 판단했습니다. 코드는 아래에 있습니다.</p>
+<ul>
+<li>배운 점<br>
+** Map이라는 자료구조는 내가 생각하는 것보다 다양한 곳에서 쓰이는 것 같습니다. 이러한 자료구조를 사용해서 문제를 풀 수 있도록 많이 생각해보고 문제도 많이 풀어봐야 할 것 같습니다. :)</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.BufferedReader;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.io.InputStreamReader;</span><br><span class="line"><span class="keyword">import</span> java.util.HashMap;</span><br><span class="line"><span class="keyword">import</span> java.util.Map;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BOJ1076</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        <span class="comment">// 저항 문제는 Map 자료구조를 사용해서 풀 수 있다.</span></span><br><span class="line">        <span class="comment">// 문제에서 입력은 세 개이므로 for문을 돌려서 받지 않고 그냥 한번에 받는 것이 더 간단.</span></span><br><span class="line"></span><br><span class="line">        BufferedReader bf = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(System.in));</span><br><span class="line">        Map&lt;String, Integer&gt; map = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line"></span><br><span class="line">        map.put(<span class="string">"black"</span>, <span class="number">0</span>);</span><br><span class="line">        map.put(<span class="string">"brown"</span>, <span class="number">1</span>);</span><br><span class="line">        map.put(<span class="string">"red"</span>, <span class="number">2</span>);</span><br><span class="line">        map.put(<span class="string">"orange"</span>, <span class="number">3</span>);</span><br><span class="line">        map.put(<span class="string">"yellow"</span>, <span class="number">4</span>);</span><br><span class="line">        map.put(<span class="string">"green"</span>, <span class="number">5</span>);</span><br><span class="line">        map.put(<span class="string">"blue"</span>, <span class="number">6</span>);</span><br><span class="line">        map.put(<span class="string">"violet"</span>, <span class="number">7</span>);</span><br><span class="line">        map.put(<span class="string">"grey"</span>, <span class="number">8</span>);</span><br><span class="line">        map.put(<span class="string">"white"</span>, <span class="number">9</span>);</span><br><span class="line"></span><br><span class="line">        String one = bf.readLine(), two = bf.readLine(), three = bf.readLine();</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> firstResult = map.get(one) * <span class="number">10</span> + map.get(two);</span><br><span class="line">        <span class="keyword">long</span> secondResult = (<span class="keyword">long</span>) Math.pow(<span class="number">10</span>, map.get(three));</span><br><span class="line">        System.out.println(firstResult * secondResult);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2018/10/03/BOJ1076/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2018/09/23/BOJ10816/"
                             aria-label=": [10816] "
                         >
@@ -975,122 +1048,6 @@ ex. https(ssl)</p>
                         <p>
                             <a
                                 href="/2018/08/09/open-tutorials-7/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2018/08/09/open-tutorials-6/"
-                            aria-label=": 생활코딩 :: URL"
-                        >
-                            생활코딩 :: URL
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2018-08-09T15:39:19+09:00">
-	
-		    Aug 09, 2018
-    	
-    </time>
-    
-        <span>in </span>
-        
-    <a class="category-link" href="/categories/Node-js/">Node.js</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="쿼리-스트링">쿼리 스트링</h1>
-<hr>
-<p>어떠한 사용자의 입력이 있을 때, 그 입력에 따라서 적당한 다른 결과를 보여주는 것이 의미있는 즉, 기능성이 있는 <strong>애플리케이션</strong>이라고 할 수 있습니다.</p>
-<img src="/img/url_string.png" width="400" height="200"> 
-<p>지금까지는 사용자가 어떤 <strong>주소</strong>로 접근하느냐에 따라서 사용자에게 다른 결과를 보여주었습니다.</p>
-<p>만약 우리의 웹사이트가 <code>a.com</code>이라고 한다면 사용자가 path에 <code>/login</code>을 하게 되면 <strong>login</strong>에 해당되는 Route가 그 라우트와 연결되어 있는 Controller(익명 함수)를 호출해서 적당한 결과를 만들어 내는 것이 애플리케이션의 구조입니다.</p>
-<img src="/img/path.png" width="400" height="200"> 
-<p>그림과 같이 paht만 놓고 본다면 서로 다른 결과를 사용자에게 보여주지만, <code>http://a.com/topic</code>이라는 path 한 개는 사용자에게 언제나 똑같은 결과만을 보여줍니다. 사고를 좀 더 확장해보면 이 <strong>topic</strong>으로 사용자가 접근했을 때도 경우에 따라서 다른 결과를 보여줄 수 있다면 더 좋을 것입니다.</p>
-<p>이것을 하기 위해서 <code>쿼리 스트링</code>을 배울 것입니다.</p>
-<img src="/img/topic.png" width="400" height="200"> 
-<ul>
-<li><strong>topic</strong>이라는 라우터에 id가 1이라고 하는 값을 전달하고 있습니다.
-<ul>
-<li>1이라는 숫자에 해당되는 결과를 처리해서 화면에 보여줍니다.</li>
-</ul>
-</li>
-<li>결과적으로 topic이라는 단 하나의 path로, 다른 말로 단 하나의 라우터로 id 값을 다르게 주는 것에 따라서 다른 결과를 만들어 낼 수 있습니다.</li>
-<li>? 뒤에 나타나는 정보를 <strong>쿼리 스트링</strong>이라고 합니다.</li>
-</ul>
-<h1 id="query-객체-사용법">query 객체 사용법</h1>
-<hr>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> express = <span class="built_in">require</span>(<span class="string">'express'</span>);</span><br><span class="line"><span class="keyword">var</span> app = express();</span><br><span class="line">app.get(<span class="string">'/topic'</span>,<span class="function"><span class="keyword">function</span>(<span class="params">req, res</span>)</span>&#123;</span><br><span class="line">    res.send(req.query.id);</span><br><span class="line">    res.send(req.query.id+<span class="string">', '</span>+req.query.name)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-<ul>
-<li>
-<p>topic이라는 path가 가리키는 <strong>Controller</strong>가 쿼리 스트링을 어떻게 알 수 있을까??</p>
-<ul>
-<li>사용자는 주소를 통해서 웹 페이지에 접근하고 있고, 사용자는 우리에게 <strong>요청</strong>을 하고 있습니다. 이러한 요청과 관련된 정보는 <code>req</code>라는 첫 번째 매개변수에 값으로 request 정보가 들어오게 됩니다.</li>
-<li>쿼리 스트링으로 전달된 값이 이 함수의(Controller의) 첫 번째 매개변수의 값인 req에 query라고 하는 객체에 id라고 하는 프로퍼티 값으로 들어옵니다.</li>
-</ul>
-</li>
-<li>
-<p>express는 req라는 값을 전달하며, req는 query라고 하는 객체를 갖습니다. 그리고 query라는 객체는 사용자가 전달한 쿼리스트링을 프로퍼티로 갖습니다.</p>
-</li>
-<li>
-<p>topic?id=1&amp;name=“이승우”</p>
-<ul>
-<li>쿼리스트링을 통해서 우리가 애플리케이션에 전달할 수 있는 값은 하나가 아니라 여러 개 일수도 있습니다. 값을 구분하는 구분자로 쿼리스트링은 <code>&amp;</code>를 사용합니다.</li>
-</ul>
-</li>
-</ul>
-<h1 id="query-객체의-활용">query 객체의 활용</h1>
-<hr>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">app.get(<span class="string">'/topic'</span>,<span class="function"><span class="keyword">function</span>(<span class="params">req, res</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">var</span> topics = [</span><br><span class="line">		<span class="string">'Javascript is ...'</span>,</span><br><span class="line">		<span class="string">'Nodejs is ...'</span>,</span><br><span class="line">		<span class="string">'Express is ...'</span></span><br><span class="line">	];</span><br><span class="line">	<span class="keyword">var</span> output = <span class="string">`</span></span><br><span class="line"><span class="string">		&lt;a href="/topic?id=0"&gt;JavaScript&lt;/a&gt;&lt;br&gt;</span></span><br><span class="line"><span class="string">		&lt;a href="/topic?id=1"&gt;Nodejs&lt;/a&gt;&lt;br&gt;</span></span><br><span class="line"><span class="string">		&lt;a href="/topic?id=2"&gt;Express&lt;/a&gt;&lt;br&gt;&lt;br&gt;</span></span><br><span class="line"><span class="string">		<span class="subst">$&#123;topics[req.query.id]&#125;</span></span></span><br><span class="line"><span class="string">	`</span></span><br><span class="line">	res.send(output);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-<ul>
-<li><strong>쿼리스트링</strong> : 어떤 애플리케이션에서 정보를 전달할 때 사용하는 URL의 약속되어 있는 국제적인 표준입니다.</li>
-<li>그리고 쿼리스트링으로 전달된 값은 <strong>request</strong> 영역이기 때문에 첫 번째 매개변수에 담겨 있는 값인 <strong>req</strong> 객체, 또 그 객체가 가지고 있는 <strong>query</strong>라는 객체 또 그 객체 안에 있는 <strong>id</strong> 값을 통해서 가져올 수 있습니다.</li>
-</ul>
-<h1 id="시멘틱-url">시멘틱 URl</h1>
-<hr>
-<p><code>topic/?id=2</code>가 아니라 쿼리스트링이 없이 <code>topic/2</code>와 같은 깔끔한 URL을 통해서 애플리케이션을 제어할 수 있습니다. 이런 방식의 URL 체계를 <strong>시멘틱 URL</strong>이라고 합니다.</p>
-<p>하지만, 기존의 쿼리스트링 방식의 URL을 사용하면 <code>topic/2</code>와 같은 URL을 잡아내지 못하고, 주소 뒤에 오는 숫자 값을 사용하기 위해서는 <strong>시멘틱 URL</strong>에서는 <code>params</code>를 이용합니다.<br>
-따라서 아래와 같은 수정이 필요합니다.</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">app.get(<span class="string">'/topic/:id'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">req, res</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> topics = [</span><br><span class="line">		<span class="string">'Javascript is ...'</span>,</span><br><span class="line">		<span class="string">'Nodejs is ...'</span>,</span><br><span class="line">		<span class="string">'Express is ...'</span></span><br><span class="line">	];</span><br><span class="line">	<span class="keyword">var</span> output = <span class="string">`</span></span><br><span class="line"><span class="string">		&lt;a href="/topic?id=0"&gt;JavaScript&lt;/a&gt;&lt;br&gt;</span></span><br><span class="line"><span class="string">		&lt;a href="/topic?id=1"&gt;Nodejs&lt;/a&gt;&lt;br&gt;</span></span><br><span class="line"><span class="string">		&lt;a href="/topic?id=2"&gt;Express&lt;/a&gt;&lt;br&gt;&lt;br&gt;</span></span><br><span class="line"><span class="string">		<span class="subst">$&#123;topics[req.params.id]&#125;</span></span></span><br><span class="line"><span class="string">	`</span></span><br><span class="line">	res.send(output);</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-<ul>
-<li><strong>쿼리 스트링</strong>을 사용해 접근하는 경우<br>
-: <code>req.query.id</code>로 접근하면 됩니다.</li>
-<li><strong>시멘틱 URL</strong>(path 방식)을 사용해 접근하는 경우<br>
-: <code>req.params.id</code>로 접근하면 됩니다.</li>
-</ul>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2018/08/09/open-tutorials-6/#post-footer"
                                 class="postShorten-excerpt_link link"
                                 aria-label=""
                             >

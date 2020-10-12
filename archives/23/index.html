@@ -274,6 +274,95 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2018/06/09/sopt-semniar6/"
+                            aria-label=": [SOPT] Seminar6"
+                        >
+                            [SOPT] Seminar6
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2018-06-09T01:26:45+09:00">
+	
+		    Jun 09, 2018
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/Inno-SOPT/">Inno_SOPT</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <p>이번주에는 내부 DB, Realm, SQLite에 대해 배워보겠습니다.</p>
+<h1 id="내부-db">내부 DB</h1>
+<hr>
+<p>안드로이드 앱 개발을 하다보면 서버와 통신을 하면서 가끔 이런 생각을 하곤 합니다.</p>
+<p>데이터가 어딘가에 저장되어 있어야 하는 건 맞고 서버랑 통신을 하긴 하는데, 굳이 이런 데이터까지 서버랑 통신을 해야하나… 혹은 오히려 서버랑 통신하면 더 불편할 정도로 정말 너무나도 간단한 데이터를 다루거나 서버한테 데이터를 맡기는 것보다는 내가 처리하는게 낫겠다라는 생각을 해본 적이 있습니다…(서버 디스는 아닙니다…^0^)</p>
+<h2 id="sharedpreference">SharedPreference</h2>
+<hr>
+<ul>
+<li>가장 간단하게 다룰 수 있는 데이터 저장 방식</li>
+<li>자동 로그인을 사용할 때 특히 많이 쓰임</li>
+<li>어플이 종료되어도 저장된 데이터는 사라지지 않음</li>
+<li>어플이 <code>삭제</code>되면 저장된 데이터는 <strong>증발</strong>함</li>
+<li>요청한 데이터가 없을 때 기본값을 지정할 수 있음</li>
+<li>쿼리문이 없다.</li>
+</ul>
+<p><code>Code</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// SharedPreference에 저장</span></span><br><span class="line"><span class="function">fun <span class="title">setId</span><span class="params">(context : Context, id : String)</span></span>&#123;</span><br><span class="line">	val pref = context.getSharedPreferences(USER, Context.MODE_PRIVATE)</span><br><span class="line">	val editor = pref.edit()</span><br><span class="line">	editor.putString(ID,id)</span><br><span class="line">	editor.commit()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// SharedPreference에서 가져오기</span></span><br><span class="line"><span class="function">fun <span class="title">getId</span><span class="params">(context : Context)</span> : String</span>&#123;</span><br><span class="line">	val pref = context.getSharedPreferences(USER, Context.MODE_PRIVATE)</span><br><span class="line">	<span class="keyword">return</span> pref.getString(ID, <span class="string">""</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="realm">Realm</h2>
+<hr>
+<ul>
+<li>최근 각광받는 Mobile Database</li>
+<li>쿼리문을 사용하지 않음</li>
+<li>객체들로 하여금 데이터를 다룸</li>
+<li>어플이 종료되어도 데이터는 유지</li>
+<li>어플이 <code>삭제</code>되면 데이터는 <strong>증발</strong>함</li>
+<li>일단 DB처럼 Primary Key를 필수로 지정해야 함</li>
+<li>데이터가 만일</li>
+</ul>
+<p><code>Code</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 데이터 저장 객체 생성</span></span><br><span class="line">open class MemberVO : RealmObject()&#123;</span><br><span class="line">	<span class="meta">@PrimaryKey</span></span><br><span class="line">	var id : String = <span class="string">""</span></span><br><span class="line">	var pwd : String = <span class="string">""</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Realm 초기화</span></span><br><span class="line"><span class="function">fun <span class="title">init</span><span class="params">()</span></span>&#123;</span><br><span class="line">	Realm.init(<span class="keyword">this</span>)</span><br><span class="line">	memberRealm = Realm.getDefaultInstance()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 데이터 가져오기</span></span><br><span class="line"><span class="function">fun <span class="title">getMemberList</span><span class="params">(id : String)</span> : RealmResults&lt;MemberVO&gt;</span>&#123;</span><br><span class="line">	<span class="keyword">return</span> memberRealm.where(MemberVO::<span class="class"><span class="keyword">class</span>.<span class="title">java</span>)</span></span><br><span class="line">	.equalTo("id",id).findAll()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 데이터 삽입</span></span><br><span class="line"><span class="function">fun <span class="title">insertMemberList</span><span class="params">()</span></span>&#123;</span><br><span class="line">	memberVO = MemberVO()</span><br><span class="line">	memberVO.id = sign_id_edit.text.toString()</span><br><span class="line">	memberVO.pwd = sign_pw_edit.text.toString()</span><br><span class="line"></span><br><span class="line">	memberRealm.beginTransaction()</span><br><span class="line">	memberRealm.copyToRealm(memberVO)</span><br><span class="line">	memberRealm.commitTransaction()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 데이터 삭제</span></span><br><span class="line"><span class="function">fun <span class="title">deletePokemonList</span><span class="params">(name : String)</span></span>&#123;</span><br><span class="line">	val result = pokemonRealm.where(PokemonVO::<span class="class"><span class="keyword">class</span>.<span class="title">java</span>)</span></span><br><span class="line">	.equalTo("name",name)</span><br><span class="line">	.findAll()</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span>(result.isEmpty())&#123;</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	pokemonRealm.beginTransaction()</span><br><span class="line">	result.deleteAllFromRealm()</span><br><span class="line">	pokemonRealm.commitTransaction()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>별도의 과제는 없고 내가 <strong>우아한 테크 캠프</strong> 코딩 테스트를 보느라 출석만 하고 바로 빠져나오는 바람에 세미나를 듣지 못하였다. 일단은 혼자 자료를 보면서 정리하였는데, 얼른 프로젝트를 보면서 혼자 만들어보면서 공부해야겠다.</p>
+<p>공부한 다음에 <strong>Github</strong>에 코드를 올릴 예정이다.</p>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2018/06/09/sopt-semniar6/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2018/06/08/BOJ11723/"
                             aria-label=": [11723] 집합"
                         >
@@ -1345,156 +1434,6 @@ addToBackStack() 함수를 호출해서 교체되서 Fragment를 back stack에 �
                         <p>
                             <a
                                 href="/2018/05/02/sopt-seminar2/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2018/05/01/sopt-semniar1/"
-                            aria-label=": [SOPT] Seminar1"
-                        >
-                            [SOPT] Seminar1
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2018-05-01T18:45:28+09:00">
-	
-		    May 01, 2018
-    	
-    </time>
-    
-        <span>in </span>
-        
-    <a class="category-link" href="/categories/Inno-SOPT/">Inno_SOPT</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h1 id="android-가볍게-보는-특징">Android 가볍게 보는 특징</h1>
-<ul>
-<li>Google에서 만든 모바일 운영체제</li>
-<li>가장 많이 사용하는 OS</li>
-<li>오픈소스</li>
-<li>다양한 라이브러리 지원</li>
-<li>개발 접근이 용이</li>
-<li>빈번한 SDK 업그레이드</li>
-</ul>
-<h2 id="최근-이슈">최근 이슈</h2>
-<p>최근에 구글과 오라클의 소송에서 구글이 패배함으로써 자바가 위협을 받고 <code>Kotlin</code>이 대두되고 있습니다. SOPT에서는 <strong>Kotlin</strong>을 이용하여 안드로이드 개발을 배우고 세미나를 진행합니다.</p>
-<h2 id="kotlin의-특징">Kotlin의 특징</h2>
-<ul>
-<li>자동 형 변환 기능을 허용하지 않는다. [타입이 다르면 반드시 형 변환을 해야 한다.]</li>
-<li><code>NPE에 대응</code> [NPE = Null Pointer Exception]</li>
-<li>뛰어난 <strong>자바와의 호환성</strong></li>
-<li>표현이 자바에 비해 훨씬 <strong>간결</strong></li>
-<li>문장 끝에 <strong>세미콜론</strong>을 사용하지 않는다.</li>
-</ul>
-<h1 id="view-layout이란">View / Layout이란??</h1>
-<h2 id="view와-viewgroup">View와 ViewGroup</h2>
-<ul>
-<li>View<br>
-버튼, 텍스트, 이미지 <strong>등 모든 유저 인터페이스(UI)의 통칭</strong><br>
-<strong>사용자 눈에 보이는</strong> 화면 구성 요소<br>
-Activity 상에서 직접 Code를 작성해서 구현할 수 있지만 더 쉽고 정교하게 작성하기 위해서 <code>XML</code>사용</li>
-</ul>
-<p><img src="/img/view.png" alt=""></p>
-<ul>
-<li>layout_width -&gt; 뷰의 너비(가로 길이)</li>
-<li>layout_height -&gt; 뷰의 높이(세로 길이)</li>
-<li>wrap_content -&gt; <code>내용의 길이(혹은 크기)</code>에 맞게 조절</li>
-<li>match_parent -&gt; <code>부모 뷰에 꽉 채워진 크기</code>(여백 제외)<br>
-위의 두 가지가 아닌 경우에는 <strong>직접 설정</strong></li>
-<li><strong>배경 지정</strong> / <strong>색</strong> 뿐만 아니라 <strong>이미지</strong>도 지정 가능</li>
-<li>화면에 보여지는 속성</li>
-</ul>
-<ol>
-<li><strong>visible</strong> : 공간도 차지하고 화면에 보임</li>
-<li><strong>invisible</strong> : 공간은 차지하는데 보이지는 않음</li>
-<li><strong>gone</strong> : 공간도 차지하지 않고 보이지도 않음</li>
-</ol>
-<p><img src="/img/margin.png" alt=""></p>
-<ul>
-<li><strong>View</strong>의 <strong>여백</strong> 설정</li>
-<li>margin -&gt; 부모 혹은 View와의 여백</li>
-<li>padding -&gt; View 외곽과 내용 사이의 여백</li>
-</ul>
-<p><code>ViewGroup</code></p>
-<ul>
-<li>뷰들을 여러 개 포함하고 있는 것</li>
-<li>뷰 그룹도 뷰에서 상속하여 뷰가 된다. 즉, 위의 뷰는 버튼, 텍스트 뿐만 아니라 이것들을 포함하는 눈에 보이지 않는 영역을 포함</li>
-</ul>
-<p><img src="/img/hierarchical.png" alt=""></p>
-<p><code>위젯</code><br>
-뷰 중에서 일반적인 <strong>컨트롤</strong> 역할을 하고 있는 것<br>
-ex) 버튼, 텍스트뷰 등등</p>
-<h2 id="layout">Layout</h2>
-<p><strong>View</strong>들이 배치 될 그룹<br>
-<strong>Layout</strong>에 따라 <strong>배치</strong>되는 <strong>방식</strong>이 달라짐<br>
-XML을 통해 작성<br>
-<strong>LinearLayout, RelativeLayout</strong>, FrameLayout, ConstraintLayout 등등 존재</p>
-<p>레이아웃은 그 안에 다른 뷰들을 담을 수 있는데, 레이아웃도 뷰를 상속하여 정의되었기 때문에 레이아웃 안에 다른 레이아웃을 담을 수 있다. 이를 이용하여 복잡한 화면 구성을 할 수 있다.</p>
-<p><img src="/img/organization.png" alt=""></p>
-<h3 id="linearlayout">LinearLayout</h3>
-<ul>
-<li>View들의 선형 배치를 제공하는 Layout</li>
-<li>수직 방향, 수평 방향으로 배치 가능</li>
-<li>수직 배치시 다음 뷰는 가장 아래 뷰를 기준으로 밑에<br>
-수평 배치시 다음 뷰는 가장 오른쪽 뷰를 기준으로 오른쪽에 배치</li>
-<li>배치 기준이 정해져 있어서 직접 정해주지 않아도 됨</li>
-<li>특정 뷰 기준으로 배치하는 것은 불가능하다.</li>
-<li>방향성이 존재하기 때문에 뷰 위에 뷰를 쌓는 것이 불가능하다.</li>
-<li>계단식으로 배치할 때 용이하게 사용할 수 있다.</li>
-</ul>
-<p><img src="/img/linearLayout.png" alt=""></p>
-<ul>
-<li>orientation : 뷰 배치에 방향성을 부여한다.(horizontal, vertical)</li>
-<li>layout_gravity : 부모 컨테이너 안에서 뷰의 위치를 정함</li>
-<li>gravity : 뷰 안에서 내용물의 위치를 정함</li>
-<li>layout_weight : 뷰의 가중치로 비율을 통해 너비 혹은 길이를 정함</li>
-</ul>
-<h3 id="ralativelayout">RalativeLayout</h3>
-<ul>
-<li>View들의 상대적 배치를 제공하는 Layout</li>
-<li>특정 뷰를 기준으로 다른 뷰를 배치하는 특징을 가지고 있다.</li>
-<li>기준을 정해주지 않게 되면 뷰가 왼쪽 상단에 쌓이게 된다.</li>
-<li>뷰 위에 뷰를 겹칠 수 있따.</li>
-<li>원하는 배치를 하기 위해서 직접 기준을 정해주면 된다.</li>
-<li>복잡한 뷰를 작성할 때 용이하게 사용할 수 있다.</li>
-</ul>
-<p><img src="/img/RelativeLayout.png" alt=""></p>
-<p><code>Github</code> : <a href="https://github.com/WooVictory/SOPT_22th_Seminar1_HomeWork" target="_blank" rel="noopener">https://github.com/WooVictory/SOPT_22th_Seminar1_HomeWork</a></p>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2018/05/01/sopt-semniar1/#post-footer"
                                 class="postShorten-excerpt_link link"
                                 aria-label=""
                             >

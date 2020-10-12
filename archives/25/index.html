@@ -274,6 +274,71 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2018/03/31/BOJ10974/"
+                            aria-label=": [10974] 모든 순열"
+                        >
+                            [10974] 모든 순열
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2018-03-31T20:37:39+09:00">
+	
+		    Mar 31, 2018
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/algorithm/">algorithm</a>, <a class="category-link" href="/categories/algorithm/BOJ/">BOJ</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <p>문제 : <a href="https://www.acmicpc.net/problem/10974" target="_blank" rel="noopener">https://www.acmicpc.net/problem/10974</a></p>
+<p><code>Key Point</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">do&#123;</span><br><span class="line"></span><br><span class="line">&#125;while();</span><br></pre></td></tr></table></figure>
+<p>잘 사용하지 않은 반복문을 사용해서 첫번째 순열을 찍고 다음 순열을 계속해서 찍어내면 된다.<br>
+do ~ while문을 사용하지 않으면 사전순으로 첫 번째에 위치한 순열을 찍어낼 수 없으므로 do ~ while문을 사용한다.<br>
+<code>Explain</code><br>
+이전 순열과 모든 순열을 구하는 문제를 하나로 합치면 된다.</p>
+<p><code>Code</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">public class Exam10974 &#123;</span><br><span class="line">	</span><br><span class="line">	public static boolean next_permutation(int[] a) &#123;</span><br><span class="line">		int i = a.length-1;</span><br><span class="line">		while(i&gt;0 &amp;&amp; a[i-1]&gt;=a[i]) &#123;</span><br><span class="line">			i--;</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		if(i&lt;=0) &#123;</span><br><span class="line">			return false;</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		int j = a.length-1;</span><br><span class="line">		while(a[j]&lt;=a[i-1]) &#123;</span><br><span class="line">			j--;</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		int tmp = a[i-1];</span><br><span class="line">		a[i-1] = a[j];</span><br><span class="line">		a[j] = tmp;</span><br><span class="line">		</span><br><span class="line">		j = a.length-1;</span><br><span class="line">		while(i&lt;j) &#123;</span><br><span class="line">			tmp = a[i];</span><br><span class="line">			a[i] = a[j];</span><br><span class="line">			a[j] = tmp;</span><br><span class="line">			i++;</span><br><span class="line">			j--;</span><br><span class="line">		&#125;</span><br><span class="line">		return true;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	public static void main(String[] args) throws IOException &#123;</span><br><span class="line">		BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));</span><br><span class="line">		int N = Integer.parseInt(bf.readLine());</span><br><span class="line">		int[] a = new int[N];</span><br><span class="line">		for(int i=0;i&lt;N;i++) &#123;</span><br><span class="line">			a[i] = i+1;</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		do &#123;</span><br><span class="line">			for(int i=0;i&lt;N;i++) &#123;</span><br><span class="line">				System.out.print(a[i]+&quot; &quot;);</span><br><span class="line">			&#125;</span><br><span class="line">			System.out.println();</span><br><span class="line">		&#125;while(next_permutation(a));</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2018/03/31/BOJ10974/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2018/03/31/BOJ10973/"
                             aria-label=": [10973] 이전 순열"
                         >
@@ -852,57 +917,6 @@ value에 저장한다. 결국, value -&gt; 차이의 최대값</p>
                             href="/2018/03/19/JavaCollectionPriorityQueue/"
                             class="postShorten-excerpt_link link"
                             aria-label=": [Java] Priority Queue"
-                        >
-                            Continue reading
-                        </a>
-                        
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-right">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2018/03/02/Android-ActivityLifeCycle/"
-                            aria-label=":  [Android] 4대 컴포넌트"
-                        >
-                             [Android] 4대 컴포넌트
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2018-03-02T13:35:59+09:00">
-	
-		    Mar 02, 2018
-    	
-    </time>
-    
-        <span>in </span>
-        
-    <a class="category-link" href="/categories/Android/">Android</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-excerpt">
-                    <p>이번에는 <code>안드로이드의 4대 컴포넌트</code>에 대해서 배워보았습니다.</p>
-                    
-                        <a
-                            href="/2018/03/02/Android-ActivityLifeCycle/"
-                            class="postShorten-excerpt_link link"
-                            aria-label=":  [Android] 4대 컴포넌트"
                         >
                             Continue reading
                         </a>

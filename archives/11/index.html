@@ -274,6 +274,113 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2019/04/30/What-is-LiveData/"
+                            aria-label=": [안드로이드] LiveData"
+                        >
+                            [안드로이드] LiveData
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2019-04-30T10:55:52+09:00">
+	
+		    Apr 30, 2019
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/Android/">Android</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <p>MVVM을 이해하기 위해 알아보는 <code>LiveData</code><br>
+추후 더 자세한 내용을 정리할 예정.</p>
+<h2 id="livedata란"># LiveData란?</h2>
+<p>직역하면 살아있는 데이터? 이렇게 생각할 수 있다. LiveData는 LifeCycle을 알고 있는 DataType이라고 생각하면 좋다. 이처럼 LifeCycle을 알고 있으면 필요할 때 변경하고 필요하지 않을 때 변경하지 않을 수 있다.</p>
+<p>또한, LiveData는 Observer 패턴을 따른다. 즉 데이터의 변경이 일어났을 때 콜백으로 받아 처리할 수 있다. 이렇게 데이터의 변경이 일어날때마다 콜백을 실행하는데 LifeCycle을 알고 있기 때문에 필요하지 않을 때는 콜백이 실행되지 않는다.</p>
+<p>예를 들어 Activity에 선언되어 있는 LiveData의 경우 Activity가 Start, Resume 상태일 때는 콜백을 실행하지만 다른 액티비티로 넘어가 있는 onStop 등의 상태일 때는 실행되지 않는다.</p>
+<img src="/img/livedata_android.png" width="600" height="200">
+<ul>
+<li>postValue : 간단히 데이터가 변경된다.</li>
+</ul>
+<p>이렇듯 onStart, onResume의 상태일 때 A와 B를 받는 옵저버 콜백은 실행되지만 onStop일 때 C와 D일 때는 실행되지 않고(옵저버 되지 않음) 다시 액티비티가 실행되면 가장 최신의 데이터인 D를 실행한다.(옵저버 됨) 이렇듯 LiveData를 사용하면 RxJava나 Interface Callback을 사용할 때 보다 더 깔끔하게 처리할 수 있다.</p>
+<h2 id="간단한-예제"># 간단한 예제</h2>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">UserProfileViewModel</span> : <span class="type">ViewModel</span></span>()&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// MutableLiveData란 변경할 수 있는 LiveData 형이다.</span></span><br><span class="line">    <span class="comment">// 일반적인 LiveData형은 변경할 수 없고 오로지 데이터의 변경값만을 소비하는데 반해</span></span><br><span class="line">    <span class="comment">// MutableLiveData는 데이터를 UI Thread와 Background Thread에서 선택적으로 바꿀 수 있다.</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">val</span> _post = MutableLiveData&lt;User&gt;()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">// _post로 선언된 MutableLiveData를 post를 통해 발행한다.</span></span><br><span class="line">    <span class="comment">// 이렇듯 ViewModel에서만 _post를 변경할 수 있기 때문에 보안에 더 좋다.</span></span><br><span class="line">    <span class="keyword">val</span> post : LiveData&lt;User&gt;</span><br><span class="line">        <span class="keyword">get</span>() = _post</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>위와 같은 데이터를 Activity에서 받으려면</li>
+</ul>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">PostActivity</span></span>() : AppCompatActivity()&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreate</span><span class="params">(savedInstanceState : <span class="type">Bundle</span>?)</span></span>&#123;</span><br><span class="line">        ...</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 위의 ViewModel에서 post LiveData를 Observe한다.</span></span><br><span class="line">        <span class="comment">// 첫 번째 인자는 UI이며 해당 인자로 어떤 UI Thread를 사용할 지 결정한다.</span></span><br><span class="line">        <span class="comment">// 두 번째는 Observe 콜백이다.</span></span><br><span class="line">        postViewModel.post.observe(<span class="keyword">this</span>,</span><br><span class="line">            Oberserver&#123;</span><br><span class="line">                post -&gt; postTitle.text = post?.title</span><br><span class="line">            &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>LiveData 콜백을 실행하는 방법은 아래처럼 두 가지가 있다.</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// MutableLiveData에ㅓ setValue, postValue 실행 하는 경우</span></span><br><span class="line"></span><br><span class="line">post.setValue(post) <span class="comment">// UI Thread 즉, Main Thread에서 실행</span></span><br><span class="line">post.postValue(post) <span class="comment">// Background Thread에서 실행</span></span><br></pre></td></tr></table></figure>
+<p>사실 LiveData를 더 잘쓰려면 <strong>데이터바인딩</strong>과 함께 사용해야 좋은 효과를 낼 수 있다. 왜냐하면 위에서처럼 Observe 패턴을 이용해서 UI를 직접 변경해줄 필요 없이 xml 상에서 깔끔하게 처리할 수 있다.</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">TextView</span></span></span><br><span class="line"><span class="tag">    <span class="attr">....</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:text</span>=<span class="string">"@&#123;viewModel.post.title&#125;/&gt;</span></span></span><br></pre></td></tr></table></figure>
+<p>이처럼 아주 깔끔하게 선언할 수 있다 이제 title이 변경되는대로 TextView UI는 알아서 변경이 된다.</p>
+<p>그렇다면 LiveData Observer UI(Activity, Fragment)가 사라진다면? 더 이상 새로운 데이터를 발행하지 않는다. rx로 따지면 Dispose가 필요없다. 즉, 데이터를 더 이상 발행하지 않기 때문에 알아서 구독을 해지하는 것으로 생각이 든다.</p>
+<h2 id="livedata-변형하기"># LiveData 변형하기</h2>
+<p>간단하게 살펴보고 추후에 자세하게 살펴보도록 하겠다.</p>
+<p><strong>Map</strong></p>
+<ul>
+<li>LiveData의 변경을 다른 LiveData에게 알려주는 메소드.</li>
+</ul>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> userLiveData : LiveData&lt;User&gt; = ...</span><br><span class="line"><span class="keyword">val</span> userNameLiveDat = Transformations.map(userLiveData, user -&gt; &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">"<span class="subst">$&#123;user.firstName&#125;</span>, <span class="subst">$&#123;user.lastName&#125;</span>"</span> <span class="comment">// String을 리턴한다.</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>UserLiveData의 변경사항을 Observe해서 map 함수를 통해서 원하는 값으로 변경한 뒤 String을 리턴한다. 즉, 새로운 LiveData를 리턴하는게 아니라 데이터만 변경한다.</p>
+<p><strong>SwitchMap</strong></p>
+<ul>
+<li>LiveData의 변경사항을 받아서 다른 LiveData를 발행한다. 일반적으로 RoomDatabase를 LiveData로 쓸 때 많이 사용된다고 한다.</li>
+</ul>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> userIdLiveData : MutableLiveData = ...</span><br><span class="line"><span class="keyword">val</span> userLiveData : LiveData = Transformations.switchMap(userIdLiveData, id -&gt; </span><br><span class="line">    repository.getUserById(id)) <span class="comment">// LiveData를 리턴한다.</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">setUserId</span><span class="params">(userId : <span class="type">String</span>)</span></span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.userIdLiveData.setValue(userId)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>SwitchMap은 데이터의 인자값에 따라 다른 LiveData를 발행한다. repository.getUserById(id)는 RooDatabase에서 ID 값에 따라 유저값을 가져오며 return 값이 LiveData이다. 즉, 인자 값에 따라서 다른 데이터 소스(LiveData)를 보낼 수 있다.</p>
+<p><strong>MediatorLiveData</strong></p>
+<ul>
+<li>여러 데이터 소스를 한 곳에서 Observe할 때 사용한다.</li>
+</ul>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> liveData1:LiveData = ...</span><br><span class="line"><span class="keyword">val</span> liveData2: LiveData = ...</span><br><span class="line"></span><br><span class="line"><span class="keyword">val</span> liveDataMerger:MediatorLiveData = new MediatorLiveData&lt;&gt;()</span><br><span class="line"> liveDataMerger.addSource(liveData1, value -&gt; liveDataMerger.setValue(value))</span><br><span class="line"> liveDataMerger.addSource(liveData2, value -&gt; liveDataMerger.setValue(value))</span><br></pre></td></tr></table></figure>
+<p>예를 들어 Fragment별로 LiveData<error>가 있고 이걸 Activity 한 곳에서 Crashlytics에 기록한다거나 Toast 메시지를 띄울 때 Fragment의 LiveData를 Activity의 MediatorLiveData를 통해 사용할 수 있다.</error></p>
+<p>LiveData는 많은 기능이 있는 것 같다. 하지만 혼자 쓰기 보다는 DataBinding, ViewModel과 함께 MVVM 패턴에서 사용될 때 효과가 더욱 두드러질 것 같다는 생각이 든다.</p>
+<p>LiveData와 관련된 자세한 내용을 추후에 공부해서 올릴 예정이다.<br>
+앞으로도 열심히하길~</p>
+<h2 id="참고"># 참고</h2>
+<ul>
+<li><a href="https://medium.com/harrythegreat/jetpack-android-livedata-%EC%95%8C%EC%95%84%EB%B3%B4%EA%B8%B0-ed49a6f17de3" target="_blank" rel="noopener">Jetpack Android — LiveData 알아보기</a></li>
+</ul>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2019/04/30/What-is-LiveData/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2019/04/29/RxJava-Chap02/"
                             aria-label=": [RxJava] Chap02"
                         >
@@ -1033,59 +1140,6 @@
                             href="/2019/03/23/Algo-Shell-Sort/"
                             class="postShorten-excerpt_link link"
                             aria-label=": [알고리즘] 정렬 알고리즘 Part2"
-                        >
-                            Continue reading
-                        </a>
-                        
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-right">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2019/03/20/Algo-Select-Sort/"
-                            aria-label=": [정렬] 정렬 알고리즘 Part1"
-                        >
-                            [정렬] 정렬 알고리즘 Part1
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2019-03-20T17:04:04+09:00">
-	
-		    Mar 20, 2019
-    	
-    </time>
-    
-        <span>in </span>
-        
-    <a class="category-link" href="/categories/알고리즘/">알고리즘</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-excerpt">
-                    <p>정렬 알고리즘은 개발자 면접을 보기 위해서 꼭 필요한 내용이다.<br>
-하나씩 정리해보고 숙지해보자.<br>
-정렬 알고리즘은 다음과 같이 간단하게 나눠볼 수 있다.</p>
-                    
-                        <a
-                            href="/2019/03/20/Algo-Select-Sort/"
-                            class="postShorten-excerpt_link link"
-                            aria-label=": [정렬] 정렬 알고리즘 Part1"
                         >
                             Continue reading
                         </a>

@@ -6,29 +6,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="VictoryWoo">
-    <title>[Android] Dependency Injection - VictoryWoo</title>
+    <title>[Java] System.arrayCopy - VictoryWoo</title>
     <meta name="author" content="VictoryWoo">
     
     
         <link rel="icon" href="https://woovictory.github.io/assets/images/develop.ico">
     
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg"},"articleBody":"의존성 주입에 대해서 알아보려고 한다. 사실, 안드로이드 개발을 시작한 지 얼마 되지 않았다면 추천하지 않는 내용이다. 관련된 개념이 어렵기 때문에 어느 정도 경험이 쌓인 사람들에게 추천하고 싶다.\n\n의존성이란\n\n코드에서 두 모듈 간의 연결 관계\n두 클래스 간의 관계\n의존성이 크다는 것은 모듈 간의 결합도가 높다는 것을 의미한다.\n\n[의존성이 미치는 영향은?]\n\n하나의 모듈이 변경되면 결합된 다른 모듈이 영향을 받는다.\n2개의 모듈일 때는 괜찮지만 최악의 경우, 모듈이 100개, 1000개,… n개일 때 하나의 모듈 변경으로 인해 n-1개의 모듈이 영향을 받는다.\n최악의 경우이며, 나머지 모듈이 제대로 동작하는지 검증해야 한다. 시간과 비용은 모듈의 갯수인 N만큼 들게 된다.\n결합도를 낮춰 모듈 간의 독립성을 높이는게 중요하다.\n\nDependency Injection\n\n의존성 주입이라고 하며, DI라고도 부른다.\n구성 요소 간의 의존 관계가 소스 코드 내부가 아닌 외부 설정 파일 등을 통해 정의되게 하는 디자인 패턴이다.\n이를 통해 객체의 생성과 사용을 분리시킬 수 있고, 재사용이 가능해진다.\n크게 3가지 유형이 존재한다.\n1. 생성자 주입 : 필요한 의존성을 모두 포함하는 생성자를 만들고 이를 통해 의존성을 주입한다.\n2. Setter를 통한 주입 : 의존성을 입력 받는 Setter 메소드를 만들고 이를 통해 의존성을 주입한다.\n3. Interface를 통합 주입 : 의존성을 주입하는 함수를 포함하는 인터페이스를 작성하고 이를 구현함으로써 실행시, 의존성을 주입한다.\n주의할 점 : 생성자 주입이 권장되지만, Activity 같은 경우 멤버 인젝션을 사용해야 한다. 이유는 Activity는 생성자를 사용하지 않기 때문이다. 생성자를 사용할 수도 있지만, onCreate()보다 먼저 실행되기 때문에 권장하지 않는다.\n\n\n의존성 주입의 목적\n\n모듈을 Testable하게 만들 수 있다는 점이다. 즉, 독립된 모듈에 대해 테스트 코드를 작성할 수 있다.\n하나의 모듈이 변경되어도 다른 모듈이 영향을 받지 않으므로 유지보수가 쉽다.\nnew를 이용한 생성자를 없앨 수 있다. 모듈 내에서 다른 모듈을 초기화하면 결합도가 높아지므로 객체 생성은 외부에서 하고 생성된 객체를 참조한다.\n객체 생성을 외부에서 하기 때문에 모듈의 독립성이 높아지고 모듈에 대한 테스트가 가능하며, 재사용할 가능성이 높아진다.\n\n\n\n\n장점\n\n클래스 간의 결합도를 낮춰 독립성을 높이므로 유지보수가 수월해진다.\n코드의 재사용을 높이기 때문에 작성된 모듈을 여러 곳에서 수정 없이 사용할 수 있다.\nMock 객체 등을 이용한 단위 테스트의 편의성을 높여준다.\n객체 생성을 외부에서 하면 클래스의 독립성이 높아지고 이에 따라서 클래스를 테스트 가능하게 할 수 있으며 재사용을 할 가능성도 높아진다.\n\n\n\n\nA 클래스가 B 클래스를 의존할 때, B의 객체를 A가 직접 생성하지 않고 오른쪽 그림처럼 생성하여 넘겨주는 것을 의존성 주입이라고 볼 수 있다.\n결국, 의존성 주입을 위해서는 객체를 생성하고 넘겨주는 외부의 무언가가 필요하다. 직접 의존성을 제공하는 Provide 형태의 클래스를 작성할 수 있고 라이브러리로 넘겨서 처리하도록 구현할 수도 있다.\nDependency Injection은 의존성이 있는 객체의 제어를 외부 Framework로 올리면서 IoC(Inversion Of Control) 개념을 구현한다. =&gt; 제 3자에 의해 정의되기 때문에 의존 관계가 역전되었다고 볼 수 있다.\n\nAndroid에서 이를 지원하는 라이브러리 중 Dagger2와 Koin이 있으며, 관련 개념과 사용법은 추후에 정리할 예정이다.\n결론 : 의존성 주입은 두 개 이상의 모듈(클래스)간의 결합도를 낮추기 위해 외부에서 객체 생성(new)하고 주입하는 것이다.\n","dateCreated":"2020-07-05T22:08:42+09:00","dateModified":"2020-07-22T11:58:35+09:00","datePublished":"2020-07-05T22:08:42+09:00","description":"의존성 주입에 대해서 알아보려고 한다. 사실, 안드로이드 개발을 시작한 지 얼마 되지 않았다면 추천하지 않는 내용이다. 관련된 개념이 어렵기 때문에 어느 정도 경험이 쌓인 사람들에게 추천하고 싶다.","headline":"[Android] Dependency Injection","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://woovictory.github.io/2020/07/05/What-is-DI/"},"publisher":{"@type":"Organization","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg","logo":{"@type":"ImageObject","url":"Victory.jpeg"}},"url":"https://woovictory.github.io/2020/07/05/What-is-DI/","keywords":"Android, DI, 안드로이드, 의존성 주입, Dependency Injection"}</script>
-    <meta name="description" content="의존성 주입에 대해서 알아보려고 한다. 사실, 안드로이드 개발을 시작한 지 얼마 되지 않았다면 추천하지 않는 내용이다. 관련된 개념이 어렵기 때문에 어느 정도 경험이 쌓인 사람들에게 추천하고 싶다.">
-<meta name="keywords" content="Android,DI,안드로이드,의존성 주입,Dependency Injection">
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg"},"articleBody":"Java에서 배열을 복사할 때, 사용하는 arraycopy에 대해서 알아보자. 이전에 '얕은 복사 vs 깊은 복사’에서도 잠깐 다뤘으며 System.arraycopy는 깊은 복사할 때 사용한다.\n\nSystem.arraycopy\n위에서 언급했듯이, 배열의 deep Copy를 할 때 사용한다고 했다. for문을 이용해서 deep Copy가 가능하기도 한데, System.arraycopy의 장점은 무엇일까?\n[1] System.arraycopy vs Array hard copy\n찾아보니 System.arraycopy는 native 코드를 호출해서 사용하므로 속도가 더 빠르다고 한다. 직접 실행해보지는 않았지만, stackoverflow 글을 보니 궁금해하던 사람이 실제로 수행한 결과를 보여주었다.\n[2] System.arraycopy vs Arrays.copyOf\n배열을 복사할 때, 종종 Arrays.copyOf를 쓰기도 하는데 이는 System.arraycopy를 래핑한 함수이다. 즉, 동일하다.\n123456789public static &lt;T,U&gt; T[] copyOf(U[] original, int newLength, Class&lt;? extends T[]&gt; newType) &#123;    @SuppressWarnings(\"unchecked\")    T[] copy = ((Object)newType == (Object)Object[].class)        ? (T[]) new Object[newLength]        : (T[]) Array.newInstance(newType.getComponentType(), newLength);    System.arraycopy(original, 0, copy, 0,                        Math.min(original.length, newLength));    return copy;&#125;\n위의 copyOf는 실제 Java에서 구현된 함수를 가지고 왔다. 내부를 살펴보면 System.arraycopy를 호출하여 배열을 복사하는 것을 알 수 있다.\n배열의 복사가 필요할 때는 for문 보다는 System.arraycopy나 Arrays.copyOf를 이용하는게 직관적이므로 권장된다. 전체 길이를 전부 복사하거나 복사 대상의 객체를 유지하지 않아도 된다면 copyOf를 사용하자. 복사하는 길이를 명시해야 하거나 객체를 유지해야 한다면 System.arraycopy를 사용하면 된다.\nRef\n\nSystem.arraycopy는 빠르다. Arrays.copyOf와는?\nJava System.arraycopy() 배열 복사\n\n","dateCreated":"2020-10-12T19:52:41+09:00","dateModified":"2020-10-12T20:15:09+09:00","datePublished":"2020-10-12T19:52:41+09:00","description":"Java에서 배열을 복사할 때, 사용하는 arraycopy에 대해서 알아보자. 이전에 '얕은 복사 vs 깊은 복사’에서도 잠깐 다뤘으며 System.arraycopy는 깊은 복사할 때 사용한다.","headline":"[Java] System.arrayCopy","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://woovictory.github.io/2020/10/12/Java-System-arrayCopy/"},"publisher":{"@type":"Organization","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg","logo":{"@type":"ImageObject","url":"Victory.jpeg"}},"url":"https://woovictory.github.io/2020/10/12/Java-System-arrayCopy/","keywords":"Java, 자바, 배열, deep Copy"}</script>
+    <meta name="description" content="Java에서 배열을 복사할 때, 사용하는 arraycopy에 대해서 알아보자. 이전에 &apos;얕은 복사 vs 깊은 복사’에서도 잠깐 다뤘으며 System.arraycopy는 깊은 복사할 때 사용한다.">
+<meta name="keywords" content="Java,자바,배열,deep Copy">
 <meta property="og:type" content="blog">
-<meta property="og:title" content="[Android] Dependency Injection">
-<meta property="og:url" content="https://woovictory.github.io/2020/07/05/What-is-DI/index.html">
+<meta property="og:title" content="[Java] System.arrayCopy">
+<meta property="og:url" content="https://woovictory.github.io/2020/10/12/Java-System-arrayCopy/index.html">
 <meta property="og:site_name" content="VictoryWoo">
-<meta property="og:description" content="의존성 주입에 대해서 알아보려고 한다. 사실, 안드로이드 개발을 시작한 지 얼마 되지 않았다면 추천하지 않는 내용이다. 관련된 개념이 어렵기 때문에 어느 정도 경험이 쌓인 사람들에게 추천하고 싶다.">
+<meta property="og:description" content="Java에서 배열을 복사할 때, 사용하는 arraycopy에 대해서 알아보자. 이전에 &apos;얕은 복사 vs 깊은 복사’에서도 잠깐 다뤘으며 System.arraycopy는 깊은 복사할 때 사용한다.">
 <meta property="og:locale" content="en">
-<meta property="og:image" content="https://woovictory.github.io/img/di.png">
-<meta property="og:image" content="https://woovictory.github.io/img/di2.png">
-<meta property="og:updated_time" content="2020-07-22T02:58:35.296Z">
+<meta property="og:updated_time" content="2020-10-12T11:15:09.159Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="[Android] Dependency Injection">
-<meta name="twitter:description" content="의존성 주입에 대해서 알아보려고 한다. 사실, 안드로이드 개발을 시작한 지 얼마 되지 않았다면 추천하지 않는 내용이다. 관련된 개념이 어렵기 때문에 어느 정도 경험이 쌓인 사람들에게 추천하고 싶다.">
-<meta name="twitter:image" content="https://woovictory.github.io/img/di.png">
+<meta name="twitter:title" content="[Java] System.arrayCopy">
+<meta name="twitter:description" content="Java에서 배열을 복사할 때, 사용하는 arraycopy에 대해서 알아보자. 이전에 &apos;얕은 복사 vs 깊은 복사’에서도 잠깐 다뤘으며 System.arraycopy는 깊은 복사할 때 사용한다.">
     
     
         
@@ -280,20 +277,20 @@
         <div class="post-header main-content-wrap text-left">
     
         <h1 class="post-title">
-            [Android] Dependency Injection
+            [Java] System.arrayCopy
         </h1>
     
     
         <div class="post-meta">
-    <time datetime="2020-07-05T22:08:42+09:00">
+    <time datetime="2020-10-12T19:52:41+09:00">
 	
-		    Jul 05, 2020
+		    Oct 12, 2020
     	
     </time>
     
         <span>in </span>
         
-    <a class="category-link" href="/categories/Android/">Android</a>
+    <a class="category-link" href="/categories/Java/">Java</a>
 
 
     
@@ -305,59 +302,22 @@
     
     <div class="post-content markdown">
         <div class="main-content-wrap">
-            <p><code>의존성 주입</code>에 대해서 알아보려고 한다. 사실, 안드로이드 개발을 시작한 지 얼마 되지 않았다면 추천하지 않는 내용이다. 관련된 개념이 어렵기 때문에 어느 정도 경험이 쌓인 사람들에게 추천하고 싶다.</p>
+            <p>Java에서 배열을 복사할 때, 사용하는 <strong>arraycopy</strong>에 대해서 알아보자. 이전에 '얕은 복사 vs 깊은 복사’에서도 잠깐 다뤘으며 <code>System.arraycopy</code>는 깊은 복사할 때 사용한다.</p>
 <a id="more"></a>
-<h3 id="의존성이란">의존성이란</h3>
+<h3 id="systemarraycopy">System.arraycopy</h3>
+<p>위에서 언급했듯이, 배열의 deep Copy를 할 때 사용한다고 했다. for문을 이용해서 deep Copy가 가능하기도 한데, System.arraycopy의 장점은 무엇일까?</p>
+<p>[1] System.arraycopy vs Array hard copy</p>
+<p>찾아보니 System.arraycopy는 native 코드를 호출해서 사용하므로 속도가 더 빠르다고 한다. 직접 실행해보지는 않았지만, <a href="https://stackoverflow.com/questions/18638743/is-it-better-to-use-system-arraycopy-than-a-for-loop-for-copying-arrays" target="_blank" rel="noopener">stackoverflow</a> 글을 보니 궁금해하던 사람이 실제로 수행한 결과를 보여주었다.</p>
+<p>[2] System.arraycopy vs Arrays.copyOf</p>
+<p>배열을 복사할 때, 종종 Arrays.copyOf를 쓰기도 하는데 이는 System.arraycopy를 래핑한 함수이다. 즉, 동일하다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> &lt;T,U&gt; T[] copyOf(U[] original, <span class="keyword">int</span> newLength, Class&lt;? extends T[]&gt; newType) &#123;</span><br><span class="line">    <span class="meta">@SuppressWarnings</span>(<span class="string">"unchecked"</span>)</span><br><span class="line">    T[] copy = ((Object)newType == (Object)Object[].class)</span><br><span class="line">        ? (T[]) <span class="keyword">new</span> Object[newLength]</span><br><span class="line">        : (T[]) Array.newInstance(newType.getComponentType(), newLength);</span><br><span class="line">    System.arraycopy(original, <span class="number">0</span>, copy, <span class="number">0</span>,</span><br><span class="line">                        Math.min(original.length, newLength));</span><br><span class="line">    <span class="keyword">return</span> copy;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>위의 copyOf는 실제 Java에서 구현된 함수를 가지고 왔다. 내부를 살펴보면 System.arraycopy를 호출하여 배열을 복사하는 것을 알 수 있다.</p>
+<p>배열의 복사가 필요할 때는 for문 보다는 System.arraycopy나 Arrays.copyOf를 이용하는게 직관적이므로 권장된다. 전체 길이를 전부 복사하거나 복사 대상의 객체를 유지하지 않아도 된다면 copyOf를 사용하자. 복사하는 길이를 명시해야 하거나 객체를 유지해야 한다면 System.arraycopy를 사용하면 된다.</p>
+<h3 id="ref">Ref</h3>
 <ul>
-<li>코드에서 두 모듈 간의 연결 관계</li>
-<li>두 클래스 간의 관계</li>
-<li>의존성이 크다는 것은 모듈 간의 결합도가 높다는 것을 의미한다.</li>
+<li><a href="https://nhj12311.tistory.com/62" target="_blank" rel="noopener">System.arraycopy는 빠르다. Arrays.copyOf와는?</a></li>
+<li><a href="https://velog.io/@agugu95/Java-System.arraycopy-%EB%B0%B0%EC%97%B4-%EB%B3%B5%EC%82%AC" target="_blank" rel="noopener">Java System.arraycopy() 배열 복사</a></li>
 </ul>
-<p><strong>[의존성이 미치는 영향은?]</strong></p>
-<ul>
-<li>하나의 모듈이 변경되면 결합된 다른 모듈이 영향을 받는다.</li>
-<li>2개의 모듈일 때는 괜찮지만 최악의 경우, 모듈이 100개, 1000개,… n개일 때 하나의 모듈 변경으로 인해 n-1개의 모듈이 영향을 받는다.</li>
-<li>최악의 경우이며, 나머지 모듈이 제대로 동작하는지 검증해야 한다. 시간과 비용은 모듈의 갯수인 N만큼 들게 된다.</li>
-<li>결합도를 낮춰 모듈 간의 독립성을 높이는게 중요하다.</li>
-</ul>
-<h3 id="dependency-injection">Dependency Injection</h3>
-<ul>
-<li>의존성 주입이라고 하며, DI라고도 부른다.</li>
-<li>구성 요소 간의 <code>의존 관계</code>가 <strong>소스 코드 내부가 아닌 외부 설정 파일 등을 통해 정의</strong>되게 하는 디자인 패턴이다.</li>
-<li>이를 통해 객체의 생성과 사용을 분리시킬 수 있고, 재사용이 가능해진다.</li>
-<li>크게 3가지 유형이 존재한다.<br>
-<strong>1. 생성자 주입</strong> : 필요한 의존성을 모두 포함하는 생성자를 만들고 이를 통해 의존성을 주입한다.<br>
-<strong>2. Setter를 통한 주입</strong> : 의존성을 입력 받는 Setter 메소드를 만들고 이를 통해 의존성을 주입한다.<br>
-<strong>3. Interface를 통합 주입</strong> : 의존성을 주입하는 함수를 포함하는 인터페이스를 작성하고 이를 구현함으로써 실행시, 의존성을 주입한다.</li>
-<li><code>주의할 점</code> : 생성자 주입이 권장되지만, Activity 같은 경우 멤버 인젝션을 사용해야 한다. 이유는 Activity는 생성자를 사용하지 않기 때문이다. 생성자를 사용할 수도 있지만, onCreate()보다 먼저 실행되기 때문에 권장하지 않는다.</li>
-</ul>
-<ul>
-<li><strong>의존성 주입의 목적</strong>
-<ul>
-<li>모듈을 Testable하게 만들 수 있다는 점이다. 즉, 독립된 모듈에 대해 테스트 코드를 작성할 수 있다.</li>
-<li>하나의 모듈이 변경되어도 다른 모듈이 영향을 받지 않으므로 유지보수가 쉽다.</li>
-<li>new를 이용한 생성자를 없앨 수 있다. 모듈 내에서 다른 모듈을 초기화하면 결합도가 높아지므로 객체 생성은 외부에서 하고 생성된 객체를 참조한다.</li>
-<li>객체 생성을 외부에서 하기 때문에 모듈의 독립성이 높아지고 모듈에 대한 테스트가 가능하며, 재사용할 가능성이 높아진다.</li>
-</ul>
-</li>
-</ul>
-<ul>
-<li><strong>장점</strong>
-<ul>
-<li>클래스 간의 결합도를 낮춰 독립성을 높이므로 유지보수가 수월해진다.</li>
-<li>코드의 재사용을 높이기 때문에 작성된 모듈을 여러 곳에서 수정 없이 사용할 수 있다.</li>
-<li>Mock 객체 등을 이용한 단위 테스트의 편의성을 높여준다.</li>
-<li>객체 생성을 외부에서 하면 클래스의 독립성이 높아지고 이에 따라서 클래스를 테스트 가능하게 할 수 있으며 <strong>재사용</strong>을 할 가능성도 높아진다.</li>
-</ul>
-</li>
-</ul>
-<img src="/img/di.png" width="600" height="200">
-<p>A 클래스가 B 클래스를 의존할 때, B의 객체를 A가 직접 생성하지 않고 오른쪽 그림처럼 생성하여 넘겨주는 것을 의존성 주입이라고 볼 수 있다.</p>
-<p>결국, <code>의존성 주입</code>을 위해서는 객체를 생성하고 넘겨주는 <strong>외부의 무언가</strong>가 필요하다. 직접 의존성을 제공하는 Provide 형태의 클래스를 작성할 수 있고 라이브러리로 넘겨서 처리하도록 구현할 수도 있다.</p>
-<p><strong>Dependency Injection</strong>은 의존성이 있는 객체의 제어를 외부 Framework로 올리면서 <code>IoC(Inversion Of Control)</code> 개념을 구현한다. =&gt; 제 3자에 의해 정의되기 때문에 의존 관계가 역전되었다고 볼 수 있다.</p>
-<img src="/img/di2.png" width="600" height="200">
-<p>Android에서 이를 지원하는 라이브러리 중 Dagger2와 Koin이 있으며, 관련 개념과 사용법은 추후에 정리할 예정이다.</p>
-<p><code>결론</code> : 의존성 주입은 두 개 이상의 모듈(클래스)간의 결합도를 낮추기 위해 외부에서 객체 생성(new)하고 주입하는 것이다.</p>
 
             
 
@@ -369,7 +329,7 @@
             <div class="post-footer-tags">
                 <span class="text-color-light text-small">TAGGED IN</span><br/>
                 
-    <a class="tag tag--primary tag--small t-link" href="/tags/Android/">Android</a> <a class="tag tag--primary tag--small t-link" href="/tags/DI/">DI</a> <a class="tag tag--primary tag--small t-link" href="/tags/Dependency-Injection/">Dependency Injection</a> <a class="tag tag--primary tag--small t-link" href="/tags/안드로이드/">안드로이드</a> <a class="tag tag--primary tag--small t-link" href="/tags/의존성-주입/">의존성 주입</a>
+    <a class="tag tag--primary tag--small t-link" href="/tags/Java/">Java</a> <a class="tag tag--primary tag--small t-link" href="/tags/deep-Copy/">deep Copy</a> <a class="tag tag--primary tag--small t-link" href="/tags/배열/">배열</a> <a class="tag tag--primary tag--small t-link" href="/tags/자바/">자바</a>
 
             </div>
         
@@ -379,14 +339,11 @@
         <ul class="post-actions post-action-nav">
             <li class="post-action">
                 
-                    
-                <a
-                    class="post-action-btn btn btn--default tooltip--top"
-                    href="/2020/07/05/Java-binding/"
-                    data-tooltip="[Java] 동적바인딩 vs 정적바인딩"
-                    aria-label="PREVIOUS: [Java] 동적바인딩 vs 정적바인딩"
-                >
-                    
+                    <a
+                        class="post-action-btn btn btn--disabled"
+                        aria-hidden="true"
+                    >
+                        
                         <i class="fa fa-angle-left" aria-hidden="true"></i>
                         <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
                     </a>
@@ -396,9 +353,9 @@
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2020/07/05/Kotlin-Collection-Filter-Map/"
-                    data-tooltip="[Kotlin] filter, map 호출 순서에 따른 성능 차이"
-                    aria-label="NEXT: [Kotlin] filter, map 호출 순서에 따른 성능 차이"
+                    href="/2020/10/08/About-AI/"
+                    data-tooltip="[ETC] About AI"
+                    aria-label="NEXT: [ETC] About AI"
                 >
                     
                         <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
@@ -423,7 +380,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://woovictory.github.io/2020/07/05/What-is-DI/"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://woovictory.github.io/2020/10/12/Java-System-arrayCopy/"
                     title="Share on Facebook"
                     aria-label="Share on Facebook"
                 >
@@ -436,7 +393,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://twitter.com/intent/tweet?text=https://woovictory.github.io/2020/07/05/What-is-DI/"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://woovictory.github.io/2020/10/12/Java-System-arrayCopy/"
                     title="Share on Twitter"
                     aria-label="Share on Twitter"
                 >
@@ -449,7 +406,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://plus.google.com/share?url=https://woovictory.github.io/2020/07/05/What-is-DI/"
+                    target="new" href="https://plus.google.com/share?url=https://woovictory.github.io/2020/10/12/Java-System-arrayCopy/"
                     title="Share on Google+"
                     aria-label="Share on Google+"
                 >
@@ -508,14 +465,11 @@
         <ul class="post-actions post-action-nav">
             <li class="post-action">
                 
-                    
-                <a
-                    class="post-action-btn btn btn--default tooltip--top"
-                    href="/2020/07/05/Java-binding/"
-                    data-tooltip="[Java] 동적바인딩 vs 정적바인딩"
-                    aria-label="PREVIOUS: [Java] 동적바인딩 vs 정적바인딩"
-                >
-                    
+                    <a
+                        class="post-action-btn btn btn--disabled"
+                        aria-hidden="true"
+                    >
+                        
                         <i class="fa fa-angle-left" aria-hidden="true"></i>
                         <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
                     </a>
@@ -525,9 +479,9 @@
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2020/07/05/Kotlin-Collection-Filter-Map/"
-                    data-tooltip="[Kotlin] filter, map 호출 순서에 따른 성능 차이"
-                    aria-label="NEXT: [Kotlin] filter, map 호출 순서에 따른 성능 차이"
+                    href="/2020/10/08/About-AI/"
+                    data-tooltip="[ETC] About AI"
+                    aria-label="NEXT: [ETC] About AI"
                 >
                     
                         <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
@@ -552,7 +506,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://woovictory.github.io/2020/07/05/What-is-DI/"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://woovictory.github.io/2020/10/12/Java-System-arrayCopy/"
                     title="Share on Facebook"
                     aria-label="Share on Facebook"
                 >
@@ -565,7 +519,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://twitter.com/intent/tweet?text=https://woovictory.github.io/2020/07/05/What-is-DI/"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://woovictory.github.io/2020/10/12/Java-System-arrayCopy/"
                     title="Share on Twitter"
                     aria-label="Share on Twitter"
                 >
@@ -578,7 +532,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://plus.google.com/share?url=https://woovictory.github.io/2020/07/05/What-is-DI/"
+                    target="new" href="https://plus.google.com/share?url=https://woovictory.github.io/2020/10/12/Java-System-arrayCopy/"
                     title="Share on Google+"
                     aria-label="Share on Google+"
                 >
@@ -622,7 +576,7 @@
                     <a
                         class="share-option-btn"
                         target="new"
-                        href="https://www.facebook.com/sharer/sharer.php?u=https://woovictory.github.io/2020/07/05/What-is-DI/"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://woovictory.github.io/2020/10/12/Java-System-arrayCopy/"
                         aria-label="Share on Facebook"
                     >
                         <i class="fab fa-facebook" aria-hidden="true"></i><span>Share on Facebook</span>
@@ -635,7 +589,7 @@
                     <a
                         class="share-option-btn"
                         target="new"
-                        href="https://twitter.com/intent/tweet?text=https://woovictory.github.io/2020/07/05/What-is-DI/"
+                        href="https://twitter.com/intent/tweet?text=https://woovictory.github.io/2020/10/12/Java-System-arrayCopy/"
                         aria-label="Share on Twitter"
                     >
                         <i class="fab fa-twitter" aria-hidden="true"></i><span>Share on Twitter</span>
@@ -648,7 +602,7 @@
                     <a
                         class="share-option-btn"
                         target="new"
-                        href="https://plus.google.com/share?url=https://woovictory.github.io/2020/07/05/What-is-DI/"
+                        href="https://plus.google.com/share?url=https://woovictory.github.io/2020/10/12/Java-System-arrayCopy/"
                         aria-label="Share on Google+"
                     >
                         <i class="fab fa-google-plus" aria-hidden="true"></i><span>Share on Google+</span>
@@ -707,9 +661,9 @@
     
         <script>
           var disqus_config = function() {
-            this.page.url = 'https://woovictory.github.io/2020/07/05/What-is-DI/';
+            this.page.url = 'https://woovictory.github.io/2020/10/12/Java-System-arrayCopy/';
               
-            this.page.identifier = '2020/07/05/What-is-DI/';
+            this.page.identifier = '2020/10/12/Java-System-arrayCopy/';
               
           };
           (function() {
