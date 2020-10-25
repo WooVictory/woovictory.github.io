@@ -267,7 +267,7 @@
     <section class="postShorten-group main-content-wrap">
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -299,62 +299,18 @@
 
             </div>
             
-                <div class="postShorten-content">
-                    <h2 id="overview">OverView</h2>
+                <div class="postShorten-excerpt">
+                    <h2>OverView</h2>
 <p>안드로이드에서는 기본적으로 메인 스레드를 갖는다. 이를 <strong>UI 스레드</strong>라고 부르기도 하는데, UI 관련 작업을 해당 스레드에서만 작업하도록 제한하기 때문에 이렇게 부른다.</p>
-<p>UI 스레드에서는 UI 관련 작업만 한다고 했는데, 그렇다면 파일을 다운로드 받거나 네트워크를 통해 데이터를 받아오는 입출력 작업 등의 시간이 오래 걸리는 작업을 하면 앱의 반응성이 낮아지고 안드로이드 시스템은 사용자의 사용성을 위해 <code>ANR(Application Not Responding)</code>을 발생시키게 된다.</p>
-<p>이 문제를 해결하기 위해 안드로이드에서는 Handler, AsyncTask 등의 방법을 제공한다. 이번 포스팅에서 알아볼 친구는 <strong>AsyncTask</strong>이다. 그 중에서도 문제점과 유의사항이다. 사실 인터넷에 많은 사용법과 개념이 있으니 여기서는 다루지 않겠다.</p>
-<h2 id="asynctask">AsyncTask</h2>
-<p><strong>Google</strong>은 <code>AsyncTask</code>를 사용할 때, '수 초 내의 동작에만 사용’하는 것을 권장하고 있다. 그 이상의 작업을 하고 싶을 때는 별도의 스레드를 생성해 직접 구현하는 것을 권장한다. 그 <strong>이유는 AsyncTask가 액티비티에 종속되지 않기 때문이다.</strong></p>
-<p><code>1. AysncTask 사용 규칙</code></p>
-<ul>
-<li>AsyncTask는 일회용 클래스이다. 두 번 이상 사용하면 안된다. 두 번째 execute() 호출시 오류가 발생한다.</li>
-<li>AsyncTask 객체는 메인스레드에서 생성되어야 하고 실행되어야 한다.</li>
-<li>AsyncTask의 콜백 메소드인 onPreExecute(), doInBackground(), onProgress() 등을 수동으로 호출하면 오류가 발생한다.</li>
-</ul>
-<p><code>2. AsyncTask가 액티비티에 종속되지 않아 생길 수 있는 문제</code></p>
-<p>AsyncTask는 액티비티에 포함되지 않는다. 그래서 doInBackground()가 수행되고 있는 동안에 액티비티가 종료되면 수행되던 AsyncTask는 다음과 같은 2가지 문제가 발생할 수 있다.</p>
-<ul>
-<li><strong>액티비티 종료 시의 문제점</strong>
-<ul>
-<li>AsyncTask를 execute() 하고 doInBackground()가 수행되고 있는 동안에 액티비티가 먼저 종료되면 AsyncTask와 액티비티는 독립적인 존재이므로 AsyncTask가 종료되지 않는다. 액티비티가 종료되더라도 doInBackground()의 수행이 끝날 때까지 AsyncTask는 실행 중 상태를 유지하게 된다.</li>
-<li>doInBackground() 수행 완료 후에 AsyncTask의 생명주기 상 onCancelled()나 onPostExecute() 메소드가 호출된다. 이때 존재하지 않은 액티비티의 UI에 접근을 한다면 메모리 누수(Memory Leak)이 발생하고 <code>IllegalArgumentException</code> 에러가 발생할 수 있다.</li>
-</ul>
-</li>
-</ul>
-<p>그래서 다음처럼 액티비티가 종료될 때, AsyncTask의 cancel() 메소드를 호출해 오류를 방지해야 한다.</p>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onDestroy</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">super</span>.onDestroy()</span><br><span class="line">    task.cancel(<span class="literal">true</span>)        </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li><strong>디바이스의 화면 회전시의 문제점</strong>
-<ul>
-<li>액티비티 종료시의 문제점 사례와 같은 상황이다. 액티비티는 디바이스의 화면을 회전시키면 액티비티가 종료되고 새로운 액티비티가 생성된다. 그렇게 되면 액티비티의 모든 변수가 초기화되고 회전 전에 실행했던 AsyncTask는 계속 백그라운드에서 수행이 되고 doInBackground()가 종료되고 난 뒤에 UI 객체에 접근을 하면 메모리 누수와 스레드 <code>IllegalArgumentException</code> 에러가 발생할 수 있다.</li>
-</ul>
-</li>
-</ul>
-<p><code>3. AsyncTask를 취소하는 방법</code></p>
-<p>AsyncTask는 수행 중에 cancel()을 호출하여 취소할 수 있다. cancel()이 한 번이라도 호출되면 isCancelled() 메소드는 true를 반환한다. 하지만 주의해야 할 것은 cancel()을 호출했다고 doInBackground()의 실행이 취소되는 것은 아니라는 점이다.</p>
-<p>액티비티 종료나 화면이 회전되는 상황이 발생했을 때 cancel()을 호출하더라도 남아있는 작업은 계속 돌게 되어 원치 않은 상황이 될 수 있다. 그래서 작업 취소 요청에 바로 반응하기 위해서 doInBackground() 메소드에서 주기적으로 isCancelled()의 반환값을 확인하여 적절한 조치를 취해야 한다.</p>
-<h2 id="참고">참고</h2>
-<ul>
-<li><a href="http://blog.naver.com/PostView.nhn?blogId=ironlove77&amp;logNo=221003037545" target="_blank" rel="noopener">안드로이드 | 스레드 | AsyncTask의 문제점과 유의사항</a></li>
-<li><a href="https://webnautes.tistory.com/1082" target="_blank" rel="noopener">안드로이드 개념 및 예제 - AsyncTask</a></li>
-</ul>
-
                     
+                        <a
+                            href="/2019/08/03/AsyncTask/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [Android] AsyncTask"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2019/08/03/AsyncTask/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             

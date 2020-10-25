@@ -267,7 +267,7 @@
     <section class="postShorten-group main-content-wrap">
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -299,55 +299,17 @@
 
             </div>
             
-                <div class="postShorten-content">
+                <div class="postShorten-excerpt">
                     <p>매일 아침 10시에 <code>Daily DevBlog</code>를 통해서 개발 관련 블로그 포스팅들이 메일로 온다. 이를 통해서 매일 아침 따끈따근한 소식을 볼 수 있고, 내가 관심 있어하는 주제가 있다면 얻을 수 있어서 굉장히 좋아하고 잘 사용하고 있다.</p>
-<p>어쨋든, 오늘 글의 주제는 이게 아니다. 글을 보던 중 괜찮은 내용이 있어서 참고해서 작성하려고 한다. Android Studio의 <code>Live Template</code> 기능이다.</p>
-<h2 id="live-template">Live Template</h2>
-<p>지극히 주관적인 생각이지만, 개발자들은 귀찮은 걸 싫어하는 것 같다. 코딩을 하더라도 조금만 귀찮은 작업이라면 싫어한다. 그래서 IDE에서 제공하는 기능을 잘 사용한다면 귀찮음을 덜어줄 수 있다. 그 중에서 나는 <code>JetBrains</code>이 만든 IDE가 좋다고 생각한다. 물론, IDE에서 제공하는 기능을 잘 사용한다면 말이다.</p>
-<p><strong>Live Template</strong>은 축약형 값을 입력하면 자주 쓰는 코드 구성을 불러오는 기능이다. 쉽게 말해 상용구이다. 안드로이드 스튜디오에서 기본적으로 제공하는 라이브 템플릿 중에서도 유용한 것들이 꽤 있고, 사용자가 직접 커스텀해 사용할 수도 있다.</p>
-<p>하나의 예로, 우리가 자주 사용하는 반복문 중 for문을 사용한다고 가정해보자. for문의 fo만 입력해도 밑에 자동 완성으로 제공되는 모습을 볼 수 있을 것이다.</p>
-<img src="/img/android_studio_exam.png" width="500" height="200">
-<p>설정을 변경할 수도 있고, 사용자가 원하는 상용구를 추가할 수도 있다. <strong>환경 설정(Preferences) -&gt; Editor -&gt; Live Template</strong> 에 들어가면 템플릿을 확인할 수 있다.</p>
-<h2 id="커스텀해보자">커스텀해보자.</h2>
-<p>그렇다면 간단한 커스텀 템플릿을 만들어보자.</p>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> intent = Intent(<span class="keyword">this</span>, MainActivity::<span class="class"><span class="keyword">class</span>.<span class="title">java</span>)</span></span><br><span class="line">startActivity(intent)</span><br></pre></td></tr></table></figure>
-<p>액티비티 이동을 위해서 이렇게 두 줄을 입력하기가 귀찮을 수 있다. 물론, 함수로 빼서 사용할 수도 있지만 그 경우는 제외하고 지금 상황만 보자. 그래서 <strong>축약형</strong>을 적었을 때, 위에 정의한 두 줄이 자동 생성되도록 하고 싶다. 현재 액티비티는 자동으로 완성되고, 이동할 두 번째 클래스명만 입력하도록 할 것이다.</p>
-<p><code>cis</code>를 입력했을 때 아래의 두 줄이 뜨게 할 것이다. <strong>Preferences -&gt; Editor -&gt; Live Template</strong> 창에서 우측 상단의 <code>+</code> 버튼을 눌러 새로운 Template Group을 만든다. 만든 Group을 누른 상태에서 <code>+</code> 버튼을 한 번 더 누른 뒤, <strong>Live Template</strong>을 눌러 Template Text를 입력해준다.</p>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> intent = android.content.Intent(<span class="keyword">this</span>@$first$, $second$::<span class="class"><span class="keyword">class</span>.<span class="title">java</span>)</span></span><br><span class="line">startActivity(intent)</span><br></pre></td></tr></table></figure>
-<img src="/img/android_studio_exam_2.png" width="800" height="200">
-<p><code>android.content.Intent</code>를 입력함으로써 자동으로 import되도록 했다.</p>
-<p>먼저, 이 템플릿을 어디에서 호출하여 사용할 것인지 지정해야 한다. 하단에 보면 주의사항 <strong>No applicable contexts</strong> 옆의 Define을 눌러 kotlin 전체에 체크해준다.</p>
-<p>다음으로 $first$와 $second$는 자유롭게 정할 수 있는 변수명이다. 이 변수에 대한 설정은 Template Text 코드 우측 하단에 <strong>Edit variables</strong>에서 설정할 수 있다. 누르면 Expression을 불러 사용할 수 있다.</p>
-<ul>
-<li>first 변수 : 미리 정의되어 있는 함수 목록에서 클래스 이름을 불러오는 <code>className()</code> 메소드를 사용한다. 오른쪽에 있는 <strong>Skip if defined</strong>에 체크하면 템플릿을 불러온 후, 커서가 바로 second 변수 쪽으로 이동하도록 설정할 수 있다.</li>
-<li>second 변수 : 직접 다음 액티비티 이름을 적어줄 것이기 때문에 아무 작업을 하지 않는다.</li>
-</ul>
-<img src="/img/android_studio_exam3.png" width="600" height="200">
-<p>이제 Ok 버튼을 눌러서 마무리하면 코드에서 사용할 수 있다. 필자는 <code>cis</code>라는 축약형을 사용했다.</p>
-<img src="/img/android_studio_exm4.png" width="600" height="200">
-<p>위 그림을 보면 <code>cis</code> 축약형을 입력했을 때, 원하는 코드가 뜨는 것을 확인할 수 있다.</p>
-<h2 id="결론">결론</h2>
-<p>Live Template을 사용하면 간단한 코드를 작성하는 것을 템플릿화시켜서 아주 유용하게 사용할 수 있을 것 같다. 아주 유용한 기능이다.</p>
-<h2 id="참고">참고</h2>
-<ul>
-<li><a href="https://blog.yena.io/studynote/2019/07/14/Android-Live-Templates.html" target="_blank" rel="noopener">[Android] Live Template 라이브 템플릿</a></li>
-</ul>
-
                     
+                        <a
+                            href="/2019/07/15/AndroidStudio-Live-Template/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [Android] Live Template?!"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2019/07/15/AndroidStudio-Live-Template/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             

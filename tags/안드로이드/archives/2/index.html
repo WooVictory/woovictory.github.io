@@ -318,7 +318,7 @@
     </article>
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -350,86 +350,18 @@
 
             </div>
             
-                <div class="postShorten-content">
-                    <h2 id="연산자">연산자</h2>
+                <div class="postShorten-excerpt">
+                    <h2>연산자</h2>
 <p>ReactiveX의 연산자는 꽤 많다. 이 연산자들을 모두 안다고 하더라도 기억하기는 어렵다. 하지만, 이름을 보고 내용을 짐작할 수 있고 마블 다이어그램이 도움이 된다. 필요할 때 찾아보자.</p>
-<p>대신, 여기서 소개하는 연산자는 자주 사용되니 꼭 알아두자!</p>
-<h3 id="1map">1.map()</h3>
-<ul>
-<li>입력값을 어떤 함수에 넣어서 원하는 값으로 변환하는 함수이다.</li>
-<li>입력 데이터가 있고 그것을 변환해줄 중개업자가 있다고 생각하면 좋다.</li>
-<li>map() 함수는 반환값을 확인한다. 또한, 스케줄러를 지원하지 않으므로 현재 스레드에서 실행된다.</li>
-<li><code>일대일 함수</code></li>
-</ul>
-<img src="/img/rx_map.png" width="500" height="200">
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">(args: <span class="type">Array</span>&lt;<span class="type">String</span>&gt;)</span></span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// map을 통해 10을 곱해준 값을 반환.</span></span><br><span class="line">    Observable.just(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>)</span><br><span class="line">            .map &#123; item -&gt; item * <span class="number">10</span> &#125;</span><br><span class="line">            .subscribe(&#123;</span><br><span class="line">                println(it)</span><br><span class="line">            &#125;, &#123;</span><br><span class="line">                println(it.message)</span><br><span class="line">            &#125;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 메소드 참조도 가능.</span></span><br><span class="line">    Observable.just(<span class="string">"RED"</span>, <span class="string">"BLUE"</span>, <span class="string">"YELLOW"</span>,<span class="string">"BLACK"</span>)</span><br><span class="line">            .map(Test::ballToIndex) </span><br><span class="line">            .subscribe(&#123;</span><br><span class="line">                println(it)</span><br><span class="line">            &#125;, &#123;</span><br><span class="line">                println(it.message)</span><br><span class="line">            &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">object</span> Test &#123;</span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">ballToIndex</span><span class="params">(color: <span class="type">String</span>)</span></span>: <span class="built_in">Int</span> = <span class="keyword">when</span> (color) &#123;</span><br><span class="line">        <span class="string">"RED"</span> -&gt; &#123;</span><br><span class="line">            <span class="number">1</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="string">"YELLOW"</span> -&gt; &#123;</span><br><span class="line">            <span class="number">2</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="string">"BLUE"</span> -&gt; &#123;</span><br><span class="line">            <span class="number">3</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> -&gt; &#123;</span><br><span class="line">            <span class="number">-1</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="2flatmap">2.flatMap()</h3>
-<ul>
-<li>map() 함수와 동일한 기능을 하지만 결과가 Observable로 나온다.</li>
-<li>결과값이 Observable이므로 여러 개의 데이터를 발행할 수 있다.</li>
-<li><code>일대다 함수</code> 혹은 <code>일대일 Observable</code> 함수이다.</li>
-<li>1개를 발행할 수도 여러 개를 발행할 수도 있다.</li>
-</ul>
-<img src="/img/rx_flatmap.png" width="500" height="200">
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">(args: <span class="type">Array</span>&lt;<span class="type">String</span>&gt;)</span></span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Function 인터페이스를 통해 제네릭 타입을 선언.</span></span><br><span class="line">    <span class="keyword">val</span> getDoubleDiamonds : (String) -&gt; Observable&lt;String&gt; = &#123; ball: String -&gt;</span><br><span class="line">        Observable.just&lt;String&gt;(<span class="string">"<span class="variable">$ball</span>&lt;&gt;"</span>, <span class="string">"<span class="variable">$ball</span>&lt;&gt;"</span>)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 3개의 데이터를 넣었는데 6개를 발행한다.</span></span><br><span class="line">    <span class="comment">// 일대다이고, Observable 을 반환한다.</span></span><br><span class="line">    <span class="comment">// 위에서 정의한 Function 인터페이스 사용.</span></span><br><span class="line">    Observable.just(<span class="string">"1"</span>, <span class="string">"2"</span>, <span class="string">"3"</span>)</span><br><span class="line">            .flatMap(getDoubleDiamonds)</span><br><span class="line">            .subscribe(&#123;</span><br><span class="line">                println(<span class="string">"성공 : <span class="variable">$it</span>"</span>)</span><br><span class="line">            &#125;, &#123;</span><br><span class="line">                println(<span class="string">"실패 : <span class="subst">$&#123;it.message&#125;</span>"</span>)</span><br><span class="line">            &#125;)</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 인라인을 사용.</span></span><br><span class="line">    Observable.just(<span class="string">"1"</span>,<span class="string">"2"</span>,<span class="string">"3"</span>)</span><br><span class="line">            .map &#123; ball -&gt;</span><br><span class="line">                Observable.just(<span class="string">"<span class="variable">$ball</span>&lt;&gt;"</span>,<span class="string">"<span class="variable">$ball</span>&lt;&gt;"</span>)</span><br><span class="line">            &#125;</span><br><span class="line">            .subscribe&#123;</span><br><span class="line">                println(it)</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>Function&lt;T,R&gt; : T는 입력값을 의미하고 R은 결과 함수이다.</li>
-<li>String을 넣으면 여러 개의 String을 발행하는 Observable이 나온다.</li>
-<li><strong>여러 개의 데이터를 발행하는 방법은 Observable 뿐이다.</strong></li>
-</ul>
-<h3 id="3filter-함수">3.filter() 함수</h3>
-<ul>
-<li>Observable에서 <code>원하는 데이터만 걸러내는 역할</code>을 한다.</li>
-<li>즉, 필요없는 데이터는 제거하고 관심있는 데이터만 filter() 함수를 통과한다.</li>
-<li>간단한 수식을 적용하는 것과 원하는 조건을 작성할 수도 있다.</li>
-</ul>
-<img src="/img/rx_filter.png" width="500" height="200">
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">(args: <span class="type">Array</span>&lt;<span class="type">String</span>&gt;)</span></span> &#123;</span><br><span class="line">    <span class="comment">// 짝수만 필터링.</span></span><br><span class="line">    Observable.just(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>)</span><br><span class="line">            .filter &#123; number -&gt;</span><br><span class="line">                number % <span class="number">2</span> == <span class="number">0</span></span><br><span class="line">            &#125;</span><br><span class="line">            .subscribe(&#123;</span><br><span class="line">                println(<span class="string">"result : <span class="variable">$it</span>"</span>)</span><br><span class="line">            &#125;, &#123;</span><br><span class="line">                println(<span class="string">"error : <span class="subst">$&#123;it.message&#125;</span>"</span>)</span><br><span class="line">            &#125;)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 결과</span></span><br><span class="line">result : <span class="number">2</span></span><br><span class="line">result : <span class="number">4</span></span><br><span class="line">result : <span class="number">6</span></span><br></pre></td></tr></table></figure>
-<p>이외에도 filter() 함수와 비슷한 함수들이 존재한다. 이름만 보고 어떤 기능을 할지 짐작이 가능하다.</p>
-<ul>
-<li><code>first(default)</code> : Observable의 첫 번째 값을 필터한다. 만약 값 없이 완료되면 기본값을 반환한다.</li>
-<li><code>last(default)</code> : Observable의 마지막 값을 필터한다. 만약 값 없이 완료되면 기본값을 반환한다.</li>
-<li><code>take(N)</code> : 최초 N개 값만 가져온다.</li>
-<li><code>takeLast(N)</code> : 마지막 N개 값만 필터한다.</li>
-<li><code>skip(N)</code> : 최초 N개 값을 건너뛴다.</li>
-<li><code>skipLast(N)</code> : 마지막 N개 값을 건너뛴다.</li>
-</ul>
-<p>사용 예제는 아래와 같다.</p>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">(args: <span class="type">Array</span>&lt;<span class="type">String</span>&gt;)</span></span> &#123;</span><br><span class="line">    <span class="keyword">val</span> source = Observable.just(<span class="number">100</span>, <span class="number">200</span>, <span class="number">300</span>, <span class="number">400</span>, <span class="number">500</span>, <span class="number">600</span>)</span><br><span class="line">    <span class="keyword">var</span> single: Single&lt;<span class="built_in">Int</span>&gt;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 1. first</span></span><br><span class="line">    single = source.first(<span class="number">-1</span>)</span><br><span class="line">    single.subscribe(&#123;</span><br><span class="line">        println(<span class="string">"first result : <span class="variable">$it</span>"</span>)</span><br><span class="line">    &#125;, &#123;</span><br><span class="line">        println(<span class="string">"error : <span class="subst">$&#123;it.message&#125;</span>"</span>)</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 2. last</span></span><br><span class="line">    single = source.last(<span class="number">-1</span>)</span><br><span class="line">    single.subscribe(&#123;</span><br><span class="line">        println(<span class="string">"last result : <span class="variable">$it</span>"</span>)</span><br><span class="line">    &#125;, &#123;</span><br><span class="line">        println(<span class="string">"error : <span class="subst">$&#123;it.message&#125;</span>"</span>)</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 3. take</span></span><br><span class="line">    source.take(<span class="number">3</span>)</span><br><span class="line">            .subscribe(&#123;</span><br><span class="line">                println(<span class="string">"take result : <span class="variable">$it</span>"</span>)</span><br><span class="line">            &#125;, &#123;</span><br><span class="line">                println(<span class="string">"error : <span class="subst">$&#123;it.message&#125;</span>"</span>)</span><br><span class="line">            &#125;)</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 4. takeLast</span></span><br><span class="line">    source.takeLast(<span class="number">3</span>)</span><br><span class="line">            .subscribe(&#123;</span><br><span class="line">                println(<span class="string">"takeLast result : <span class="variable">$it</span>"</span>)</span><br><span class="line">            &#125;, &#123;</span><br><span class="line">                println(<span class="string">"error : <span class="subst">$&#123;it.message&#125;</span>"</span>)</span><br><span class="line">            &#125;)</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 5. skip -&gt; 300,400,500,600</span></span><br><span class="line">    source.skip(<span class="number">2</span>)</span><br><span class="line">            .subscribe(&#123;</span><br><span class="line">                println(<span class="string">"skip result : <span class="variable">$it</span>"</span>)</span><br><span class="line">            &#125;, &#123;</span><br><span class="line">                println(<span class="string">"error : <span class="subst">$&#123;it.message&#125;</span>"</span>)</span><br><span class="line">            &#125;)</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 6. skipLast -&gt; 100,200,300</span></span><br><span class="line">    source.skipLast(<span class="number">3</span>)</span><br><span class="line">            .subscribe(&#123;</span><br><span class="line">                println(<span class="string">"skipLast result : <span class="variable">$it</span>"</span>)</span><br><span class="line">            &#125;, &#123;</span><br><span class="line">                println(<span class="string">"error : <span class="subst">$&#123;it.message&#125;</span>"</span>)</span><br><span class="line">            &#125;)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 결과</span></span><br><span class="line">first result : <span class="number">100</span></span><br><span class="line">last result : <span class="number">600</span></span><br><span class="line">take result : <span class="number">100</span></span><br><span class="line">take result : <span class="number">200</span></span><br><span class="line">take result : <span class="number">300</span></span><br><span class="line">takeLast result : <span class="number">400</span></span><br><span class="line">takeLast result : <span class="number">500</span></span><br><span class="line">takeLast result : <span class="number">600</span></span><br><span class="line">skip result : <span class="number">300</span></span><br><span class="line">skip result : <span class="number">400</span></span><br><span class="line">skip result : <span class="number">500</span></span><br><span class="line">skip result : <span class="number">600</span></span><br><span class="line">skipLast result : <span class="number">100</span></span><br><span class="line">skipLast result : <span class="number">200</span></span><br><span class="line">skipLast result : <span class="number">300</span></span><br></pre></td></tr></table></figure>
-<h3 id="4reduce">4.reduce()</h3>
-<ul>
-<li>발행한 데이터를 모두 사용하여 어떤 최종 결과 데이터를 합성할 때 활용한다.</li>
-<li>함수형 프로그래밍의 가장 기본 연산자인 map/filter/reduce 패턴을 이루는 마지막 필수 함수이다.</li>
-<li>Observable을 이용해 들어오는 데이터를 1개씩 모아서 최종 결과를 만들어야 할 때 사용한다고 생각하면 된다. 주로 수치와 관련된 계산 문제에서 활용하면 좋다.</li>
-</ul>
-<p>보통 Observable에 입력된 데이터를 필요한 map() 함수로 매핑하고, 원하는 데이터만 추출할 때는 불필요한 데이터를 걸러내는 filter() 함수를 사용한다. 또한 상황에 따라 발행된 데이터를 취합하여 어떤 결과를 만들어낼 때는 reduce 계열의 함수를 사용한다.</p>
-<img src="/img/rx_reduce.png" width="500" height="200">
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">(args: <span class="type">Array</span>&lt;<span class="type">String</span>&gt;)</span></span> &#123;</span><br><span class="line">    <span class="keyword">val</span> source: Maybe&lt;String&gt; = Observable.just(<span class="string">"1"</span>, <span class="string">"3"</span>, <span class="string">"5"</span>)</span><br><span class="line">            .reduce &#123; ball1, ball2 -&gt;</span><br><span class="line">                <span class="string">"<span class="variable">$ball2</span>(<span class="variable">$ball1</span>)"</span></span><br><span class="line">            &#125;</span><br><span class="line">    source.subscribe(&#123;</span><br><span class="line">        println(<span class="string">"reduce 결과 : <span class="variable">$it</span>"</span>)</span><br><span class="line">    &#125;, &#123;</span><br><span class="line">        println(<span class="string">"error : <span class="subst">$&#123;it.message&#125;</span>"</span>)</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 람다 표현식을 별도 함수로 분리.</span></span><br><span class="line">    Observable.just(<span class="string">"1"</span>,<span class="string">"3"</span>,<span class="string">"5"</span>)</span><br><span class="line">            .reduce(mergeBalls)</span><br><span class="line">            .subscribe(&#123;</span><br><span class="line">                println(<span class="string">"reduce 함수로 분리한 결과 : <span class="variable">$it</span>"</span>)</span><br><span class="line">            &#125;,&#123;</span><br><span class="line">                println(<span class="string">"error : <span class="subst">$&#123;it.message&#125;</span>"</span>)</span><br><span class="line">            &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>reduce() 함수를 호출하면 인자로 넘긴 람다 표현식에 의해 결과 없이 완료될 수도 있다. 따라서 Observable이 아니라 결과가 반환할 수도 아닐 수도 있는 <code>Maybe</code> 객체로 리턴된다.</p>
-<h3 id="예제">예제</h3>
-<p>다음과 같은 예제를 한번 작성해보자.</p>
-<ol>
-<li>전체 매출 데이터를 입력한다.</li>
-<li>매출 데이터 중 TV 매출을 필터링한다.</li>
-<li>TV 매출의 합을 구한다.</li>
-</ol>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">(args: <span class="type">Array</span>&lt;<span class="type">String</span>&gt;)</span></span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 1. 데이터 입력.</span></span><br><span class="line">    <span class="comment">// first : 상품 이름, second : 매출액.</span></span><br><span class="line">    <span class="keyword">var</span> sales = mutableListOf&lt;Pair&lt;String, <span class="built_in">Int</span>&gt;&gt;()</span><br><span class="line">    sales.add(<span class="string">"TV"</span> to <span class="number">2500</span>)</span><br><span class="line">    sales.add(<span class="string">"Camera"</span> to <span class="number">300</span>)</span><br><span class="line">    sales.add(<span class="string">"TV"</span> to <span class="number">1600</span>)</span><br><span class="line">    sales.add(<span class="string">"Phone"</span> to <span class="number">800</span>)</span><br><span class="line">    sales.add(<span class="string">"Sofa"</span> to <span class="number">10000</span>)</span><br><span class="line">    sales.add(Pair(<span class="string">"TV"</span>, <span class="number">1000</span>))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">val</span> source: Maybe&lt;<span class="built_in">Int</span>&gt; = Observable.fromIterable(sales)</span><br><span class="line">            <span class="comment">// 2. 매출 데이터 중 TV 매출을 필터링한다.</span></span><br><span class="line">            .filter &#123; sale -&gt;</span><br><span class="line">                sale.first == <span class="string">"TV"</span></span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// map 을 통해 sale 에서 매출액만 뽑는다.</span></span><br><span class="line">            .map &#123; sale -&gt;</span><br><span class="line">                sale.second</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 3. reduce 를 통해 매출의 합을 구한다.</span></span><br><span class="line">            .reduce &#123; sale1, sale2 -&gt;</span><br><span class="line">                sale1 + sale2</span><br><span class="line">            &#125;</span><br><span class="line">    <span class="comment">// reduce 를 호출하기 때문에 Observable 이 아니라 Maybe 를 사용한다.</span></span><br><span class="line"></span><br><span class="line">    source.subscribe(&#123; total -&gt;</span><br><span class="line">        println(<span class="string">"TV Sale: $ <span class="variable">$total</span>"</span>)</span><br><span class="line">    &#125;, &#123;</span><br><span class="line">        println(<span class="string">"error : <span class="subst">$&#123;it.message&#125;</span>"</span>)</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 결과</span></span><br><span class="line">TV Sale: $ <span class="number">4100</span></span><br></pre></td></tr></table></figure>
-
                     
+                        <a
+                            href="/2019/05/22/RxJava-Chap03/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [RxJava] Chap03"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2019/05/22/RxJava-Chap03/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             
@@ -975,7 +907,7 @@ ViewModel 객체는 자동으로 화면 회전 같은 상태 변화동안 자동
     </article>
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -1007,309 +939,17 @@ ViewModel 객체는 자동으로 화면 회전 같은 상태 변화동안 자동
 
             </div>
             
-                <div class="postShorten-content">
+                <div class="postShorten-excerpt">
                     <p>이번에는 <strong>Observable</strong>의 개념에 대해서 알아보도록 하겠다. 책을 보면 RxJava는 Observable에서 시작해서 Observable로 끝난다고 해도 과언이 아니라고 한다. 그렇다면 과연 어떤 것인지 공부해보자.</p>
-<ul>
-<li><a href="#Observable-%EC%86%8C%EA%B0%9C">Observable 소개</a></li>
-<li><a href="#Observable-%ED%81%B4%EB%9E%98%EC%8A%A4">Observable 클래스</a>
-<ol>
-<li><a href="#%EC%98%B5%EC%A0%80%EB%B2%84-%ED%8C%A8%ED%84%B4">옵저버 패턴</a></li>
-<li><a href="#%EC%A0%95%EC%A0%81%ED%8C%A9%ED%86%A0%EB%A6%AC-%ED%95%A8%EC%88%98">정적팩토리 함수</a></li>
-<li><a href="#%ED%8C%A9%ED%86%A0%EB%A6%AC-%ED%95%A8%EC%88%98%EB%93%A4">팩토리 함수들</a></li>
-</ol>
-</li>
-</ul>
-<h1 id="observable-소개">Observable 소개</h1>
-<p><code>Observable</code>은 데이터 흐름에 맞게 알림을 보내 구독자가 데이터를 처리할 수 있도록 한다. RxJava에서는 Observable이 중요한 개념이다.</p>
-<ul>
-<li>Maybe 클래스 : reduce(), firstElement() 함수와 같이 데이터가 발행될 수 있거나 혹은 발행되지 않고도 완료되는 경우를 의미한다.</li>
-<li>Flowable 클래스 : 데이터가 발행되는 속도가 구독자가 처리하는 속도보다 현저하게 빠른 경우 발생하는 <strong>배압</strong>(Back Pressure) 이슈에 대응하는 기능을 추가로 제공한다.</li>
-</ul>
-<p>위와 같은 클래스들은 이번 Chapter에서는 공부하지 않고 다음 Chapter에서 공부할 예정이다. 이번에는 Observable에 대해서 파헤쳐보자.</p>
-<h2 id="observable-클래스">Observable 클래스</h2>
-<p>Observable은 <strong>옵저버 패턴</strong>을 구현한다. 옵저버 패턴이라 함은 객체의 상태 변화를 관찰하는 관찰자(옵저버) 목록을 객체에 등록한다. 그리고 상태 변화가 있을 때마다 메소드를 호출하여 객체가 직접 목록의 각 옵저버에게 변화를 알려준다. 라이프 사이클은 존재하지 않으며 보통 단일 함수를 통해 변화만 알린다.</p>
-<p>옵저버 패턴의 대표적인 예로는 사용자가 버튼을 누르면 버튼에 미리 등록해 둔 onClick() 메소드를 호출해 원하는 처리를 하는 것이다. 안드로이드에서는 onClick() 이벤트를 처리하는 것이 딱 이 예와 같다고 볼 수 있다.</p>
-<p><strong>RxJava</strong>의 Observable은 세 가지의 알림을 구독자에게 전달한다.</p>
-<ul>
-<li>onNext() : Observable이 데이터의 발행을 알린다. 기존의 옵저버 패턴과 동일하다.</li>
-<li>onComplete() : 모든 데이터의 발행을 완료했음을 알린다. onComplete 이벤트는 단 한번만 발생하며, 발생한 후에는 onNext 이벤트가 발생해서는 안된다.</li>
-<li>onError() : Observable에서 어떠한 이유로 에러가 발생했음을 알린다. onError 이벤트가 발생하면 이후에 onNext나 onComplete 이벤트가 발생하지 않는다. 즉, Observable의 실행을 종료한다.</li>
-</ul>
-<p>Observable을 생성할 때는 직접 인스턴스를 만들지 않고 <strong>정적 팩토리 함수</strong>를 호출한다. 여기서 말하는 정적 팩토리 함수가 뭘까…??</p>
-<h3 id="옵저버-패턴">옵저버 패턴</h3>
-<p>여기쯤에 옵저버 패턴 공부 좀 하고 넣으면 될 것 같다. 아니면 새로운 글을 만들어서 디자인 패턴의 옵저버 패턴을 공부하면 괜찮을 듯 하다.</p>
-<h2 id="정적팩토리-함수"># 정적팩토리 함수</h2>
-<h3 id="팩토리-함수들"># 팩토리 함수들</h3>
-<p>RxJava에서 제공하는 팩토리 함수들을 살펴볼 예정이다. 알아보고 직접 사용해보면서 사용법을 익혀보자.</p>
-<ul>
-<li>Observable을 만드는 함수들이다.</li>
-</ul>
-<p><strong>1. just() 함수</strong></p>
-<ul>
-<li>데이터를 발행하는 가장 쉬운 방법은 기존의 자료구조를 사용하는 것이다.</li>
-<li>just() 함수는 인자로 넣은 데이터를 차례로 발행하려고 <strong>Observable</strong>을 생성한다.</li>
-<li><code>실제 데이터의 발행은 subscribe() 함수를 호출해야 시작한다.</code></li>
-<li>한 개의 값을 넣을 수도 있고 인자로 여러 개의 값을 넣을 수도 있다.
-<ul>
-<li>주의해야 할 점은 최대 10개까지의 데이터를 넣을 수 있다는 것이다.</li>
-<li>그리고 타입은 모두 같아야 한다.</li>
-<li>데이터 내용을 바꾸지 않고 그대로 발행한다.</li>
-</ul>
-</li>
-</ul>
-<p><strong>2. subscribe() 함수와 Disposable 객체</strong></p>
-<ul>
-<li>RxJava는 내가 동작시키기 원하는 것을 사전에 정의해둔 다음 실제 그것이 실행되는 시점을 조절할 수 있다. 이때 사용하는 것이 <code>subscribe()</code> 함수이다.</li>
-<li>Observable은 just() 등의 팩토리 함수로 데이터 흐름을 정의한 후 <strong>subscribe()</strong> 함수를 호출해야 실제로 데이터를 발행한다.</li>
-</ul>
-<blockquote>
-<p>RxJava는 선언형 프로그래밍</p>
-</blockquote>
-<p>앞선 <a href="https://woovictory.github.io/2019/03/12/Rxjava-chap01/">Chap01</a>에서도 설명했지만 한 번 더 보도록 하겠다. RxJava는 선언형 프로그래밍을 지향한다. 선언형 프로그래밍은 명령형 프로그래밍의 반대말이다. 즉, 어떤 방법(How)으로 동작하는지가 아니라 프로그래밍할 대상이 무엇(What)인지 알려주는 것을 의미한다.</p>
-<p>예를 들어 명령형 프로그래밍 언어에서는 실행할 알고리즘과 동작을 구체적으로 명시한다. 하지만 선언형 프로그래밍은 목표를 명시할 뿐 실행할 알고리즘을 명시하지 않는다.</p>
-<p>다시 subscribe() 함수에 관한 이야기로 돌아와보자. subscribe() 함수의 주요 원형 중 하나를 설명하겠다.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Disposable <span class="title">subscribe</span><span class="params">()</span></span></span><br></pre></td></tr></table></figure>
-<p>위의 인자가 없는 subscribe() 함수는 onNext()와 onComplete() 이벤트를 무시하고 onError 이벤트가 발생했을 때만 OnErrorNotImplementedException를 던진다.(throw) 따라서 Observable로 작성한 코드를 테스트하거나 디버깅할 때 활용한다.</p>
-<p>이외에도 함수의 원형은 여러 가지 존재한다. 관련된 부분은 문서를 참고하길 바란다. 모든 함수 원형은 <strong>Disposable</strong> 인터페이스의 객체를 리턴한다. Disposable은 RxJava의 구독 객체에 해당한다.</p>
-<blockquote>
-<p><code>Disposable 인터페이스의 함수</code></p>
-</blockquote>
-<p>dispose()는 Observable에게 더 이상 데이터를 발행하지 않도록 구독을 해지하는 함수이다. Observable 계약(Observable Contract)에 따르면 Observable이 onComplete 알림을 보냈을 때 자동으로 dispose()를 호출해 Observable과 구독자의 관계를 끊는다.</p>
-<p>따라서 onComplete 이벤트가 정상적으로 발생했다면 구독자가 별도로 dispose()를 호출할 필요가 없다.</p>
-<ul>
-<li>isDisposed() : Observable이 데이터를 발행하지 않는지(구독을 해지했는지) 확인하는 함수이다.
-<ul>
-<li>위에서 언급했듯, onComplete 이벤트가 정상적으로 발생했다면 구독자가 별도로 dispose() 하지 않아도 구독이 해제된다.</li>
-</ul>
-</li>
-</ul>
-<p><strong>3. create()</strong></p>
-<ul>
-<li>just()는 데이터를 인자로 넣으면 자동으로 알림 이벤트가 발생하지만, create() 함수는 onNext, onComplete, onError 같은 알림을 개발자가 직접 호출해야 된다.</li>
-<li>개발자가 무언가를 하는 느낌이 강하다.</li>
-<li>데이터 발행을 위해서 onNext()를 호출해야 한다.</li>
-<li>모든 데이터를 발행한 후 onComplete()를 호출해야 한다.</li>
-</ul>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> sourceInt : Observable&lt;<span class="built_in">Int</span>&gt; = Observable.create &#123;</span><br><span class="line">    it.onNext(<span class="number">100</span>)</span><br><span class="line">    it.onNext(<span class="number">200</span>)</span><br><span class="line">    it.onNext(<span class="number">300</span>)</span><br><span class="line">    it.onNext(<span class="number">400</span>)</span><br><span class="line">    it.onComplete() <span class="comment">// 데이터 발행 완료.</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">sourceInt.subscribe(System.<span class="keyword">out</span>::println)</span><br><span class="line"><span class="comment">// 람다식 활용.</span></span><br><span class="line">sourceInt.subscribe &#123;</span><br><span class="line">        println(<span class="string">"data : <span class="variable">$it</span>"</span>)</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>onNext() 함수를 이용해 차례로 데이터를 발행했다. 그리고 onComplete() 함수를 호출하여 데이터 발행을 완료한다.</li>
-<li>람다식을 활용하면 메소드의 원형을 알 필요도 없고 가독성도 훨씬 높아진다.</li>
-<li>subscribe() 함수를 호출하지 않으면 데이터 발행이 안된다.</li>
-<li>메소드 레퍼런스와 람다 표현식을 사용하면 좋다. 이유는 함수의 원형을 알지 않아도 되므로 가독성이 높아진다.</li>
-</ul>
-<p><strong>4. fromArray()</strong></p>
-<ul>
-<li>just(), create()는 단일 데이터를 다룬다.</li>
-<li>단일 데이터가 아닐 때는 fromXXX() 함수를 사용하면 된다.</li>
-<li>배열에 들어있는 데이터를 세분화할 때 fromArray() 함수를 사용하면 된다.</li>
-<li>숫자 뿐 아니라 사용자 정의 클래스 객체도 넣을 수 있다.</li>
-</ul>
-<p>기본 타입인 int[] 배열을 RxJava에서 인식시키기 위해서는 Integer[] 배열로 변환해야 한다. 자바 8의 Stream API에서 제공하는 방법을 사용하면 된다.</p>
-<p>toIntegerArray() 함수는 int[] 배열 각각의 요소를 Integer로 변환해 Integer[] 배열의 스트림으로 만들어 반환한다. 그리고 최종적으로 스트림을 Integer[] 배열로 만들어준다.</p>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">(args : <span class="type">Array</span>&lt;<span class="type">String</span>&gt;)</span></span>&#123;</span><br><span class="line">    <span class="keyword">val</span> array : IntArray = intArrayOf(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>)</span><br><span class="line">    executeIntFromArray(array)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">fun</span> <span class="title">executeIntFromArray</span><span class="params">(array: <span class="type">IntArray</span>)</span></span> = Observable.fromArray(IntegerArray(array)).subscribe &#123;</span><br><span class="line">    <span class="keyword">for</span> (i <span class="keyword">in</span> array) &#123;</span><br><span class="line">        println(<span class="string">"array : <span class="variable">$i</span>"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>5. fromIterable()</strong></p>
-<ul>
-<li>Iterable 인터페이스는 반복자를 반환한다.</li>
-<li>이터레이터 패턴을 구현한 것으로 다음에 어떤 데이터가 있는지와 그 값을 얻어오는 것만 관여할 뿐 특정 데이터 타입에 의존하지 않는 장점이 있다.</li>
-<li>hasNext(), next() 메소드가 있다.</li>
-<li>자바의 많은 컬렉션 클래스가 Iterable 인터페이스를 구현한다.</li>
-</ul>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">fun</span> <span class="title">executeFromIterable</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">val</span> list: MutableList&lt;String&gt; = ArrayList()</span><br><span class="line">    list.add(<span class="string">"Lee"</span>)</span><br><span class="line">    list.add(<span class="string">"Park"</span>)</span><br><span class="line">    list.add(<span class="string">"Kim"</span>)</span><br><span class="line"></span><br><span class="line">    Observable.fromIterable(list).subscribe &#123;</span><br><span class="line">        println(it)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">val</span> orderQueue: BlockingQueue&lt;Order&gt; = ArrayBlockingQueue(<span class="number">100</span>);</span><br><span class="line">    orderQueue.add(Order(<span class="string">"ORD-1"</span>))</span><br><span class="line">    orderQueue.add(Order(<span class="string">"ORD-2"</span>))</span><br><span class="line">    orderQueue.add(Order(<span class="string">"ORD-3"</span>))</span><br><span class="line"></span><br><span class="line">    Observable.fromIterable(orderQueue).subscribe &#123; order -&gt;</span><br><span class="line">        println(order.mid)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// Order 데이터 클래스.</span></span><br><span class="line"><span class="keyword">data</span> <span class="class"><span class="keyword">class</span> <span class="title">Order</span></span>(<span class="keyword">val</span> mid: String)</span><br></pre></td></tr></table></figure>
-<p><strong>6. fromCallable()</strong></p>
-<ul>
-<li>동시성 API인 Callable 인터페이스</li>
-<li>Callable 객체와 fromCallable() 함수를 이용해 Observable을 만들 수 있다.</li>
-<li>실행 결과를 리턴한다.</li>
-<li>Executor 인터페이스의 인자로 활용되기 때문에 잠재적으로 다른 스레드에서 실행되는 것을 의미한다.</li>
-</ul>
-<p><strong>7. fromFuture()</strong></p>
-<ul>
-<li>Future 인터페이스도 동시성 API로 비동기 계산의 결과를 구할 때 사용한다.</li>
-<li>잘 모르는 내용이기 때문에 더 공부하고 추가하도록 하겠다… ^^;</li>
-</ul>
-<p><strong>8. fromPublishe()</strong></p>
-<ul>
-<li>fromXXX() 계열의 마지막 함수.</li>
-<li>자바 9의 표준인 Flow API의 일부.</li>
-<li>기존의 RxJava와 비교했을 때 패키지 이름이 다르다.</li>
-<li>Observable.create()와 마찬가지로 onNext()와 onComplete() 함수를 호출할 수 있다.</li>
-</ul>
-<h2 id="single-클래스"># Single 클래스</h2>
-<ul>
-<li>Single 클래스는 <strong>오직 1개의 데이터만 발행</strong>하도록 한정한다.</li>
-<li>결과가 유일한 서버 API를 호출할 때 유용하게 사용할 수 있다.</li>
-<li>데이터 하나가 발행과 동시에 종료(onSuccess) 된다는 점이다.</li>
-<li>onNext()와 onComplete() 함수가 onSuccess() 함수로 통합된 것으로 보면 된다.</li>
-<li>따라서 Single 클래스의 라이프 라이클 함수.
-<ul>
-<li>onSuccess()</li>
-<li>onError()</li>
-</ul>
-</li>
-</ul>
-<p><strong>1. just() 함수</strong></p>
-<ul>
-<li>Observable과 거의 같은 방법으로 활용할 수 있다.</li>
-<li>Single 클래스는 하나의 데이터만 발행하기 때문에 조심해서 사용해야 한다.</li>
-<li>예제</li>
-</ul>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">fun</span> <span class="title">executeFromObservableToSingle</span><span class="params">()</span></span> &#123;</span><br><span class="line">    println(<span class="string">"==Single 예제=="</span>)</span><br><span class="line">    <span class="comment">// 1. 기존 Observable 에서 Single 객체로 변환하기.</span></span><br><span class="line">    <span class="keyword">val</span> source: Observable&lt;String&gt; = Observable.just(<span class="string">"Hello Single"</span>)</span><br><span class="line">    Single.fromObservable(source).subscribe &#123; it -&gt;</span><br><span class="line">        println(it)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 2. Single() 함수를 호출해 Single 객체 생성하기.</span></span><br><span class="line">    <span class="comment">// Observable 에서 값이 발행되지 않을 때, 인자로 넣은 기본 값을 대신 발행한다.</span></span><br><span class="line">    Observable.just(<span class="string">"Hi Single"</span>)</span><br><span class="line">            .single(<span class="string">"default value"</span>)</span><br><span class="line">            .subscribe &#123; it -&gt;</span><br><span class="line">                println(it)</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 3. first() 함수를 호출해 Single 객체 생성하기.</span></span><br><span class="line">    <span class="comment">// 하나 이상의 데이터를 발행하더라도 첫 번째 데이터 발행 후 onSuccess 이벤트가 발생한다.</span></span><br><span class="line">    <span class="keyword">val</span> colors: Array&lt;String&gt; = arrayOf(<span class="string">"Red"</span>, <span class="string">"Blue"</span>, <span class="string">"White"</span>)</span><br><span class="line">    Observable.fromArray(colors).map &#123;</span><br><span class="line">        <span class="keyword">return</span><span class="symbol">@map</span> it[<span class="number">0</span>]</span><br><span class="line">    &#125;</span><br><span class="line">            .first(<span class="string">"d"</span>)</span><br><span class="line">            .subscribe &#123; it -&gt;</span><br><span class="line">                println(it)</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 4. empty Observable 에서 Single 객체 생성하기.</span></span><br><span class="line">    <span class="comment">// 첫 번째 데이터 발행 후 onSuccess 이벤트가 발생.</span></span><br><span class="line">    <span class="comment">// Observable 에서 값이 발행되지 않을 때도 기본값을 갖는 single 객체로 변환할 수 있다.</span></span><br><span class="line">    Observable.empty&lt;String&gt;()</span><br><span class="line">            .single(<span class="string">"default value"</span>)</span><br><span class="line">            .subscribe &#123; it -&gt;</span><br><span class="line">                println(it)</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 5. take() 함수에서 single 객체 생성하기.</span></span><br><span class="line">    <span class="comment">// Single 이기 때문에 take() 함수에 인자로 1보다 큰 값을 넣으면 에러 발생.</span></span><br><span class="line">    Observable.just(Order(<span class="string">"ORD-5"</span>), Order(<span class="string">"ORD-6"</span>))</span><br><span class="line">            .take(<span class="number">1</span>)</span><br><span class="line">            .single(Order(<span class="string">"default value"</span>))</span><br><span class="line">            .subscribe &#123; it -&gt;</span><br><span class="line">                println(it)</span><br><span class="line">            &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">data</span> <span class="class"><span class="keyword">class</span> <span class="title">Order</span></span>(<span class="keyword">val</span> mid: String) &#123;</span><br><span class="line">    <span class="comment">// toString 오버라이드.</span></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">toString</span><span class="params">()</span></span>: String &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"Order ID : <span class="variable">$mid</span>"</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="maybe-클래스"># Maybe 클래스</h2>
-<ul>
-<li>최대 데이터 하나를 가질 수 있지만 데이터 발행 없이 바로 데이터 발생을 완료할 수도 있다.
-<ul>
-<li>Single 클래스 : 1개 완료</li>
-<li>Maybe 클래스 : 0 혹은 1개 완료</li>
-</ul>
-</li>
-<li>Maybe 클래스는 Single 클래스에 onComplete 이벤트가 추가된 형태이다.</li>
-</ul>
-<img src="/img/rx_maybe.png" width="600" height="200">
-<ul>
-<li>차례대로 onSuccess, onError, onComplete 이벤트에 해당한다.</li>
-<li>Observable의 특정 연산자를 통해 생성할 때가 많다.</li>
-</ul>
-<h2 id="뜨거운-observable"># 뜨거운 Observable</h2>
-<p>Observable에는 뜨거운 Observable과 차가운 Observable이 있다.</p>
-<ul>
-<li>
-<p><strong>차가운 Observable</strong></p>
-<ul>
-<li>just(), fromIterable() 함수를 호출해도 옵서버가 subscribe() 함수를 호출하여 구독하지 않으면 데이터를 발행하지 않는다.</li>
-<li>예) 웹 요청, 데이터베이스 쿼리와 파일 읽기 등.</li>
-<li>원하는 URL이나 데이터를 지정하면 그때부터 서버나 데이터베이스 요청을 보내고 결과를 받는다.</li>
-<li>앞서 봤던 것들이 차가운 Observable이다.</li>
-<li>앞으로 공부함에 있어서 별도의 언급이 없으면 차가운 Observable!</li>
-</ul>
-</li>
-<li>
-<p><strong>뜨거운 Observable</strong></p>
-<ul>
-<li>구독자의 존재 여부와 관계없이 데이터를 발행한다.</li>
-<li>따라서 여러 구독자를 고려할 수 있다.</li>
-<li>구독자로서는 Observable에서 발행하는 데이터를 처음부터 모두 수신할 것으로 보장할 수 없다.</li>
-<li>예) 마우스 이벤트, 키보드 이벤트, 시스템 이벤트, 센서 데이터와 주식 가격 등.</li>
-<li>온도, 습도 센서의 데이터를 처리하는 앱이라면 최근의 온도, 습도 정보만 사용자에게 표시하면 된다.</li>
-</ul>
-</li>
-</ul>
-<p><strong>요약하면, 차가운 Observable은 구독자가 구독하면 준비된 데이터를 처음부터 발행한다. 하지만 뜨거운 Observable은 구독한 시점부터 Observable에서 발행한 값을 받는다.</strong></p>
-<p><strong>구독자가 여러명?</strong></p>
-<p>위에서 뜨거운 Observable은 여러 구독자를 고려할 수 있다고 한다. 무슨 뜻일까?<br>
-예를 들어 서버에 요청한 결과로 반환된 JSON 문서를 파싱해 원하는 속성을 추추란다고 해보자.<br>
-날씨 정보, 지역 정보, 시간 정보를 반환하는 경우 RxJava에서는 위의 세 가지 정보를 구독자라고 생각하면 편리하다.</p>
-<p>데이터의 원천은 한 곳이지만 내가 최종적으로 원하는 결과 데이터가 여러 종류일 때는 각각을 구독자로 생각하면 좋다.</p>
-<h2 id="subject-클래스"># Subject 클래스</h2>
-<ul>
-<li>차가운 Observable -&gt; 뜨거운 Observable</li>
-<li>Observable의 속성과 구독자의 속성이 모두 있다.
-<ul>
-<li>Observable처럼 데이터를 발행할 수도 있고 구독자처럼 발행된 데이터를 바로 처리할 수도 있다.</li>
-</ul>
-</li>
-</ul>
-<p><strong>1. AsyncSubject 클래스</strong></p>
-<ul>
-<li>Observable에서 발행한 마짐막 데이터를 얻어올 수 있는 Subject.</li>
-<li>즉, 완료되기 전 마지막 데이터에만 관심이 있으며 이전 데이터는 무시한다.</li>
-</ul>
-<img src="/img/AsyncSubject.png" width="600" height="200"> 
-<ol>
-<li>처음 구독자가 subscribe() 함수를 호출한다.</li>
-<li>이후에 Red, Green 원이 발행된 후 두 번째 구독자가 subscribe() 함수를 호출한다.</li>
-<li>마지막으로 Blue 원이 발행되고 데이터 발행을 완료한다.(onComplete 이벤트)</li>
-</ol>
-<p>이때 완료되기 전까지는 구독자에게 데이터를 전달하지 안하가 완료됨과 동시에 첫 번째와 두 번째 구독자에게 마지막 데이터를 발행하고 종료한다.</p>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">fun</span> <span class="title">executeAsyncSubject</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">val</span> subject : AsyncSubject&lt;String&gt; = AsyncSubject.create()</span><br><span class="line">    <span class="comment">// 정적 팩토리 함수인 create()로 객체 생성.</span></span><br><span class="line">    subject.subscribe&#123;</span><br><span class="line">        <span class="keyword">data</span> -&gt; println(<span class="string">"Subscriber #1 =&gt; <span class="variable">$data</span>"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 구독.</span></span><br><span class="line"></span><br><span class="line">    subject.onNext(<span class="string">"1"</span>)</span><br><span class="line">    subject.onNext(<span class="string">"3"</span>)</span><br><span class="line">    <span class="comment">// onNext()를 호출하여 데이터 발행.</span></span><br><span class="line"></span><br><span class="line">    subject.subscribe&#123;</span><br><span class="line">        <span class="keyword">data</span> -&gt; println(<span class="string">"Subscriber #2 =&gt; <span class="variable">$data</span>"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 두 번째 구독.</span></span><br><span class="line"></span><br><span class="line">    subject.onNext(<span class="string">"5"</span>)</span><br><span class="line">    subject.onComplete()</span><br><span class="line">    <span class="comment">// 데이터를 발행한 후에는 마지막으로 onComplete() 호출.</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// onComplete() 함수를 호출한 후에 구독했을 경우.</span></span><br><span class="line">    <span class="comment">// Observable과 마찬가지로 onComplete 함수 호출 이후에 onNext 이벤트를 무시한다.</span></span><br><span class="line">    subject.onNext(<span class="string">"12"</span>)</span><br><span class="line">    subject.subscribe&#123;</span><br><span class="line">        <span class="keyword">data</span> -&gt; println(<span class="string">"Subscriber #3 =&gt; <span class="variable">$data</span>"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    subject.subscribe&#123;</span><br><span class="line">        <span class="keyword">data</span> -&gt; println(<span class="string">"Subscriber #4 =&gt; <span class="variable">$data</span>"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 결과</span></span><br><span class="line">Subscriber #<span class="number">1</span> =&gt; <span class="number">5</span></span><br><span class="line">Subscriber #<span class="number">2</span> =&gt; <span class="number">5</span></span><br><span class="line">Subscriber #<span class="number">3</span> =&gt; <span class="number">5</span></span><br><span class="line">Subscriber #<span class="number">4</span> =&gt; <span class="number">5</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li>또한, AsyncSubject 클래스는 구독자로도 동작할 수 있다.</li>
-</ul>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">fun</span> <span class="title">executeAsyncSubject2</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">val</span> source : Observable&lt;<span class="built_in">Float</span>&gt; = Observable.just(<span class="number">10.1</span>f,<span class="number">13.4</span>f,<span class="number">12.5</span>f)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">val</span> subject : AsyncSubject&lt;<span class="built_in">Float</span>&gt; = AsyncSubject.create()</span><br><span class="line">    subject.subscribe&#123;</span><br><span class="line">        <span class="keyword">data</span> -&gt; println(<span class="string">"Subscriber # =&gt; <span class="variable">$data</span>"</span>)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    source.subscribe(subject)</span><br><span class="line">    <span class="comment">// subject가 source 즉, Observable을 구독.</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 결과</span></span><br><span class="line">Subscriber # =&gt; <span class="number">12.5</span></span><br></pre></td></tr></table></figure>
-<p><strong>2. BehaviorSubject 클래스</strong></p>
-<ul>
-<li>구독자가 구독을 하면 가장 최근 값 혹은 기본값을 넘겨주는 클래스이다.</li>
-<li>예를 들어 온도 센서에서 값을 받아온다면 가장 최근의 온도 값을 받아오는 동작을 구현할 수 있으며 처음 온도를 얻을 때는 초깃값(0)을 반환하기도 한다.</li>
-</ul>
-<img src="/img/BehaviorSubject.png" width="600" height="200"> 
-<ul>
-<li>마블 다이어그램처럼 처음에 발행한 값이 없다면 기본값을 발행해서 구독자가 받게 된다.</li>
-<li>그 다음부터는 발행한 최근 값을 받는다.</li>
-</ul>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">fun</span> <span class="title">executeBehaviorSubject</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">val</span> subject: BehaviorSubject&lt;String&gt; = BehaviorSubject.createDefault(<span class="string">"6"</span>)</span><br><span class="line">    subject.subscribe &#123; <span class="keyword">data</span> -&gt;</span><br><span class="line">        println(<span class="string">"Subscriber #1 =&gt; <span class="variable">$data</span>"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    subject.onNext(<span class="string">"1"</span>)</span><br><span class="line">    subject.onNext(<span class="string">"3"</span>)</span><br><span class="line">    subject.subscribe &#123; <span class="keyword">data</span> -&gt;</span><br><span class="line">        println(<span class="string">"Subscriber #2 =&gt; <span class="variable">$data</span>"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    subject.onNext(<span class="string">"5"</span>)</span><br><span class="line">    subject.onComplete()</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 결과</span></span><br><span class="line">Subscriber #<span class="number">1</span> =&gt; <span class="number">6</span></span><br><span class="line">Subscriber #<span class="number">1</span> =&gt; <span class="number">1</span></span><br><span class="line">Subscriber #<span class="number">1</span> =&gt; <span class="number">3</span></span><br><span class="line">Subscriber #<span class="number">2</span> =&gt; <span class="number">3</span></span><br><span class="line">Subscriber #<span class="number">1</span> =&gt; <span class="number">5</span></span><br><span class="line">Subscriber #<span class="number">2</span> =&gt; <span class="number">5</span></span><br></pre></td></tr></table></figure>
-<p><strong>3. PublishSubject 클래스</strong></p>
-<ul>
-<li>구독자가 subscribe() 함수를 호출하면 값을 발행하기 시작한다.</li>
-<li>가장 평범한 Subject 클래스.</li>
-<li>오직 해당 시간에 발생한 데이터를 그대로 구독자에게 전달한다.</li>
-</ul>
-<img src="/img/PublishSubject.png" width="600" height="200"> 
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">fun</span> <span class="title">executePublishSubject</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">val</span> subject: PublishSubject&lt;String&gt; = PublishSubject.create()</span><br><span class="line">    subject.subscribe &#123; <span class="keyword">data</span> -&gt;</span><br><span class="line">        println(<span class="string">"Subscriber #1 =&gt; <span class="variable">$data</span>"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    subject.onNext(<span class="string">"1"</span>)</span><br><span class="line">    subject.onNext(<span class="string">"3"</span>)</span><br><span class="line">    subject.subscribe &#123; <span class="keyword">data</span> -&gt;</span><br><span class="line">        println(<span class="string">"Subscriber #2 =&gt; <span class="variable">$data</span>"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    subject.onNext(<span class="string">"5"</span>)</span><br><span class="line">    subject.onComplete()</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 결과</span></span><br><span class="line">Subscriber #<span class="number">1</span> =&gt; <span class="number">1</span></span><br><span class="line">Subscriber #<span class="number">1</span> =&gt; <span class="number">3</span></span><br><span class="line">Subscriber #<span class="number">1</span> =&gt; <span class="number">5</span></span><br><span class="line">Subscriber #<span class="number">2</span> =&gt; <span class="number">5</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li>마블 다이어그램과 코드를 함께 보면 이해가 조금 더 수월하다.</li>
-<li>첫 번째 구독자가 subscribe() 함수를 호출하면 Subject가 발행한 1,3 이라는 데이터를 전달받는다.</li>
-<li>이 후 두 번째 구독자가 subscribe() 함수를 호출하고 Subject가 발행한 5라는 데이터는 두 구독자 모두가 전달받는다.
-<ul>
-<li>두 번째 구독자는 구독한 이후에 발행된 데이터인 5만 전달받는다.</li>
-</ul>
-</li>
-</ul>
-<p><strong>4. ReplaySubject 클래스</strong></p>
-<ul>
-<li>Subject 클래스의 목적은 뜨거운 Observable을 활용하는 것인데 차가운 Observable 처럼 동작하기 때문이다. -&gt; 아직 무슨 말인지 정확히 이해가 가지 않는다…ㅜ</li>
-<li>구독자가 새로 생기면 항상 데이터의 처음부터 끝까지 발행하는 것을 보장해준다.</li>
-<li>그러므로 모든 데이터 내용을 저장해두는 과정 중 메모리 누수가 발생할 가능성을 염두에 두고 사용할 때 주의해야 한다.</li>
-</ul>
-<img src="/img/ReplaySubject.png" width="600" height="200"> 
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">fun</span> <span class="title">exectueReplaySubject</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">val</span> subject : ReplaySubject&lt;String&gt; = ReplaySubject.create()</span><br><span class="line">    subject.subscribe &#123;</span><br><span class="line">        <span class="keyword">data</span>-&gt; println(<span class="string">"Subscriber #1 =&gt; <span class="variable">$data</span>"</span>)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    subject.onNext(<span class="string">"1"</span>)</span><br><span class="line">    subject.onNext(<span class="string">"3"</span>)</span><br><span class="line">    subject.subscribe &#123;</span><br><span class="line">        <span class="keyword">data</span> -&gt; println(<span class="string">"Subscriber #2 =&gt; <span class="variable">$data</span>"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    subject.onNext(<span class="string">"5"</span>)</span><br><span class="line">    subject.onComplete()</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//결과</span></span><br><span class="line">Subscriber #<span class="number">1</span> =&gt; <span class="number">1</span></span><br><span class="line">Subscriber #<span class="number">1</span> =&gt; <span class="number">3</span></span><br><span class="line">Subscriber #<span class="number">2</span> =&gt; <span class="number">1</span></span><br><span class="line">Subscriber #<span class="number">2</span> =&gt; <span class="number">3</span></span><br><span class="line">Subscriber #<span class="number">1</span> =&gt; <span class="number">5</span></span><br><span class="line">Subscriber #<span class="number">2</span> =&gt; <span class="number">5</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li>첫 번째 구독자는 Observable을 구독한 이후에 발행한 1과 3을 전달받는다.</li>
-<li>두 번째 구독자는 subscribe() 함수를 호출하면 지금까지 발행된 1과 3을 바로 전달받는다. 그리고 마지막으로 Subject 클래스가 5를 발행하면 두 구독자 모두 해당 값을 전달받는다.</li>
-</ul>
-<h2 id="connectableobservable-클래스"># ConnectableObservable 클래스</h2>
-<ul>
-<li>차가운 Observable을 뜨거운 Observable로 변환한다.(Subject 처럼)</li>
-<li>Observable을 여러 구독자에게 공유할 수 있으므로 원 데이터 하나를 여러 구독자에게 동시에 전달할 때 사용한다.</li>
-<li>subscribe() 함수를 호출해도 아무 동작이 일어나지 않는다.</li>
-<li>connect() 함수는 호출한 시점부터 subscribe() 함수를 호출한 구독자에게 데이터를 발행한다.</li>
-</ul>
-<img src="/img/ConnectableObservable.png" width="600" height="200"> 
-<ul>
-<li><code>publish()</code> : Observable을 ConnectableObservable로 변환.</li>
-<li>여러 구독자에게 데이터를 발행하기 위해 connect() 함수를 호출하기 전까지 데이터 발행을 유예할 수 있다.</li>
-<li><code>connect()</code> 함수를 호출해야 그때까지 구독했던 구독자 모두에게 데이터를 발행한다. connect() 함수를 호출한 이후에 구독한 구독자에게는 구독 이후에 발생한 데이터부터 발행한다.</li>
-</ul>
-<p>ConnectableObservable로 바꿔놓으면</p>
-<ol>
-<li>
-<p>구독자를 동시에 대기시킬 수 있다.<br>
--&gt; 구독자 1,2,3을 subscribe() 해놓고 마지막에 connect()를 하면 동시에 같은 데이터를 받을 수 있다. 이것이 뜨거운 Observable의 성격!</p>
-</li>
-<li>
-<p>connect()한 이후에 subscribe()를 하게 되면 앞서 발행되었던 데이터를 받을 수 없다.<br>
--&gt; 이도 마찬가지로 뜨거운 Observable의 성격이다. 최신의 데이터만 필요하거나 앞서 발행되었던 데이터는 불필요한 경우에 활용될 수 있다.</p>
-</li>
-</ol>
-<h2 id="참고"># 참고</h2>
-<ul>
-<li><a href="https://brunch.co.kr/@yudong/61" target="_blank" rel="noopener">뜨거운 Observable 만들기</a></li>
-<li><a href="http://www.hanbit.co.kr/store/books/look.php?p_code=B3448548347" target="_blank" rel="noopener">RxJava 프로그래밍</a></li>
-</ul>
-
                     
+                        <a
+                            href="/2019/04/29/RxJava-Chap02/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [RxJava] Chap02"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2019/04/29/RxJava-Chap02/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             

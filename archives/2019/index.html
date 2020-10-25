@@ -267,7 +267,7 @@
     <section class="postShorten-group main-content-wrap">
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -299,125 +299,21 @@
 
             </div>
             
-                <div class="postShorten-content">
-                    <h2 id="testobserver-클래스">TestObserver 클래스</h2>
+                <div class="postShorten-excerpt">
+                    <h2>TestObserver 클래스</h2>
 <ul>
 <li>RxJava에서 제공하는 TestObserver 클래스다.</li>
 <li>JUnit 기반의 테스트 코드와 다른 점은 test()와 assertResult() 함수다.</li>
-<li>코드는 다음과 같다.</li>
 </ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JUnitBasic</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testGetShapeObservable</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        String[] data = &#123;<span class="string">"1"</span>, <span class="string">"2-R"</span>, <span class="string">"3-T"</span>&#125;;</span><br><span class="line">        <span class="comment">// source : 실제 결과.</span></span><br><span class="line">        Observable&lt;String&gt; source = Observable.fromArray(data)</span><br><span class="line">                .map(Shape::getShape);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// expected : 예상 결과.</span></span><br><span class="line">        String[] expected = &#123;Shape.BALL, Shape.RECTANGLE, Shape.TRIANGLE&#125;;</span><br><span class="line">        source.test().assertResult(expected);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li><strong>assertResult()</strong> : 예상된 결과와 실제 결과를 비교하는 메소드. JUnit의 assertEquals() 메소드와 같다.</li>
-<li><strong>assertFailure()</strong> : Observable에서 기대했던 에러가 발생하는지 확인하는 코드다. 만약, 기대했던 에러가 발생하지 않으면 테스트 코드 실행은 실패한다.
-<ul>
-<li>총 3개의 값을 넣어 앞 두 번째 값까지는 정상적으로 발행하고 마지막 값에서 기대했던 예외가 발생하는지 확인한다.</li>
-<li>세번째 데이터는 %를 붙여서 Integer.parseInt()에서 변환이 안되기 때문에 NumberFormatException이 발생하고 onError 이벤트로 종료된다.</li>
-</ul>
-</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">assertFailureExample</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        String[] data = &#123;<span class="string">"100"</span>, <span class="string">"200"</span>, <span class="string">"%300"</span>&#125;;</span><br><span class="line">        Observable&lt;Integer&gt; source = Observable.fromArray(data)</span><br><span class="line">                .map(Integer::parseInt);</span><br><span class="line"></span><br><span class="line">        source.test().assertFailure(NumberFormatException.class, <span class="number">100</span>, <span class="number">200</span>);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li><strong>assertFailureAndMessage()</strong> : 기대했던 에러 발생시 에러 메시지까지 확인할 수 있다.
-<ul>
-<li>에러 메시지를 확인하기 위한 message 인자가 추가되었다.</li>
-<li>에러가 발생했을 때 메시지를 확인하기 위해 아래와 같은 구문을 추가한다.</li>
-</ul>
-</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">assertFailureAndMessage</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    String[] data = &#123;<span class="string">"100"</span>, <span class="string">"200"</span>, <span class="string">"%300"</span>&#125;;</span><br><span class="line">    Observable&lt;Integer&gt; source = Observable.fromArray(data)</span><br><span class="line">            .map(Integer::parseInt);</span><br><span class="line"></span><br><span class="line">    source.test().assertFailureAndMessage(NumberFormatException.class,</span><br><span class="line">            <span class="string">"For input string : \"%300\""</span>, <span class="number">100</span>, <span class="number">200</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li><strong>awaitDone()</strong> : interval() 함수처럼 비동기로 동작하는 Observable 코드를 테스트할 수 있다.</li>
-<li><strong>assertComplete()</strong> : Observable을 정상적으로 완료했는지(onComplete 이벤트) 확인한다.</li>
-<li></li>
-</ul>
-<h2 id="비동기-코드-테스트">비동기 코드 테스트</h2>
-<ul>
-<li>RxJava는 다양한 상황에서 비동기 코드를 직관적으로 작성할 수 있다. 하지만, 비동기 코드를 테스트하는 것은 어려우므로 RxJava는 비동기로 동작하는 코드를 테스트할 방법을 제공한다.</li>
-<li>Observable.interval() 메소드는 main 스레드가 아닌 계산 스케줄러에서 실행되기 때문에 비동기 코드를 테스트할 필요가 있다. <code>awaitDone()</code> 함수를 사용하면 된다.</li>
-<li>awaitDone() 함수는 test() 함수가 실행되는 스레드에서 onComplete() 함수를 호출할 때까지 기다려준다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestAsync</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testInterval</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        Observable&lt;Integer&gt; source = Observable.interval(<span class="number">100L</span>, TimeUnit.MILLISECONDS)</span><br><span class="line">                .take(<span class="number">5</span>)</span><br><span class="line">                .map(Long::intValue);</span><br><span class="line"></span><br><span class="line">        source.doOnNext(Log::d)</span><br><span class="line">                .test()</span><br><span class="line">                .awaitDone(<span class="number">1L</span>, TimeUnit.SECONDS)</span><br><span class="line">                .assertResult(<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>HTTP 서버와 통신하는 코드를 테스트하는 것은 소스 코드만 봐도 충분히 이해할 수 있다.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testHttp</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">final</span> String url = <span class="string">"http://api.github.com/users/yudong80"</span>;</span><br><span class="line">    Observable&lt;String&gt; source = Observable.just(url)</span><br><span class="line">            .subscribeOn(Schedulers.io())</span><br><span class="line">            .map(OkHttpHelper::get)</span><br><span class="line">            .doOnNext(Log::d) <span class="comment">// json 을 로그로 찍는다.</span></span><br><span class="line">            .map(json -&gt; GsonHelper.parseValue(json, <span class="string">"name"</span>))</span><br><span class="line">            .observeOn(Schedulers.newThread());</span><br><span class="line"></span><br><span class="line">    <span class="comment">// json 중에서 name 만 뽑은 것을 로그로 찍는다.</span></span><br><span class="line">    String expected = <span class="string">"Dong Hwan Yu"</span>;</span><br><span class="line">    source.doOnNext(Log::i)</span><br><span class="line">            .test()</span><br><span class="line">            .awaitDone(<span class="number">3</span>, TimeUnit.SECONDS)</span><br><span class="line">            .assertResult(expected);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>HTTP 호출은 IO 스케줄러에서 실행되었고 JSON 파싱 결과는 뉴 스레드 스케줄러에서 출력한다. UI 프로그래밍을 할 때는 뉴 스레드 스케줄러 대신 UI 스레드로 변경하면 된다.</li>
-</ul>
-<h2 id="flowable-클래스">Flowable 클래스</h2>
-<ul>
-<li>배압 이슈를 위해 별도로 분리한 클래스다.</li>
-<li>Flowable 클래스를 도입한 이유는 Observable 클래스의 성능을 향상시키기 위해서다.</li>
-<li>기존의 Observable 클래스(배압 관련 함수들을 포함했었다.)는 배압에 관한 처리가 불필요한 경우에는 초기 로딩 때문에 약간의 오버헤드가 있었지만, RxJava 2.X의 Observable 클래스에는 배압으로 인한 성능 오버헤드가 사라졌다.</li>
-<li>Flowable -&gt; Observable로 변환하는 것뿐만 아니라 반대도 어렵지 않다.</li>
-</ul>
-<h3 id="observabler과-flowable의-선택-기준">Observabler과 Flowable의 선택 기준</h3>
-<p><strong>1. Observable을 사용해야 할 때</strong></p>
-<ul>
-<li>최대 1000개 미만의 데이터 흐름.</li>
-<li>예를 들어, 응용 프로그램에서 OOM이 발생할 확률이 거의 없는 경우다</li>
-<li>마우스 이벤트나 터치 이벤트를 다루는 GUI 프로그래밍. 이 경우에는 배압의 이슈가 거의 발생하지 않는다. Observable로는 초당 1000회 이하의 이벤트를 다루는데 이때 sample()이나 debounce() 같은 흐름 제어 함수를 활용하면 된다.</li>
-<li>데이터 흐름이 본질적으로 동기 방식이지만, 프로젝트에서 사용하는 플랫폼이 자바 Stream API나 그에 준하는 기능을 제공하지 않을 때, Observable은 보통 Flowable과 비교했을 때 성능 오버헤드가 낮다.</li>
-</ul>
-<p><strong>2. Flowable을 사용해야 할 때</strong></p>
-<ul>
-<li>특정 방식으로 생성된 1000개 이상의 데이터를 처리하는 경우. 이때 메소드 체인에서 데이터 소스에 데이터 개수 제한을 요청해야 한다.</li>
-<li>디스크에서 파일을 읽어 들일 경우, 본질적으로 블로킹 I/O 방식을 활용하고 내가 원하는 만큼 가져오는 방식(pull-based)으로 처리해야 하기 때문이다. 예를 들면, 특정 단위로 잘라 몇 행씩 가져오도록 제어할 수 있다.</li>
-<li>JDBC를 활용해 데이터베이스의 쿼리 결과를 가져오는 경우, 블로킹 방식을 이용하므로 ResultSet.next()를 호출하는 방식으로 쿼리의 결과를 읽어오도록 제어할 수 있다.</li>
-<li>네트워크 I/O를 실행하는 경우, 네트워크나 프로토콜을 통해 서버에서 가져오길 원하는 만큼의 데이터양을 요청할 수 있을 때이다.</li>
-<li>다수의 블로킹 방식을 사용하거나 가져오는 방식(pull-based)의 데이터 소스가 미래에는 논 블로킹 방식의 리액티브 API나 드라이버를 제공할 수도 있는 경우다.</li>
-</ul>
-<p>디스크에서 파일 읽기, JDBC를 활용한 데이터베이스 쿼리하기, 네트워크 I/O 등은 차가운 Observable(구독자가 구독하면 데이터의 처음부터 모두 발행하는 Observable)에 해당한다. 이는 결과 데이터를 처리할 수 있는만큼 조금씩 가져오는 것이 아니라 한 번에 모두 가져온다. 따라서 이 경우에는 반드시 Flowable을 활용해야 하는 것은 아니다.</p>
-<p>업스트림에서 발생하는 데이터의 속도와 다운스트림에서 처리하는 속도의 차이가 작다면 Observable을 활용해도 된다. 즉, 데이터 발행과 처리 속도가 차이나더라도 먼저 <strong>sample(), throttle(), debounce()</strong> 같은 흐름 제어 함수를 활용해 해결하는 것이 좋다. 이러한 함수로도 해결하기 어려울 때는 Flowable 클래스로 전환하면 된다.</p>
-<h3 id="flowable을-활용한-배압-이슈-대응">Flowable을 활용한 배압 이슈 대응</h3>
-<ul>
-<li>onBackpressureBuffer() : 배압 이슈가 발생했을 때 별도의 버퍼에 저장한다. Flowable 클래스는 기본적으로 128개의 버퍼가 있다.</li>
-<li>onBackpressureDrop() : 배압 이슈가 발생했을 때 해당 데이터를 무시한다.</li>
-<li>onBackpressureLatest() : 처리할 수 없어서 쌓이는 데이터를 무시하면서 최신의 데이터만 유지한다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FlowableSample</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        CommonUtils.exampleStart();</span><br><span class="line"></span><br><span class="line">        PublishSubject&lt;Integer&gt; subject = PublishSubject.create();</span><br><span class="line">        subject.observeOn(Schedulers.computation())</span><br><span class="line">                .subscribe(data -&gt; &#123;</span><br><span class="line">                    CommonUtils.sleep(<span class="number">100</span>); <span class="comment">// 100ms 후에 데이터 처리.</span></span><br><span class="line">                    Log.it(data);</span><br><span class="line">                &#125;, err -&gt; Log.e(err.toString()));</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 뜨거운 Observable 로 50,000,000개의 데이터를 연속으로 발행함.</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">50000000</span>; i++) &#123;</span><br><span class="line">            subject.onNext(i);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        subject.onComplete();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>PublishSubject 객체를 생성한 후, 처리 결과는 계산 스케줄러로 전달한다. subscribe() 함수를 호출한 후 Subject 객체가 발행한 데이터는 100ms 후에 로그를 찍는다.</p>
-<p>한편 PublishSubject 객체는 뜨거운 Observable이다. 데이터를 발행하는 속도와 데이터를 처리하는 속도의 차이가 발생했을 때 어떠한 보호 장치도 없다. 결과는 아래와 같다.</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">RxComputationThreadPool-1 | 604 | value = 0</span><br><span class="line">RxComputationThreadPool-1 | 742 | value = 1</span><br><span class="line">RxComputationThreadPool-1 | 3172 | value = 2</span><br><span class="line">RxComputationThreadPool-1 | 5158 | value = 3</span><br><span class="line">RxComputationThreadPool-1 | 7426 | value = 4</span><br><span class="line">RxComputationThreadPool-1 | 7528 | value = 5</span><br><span class="line">RxComputationThreadPool-1 | 8017 | value = 6</span><br><span class="line">RxComputationThreadPool-1 | 8570 | value = 7</span><br><span class="line">RxComputationThreadPool-1 | 9180 | value = 8</span><br><span class="line">RxComputationThreadPool-1 | 15089 | value = 9</span><br><span class="line">RxComputationThreadPool-1 | 15675 | value = 10</span><br></pre></td></tr></table></figure>
-<p>처리 결과를 보면 100ms 간격보다 상당히 느리게 데이터를 처리한다. 그리고 데이터는 반복문을 통해서 PublishSubject 객체에서 매우 빠르게 발행되는데 데이터는 겨우 10개만 처리되었다. 만약, 발행하는 데이터의 개수가 훨씬 많아지면 JVM은 곧 OOM 예외를 발생하고 실행을 중단할 것이다. <strong>이런 배압 이슈가 발생했을 때 Flowable 클래스를 활용한다.</strong></p>
-<p>위와 같은 배압 이슈에 대응하기 위해서 첫 번째 방법은 사용해보자.</p>
-<ul>
-<li>버퍼 만들기</li>
-<li>onBackpressureBuffer() 함수에는 다음과 같은 오버로딩이 있다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 기본값(128)의 버퍼 개수가 있다.</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> Flowable&lt;T&gt; <span class="title">onBackpressureBuffer</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="comment">// delayError 여부를 지정할 수 있다. </span></span></span><br><span class="line"><span class="function"><span class="comment">// true : 예외가 발생했을 때 버퍼에 쌓인 데이터를 모두 처리할 때가지 예외를 던지지 않는다.</span></span></span><br><span class="line"><span class="function"><span class="comment">// false : 예외가 발생했을 때 바로 다운스트림에 예외를 던진다.</span></span></span><br><span class="line"><span class="function"><span class="comment">// 기본값은 false다.</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> Flowable&lt;T&gt; <span class="title">onBackpressureBuffer</span><span class="params">(<span class="keyword">boolean</span> delayError)</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="comment">// capacity 인자로 버퍼의 개수를 지정한다.</span></span></span><br><span class="line"><span class="function"><span class="comment">// onOverflow 인자에 버퍼가 넘쳤을 때 실행할 동작을 지정한다.</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> Flowable&lt;T&gt; <span class="title">onBackpressureBuffer</span><span class="params">(<span class="keyword">int</span> capacity, Action onOverflow)</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="comment">// 버퍼가 가득찼을 때 추가로 실행하는 전략을 지정할 수 있다.</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> Flowable&lt;T&gt; <span class="title">onBackpressureBuffer</span><span class="params">(<span class="keyword">long</span> capacity, Action onOverflow, BackpressureOverflowStrategy overflowStrategy)</span></span></span><br></pre></td></tr></table></figure>
-<p>지정할 수 있는 전략은 아래와 같다.</p>
-<ul>
-<li><code>ERROR</code> : MissingBackpressureException 예외를 던지고 데이터 흐름을 중단한다.</li>
-<li><code>DROP_LATEST</code> : 버퍼에 쌓여있는 최근 값을 제거한다.</li>
-<li><code>DROP_OLDEST</code> : 버퍼에 쌓여있는 가장 오래된 값을 제거한다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">onBackPressureBufferSample</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        CommonUtils.exampleStart();</span><br><span class="line"></span><br><span class="line">        Flowable.range(<span class="number">1</span>, <span class="number">50000000</span>)</span><br><span class="line">                .onBackpressureBuffer(<span class="number">128</span>, () -&gt; &#123;</span><br><span class="line">                &#125;, BackpressureOverflowStrategy.DROP_OLDEST)</span><br><span class="line">                .observeOn(Schedulers.computation())</span><br><span class="line">                .subscribe(data -&gt; &#123;</span><br><span class="line">                    CommonUtils.sleep(<span class="number">100</span>);</span><br><span class="line">                    Log.it(data);</span><br><span class="line">                &#125;, error -&gt; Log.e(error.getMessage()));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>Flowable.range() 함수를 활용해 동일한 개수의 데이터를 발행한다. 그리고 128개의 버퍼를 생성한 후 버퍼가 넘치면 버퍼의 가장 오래된 데이터를 버리도록 지정한다. 결과는 아래와 같다.</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">RxComputationThreadPool-1 | 356 | value = 1</span><br><span class="line">RxComputationThreadPool-1 | 459 | value = 2</span><br><span class="line">RxComputationThreadPool-1 | 561 | value = 3</span><br><span class="line">RxComputationThreadPool-1 | 662 | value = 4</span><br><span class="line">RxComputationThreadPool-1 | 766 | value = 5</span><br><span class="line">RxComputationThreadPool-1 | 869 | value = 6</span><br><span class="line">RxComputationThreadPool-1 | 972 | value = 7</span><br><span class="line">RxComputationThreadPool-1 | 1072 | value = 8</span><br><span class="line">RxComputationThreadPool-1 | 1176 | value = 9</span><br><span class="line">RxComputationThreadPool-1 | 1276 | value = 10</span><br><span class="line">RxComputationThreadPool-1 | 1380 | value = 11</span><br><span class="line">RxComputationThreadPool-1 | 1485 | value = 12</span><br><span class="line">RxComputationThreadPool-1 | 1586 | value = 13</span><br><span class="line">RxComputationThreadPool-1 | 1688 | value = 14</span><br><span class="line">RxComputationThreadPool-1 | 1793 | value = 15</span><br><span class="line">RxComputationThreadPool-1 | 1895 | value = 16</span><br></pre></td></tr></table></figure>
-<p>이처럼 버퍼를 활용해 데이터를 훨씬 빠르게 다운스트림으로 발행하는 것을 알 수 있다. 거의 10배의 속도이다. 발행하는 속도도 이전보다 빨라졌고 더 많은 데이터를 발행한다. 데이터의 발행 속도가 워낙 빠르기 때문에 128개의 버퍼로는 모두 대응하기 어렵다.</p>
-<p>배압 이슈에 대응하는 두 번째 방법은 <code>onBackpressureDrop()</code> 함수를 활용하는 것이다. onBackpressureBuffer() 함수가 버퍼를 만들어 쌓아 두었다가 처리하는 방식이라면, onBackpressureDrop() 함수는 버퍼가 가득 찼을 때, 이후 데이터를 그냥 무시한다.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">onBackPressureDropSample</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        CommonUtils.exampleStart();</span><br><span class="line"></span><br><span class="line">        Flowable.range(<span class="number">1</span>, <span class="number">50000000</span>)</span><br><span class="line">                .onBackpressureDrop()</span><br><span class="line">                .observeOn(Schedulers.computation())</span><br><span class="line">                .subscribe(data -&gt; &#123;</span><br><span class="line">                    CommonUtils.sleep(<span class="number">100</span>);</span><br><span class="line">                    Log.it(data);</span><br><span class="line">                &#125;, error -&gt; Log.e(error.getMessage()));</span><br><span class="line"></span><br><span class="line">        CommonUtils.sleep(<span class="number">20000</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 결과</span></span><br><span class="line">... 생략</span><br><span class="line">RxComputationThreadPool-<span class="number">1</span> | <span class="number">13004</span> | value = <span class="number">124</span></span><br><span class="line">RxComputationThreadPool-<span class="number">1</span> | <span class="number">13105</span> | value = <span class="number">125</span></span><br><span class="line">RxComputationThreadPool-<span class="number">1</span> | <span class="number">13207</span> | value = <span class="number">126</span></span><br><span class="line">RxComputationThreadPool-<span class="number">1</span> | <span class="number">13309</span> | value = <span class="number">127</span></span><br><span class="line">RxComputationThreadPool-<span class="number">1</span> | <span class="number">13411</span> | value = <span class="number">128</span></span><br></pre></td></tr></table></figure>
-<p>버퍼에 128개의 데이터가 가득 찼을 때, 데이터를 계산 스케줄러에서 출력하기도 전에 예제가 끝난다. 따라서 계산 스케줄러에서 데이터를 다운스트림으로 발행할 수 있도록 충분한 시간(여기서는 20초)을 기다려줘야 한다. UI 프로그래밍(안드로이드)에서는 이와 같은 기다림이 필요하지 않다.</p>
-<p>기본 버퍼 개수만큼만 버퍼에 저장하고 나머지는 모두 무시했기 때문에 128개의 데이터만 출력하고 종료한다.</p>
-<p>마지막 방법은 <code>onBackpressureLatest()</code> 함수를 활용하는 것이다. 위의 두 함수의 기능을 섞을 것으로 데이터가 많이 쌓이면 무시하면서 최신의 데이터 즉, 마지막 데이터를 유지하는 것이다.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">onBackPressureLatest</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        CommonUtils.exampleStart();</span><br><span class="line"></span><br><span class="line">        Flowable.range(<span class="number">1</span>, <span class="number">50000000</span>)</span><br><span class="line">                .onBackpressureLatest()</span><br><span class="line">                .observeOn(Schedulers.computation())</span><br><span class="line">                .subscribe(data -&gt; &#123;</span><br><span class="line">                    CommonUtils.sleep(<span class="number">100</span>);</span><br><span class="line">                    Log.it(data);</span><br><span class="line">                &#125;, error -&gt; Log.e(error.getMessage()));</span><br><span class="line"></span><br><span class="line">        CommonUtils.sleep(<span class="number">20000</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 결과</span></span><br><span class="line">RxComputationThreadPool-<span class="number">1</span> | <span class="number">13416</span> | value = <span class="number">127</span></span><br><span class="line">RxComputationThreadPool-<span class="number">1</span> | <span class="number">13518</span> | value = <span class="number">128</span></span><br><span class="line">RxComputationThreadPool-<span class="number">1</span> | <span class="number">13622</span> | value = <span class="number">50000000</span></span><br></pre></td></tr></table></figure>
-<p>함수만 교체해주었고, 결과는 위와 같다. 버퍼가 꽉찼을 때, 데이터를 무시하면서 마지막 데이터를 다운 스트림으로 발행하는 것을 확인할 수 있다.</p>
-
                     
+                        <a
+                            href="/2019/09/15/RxJava-Chap08/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [RxJava] Chap08. 테스팅과 Flowable"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2019/09/15/RxJava-Chap08/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             
@@ -426,7 +322,7 @@
     </article>
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -458,144 +354,20 @@
 
             </div>
             
-                <div class="postShorten-content">
-                    <h1 id="흐름-제어">흐름 제어</h1>
+                <div class="postShorten-excerpt">
+                    <h1>흐름 제어</h1>
 <ul>
 <li>흐름 제어는 Observable이 데이터를 발행하는 속도와 옵저버가 데이터를 받아서 처리하는 속도 사이의 차이가 발생할 때 사용하는 함수이다.</li>
-<li>RxJava는 Observable이 데이터의 흐름을 push하는 방식으로 동작하기 때문에 위의 문제에 대해서 대처할 수 있어야 한다.</li>
 </ul>
-<h2 id="sample">sample()</h2>
-<ul>
-<li>특정한 시간 동안 가장 최근에 발행한 데이터만 걸러준다. <strong>즉, 최근에 발행된 데이터만 넘겨주고 나머지는 무시한다.</strong></li>
-<li>해당 시간에는 아무리 많은 데이터가 들어와도 해당 구간의 마지막 데이터만 발행하고 나머지는 무시한다.</li>
-</ul>
-<img src="/img/sample.png" width="500" height="200">
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SchedulerSupport</span>(SchedulerSupport.COMPUTATION)</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> Observable&lt;T&gt; <span class="title">sample</span><span class="params">(<span class="keyword">long</span> period, TimeUnit unit)</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> Observable&lt;T&gt; <span class="title">sample</span><span class="params">(<span class="keyword">long</span> period, TimeUnit unit, <span class="keyword">boolean</span> emitLast)</span></span></span><br></pre></td></tr></table></figure>
-<ul>
-<li><code>emitLast</code> 인자는 sample() 함수의 데이터 발행이 완료되지 않고 마지막에 데이터가 남아 있을 때, 해당 데이터를 발행할 것인지 결정한다. true로 설정하면 마지막 데이터를 발행한다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">sampleTest</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        String[] data = &#123;<span class="string">"1"</span>, <span class="string">"7"</span>, <span class="string">"2"</span>, <span class="string">"3"</span>, <span class="string">"6"</span>&#125;;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 시간 측정용.</span></span><br><span class="line">        CommonUtils.exampleStart();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 앞의 4개의 데이터는 100ms 간격으로 발행.</span></span><br><span class="line">        Observable&lt;String&gt; earlySource = Observable.fromArray(data)</span><br><span class="line">                .take(<span class="number">4</span>)</span><br><span class="line">                .zipWith(Observable.interval(<span class="number">100L</span>, TimeUnit.MILLISECONDS),</span><br><span class="line">                        (a, b) -&gt; a);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 마지막 데이터는 300ms 후에 발행.</span></span><br><span class="line">        Observable&lt;String&gt; lateSource = Observable.just(data[<span class="number">4</span>])</span><br><span class="line">                .zipWith(Observable.interval(<span class="number">300L</span>, TimeUnit.MILLISECONDS),</span><br><span class="line">                        (a, b) -&gt; a);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 2개의 Observable 을 결합하고 300ms 로 샘플링.</span></span><br><span class="line">        Observable&lt;String&gt; source = Observable.concat(earlySource, lateSource)</span><br><span class="line">                .sample(<span class="number">300L</span>, TimeUnit.MILLISECONDS);</span><br><span class="line"></span><br><span class="line">        source.subscribe(Log::it);</span><br><span class="line"></span><br><span class="line">        CommonUtils.sleep(<span class="number">1000</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 결과</span></span><br><span class="line">RxComputationThreadPool-<span class="number">1</span> | <span class="number">552</span> | value = <span class="number">7</span></span><br><span class="line">RxComputationThreadPool-<span class="number">1</span> | <span class="number">849</span> | value = <span class="number">3</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li>먼저, 100ms 간격으로 data 배열에 있는 데이터 4개를 발행한다. 그리고 마지막 데이터인 6을 300ms 후에 발행한다.</li>
-<li>또한 내가 원하는 특정 시간 후에 발행하기 위해 concat() 함수를 호출해 2개의 데이터 흐름(Observable)을 결합했다. 이렇게 전체 데이터 흐름을 세부 데이터 흐름으로 나누면 코드의 가독성이 좋아진다.</li>
-<li>sample() 함수는 300ms 간격으로 수행한다. 매 300ms 마다 가장 최근에 들어온 값만 최종적으로 발행한다.</li>
-<li>처음에 데이터를 발행하기 위해 약간의 지연 시간이 있어서(100ms+a) 다이어그램을 보면 시작할 때 약간의 간격이 있음을 볼 수 있다. 다음 데이터 발행이 3XXms이기 때문에 300ms일 때는 가장 최근 데이터가 이전에 발행했던 7이 되는 것이다.(처음 기준!)</li>
-<li>마지막 인자를 true로 설정하면 마지막 데이터를 발행한다. 기본값이 false이다.</li>
-</ul>
-<h2 id="buffer">buffer()</h2>
-<ul>
-<li>일정 시간 동안 데이터를 모아두었다가 한꺼번에 발행해준다.</li>
-<li>따라서 넘치는 데이터 흐름을 제어할 필요가 있을 때 활용한다. 컴퓨터의 버퍼 같은 기능을 한다.</li>
-</ul>
-<img src="/img/buffer.png" width="500" height="200">
-<ul>
-<li>처음에 빨,노,초 원을 발행하면 그것을 모아서 List 객체에 전달해준다. 그 다음 다시 하늘,파,보 원이 모이면 그것을 모아서 한 번에 발행해준다. 매우 단순한 로직이다.</li>
-<li>함수의 원형은 다음과 같다.
-<ul>
-<li>기본적으로 스케줄러 없이 현재 스레드에서 동작하며 입력되는 값을 count에 저장된 수만큼 모아서 List<t>에 한꺼번에 발행한다.</t></li>
-</ul>
-</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SchedulerSupport</span>(SchedulerSupport.NONE)</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> Observable&lt;List&lt;T&gt;&gt; buffer(<span class="keyword">int</span> count)</span><br></pre></td></tr></table></figure>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">bufferSample</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        String[] data = &#123;<span class="string">"1"</span>, <span class="string">"2"</span>, <span class="string">"3"</span>, <span class="string">"4"</span>, <span class="string">"5"</span>, <span class="string">"6"</span>&#125;;</span><br><span class="line">        CommonUtils.exampleStart();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 앞의 3개는 100ms 간격으로 발행.</span></span><br><span class="line">        Observable&lt;String&gt; earlySource = Observable.fromArray(data)</span><br><span class="line">                .take(<span class="number">3</span>)</span><br><span class="line">                .zipWith(Observable.interval(<span class="number">100L</span>, TimeUnit.MILLISECONDS),</span><br><span class="line">                        (a, b) -&gt; a);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 가운데 1개는 300ms 후에 발행.</span></span><br><span class="line">        Observable&lt;String&gt; middleSource = Observable.just(data[<span class="number">3</span>])</span><br><span class="line">                .zipWith(Observable.interval(<span class="number">300L</span>, TimeUnit.MILLISECONDS),</span><br><span class="line">                        (a, b) -&gt; a);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 마지막 2개는 100ms 후에 발행.</span></span><br><span class="line">        Observable&lt;String&gt; lataSource = Observable.just(data[<span class="number">4</span>], data[<span class="number">5</span>])</span><br><span class="line">                .zipWith(Observable.interval(<span class="number">100L</span>, TimeUnit.MILLISECONDS),</span><br><span class="line">                        (a, b) -&gt; a);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        Observable&lt;List&lt;String&gt;&gt; source = Observable.concat(earlySource, middleSource, lataSource)</span><br><span class="line">                .buffer(<span class="number">3</span>);</span><br><span class="line"></span><br><span class="line">        source.subscribe(Log::it);</span><br><span class="line">        CommonUtils.sleep(<span class="number">1000</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 결과</span></span><br><span class="line">RxComputationThreadPool-<span class="number">1</span> | <span class="number">562</span> | value = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]</span><br><span class="line">RxComputationThreadPool-<span class="number">3</span> | <span class="number">1067</span> | value = [<span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>]</span><br></pre></td></tr></table></figure>
-<ul>
-<li>buffer(3)는 데이터를 3개씩 모았다가 List<string>에 채운 후 값을 한꺼번에 발행해준다. 그래서 위의 결과를 보면 확인 가능하다.</string></li>
-<li>buffer() 함수에는 모으거나(count) 무시할(skip) 데이터 개수를 입력할 수 있다.</li>
-<li>skip 변수는 count보다 값이 커야 한다. count가 2이고 skip이 3이면 2개 데이터를 모으고 3번째 데이터 1개는 스킵한다.</li>
-<li>코드는 위와 같으면 <code>buffer(2,3)</code>으로 호출하면 아래와 같은 결과를 얻을 수 있다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">RxComputationThreadPool-<span class="number">1</span> | <span class="number">562</span> | value = [<span class="number">1</span>, <span class="number">2</span>]</span><br><span class="line">RxComputationThreadPool-<span class="number">3</span> | <span class="number">1067</span> | value = [<span class="number">4</span>, <span class="number">5</span>]</span><br></pre></td></tr></table></figure>
-<ul>
-<li>Observable에서 onNext 이벤트가 발생하면 내부 데이터는 3개가 아니라 2개 값을 모아 바로 List<string>에 채운 후 구독자에게 데이터를 발행한다.</string></li>
-</ul>
-<h2 id="throttlefirst-throttlelast">throttleFirst(), throttleLast()</h2>
-<ul>
-<li>throttle는 <strong>조절판</strong>이라는 뜻이다. 그것에 맞게 throttleFirst() 함수는 주어진 조건에서 가장 먼저 입력된 값을 발행한다. throttleLast() 함수는 주어진 조건에서 가장 마지막에 입력된 값을 발행한다.</li>
-<li>throttleFirst()와 throttleLast()는 정반대의 의미가 아니다. throttleFirst() 함수는 어떤 데이터가 입력된 후 일정 시간 동안 다른 데이터가 발행되지 못하도록 방지하지만, throttleLast() 함수는 sample() 함수처럼 고정된 시간 간격안에서 마지막 데이터만 발행한다.</li>
-<li><strong>throttleFirst()</strong> : sample() 함수와 비슷하지만 다르다. sample() 함수가 주어진 시간 동안 입력된 마지막 값을 발행한다면 <code>throttleFirst()</code> 함수는 <strong>어떤 데이터를 발행하면 지정된 시간 동안 다른 데이터를 발행하지 않도록 막는다.</strong></li>
-<li><strong>throttleLast()</strong> : sample() 함수와 기본 개념은 동일하다. 주어진 시간 동안 입력된 값 중 마지막 값을 발행한다.</li>
-</ul>
-<img src="/img/throttleFirst.png" width="500" height="200">
-<ul>
-<li>함수 원형은 다음과 같다.
-<ul>
-<li>계산 스케줄러에서 실행한다. 즉, 비동기로 동작하도록 설계된 함수다.</li>
-<li>windowDuration는 시간 간격을 지정하며 unit은 시간의 단위다.</li>
-</ul>
-</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SchedulerSupport</span>(SchedulerSupport.COMPUTATION)</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> Observable&lt;T&gt; <span class="title">throttleFirst</span><span class="params">(<span class="keyword">long</span> windowDuration, TimeUnit unit)</span></span></span><br></pre></td></tr></table></figure>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">throttleFirstSample</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        String[] data = &#123;<span class="string">"1"</span>, <span class="string">"2"</span>, <span class="string">"3"</span>, <span class="string">"4"</span>, <span class="string">"5"</span>, <span class="string">"6"</span>&#125;;</span><br><span class="line">        CommonUtils.exampleStart();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 앞의 1개는 100ms 간격으로 발행.</span></span><br><span class="line">        Observable&lt;String&gt; earlySource = Observable.just(data[<span class="number">0</span>])</span><br><span class="line">                .zipWith(Observable.interval(<span class="number">100L</span>, TimeUnit.MILLISECONDS),</span><br><span class="line">                        (a, b) -&gt; a);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 다음 1개는 300ms 후에 발행.</span></span><br><span class="line">        Observable&lt;String&gt; middlerSource = Observable.just(data[<span class="number">1</span>])</span><br><span class="line">                .zipWith(Observable.interval(<span class="number">300L</span>, TimeUnit.MILLISECONDS),</span><br><span class="line">                        (a, b) -&gt; a);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 마지막 4개는 100ms 후에 발행.</span></span><br><span class="line">        Observable&lt;String&gt; lateSource = Observable.just(data[<span class="number">2</span>], data[<span class="number">3</span>], data[<span class="number">4</span>], data[<span class="number">5</span>])</span><br><span class="line">                .zipWith(Observable.interval(<span class="number">100L</span>, TimeUnit.MILLISECONDS),</span><br><span class="line">                        (a, b) -&gt; a)</span><br><span class="line">                .doOnNext(Log::dt); <span class="comment">// 디버깅 정보 출력.</span></span><br><span class="line"></span><br><span class="line">        Observable&lt;String&gt; source = Observable.concat(earlySource, middlerSource, lateSource)</span><br><span class="line">                .throttleFirst(<span class="number">200L</span>, TimeUnit.MILLISECONDS);</span><br><span class="line"></span><br><span class="line">        source.subscribe(Log::it);</span><br><span class="line">        CommonUtils.sleep(<span class="number">1000</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 결과</span></span><br><span class="line">RxComputationThreadPool-<span class="number">1</span> | <span class="number">371</span> | value = <span class="number">1</span></span><br><span class="line">RxComputationThreadPool-<span class="number">3</span> | <span class="number">673</span> | value = <span class="number">2</span></span><br><span class="line">RxComputationThreadPool-<span class="number">4</span> | <span class="number">779</span> | debug = <span class="number">3</span></span><br><span class="line">RxComputationThreadPool-<span class="number">4</span> | <span class="number">876</span> | debug = <span class="number">4</span></span><br><span class="line">RxComputationThreadPool-<span class="number">4</span> | <span class="number">975</span> | debug = <span class="number">5</span></span><br><span class="line">RxComputationThreadPool-<span class="number">4</span> | <span class="number">975</span> | value = <span class="number">5</span></span><br><span class="line">RxComputationThreadPool-<span class="number">4</span> | <span class="number">1077</span> | debug = <span class="number">6</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li>처음 100ms가 지난 후에 1을 발행한 후, 300ms 동안 기다린 다음 2를 발행한다. 그리고 100ms 간격으로 나머지 값들을 발행한다. 마지막으로 throttleFirst() 함수를 호출해 200ms 간격으로 타임 윈도에 맨 먼저 입력된 값을 발행한다.</li>
-<li>위에서는 1,2,4,6이 다운 스트림으로 발행된다.</li>
-</ul>
-<h2 id="window">window()</h2>
-<ul>
-<li>groupBy() 함수와 개념적으로 비슷하다.</li>
-<li>throttleFirst()나 sample() 함수처럼 내가 처리할 수 있는 일부의 값들만 받아들일 수 있다. 흐름 제어 기능에 groupBy() 함수와 비슷한 별도의 Observable 분리 기능을 모두 갖추었다고 생각하면 된다.</li>
-</ul>
-<img src="/img/window.png" width="500" height="200">
-<ul>
-<li>count를 인자로 받는다. 예를 들어, 3을 인자로 받으면 앞으로 데이터 3개가 발행될 때마다 새로운 Observable을 생성하겠다는 뜻이다.</li>
-<li>함수의 원형은 다음과 같다.
-<ul>
-<li>현재 스레드를 그대로 활용한다. 왜 그런지 window() 함수의 다른 변형을 비교하면 알 수 있다.</li>
-</ul>
-</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SchedulerSupport</span>(SchedulerSupport.NONE)</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> Observable&lt;Observable&lt;T&gt;&gt; window(<span class="keyword">long</span> count)</span><br></pre></td></tr></table></figure>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SchedulerSupport</span>(SchedulerSupport.COMPUTATION)</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> Observable&lt;Observable&lt;T&gt;&gt; window(</span><br><span class="line">    <span class="keyword">long</span> timespan, <span class="keyword">long</span> timeskip, TimeUnit unit</span><br><span class="line">)&#123; </span><br><span class="line">    <span class="comment">// 생략.</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>count만을 인자로 갖는 window() 함수는 입력된 값을 그대로 발행하기 때문에 비동기 작업이라고 보기 어렵다.</li>
-<li>위의 함수 원형에는 timespan이라는 시간 동안 입력된 값 중에서 일부를 무시하는 기능을 포함한다.</li>
-<li>어떤 필터링 작업을 해줘야 하기 때문에 계산 스케줄러를 활용하게 된다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">windowSample</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        String[] data = &#123;<span class="string">"1"</span>, <span class="string">"2"</span>, <span class="string">"3"</span>, <span class="string">"4"</span>, <span class="string">"5"</span>, <span class="string">"6"</span>&#125;;</span><br><span class="line"></span><br><span class="line">        CommonUtils.exampleStart();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 앞의 3개는 100ms 간격으로 발행.</span></span><br><span class="line">        Observable&lt;String&gt; earlySource = Observable.fromArray(data)</span><br><span class="line">                .take(<span class="number">3</span>)</span><br><span class="line">                .zipWith(Observable.interval(<span class="number">100L</span>, TimeUnit.MILLISECONDS),</span><br><span class="line">                        (a, b) -&gt; a);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 가운데 1개는 300ms 후에 발행.</span></span><br><span class="line">        Observable&lt;String&gt; middleSource = Observable.just(data[<span class="number">3</span>])</span><br><span class="line">                .zipWith(Observable.interval(<span class="number">300L</span>, TimeUnit.MILLISECONDS),</span><br><span class="line">                        (a, b) -&gt; a);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 마지막 2개는 100ms 후에 발행.</span></span><br><span class="line">        Observable&lt;String&gt; lateSource = Observable.just(data[<span class="number">4</span>], data[<span class="number">5</span>])</span><br><span class="line">                .zipWith(Observable.interval(<span class="number">100L</span>, TimeUnit.MILLISECONDS),</span><br><span class="line">                        (a, b) -&gt; a);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 데이터 3개씩 모아서 새로운 Observable 생성.</span></span><br><span class="line">        Observable&lt;Observable&lt;String&gt;&gt; source = Observable.concat(earlySource, middleSource, lateSource)</span><br><span class="line">                .window(<span class="number">3</span>);</span><br><span class="line"></span><br><span class="line">        source.subscribe(observable -&gt; &#123;</span><br><span class="line">            Log.dt(<span class="string">"New Observable Started!!"</span>);</span><br><span class="line">            observable.subscribe(Log::it);</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">        CommonUtils.sleep(<span class="number">1000</span>);</span><br><span class="line">        CommonUtils.exampleComplete();</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 결과</span></span><br><span class="line">RxComputationThreadPool-<span class="number">1</span> | <span class="number">365</span> | debug = New Observable Started!!</span><br><span class="line">RxComputationThreadPool-<span class="number">1</span> | <span class="number">366</span> | value = <span class="number">1</span></span><br><span class="line">RxComputationThreadPool-<span class="number">1</span> | <span class="number">461</span> | value = <span class="number">2</span></span><br><span class="line">RxComputationThreadPool-<span class="number">1</span> | <span class="number">560</span> | value = <span class="number">3</span></span><br><span class="line">RxComputationThreadPool-<span class="number">2</span> | <span class="number">861</span> | debug = New Observable Started!!</span><br><span class="line">RxComputationThreadPool-<span class="number">2</span> | <span class="number">861</span> | value = <span class="number">4</span></span><br><span class="line">RxComputationThreadPool-<span class="number">3</span> | <span class="number">963</span> | value = <span class="number">5</span></span><br><span class="line">RxComputationThreadPool-<span class="number">3</span> | <span class="number">1062</span> | value = <span class="number">6</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li>window() 함수의 인자로 3을 넣었다. 처음에 Observable을 생성하고 3개의 데이터를 전달받으면 새로운 Observable을 다시 생성하여 값을 발행한다.</li>
-<li>1 값을 발행할 때와 4 값을 발행할 때 각각 새로운 Observable이 생성되었다.</li>
-</ul>
-<h2 id="debounce">debounce()</h2>
-<ul>
-<li>빠르게 연속 이벤트를 처리하는 흐름 제어 함수다.</li>
-<li>안드로이드와 같은 UI 기반의 프로그래밍에서는 유용하게 활용할 수 있다.</li>
-<li>예를 들어, 버튼을 빠르게 누르는 상황에서 마지막에 누른 이벤트만 처리해야할 때 간단하게 적용할 수 있다. RxJava를 이용하지 않는다면 마지막에 버튼을 누른 시간을 멤버 변수에 저장하고 일정 시간 동안 if문으로 예외 처리해야 하기 때문에 매우 번거롭고 실수할 가능성도 크다.</li>
-</ul>
-<img src="/img/debounce.png" width="500" height="200">
-<ul>
-<li>첫 번째 원은 지정한 시간 간격 안에 들어왔고 다른 이벤트는 없어서 그대로 발행되었다. 두 번째 원의 경우 시간 간격 안에 세 번째 원이 다시 들어왔으므로 두 번째가 아닌 세 번째 원을 발행한다. 마지막도 마찬가지다.</li>
-<li>함수의 원형은 다음과 같다.
-<ul>
-<li>계산 스케줄러에서 동작한다.</li>
-<li><strong>어떤 이벤트가 입력되고 timeout에서 지정한 시간 동안 추가 이벤트가 발생하지 않으면 마지막 이벤트를 최종적으로 발행한다.</strong></li>
-</ul>
-</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SchedulerSupport</span>(SchedulerSupport.COMPUTATION)</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> Observable&lt;T&gt; <span class="title">debounce</span><span class="params">(<span class="keyword">long</span> timeout, TimeUnit unit)</span></span></span><br></pre></td></tr></table></figure>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">debounceSample</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        String[] data = &#123;<span class="string">"1"</span>, <span class="string">"2"</span>, <span class="string">"3"</span>, <span class="string">"5"</span>&#125;;</span><br><span class="line">        Observable&lt;String&gt; source = Observable.concat(</span><br><span class="line">                Observable.timer(<span class="number">100L</span>, TimeUnit.MILLISECONDS).map(i -&gt; data[<span class="number">0</span>]),</span><br><span class="line">                Observable.timer(<span class="number">300L</span>, TimeUnit.MILLISECONDS).map(i -&gt; data[<span class="number">1</span>]),</span><br><span class="line">                Observable.timer(<span class="number">100L</span>, TimeUnit.MILLISECONDS).map(i -&gt; data[<span class="number">2</span>]),</span><br><span class="line">                Observable.timer(<span class="number">300L</span>, TimeUnit.MILLISECONDS).map(i -&gt; data[<span class="number">3</span>])</span><br><span class="line">        ).debounce(<span class="number">200L</span>, TimeUnit.MILLISECONDS);</span><br><span class="line"></span><br><span class="line">        source.subscribe(Log::i);</span><br><span class="line">        CommonUtils.sleep(<span class="number">1000</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 결과</span></span><br><span class="line">RxComputationThreadPool-<span class="number">2</span> | value = <span class="number">1</span></span><br><span class="line">RxComputationThreadPool-<span class="number">2</span> | value = <span class="number">3</span></span><br><span class="line">RxComputationThreadPool-<span class="number">2</span> | value = <span class="number">5</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li>데이터를 발행하는 부분이 특이하다. 각각의 시간 간격이 서로 다르기 때문에 concat() 함수를 활용해 각가 데이터를 발행했다.</li>
-<li>timer() 함수는 이벤트를 한 번만 발생시키고 완료하기 때문에 concat()과 timer() 함수의 조합은 유용하다.</li>
-<li>debounce()를 활용해 어떤 이벤트가 입력되고 지정된 timeout인 200ms 안에 더 이상의 이벤트가 없으면 마지막에 입력된 값을 발행한다.</li>
-<li>여기서 이해가 잘 안되었던 부분이 있었다. 결과를 예상해봤을 때, 1,2,5라고 생각했지만 아니었다. <strong>왜냐면 정의 자체가 어떤 이벤트가 입력되고 나서 timout 내에 더 이상의 이벤트가 없으면 마지막 이벤트를 발행하는 것이다.</strong> 그러니까 어떤 이벤트가 입력되고 나서 timout 내에 이벤트가 있는지 찾는 것이다. 그래서 결과는 1,3,5가 맞다.</li>
-</ul>
-
                     
+                        <a
+                            href="/2019/09/14/RxJava-Chap07-3/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [RxJava] Chap07. 디버깅 - 흐름 제어"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2019/09/14/RxJava-Chap07-3/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             
@@ -700,7 +472,7 @@
     </article>
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -732,50 +504,17 @@
 
             </div>
             
-                <div class="postShorten-content">
+                <div class="postShorten-excerpt">
                     <p>코틀린에서 사용하는 더블콜론 참조에 대해서 알아보려고 한다.</p>
-<h2 id="리플렉션reflection이란">리플렉션(Reflection)이란</h2>
-<p>코틀린에서 더블콜론(::)은 리플렉션을 위해 사용한다. 리플렉션이란 코드를 작성하는 시점에는 런타임상 컴파일된 바이트 코드에서 내가 작성한 코드가 어디에 위치하는지 알 수 없기 때문에 바이트 코드를 이용해 내가 참조하려는 값을 찾기위해 사용한다.</p>
-<h2 id="자바와-코틀린에서의-리플렉션">자바와 코틀린에서의 리플렉션</h2>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">SomeClass.class -&gt; 클래스 그 자체를 리플렉션</span><br><span class="line">someInstance.getClass() -&gt; 인스턴스에서 클래스를 리플렉션</span><br></pre></td></tr></table></figure>
-<ul>
-<li>자바에서는 클래스를 참조할 때 위와 같이 사용한다.</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">SomeClass::class</span><br><span class="line">someInstance::class</span><br></pre></td></tr></table></figure>
-<ul>
-<li>코틀린에서는 더블콜론을 리플렉션을 위해 사용하며 위와 같은 형태로 사용한다.</li>
-</ul>
-<p>하지만 우리가 액티비티를 넘길 때는 <code>SomeClass::class.java</code>와 같이 끝에 <strong>.java</strong>가 붙는 것을 볼 수 있다. 그 이유는 자바에서 쓰는 클래스와 코틀린에서 쓰는 클래스가 다르기 때문이다.</p>
-<p>자바에서의 <code>SomeClass.class</code>는 Class를 리턴한다. 반면, 코틀린에서는 <code>SomeClass::class</code>를 하면 <strong>KClass</strong>를 리턴한다. 그렇기 때문에 KClass를 Class로 바꾸어 주어야하는데 이때 .Java를 이용하여 자바 클래스 값을 받는다.</p>
-<img src="/img/kclass.png" width="700" height="300">
-<p>KClass 안의 java의 getter는 위 그림과 같이 확장함수 형태로 되어있으며 KClass에서 자바의 클래스 타입을 반환한다.</p>
-<h2 id="코틀린에서의-함수참조">코틀린에서의 함수참조</h2>
-<p>코틀린에서 SomeClass::class와 같이 클래스를 참조할 수도 있지만 SomeClass:Method와 같이 클래스 내의 메소드도 참조할 수 있고 ::Function 형식의 함수도 참조할 수 있다.</p>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">(args: <span class="type">Array</span>&lt;<span class="type">String</span>&gt;)</span></span> &#123;</span><br><span class="line">    <span class="keyword">val</span> numbers = listOf(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>)</span><br><span class="line"></span><br><span class="line">    numbers.filter(::isOdd)</span><br><span class="line">            .forEach &#123;</span><br><span class="line">                println(it)</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">isOdd</span><span class="params">(x: <span class="type">Int</span>)</span></span>: <span class="built_in">Boolean</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> x % <span class="number">2</span> != <span class="number">0</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 단축형</span></span><br><span class="line"><span class="comment">//fun isOdd(x: Int) = x % 2 !=0</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li>isOdd() 함수를 filter를 사용한 코드이다. filter를 사용하면서 함수참조를 이용해 <code>::isOdd</code> 형태로 함수를 호출하였다.</li>
-<li>필터의 원형은 IntArray에서 Int 값을 받아 Boolean을 반환하는 inline 함수이다. 마찬가지로 Int를 받아 Boolean을 반환하기 때문에 함수를 참조하여 동일한 형식의 isOdd를 사용할 수 있다.</li>
-</ul>
-<h2 id="reference">Reference</h2>
-<ul>
-<li><a href="https://medium.com/harrythegreat/%EC%BD%94%ED%8B%80%EB%A6%B0%EC%9D%98-%EB%8D%94%EB%B8%94%EC%BD%9C%EB%A1%A0-%EC%B0%B8%EC%A1%B0-73ff25484586" target="_blank" rel="noopener">코틀린의 더블콜론(::) 참조</a></li>
-</ul>
-
                     
+                        <a
+                            href="/2019/08/08/Kotlin-Double-Ref/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [Kotlin] 더블콜론(::) 참조"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2019/08/08/Kotlin-Double-Ref/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             
@@ -1023,7 +762,7 @@
     </article>
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -1055,62 +794,18 @@
 
             </div>
             
-                <div class="postShorten-content">
-                    <h2 id="overview">OverView</h2>
+                <div class="postShorten-excerpt">
+                    <h2>OverView</h2>
 <p>안드로이드에서는 기본적으로 메인 스레드를 갖는다. 이를 <strong>UI 스레드</strong>라고 부르기도 하는데, UI 관련 작업을 해당 스레드에서만 작업하도록 제한하기 때문에 이렇게 부른다.</p>
-<p>UI 스레드에서는 UI 관련 작업만 한다고 했는데, 그렇다면 파일을 다운로드 받거나 네트워크를 통해 데이터를 받아오는 입출력 작업 등의 시간이 오래 걸리는 작업을 하면 앱의 반응성이 낮아지고 안드로이드 시스템은 사용자의 사용성을 위해 <code>ANR(Application Not Responding)</code>을 발생시키게 된다.</p>
-<p>이 문제를 해결하기 위해 안드로이드에서는 Handler, AsyncTask 등의 방법을 제공한다. 이번 포스팅에서 알아볼 친구는 <strong>AsyncTask</strong>이다. 그 중에서도 문제점과 유의사항이다. 사실 인터넷에 많은 사용법과 개념이 있으니 여기서는 다루지 않겠다.</p>
-<h2 id="asynctask">AsyncTask</h2>
-<p><strong>Google</strong>은 <code>AsyncTask</code>를 사용할 때, '수 초 내의 동작에만 사용’하는 것을 권장하고 있다. 그 이상의 작업을 하고 싶을 때는 별도의 스레드를 생성해 직접 구현하는 것을 권장한다. 그 <strong>이유는 AsyncTask가 액티비티에 종속되지 않기 때문이다.</strong></p>
-<p><code>1. AysncTask 사용 규칙</code></p>
-<ul>
-<li>AsyncTask는 일회용 클래스이다. 두 번 이상 사용하면 안된다. 두 번째 execute() 호출시 오류가 발생한다.</li>
-<li>AsyncTask 객체는 메인스레드에서 생성되어야 하고 실행되어야 한다.</li>
-<li>AsyncTask의 콜백 메소드인 onPreExecute(), doInBackground(), onProgress() 등을 수동으로 호출하면 오류가 발생한다.</li>
-</ul>
-<p><code>2. AsyncTask가 액티비티에 종속되지 않아 생길 수 있는 문제</code></p>
-<p>AsyncTask는 액티비티에 포함되지 않는다. 그래서 doInBackground()가 수행되고 있는 동안에 액티비티가 종료되면 수행되던 AsyncTask는 다음과 같은 2가지 문제가 발생할 수 있다.</p>
-<ul>
-<li><strong>액티비티 종료 시의 문제점</strong>
-<ul>
-<li>AsyncTask를 execute() 하고 doInBackground()가 수행되고 있는 동안에 액티비티가 먼저 종료되면 AsyncTask와 액티비티는 독립적인 존재이므로 AsyncTask가 종료되지 않는다. 액티비티가 종료되더라도 doInBackground()의 수행이 끝날 때까지 AsyncTask는 실행 중 상태를 유지하게 된다.</li>
-<li>doInBackground() 수행 완료 후에 AsyncTask의 생명주기 상 onCancelled()나 onPostExecute() 메소드가 호출된다. 이때 존재하지 않은 액티비티의 UI에 접근을 한다면 메모리 누수(Memory Leak)이 발생하고 <code>IllegalArgumentException</code> 에러가 발생할 수 있다.</li>
-</ul>
-</li>
-</ul>
-<p>그래서 다음처럼 액티비티가 종료될 때, AsyncTask의 cancel() 메소드를 호출해 오류를 방지해야 한다.</p>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onDestroy</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">super</span>.onDestroy()</span><br><span class="line">    task.cancel(<span class="literal">true</span>)        </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li><strong>디바이스의 화면 회전시의 문제점</strong>
-<ul>
-<li>액티비티 종료시의 문제점 사례와 같은 상황이다. 액티비티는 디바이스의 화면을 회전시키면 액티비티가 종료되고 새로운 액티비티가 생성된다. 그렇게 되면 액티비티의 모든 변수가 초기화되고 회전 전에 실행했던 AsyncTask는 계속 백그라운드에서 수행이 되고 doInBackground()가 종료되고 난 뒤에 UI 객체에 접근을 하면 메모리 누수와 스레드 <code>IllegalArgumentException</code> 에러가 발생할 수 있다.</li>
-</ul>
-</li>
-</ul>
-<p><code>3. AsyncTask를 취소하는 방법</code></p>
-<p>AsyncTask는 수행 중에 cancel()을 호출하여 취소할 수 있다. cancel()이 한 번이라도 호출되면 isCancelled() 메소드는 true를 반환한다. 하지만 주의해야 할 것은 cancel()을 호출했다고 doInBackground()의 실행이 취소되는 것은 아니라는 점이다.</p>
-<p>액티비티 종료나 화면이 회전되는 상황이 발생했을 때 cancel()을 호출하더라도 남아있는 작업은 계속 돌게 되어 원치 않은 상황이 될 수 있다. 그래서 작업 취소 요청에 바로 반응하기 위해서 doInBackground() 메소드에서 주기적으로 isCancelled()의 반환값을 확인하여 적절한 조치를 취해야 한다.</p>
-<h2 id="참고">참고</h2>
-<ul>
-<li><a href="http://blog.naver.com/PostView.nhn?blogId=ironlove77&amp;logNo=221003037545" target="_blank" rel="noopener">안드로이드 | 스레드 | AsyncTask의 문제점과 유의사항</a></li>
-<li><a href="https://webnautes.tistory.com/1082" target="_blank" rel="noopener">안드로이드 개념 및 예제 - AsyncTask</a></li>
-</ul>
-
                     
+                        <a
+                            href="/2019/08/03/AsyncTask/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [Android] AsyncTask"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2019/08/03/AsyncTask/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             
@@ -1119,7 +814,7 @@
     </article>
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -1151,104 +846,19 @@
 
             </div>
             
-                <div class="postShorten-content">
+                <div class="postShorten-excerpt">
                     <blockquote>
 <p>해당 포스팅 글이 로컬에서만 보이는 문제로 인하여 재업로드한 글입니다.</p>
 </blockquote>
-<p>RxJava와 관련된 내용은 <a href="http://www.yes24.com/Product/goods/45506284" target="_blank" rel="noopener">RxJava 프로그래밍</a> 책을 구매하여 공부하면서 참고하였습니다. 앞으로 작성하는 RxJava 글은 위의 책으로 공부하면서 정리한 내용입니다. 문제가 된다면 해당 게시글을 삭제하도록 하겠습니다. 아래 글은 제가 책을 보고 공부한 내용과 참고한 내용으로 작성되었으므로 정확하지 않을 수 있으니 깃헙에 있는 이메일로 연락주시면 감사하겠습니다.</p>
-<ul>
-<li><a href="#%EB%A6%AC%EC%95%A1%ED%8B%B0%EB%B8%8C-%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D">리액티브 프로그래밍</a></li>
-</ul>
-<h2 id="리액티브-프로그래밍">리액티브 프로그래밍</h2>
-<p>리액티브 프로그래밍(Reative Programming)은 반응형 프로그래밍이라고도 한다. <strong>데이터 의 흐름과 전달에 관한 프로그래밍 패러다임</strong>이다. 기존의 명령형 프로그래밍은 주로 컴퓨터 하드웨어를 대상으로 프로그래머가 작성한 코드가 정해진 절차에 따라 순서대로 실행된다. <strong>리액티브 프로그래밍</strong>은 데이터 흐름을 먼저 정의하고 데이터가 변경되었을 때 연관되는 수식이나 함수가 업데이트되는 방식이다.</p>
-<p>가장 쉽게 이해할 수 있는 예는 MS의 엑셀(즉, 스프레드 시트)이다. 엑셀에서 값을 변경했을 때 자동으로 반영되는 것이 이러한 예를 설명한다.</p>
-<ul>
-<li>기존의 명령형 프로그래밍 &lt;–&gt; 반응형 프로그래밍(즉, 리액티브 프로그래밍)</li>
-<li><code>명령형 프로그래밍</code> 방식은 변경이 발생했다는 통지를 받아서 연말 매출액을 새로 계산하는 당겨오는(<strong>pull</strong>) 방식이지만, <code>리액티브 프로그래밍</code>은 데이터 소스가 변경된 데이터를 밀어주는(<strong>push</strong> 방식이다. 일종의 옵저버 패턴이라고 생각하면 된다.</li>
-<li>명령형 프로그래밍의 반대말은 선언형 프로그래밍이라고도 한다.
-<ul>
-<li>ex) SQL.</li>
-<li>반응형 프로그래밍은 선언형 프로그래밍을 지향한다.</li>
-</ul>
-</li>
-</ul>
-<h2 id="자바언어와-리액티브-프로그래밍">자바언어와 리액티브 프로그래밍</h2>
-<ul>
-<li>기존의 pull 방식의 프로그래밍 개념 -&gt; push 방식의 프로그래밍 개념으로 바뀜.</li>
-<li><code>함수형 프로그래밍</code>의 지원을 받는다.</li>
-</ul>
-<p><strong>리액티브 프로그래밍</strong>에서는 데이터의 변화가 발생했을 때 변경이 발생한 곳(데이터 소스)에서 새로운 데이터를 보내(push 방식) 준다. 기존 자바 프로그래밍이 pull 방식이라면 리액티브 프로그래밍은 push 방식이다.</p>
-<p>한편 우리가 아는 콜백이나 옵저버 패턴을 넘어서 RxJava 기반의 리액티브 프로그래밍이 되려면 <strong>함수형 프로그래밍</strong>이 필요하다. 콜백이나 옵저버 패턴은 옵저버가 1개이거나 단일 스레드 환경에서는 문제가 없지만, 멀티 스레드 환경에서는 사용시 많은 주의가 필요하다.<br>
-대표적인 예가 <strong>데드락</strong>과 <strong>동기화</strong>문제이다.</p>
-<p>추가적으로 <strong>함수형 프로그래밍은 부수 효과(side effect)가 없다.</strong> 부수 효과란 콜백이나 옵저버 패턴이 스레드에 안전하지 않은 이유가 같은 자원에 여러 스레드가 경쟁 조건(race condition)에 빠지게 되었을 때 예측할 수 없는 잘못된 결과가 나오는 것을 말한다. 한 두개의 스레드가 있을 때는 잘 동작하다가 수십, 수백개의 스레드가 동시에 단일 자원에 접근하면 계산 결과가 꼬이게 되고 디버깅도 어려워진다.</p>
-<p>함수형 프로그래밍은 부수 효과가 없는 순수 함수(pure function)를 지향한다. 따라서 멀티 스레드 환경에서도 안전하다. 자바를 사용해 리액티브 프로그래밍을 하기 위해서는 <strong>함수형 프로그래밍의 도움이 필요하다.</strong></p>
-<blockquote>
-<p>그럼 여기서 말하는 함수형 프로그래밍은 무엇을 말하는 걸까?</p>
-</blockquote>
-<p>간략하게 말하면 함수형 프로그래밍 언어는 함수를 단지 호출하는 대상이 아닌 변수로도 할 수 있고 인자로도 넘길 수 있고 마음대로 지지고 볶고? 할 수 있다. (아직 개념이 정확히 잡히지 않아서. . ㅜㅜ) 어려운 말로는 일급 시민이라고 표현한다고 한다.</p>
-<p>반응형 프로그래밍은 이런 함수형 언어의 도구들을 자유자재로 활용해야 한다. 예를 들어 Java 8에 도입된 람다 표현식은 반드시 알아야 한다.</p>
-<h2 id="리액티브-프로그래밍-개념-다시-잡아보자">리액티브 프로그래밍 개념 다시 잡아보자.</h2>
-<p>RxJava를 비롯해서 리액티브 프로그래밍을 공부하다 보면 새로 등장하는 개념으로 인해 많은 혼란을 겪는다고 한다. 일단, 프로그래밍 스타일이 너무 다르다. 자바는 객체 지향 언어인데 리액티브 프로그래밍은 뭔가 좀 다른 것 같다. 그리고 내가 문제를 바라보는 개념도 이전과는 달라야 하는 것 같다. 이 부분은 아직 감이 안잡히지만 천천히 잡아보도록 하겠다.</p>
-<p>아무튼 어렵고 새로운 개념은 초반에 잘 잡아놓으면 나중에 공부할 때 도움이 많이 되기 때문에 여기서 잘 잡아서 앞으로 나아가자. 다음은 위키 백과에 나와 있는 설명 중 일부분이다.</p>
-<blockquote>
-<p>위키 백과의 일부</p>
-</blockquote>
-<ul>
-<li>상호 작용 프로그램은 <strong>프로그램이 주도하는 속도</strong>로 사용자 혹은 다른 프로그램과 상호작용 한다.</li>
-<li>사용자의 관점으로 볼 때 시분할 시스템은 상호작용 프로그램이다.</li>
-<li><strong>리액티브 프로그래밍</strong>은 주변의 환경과 끊임없이 상호작용을 하는데 <code>프로그램이 주도하는 것이 아니라 환경이 변하면 이벤트를 받아 동작한다.</code></li>
-<li>상호작용 프로그램은 자신의 속도에 맞춰 일하고 대부분 통신을 담당하는 반면 리액티브 프로그램은 외부 요구에 반응에 맞춰 일하고 대부분 정확한 인터럽트 처리를 담당한다.</li>
-</ul>
-<p>자바에서는 이런 RxJava와 같은 리액티브 프로그래밍을 하기 위해서 기반이 마련되야 한다. 즉, 데이터 소스를 정의할 수 있고 그것의 변경 사항을 받아서 내 프로그램에 알려줄 존재(<strong>push</strong>)가 필요하다. 이를 <strong>RxJava 라이브러리</strong>를 통해서 구현할 수 있다.</p>
-<h2 id="rxjava를-만든-이유가-뭘까">RxJava를 만든 이유가 뭘까??</h2>
-<p>RxJava는 지금 우리가 아주 아주 잘 사용하는 [넷플릭스](<a href="https://www.netflix.com/kr/" target="_blank" rel="noopener">https://www.netflix.com/kr/</a>)의 기술 블로그에서 처음 소개되었다. 성능 개선을 위해서 넷플릭스는 .NET 환경의 리액티브 확장 라이브러리(Rx)를 JVM에 포팅(??)하여 RxJava를 만들었다. 넷플릭스가 RxJava를 만든 핵심적인 이유는 아래와 같다.</p>
-<ol>
-<li>동시성을 적극적으로 끌어안기에 자바는 번거롭다.</li>
-</ol>
-<p>자바가 동시성(? 정확히 뭐지…?)을 처리하기에 번거롭기 때문에 넷플릭스는 클라이언트의 요청을 <strong>서비스 계층</strong>에서 동시성을 적극적으로 끌어안음으로 이를 해결했다. 클라이언트의 요청을 처리할 때 <strong>다수의</strong> 비동기 실행 흐름(스레드 등등)을 생성하고 그것의 결과를 취합하여 최종 리턴하는 방식으로 내부 로직을 변경했다고 한다.</p>
-<ol start="2">
-<li>자바의 Future를 조합하기 어렵다?!</li>
-</ol>
-<p>약 6년 전 (시간이 벌써 2019년이라니ㅜ.ㅜ) 내가 대학교 1학년일 때이다. 이 당시에 자바 8에서 제공하는 <strong>CompletableFuture</strong> 같은 클래스가 제공되지 않았다고 한다. 그래서 비동기 흐름을 조합할 수 있는 방법이 거의 없었고, RxJava에서는 이를 해결하려고 비동기 흐름을 조합<code>(Compose)</code>할 수 있는 방법을 제공한다.<br>
-RxJava에서 조합하는 실행 단위를 <strong>리액티브 연산자</strong>(Operator)라고 한다.</p>
-<ol start="3">
-<li>콜백 지옥 탈출!</li>
-</ol>
-<p>콜백이 콜백을 부르는 콜백 지옥(Callback Hell) 상황은 코드의 가독성을 떨어트린다. 또한, 문제 발생 시 디버깅을 어렵게 만든다. <strong>콜백</strong>은 비동기 방식으로 동작하는 가장 대표적인 패턴이다. 이런 지옥을 탈출하고자 RxJava에서는 콜백을 사용하지 않는 방향으로 설계하려고 했다.</p>
-<h2 id="정리">정리</h2>
-<p>위에서 쭉 반응형 프로그래밍(즉, 리액티브 프로그래밍)은 비동기 데이터의 흐름과 전달에 초점을 맞춘 패러다임이다. 그리고 함수형 프로그래밍 언어의 지원을 받고 이를 활용한다고 했다.</p>
-<p>정리하자면 반응형 프로그래밍은 <code>함수형 프로그래밍 언어의 도구들을 가지고 데이터의 흐름을 Composable(구성 가능하게?!)하게 구현</code>하는 것이라고 할 수 있다.</p>
-<h2 id="참고">참고</h2>
-<ul>
-<li>
-<p><a href="https://brunch.co.kr/@yudong/33" target="_blank" rel="noopener">RxJava 반응형 프로그래밍이란 무엇인가?</a></p>
-</li>
-<li>
-<p>아래는 참고하면 좋을 자료들!</p>
-<ul>
-<li><a href="https://medium.com/@jooyunghan/%ED%95%A8%EC%88%98%ED%98%95-%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D%EC%9D%B4%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80-fab4e960d263" target="_blank" rel="noopener">함수형 프로그래밍이란 무엇인가?</a></li>
-<li><a href="https://www.slideshare.net/ChiwonSong/20171104-frp-81598173" target="_blank" rel="noopener">함수형 프로그래밍</a></li>
-<li><a href="https://poqw.github.io/RxJava2_1/" target="_blank" rel="noopener">RxJava에 관하여</a></li>
-<li><a href="https://medium.com/@LIP/rxjava-29cfb3ceb4ca" target="_blank" rel="noopener">RxJava 기초</a></li>
-</ul>
-</li>
-</ul>
-
                     
+                        <a
+                            href="/2019/07/31/RxJava-Chap01-Introduce/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [RxJava] Chap01 리액티브 소개"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2019/07/31/RxJava-Chap01-Introduce/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             
@@ -1257,7 +867,7 @@ RxJava에서 조합하는 실행 단위를 <strong>리액티브 연산자</stron
     </article>
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -1289,55 +899,17 @@ RxJava에서 조합하는 실행 단위를 <strong>리액티브 연산자</stron
 
             </div>
             
-                <div class="postShorten-content">
+                <div class="postShorten-excerpt">
                     <p>매일 아침 10시에 <code>Daily DevBlog</code>를 통해서 개발 관련 블로그 포스팅들이 메일로 온다. 이를 통해서 매일 아침 따끈따근한 소식을 볼 수 있고, 내가 관심 있어하는 주제가 있다면 얻을 수 있어서 굉장히 좋아하고 잘 사용하고 있다.</p>
-<p>어쨋든, 오늘 글의 주제는 이게 아니다. 글을 보던 중 괜찮은 내용이 있어서 참고해서 작성하려고 한다. Android Studio의 <code>Live Template</code> 기능이다.</p>
-<h2 id="live-template">Live Template</h2>
-<p>지극히 주관적인 생각이지만, 개발자들은 귀찮은 걸 싫어하는 것 같다. 코딩을 하더라도 조금만 귀찮은 작업이라면 싫어한다. 그래서 IDE에서 제공하는 기능을 잘 사용한다면 귀찮음을 덜어줄 수 있다. 그 중에서 나는 <code>JetBrains</code>이 만든 IDE가 좋다고 생각한다. 물론, IDE에서 제공하는 기능을 잘 사용한다면 말이다.</p>
-<p><strong>Live Template</strong>은 축약형 값을 입력하면 자주 쓰는 코드 구성을 불러오는 기능이다. 쉽게 말해 상용구이다. 안드로이드 스튜디오에서 기본적으로 제공하는 라이브 템플릿 중에서도 유용한 것들이 꽤 있고, 사용자가 직접 커스텀해 사용할 수도 있다.</p>
-<p>하나의 예로, 우리가 자주 사용하는 반복문 중 for문을 사용한다고 가정해보자. for문의 fo만 입력해도 밑에 자동 완성으로 제공되는 모습을 볼 수 있을 것이다.</p>
-<img src="/img/android_studio_exam.png" width="500" height="200">
-<p>설정을 변경할 수도 있고, 사용자가 원하는 상용구를 추가할 수도 있다. <strong>환경 설정(Preferences) -&gt; Editor -&gt; Live Template</strong> 에 들어가면 템플릿을 확인할 수 있다.</p>
-<h2 id="커스텀해보자">커스텀해보자.</h2>
-<p>그렇다면 간단한 커스텀 템플릿을 만들어보자.</p>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> intent = Intent(<span class="keyword">this</span>, MainActivity::<span class="class"><span class="keyword">class</span>.<span class="title">java</span>)</span></span><br><span class="line">startActivity(intent)</span><br></pre></td></tr></table></figure>
-<p>액티비티 이동을 위해서 이렇게 두 줄을 입력하기가 귀찮을 수 있다. 물론, 함수로 빼서 사용할 수도 있지만 그 경우는 제외하고 지금 상황만 보자. 그래서 <strong>축약형</strong>을 적었을 때, 위에 정의한 두 줄이 자동 생성되도록 하고 싶다. 현재 액티비티는 자동으로 완성되고, 이동할 두 번째 클래스명만 입력하도록 할 것이다.</p>
-<p><code>cis</code>를 입력했을 때 아래의 두 줄이 뜨게 할 것이다. <strong>Preferences -&gt; Editor -&gt; Live Template</strong> 창에서 우측 상단의 <code>+</code> 버튼을 눌러 새로운 Template Group을 만든다. 만든 Group을 누른 상태에서 <code>+</code> 버튼을 한 번 더 누른 뒤, <strong>Live Template</strong>을 눌러 Template Text를 입력해준다.</p>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> intent = android.content.Intent(<span class="keyword">this</span>@$first$, $second$::<span class="class"><span class="keyword">class</span>.<span class="title">java</span>)</span></span><br><span class="line">startActivity(intent)</span><br></pre></td></tr></table></figure>
-<img src="/img/android_studio_exam_2.png" width="800" height="200">
-<p><code>android.content.Intent</code>를 입력함으로써 자동으로 import되도록 했다.</p>
-<p>먼저, 이 템플릿을 어디에서 호출하여 사용할 것인지 지정해야 한다. 하단에 보면 주의사항 <strong>No applicable contexts</strong> 옆의 Define을 눌러 kotlin 전체에 체크해준다.</p>
-<p>다음으로 $first$와 $second$는 자유롭게 정할 수 있는 변수명이다. 이 변수에 대한 설정은 Template Text 코드 우측 하단에 <strong>Edit variables</strong>에서 설정할 수 있다. 누르면 Expression을 불러 사용할 수 있다.</p>
-<ul>
-<li>first 변수 : 미리 정의되어 있는 함수 목록에서 클래스 이름을 불러오는 <code>className()</code> 메소드를 사용한다. 오른쪽에 있는 <strong>Skip if defined</strong>에 체크하면 템플릿을 불러온 후, 커서가 바로 second 변수 쪽으로 이동하도록 설정할 수 있다.</li>
-<li>second 변수 : 직접 다음 액티비티 이름을 적어줄 것이기 때문에 아무 작업을 하지 않는다.</li>
-</ul>
-<img src="/img/android_studio_exam3.png" width="600" height="200">
-<p>이제 Ok 버튼을 눌러서 마무리하면 코드에서 사용할 수 있다. 필자는 <code>cis</code>라는 축약형을 사용했다.</p>
-<img src="/img/android_studio_exm4.png" width="600" height="200">
-<p>위 그림을 보면 <code>cis</code> 축약형을 입력했을 때, 원하는 코드가 뜨는 것을 확인할 수 있다.</p>
-<h2 id="결론">결론</h2>
-<p>Live Template을 사용하면 간단한 코드를 작성하는 것을 템플릿화시켜서 아주 유용하게 사용할 수 있을 것 같다. 아주 유용한 기능이다.</p>
-<h2 id="참고">참고</h2>
-<ul>
-<li><a href="https://blog.yena.io/studynote/2019/07/14/Android-Live-Templates.html" target="_blank" rel="noopener">[Android] Live Template 라이브 템플릿</a></li>
-</ul>
-
                     
+                        <a
+                            href="/2019/07/15/AndroidStudio-Live-Template/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [Android] Live Template?!"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2019/07/15/AndroidStudio-Live-Template/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             

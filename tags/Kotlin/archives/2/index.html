@@ -422,7 +422,7 @@
     </article>
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -454,50 +454,17 @@
 
             </div>
             
-                <div class="postShorten-content">
+                <div class="postShorten-excerpt">
                     <p>코틀린에서 사용하는 더블콜론 참조에 대해서 알아보려고 한다.</p>
-<h2 id="리플렉션reflection이란">리플렉션(Reflection)이란</h2>
-<p>코틀린에서 더블콜론(::)은 리플렉션을 위해 사용한다. 리플렉션이란 코드를 작성하는 시점에는 런타임상 컴파일된 바이트 코드에서 내가 작성한 코드가 어디에 위치하는지 알 수 없기 때문에 바이트 코드를 이용해 내가 참조하려는 값을 찾기위해 사용한다.</p>
-<h2 id="자바와-코틀린에서의-리플렉션">자바와 코틀린에서의 리플렉션</h2>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">SomeClass.class -&gt; 클래스 그 자체를 리플렉션</span><br><span class="line">someInstance.getClass() -&gt; 인스턴스에서 클래스를 리플렉션</span><br></pre></td></tr></table></figure>
-<ul>
-<li>자바에서는 클래스를 참조할 때 위와 같이 사용한다.</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">SomeClass::class</span><br><span class="line">someInstance::class</span><br></pre></td></tr></table></figure>
-<ul>
-<li>코틀린에서는 더블콜론을 리플렉션을 위해 사용하며 위와 같은 형태로 사용한다.</li>
-</ul>
-<p>하지만 우리가 액티비티를 넘길 때는 <code>SomeClass::class.java</code>와 같이 끝에 <strong>.java</strong>가 붙는 것을 볼 수 있다. 그 이유는 자바에서 쓰는 클래스와 코틀린에서 쓰는 클래스가 다르기 때문이다.</p>
-<p>자바에서의 <code>SomeClass.class</code>는 Class를 리턴한다. 반면, 코틀린에서는 <code>SomeClass::class</code>를 하면 <strong>KClass</strong>를 리턴한다. 그렇기 때문에 KClass를 Class로 바꾸어 주어야하는데 이때 .Java를 이용하여 자바 클래스 값을 받는다.</p>
-<img src="/img/kclass.png" width="700" height="300">
-<p>KClass 안의 java의 getter는 위 그림과 같이 확장함수 형태로 되어있으며 KClass에서 자바의 클래스 타입을 반환한다.</p>
-<h2 id="코틀린에서의-함수참조">코틀린에서의 함수참조</h2>
-<p>코틀린에서 SomeClass::class와 같이 클래스를 참조할 수도 있지만 SomeClass:Method와 같이 클래스 내의 메소드도 참조할 수 있고 ::Function 형식의 함수도 참조할 수 있다.</p>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">(args: <span class="type">Array</span>&lt;<span class="type">String</span>&gt;)</span></span> &#123;</span><br><span class="line">    <span class="keyword">val</span> numbers = listOf(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>)</span><br><span class="line"></span><br><span class="line">    numbers.filter(::isOdd)</span><br><span class="line">            .forEach &#123;</span><br><span class="line">                println(it)</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">isOdd</span><span class="params">(x: <span class="type">Int</span>)</span></span>: <span class="built_in">Boolean</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> x % <span class="number">2</span> != <span class="number">0</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 단축형</span></span><br><span class="line"><span class="comment">//fun isOdd(x: Int) = x % 2 !=0</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li>isOdd() 함수를 filter를 사용한 코드이다. filter를 사용하면서 함수참조를 이용해 <code>::isOdd</code> 형태로 함수를 호출하였다.</li>
-<li>필터의 원형은 IntArray에서 Int 값을 받아 Boolean을 반환하는 inline 함수이다. 마찬가지로 Int를 받아 Boolean을 반환하기 때문에 함수를 참조하여 동일한 형식의 isOdd를 사용할 수 있다.</li>
-</ul>
-<h2 id="reference">Reference</h2>
-<ul>
-<li><a href="https://medium.com/harrythegreat/%EC%BD%94%ED%8B%80%EB%A6%B0%EC%9D%98-%EB%8D%94%EB%B8%94%EC%BD%9C%EB%A1%A0-%EC%B0%B8%EC%A1%B0-73ff25484586" target="_blank" rel="noopener">코틀린의 더블콜론(::) 참조</a></li>
-</ul>
-
                     
+                        <a
+                            href="/2019/08/08/Kotlin-Double-Ref/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [Kotlin] 더블콜론(::) 참조"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2019/08/08/Kotlin-Double-Ref/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             
