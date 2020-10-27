@@ -275,6 +275,71 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2018/03/31/BOJ1722/"
+                            aria-label=": [1722] 순열의 순서"
+                        >
+                            [1722] 순열의 순서
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2018-03-31T20:53:52+09:00">
+	
+		    Mar 31, 2018
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/algorithm/">algorithm</a>, <a class="category-link" href="/categories/algorithm/BOJ/">BOJ</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <p>문제 : <a href="https://www.acmicpc.net/problem/1722" target="_blank" rel="noopener">https://www.acmicpc.net/problem/1722</a></p>
+<p><code>Key Point</code><br>
+N의 범위 : 0&lt;=N&lt;=20<br>
+그래서 next_permutation 함수를 구현해서 문제를 풀려고 하였는데, 시간초과가 발생하여서<br>
+다른 방식으로 풀어야 한다.</p>
+<p><code>Explain</code></p>
+<p><code>Code</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line">public class Exam1722 &#123;</span><br><span class="line"></span><br><span class="line">	public static void main(String[] args) &#123;</span><br><span class="line">		// TODO Auto-generated method stub</span><br><span class="line">		Scanner sc = new Scanner(System.in);</span><br><span class="line">		int num = sc.nextInt();</span><br><span class="line">		int check = sc.nextInt();</span><br><span class="line">		long[] fac = new long[num+1];</span><br><span class="line">		boolean[] c = new boolean[num+1];</span><br><span class="line">		</span><br><span class="line">		fac[0] = 1;</span><br><span class="line">		for(int i=1;i&lt;=num;i++) &#123;</span><br><span class="line">			fac[i] = fac[i-1] * i;</span><br><span class="line">		&#125;</span><br><span class="line">		// 팩토리얼 구하기</span><br><span class="line">		</span><br><span class="line">		if(check == 1) &#123;</span><br><span class="line">			long where = sc.nextLong();</span><br><span class="line">			int[] arr = new int[num];</span><br><span class="line">			for(int i=0;i&lt;num;i++) &#123;</span><br><span class="line">				for(int j=1;j&lt;=num;j++) &#123;</span><br><span class="line">					if(c[j] == true) &#123;</span><br><span class="line">						continue;</span><br><span class="line">					&#125;</span><br><span class="line">					</span><br><span class="line">					if(fac[num-i-1]&lt;where) &#123;</span><br><span class="line">						where = where - fac[num-i-1];</span><br><span class="line">					&#125;else &#123;</span><br><span class="line">						arr[i] = j;</span><br><span class="line">						c[j] = true;</span><br><span class="line">						break;</span><br><span class="line">					&#125;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">			</span><br><span class="line">			for(int i=0;i&lt;num;i++) &#123;</span><br><span class="line">				System.out.print(arr[i]+&quot; &quot;);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;else if(check == 2) &#123;</span><br><span class="line">			int[] arr = new int[num];</span><br><span class="line">			for(int i=0;i&lt;num;i++) &#123;</span><br><span class="line">				arr[i] = sc.nextInt();</span><br><span class="line">			&#125;</span><br><span class="line">			</span><br><span class="line">			long result = 0;</span><br><span class="line">			</span><br><span class="line">			for(int i=0;i&lt;num;i++) &#123;</span><br><span class="line">				for(int j=1;j&lt;arr[i];j++) &#123;</span><br><span class="line">					if(c[j] == false) &#123;</span><br><span class="line">						result = result + fac[num-i-1];</span><br><span class="line">					&#125;</span><br><span class="line">				&#125;</span><br><span class="line">				c[arr[i]] = true;</span><br><span class="line">			&#125;</span><br><span class="line">			System.out.println(result+1);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2018/03/31/BOJ1722/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2018/03/31/BOJ10974/"
                             aria-label=": [10974] 모든 순열"
                         >
@@ -871,57 +936,6 @@ value에 저장한다. 결국, value -&gt; 차이의 최대값</p>
                                 Comment and share
                             </a>
                         </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-right">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2018/03/19/JavaCollectionPriorityQueue/"
-                            aria-label=": [Java] Priority Queue"
-                        >
-                            [Java] Priority Queue
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2018-03-19T17:11:16+09:00">
-	
-		    Mar 19, 2018
-    	
-    </time>
-    
-        <span>in </span>
-        
-    <a class="category-link" href="/categories/Java/">Java</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-excerpt">
-                    <p>이번에는 <code>Priority Queue</code>에 대해서 공부를 해보았습니다.</p>
-                    
-                        <a
-                            href="/2018/03/19/JavaCollectionPriorityQueue/"
-                            class="postShorten-excerpt_link link"
-                            aria-label=": [Java] Priority Queue"
-                        >
-                            Continue reading
-                        </a>
-                        
                     
                 </div>
             

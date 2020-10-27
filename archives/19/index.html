@@ -274,6 +274,67 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2018/10/26/BOJ10814/"
+                            aria-label=": [10814] 나이순 정렬"
+                        >
+                            [10814] 나이순 정렬
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2018-10-26T20:50:32+09:00">
+	
+		    Oct 26, 2018
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/algorithm/">algorithm</a>, <a class="category-link" href="/categories/algorithm/BOJ/">BOJ</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <p>문제 : <a href="https://www.acmicpc.net/problem/10814" target="_blank" rel="noopener">https://www.acmicpc.net/problem/10814</a></p>
+<h1 id="풀이방법">풀이방법</h1>
+<hr>
+<p>이 문제는 너무 너무 간단한 문제입니다. 정렬 시리즈 중에 하나로 나이순으로 정렬하고 나이가 같다면 먼저 가입한 순서로 정렬하게 됩니다. 여기서 먼저 가입한 순서는 먼저 입력된 순서와 같으므로 입력될 때 list에 Member이라는 클래스에 index를 추가로 가지게 하여 구현했습니다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.*;</span><br><span class="line"><span class="keyword">import</span> java.util.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BOJ10814</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        BufferedReader bf = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(System.in));</span><br><span class="line">        BufferedWriter bw = <span class="keyword">new</span> BufferedWriter(<span class="keyword">new</span> OutputStreamWriter(System.out));</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> N = Integer.parseInt(bf.readLine());</span><br><span class="line">        List&lt;Member&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;N;i++)&#123;</span><br><span class="line">            StringTokenizer st = <span class="keyword">new</span> StringTokenizer(bf.readLine(), <span class="string">" "</span>);</span><br><span class="line">            <span class="keyword">int</span> age = Integer.parseInt(st.nextToken());</span><br><span class="line">            String name = st.nextToken();</span><br><span class="line">            list.add(<span class="keyword">new</span> Member(age, name, (i+<span class="number">1</span>)));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        Collections.sort(list, <span class="keyword">new</span> Comparator&lt;Member&gt;() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">compare</span><span class="params">(Member o1, Member o2)</span> </span>&#123;</span><br><span class="line">                <span class="keyword">if</span>(o1.age&gt;o2.age)&#123;</span><br><span class="line">                    <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">                &#125;<span class="keyword">else</span> <span class="keyword">if</span>(o1.age == o2.age)&#123;</span><br><span class="line">                    <span class="keyword">if</span>(o1.order&gt;o2.order)&#123;</span><br><span class="line">                        <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">                    &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">                        <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">                    <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;list.size();i++)</span><br><span class="line">            bw.write(list.get(i).age+<span class="string">" "</span>+list.get(i).name+<span class="string">"\n"</span>);</span><br><span class="line"></span><br><span class="line">        bw.flush();</span><br><span class="line">        bw.close();</span><br><span class="line">        bf.close();</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Member</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> age;</span><br><span class="line">    String name;</span><br><span class="line">    <span class="keyword">int</span> order;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Member</span><span class="params">(<span class="keyword">int</span> age, String name, <span class="keyword">int</span> order)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.age = age;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">        <span class="keyword">this</span>.order = order;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2018/10/26/BOJ10814/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2018/10/25/BOJ10825/"
                             aria-label=": [10825] 국영수"
                         >
@@ -855,68 +916,6 @@ Comparator를 구현하면 compare()라는 메소드를 오버라이드 합니�
                         <p>
                             <a
                                 href="/2018/10/17/BOJ10809/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2018/10/17/BOJ10808/"
-                            aria-label=": [10808] 알파벳 개수"
-                        >
-                            [10808] 알파벳 개수
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2018-10-17T20:52:01+09:00">
-	
-		    Oct 17, 2018
-    	
-    </time>
-    
-        <span>in </span>
-        
-    <a class="category-link" href="/categories/algorithm/">algorithm</a>, <a class="category-link" href="/categories/algorithm/BOJ/">BOJ</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <p>문제 : <a href="https://www.acmicpc.net/problem/10808" target="_blank" rel="noopener">https://www.acmicpc.net/problem/10808</a></p>
-<h1 id="풀이방법">풀이방법</h1>
-<hr>
-<p>이 문제는 예전에 풀어봤지만 당연하게 기억이 나지 않아서 다시 풀어봤습니다. 이 문제는 알파벳의 개수가 26개이므로 size가 26인 배열을 만들고 모든 배열 요소를 0으로 초기화 해주었습니다. 그리고 input 문자열을 입력받고 그 문자열의 각 요소에 charAt() 메소드를 통하여 접근하고 아스키 코드 표를 이용하여 A에 해당하는 값인 97을 빼준 값을 index로 정하고 index에 해당하는 배열 요소의 값을 증가시켜줌으로써 계산을 했습니다.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> language;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        BufferedReader bf = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(System.in));</span><br><span class="line">        BufferedWriter bw = <span class="keyword">new</span> BufferedWriter(<span class="keyword">new</span> OutputStreamWriter(System.out));</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span>[] checkArr = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">26</span>];</span><br><span class="line"></span><br><span class="line">        String input = bf.readLine();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">26</span>;i++)</span><br><span class="line">            checkArr[i]=<span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;input.length();i++) &#123;</span><br><span class="line">            <span class="keyword">int</span> index = input.charAt(i) - <span class="number">97</span>;</span><br><span class="line">            checkArr[index]++;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">26</span>;i++)&#123;</span><br><span class="line">            System.out.print(checkArr[i]+<span class="string">" "</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2018/10/17/BOJ10808/#post-footer"
                                 class="postShorten-excerpt_link link"
                                 aria-label=""
                             >
