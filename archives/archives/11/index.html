@@ -275,6 +275,151 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2019/05/12/What-is-WorkManager/"
+                            aria-label=": [Android] Work Manager"
+                        >
+                            [Android] Work Manager
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2019-05-12T10:29:10+09:00">
+	
+		    May 12, 2019
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/Android/">Android</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <p>이번에 공부할 내용은 <strong>WorkManager</strong>이다.<br>
+백그라운드를 다루는 안드로이드의 새 버전들의 출시로 인해, 백그라운드 다루기는 이전보다 더 복잡해져다. 그래서 구글은 <code>JetPack</code>의 일부로 이러한 백그라운드 작버을 도와주기 위해 WorkManager를 출시했다.</p>
+<p>먼저, 왜 만들어지게 되었고, 왜 필요한지를 알 필요가 있다고 생각한다. 사용하는 것도 중요하지만 내가 왜 사용하는지 <strong>이유</strong>를 알고 쓰는게 더 중요하기 때문이다.</p>
+<p>아래와 같은 3개의 구성으로 나누도록 하겠다.</p>
+<ol>
+<li>메모리</li>
+<li>현재 존재하는 백그라운드 처리 방법</li>
+<li>WorkManager</li>
+</ol>
+<h2 id="1-메모리">1. 메모리</h2>
+<p>안드로이드 커널은 리눅스 커널을 기반으로 해서 만들어졌다. 안드로이드 커널과 모든 리눅스 커널들의 가장 큰 차이점은 <code>스왑 공간(Swap Space)</code>가 없다는 것이다.</p>
+<p>리눅스의 스왑공간은 램이 꽉 찼을 때 사용된다. 시스템은 더 많은 메모리 리소스를 필요로 하지만 램이 꽉 찼을 때, 메모리 상의 비활성 페이지를 <strong>스왑 공간</strong>으로 이동시킨다. 스왑공간은 램의 용량이 작은 디바이스에 도움이 되긴 하지만, 램의 용량을 늘리는 것을 대체할 수는 없다. 스왑공간은 램보다 Access time이 훨씬 느린 하드 드라이브에 위치하기 때문이다.</p>
+<p>안드로이드에서는 스왑공간 같은 개념이 없다. 시스템의 메모리가 다 소진되었을 때, OOM 킬러를 이용해 프로레스스 강제 종료시켜버린다. OOM 킬러는 <strong>Visible 상태</strong>와 <strong>소모된 메모리의 양</strong>에 기반하여 프로세스를 정리하여 여유 메모리를 확보한다.</p>
+<p>모든 프로세스는 액티비티 매니저가 부여한 자신의 <code>oom_adj</code> 점수를 가지고 있다. 이 점수는 애플리케이션의 상태(Foreground, Background, Background Service 등등)의 조합이다. 아래는 모든 <code>oom_adj</code> 값을 보여준다.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"># Define the oom_adj values for the classes of processes that can be</span><br><span class="line"># killed by the kernel.  These are used in ActivityManagerService.</span><br><span class="line">    setprop ro.FOREGROUND_APP_ADJ 0</span><br><span class="line">    setprop ro.VISIBLE_APP_ADJ 1</span><br><span class="line">    setprop ro.SECONDARY_SERVER_ADJ 2</span><br><span class="line">    setprop ro.BACKUP_APP_ADJ 2</span><br><span class="line">    setprop ro.HOME_APP_ADJ 4</span><br><span class="line">    setprop ro.HIDDEN_APP_MIN_ADJ 7</span><br><span class="line">    setprop ro.CONTENT_PROVIDER_ADJ 14</span><br><span class="line">    setprop ro.EMPTY_APP_ADJ 15</span><br></pre></td></tr></table></figure>
+<p>프로세스의 <code>oom_adj</code>의 값이 클수록 커널의 OOM 킬러에게 정리당하기 쉽다. OOM 킬러는 현재 사용 가능한 여유메모리 크기와 <code>oom_adj</code> 임계값을 기반으로 구성한 규칙을 사용한다. 즉, OOM 킬러의 조건은 아래와 같다.</p>
+<p><strong>여유 메모리 공간의 크기가 X보다 작을 때, oom_adj 값이 Y보다 큰 프로세스를 정리하라!</strong></p>
+<p>즉, 앱이 메모리를 적게 소비할수록 프로세스가 정리되지 않고 중요한 내용을 다룰 기회가 더 많아진다는 것이다. 두번째로 중요한 내용은 애플리케이션의 상태에 대해 이해하는 것이다. 그래서 앱이 백그라운드에 진입했을 때에도 뭔가를 지속적으로 하고 싶다면 <strong>서비스</strong> 컴포넌트를 사용해야 한다.</p>
+<ul>
+<li>서비스는 UI를 제공하지 않고, 백그라운드에서 오래 걸리는 동작을 수행할 수 있도록 하는 4대 컴포넌트 중 하나이다.</li>
+<li>서비스를 사용해야 했던 이유는 아래와 같다.
+<ol>
+<li>시스템에게 이 프로세스가 오래 걸리는 작업이 있음을 알려주고, 그에 맞는 <strong>oom_adj</strong> 점수를 얻도록 하기 위함이다.</li>
+<li>안드로이드 애플리케이션의 4대 컴포넌트 중 하나이다.</li>
+<li>서비스를 별개의 프로세스에서 실행시킬 수 있다.</li>
+</ol>
+</li>
+</ul>
+<p>사용했을 때의 이점이 있기 때문에 좋아 보인다. 하지만, 서비스 사용의 단점이 있다.</p>
+<ol>
+<li>프로세스가 계속 실행되고 있는 것이므로 배터리를 엄청나게 소모한다.</li>
+<li>마시멜로우 버전부터 도즈 모드(Doze)가 도입되었다.</li>
+<li>누가 버전에서 더 발전되었고 오레오 버전에서 더욱 강화되었다.</li>
+</ol>
+<p>도즈 모드는 사용자가 디바이스의 스크린을 끄고 나면 네트워크 통신, Sync, GPS, 알람, 와이파이 스캔 등을 비활성화 시켜버린다. 사용자가 스크린을 켜거나 디바이스를 충전기에 연결할 때까지 유지된다. 그리고 중요하지 않은 일을 수행하는 앱의 개수를 줄임으로써 디바이스의 배터리를 절약하도록 한다.</p>
+<p>또한, 오레오 버전으로 타게팅된 앱이 백그라운드 서비스 생성을 허가받지 않은 채로 <code>startService()</code> 메소드를 호출하려고 하면 백그라운드 서비스 제한이 있어서 <code>IllegalStateException</code> 예외를 던진다.</p>
+<p>'그럼 오레오 버전으로 타게팅 하지 않으면 되잖아?'라고 생각할 수 있다. 구글의 정책을 살펴보도록 하자.</p>
+<ul>
+<li>2018년 8월 : 새로 출시되는 앱들은 반드시 API 26(Oreo 8.0) 이상</li>
+<li>2018년 11월 : 기존 앱들도 API 26(Oreo 8.0) 이상.</li>
+<li>2019년 이후 : 매년 targetSdkVersion 요구사항이 향상될 것이다. 안드로이드가 매년 새로운 버전을 낼 때마다, 모든 앱들은 해당 API 레벨 이상을 타겟팅 해야 한다.</li>
+</ul>
+<p><strong>이를 통해 알 수 있는 것은 백그라운드 작업을 위해 더 이상 서비스를 사용하지 않게 될 것이라는 것이다.</strong></p>
+<h2 id="2-현재-존재하는-백그라운드-처리-방법">2. 현재 존재하는 백그라운드 처리 방법</h2>
+<p><strong>AlarmManager와 BroadcastReceiver 사용</strong></p>
+<p>지정한 타이밍에 시스템에서 알림이 오고 여기에 맞춰 백그라운드 작업을 수행할 수 있었다. 하지만, 킷캣(K, API 19) 버전에서는 알림이 미뤄지거나 한 번에 몰아서 오는 등 정확한 실행을 보장하지 않게 된다.</p>
+<p><code>BroadcastReceiver</code>를 통해서 기기의 부팅, 네트워크 연결 등의 디바이스 이벤트를 시스템으로부터 전파받아서 특정 작업을 수행해왔는데 누가(N, API 24)버전에서 특정 인텐트에 대한 동작이 제한되고, 오레오(O, API 26)버전에서 암시적 브로드캐스트 리시버 등록을 차단하는 등 제한이 추가되고 있다.</p>
+<p>그래서 대안책이 <strong>Job</strong>을 사용하는 것이다.</p>
+<p><strong>JobScheduler 사용</strong></p>
+<p>롤리팝(L, API 21) 버전에서 <code>JobScheduler</code>를 제공한다. 부정확해진 Alarm Manager의 대안이기도 했고, 결국 백그라운드 작업을 배제할 수 없었기 때문이다. 하지만, API 2에서 사용할 수 있다는 제약으로 인해 API 21 이전과 이후 버전을 나누어 <code>AlarmManager</code>와 <code>JobScheduler</code>를 각각 사용해서 구현해야 하는 번거로운 문제가 생겼다.</p>
+<p><strong>JobDispatcher 사용</strong></p>
+<p>이후에 구글은 Firebase JobDispatcher를 제공하기 시작했다. JobDispatcher는 진저브레드(G, API 9) 버전 이상을 지원한다. 그리고 내부적으로 <code>AlarmManager</code>와 <code>JobScheduler</code>를 선택해준다. 이를 통해서 개발자가 하는 일은 한 가지로 줄었으나, 구글 플레이 서비스에 의존하게 되어 아마존/주욱 제조사 디바이스에서는 기능을 사용할 수 없다. 결국, 구글 플레이 서비스를 지원하지 않는 디바이스에서는 <code>AlarmManager</code>와 <code>JobScheduler</code>를 각각 사용해서 구현해야 한다.</p>
+<p><strong>JobIntentService 사용</strong></p>
+<p>다른 대안으로 <code>JobIntentService</code>를 사용하는 방법이 있다. 하지만, 정확한 시간에 작업이 수행되지 않기 때문에 오레오에서 Job을 빨리 수행하는데는 도움이 되지 않는다.</p>
+<p><strong>Android-Job(Evernote) 라이브러리(Third party library) 사용</strong></p>
+<p>이는 자동으로 안드로이브 버전에 따라 <code>AlarmManager</code>, <code>JobScheduler</code>, <code>JobDispatcher</code>들 중 어떤 것을 사용할지 결정해주는 라이브러리이다. WorkManager를 제외하고 생각한다면 가장 좋은 라이브러리라고 평가받고 있다.</p>
+<p>하지만, Evernote가 새로운 가이드 안을 발표했다. 안드로이드 버전에 따라 백그라운드 API가 수시로 변경되어서 버전별로 분기가 필요하고 복잡한 API 사용이 힘들었을텐데 앞으로 Evernote는 Android Job 라이브러리를 배포하여 개발자들에게 편의를 제공해왔지만 더 이상 지원하지 않고 <code>WorkManager</code> 사용을 권장한다는 내용이다.</p>
+<p>결국, 현재 실행 중인 안드로이드 버전에 따라서 백그라운드 서비스 API를 다르게 호출시키고 관리해야 한다. 디바이스의 안드로이드 버전과 구글 플레이 서비스 여부에 따라 백그라운드 서비스를 지원하기 까다롭다. 그래서 Google I/O에서 <code>WorkManager</code>라는 해결책을 제공해주었다.</p>
+<h2 id="3-workmanager">3. WorkManager</h2>
+<p>2018년 Google I/O에서는 안드로이드의 백그라운드 작업을 도와줄 WorkManager가 공개되었다.<br>
+WorkManager는 Android JetPack의 아키텍처의 구성 요소이다.</p>
+<p>WorkManager는 다음과 같은 특징을 갖는다.</p>
+<img src="/img/workmanager_feature.png" width="600" height="300">
+<ul>
+<li>실행이 보장된다. 또한 제약 조건을 가지고 실행할 수 있다. 예를 들어, 네트워크 연결시에만 처리되는 작업을 추가하면 네트워크가 연결되면 반드시 실행된다.</li>
+<li>장치의 상태를 존중한다. 도즈 모드에 진입하면 일을 처리하기 위해 기기를 깨우거나 하지 않는다.</li>
+<li>실행 중인가, 대기 중인가, 완료되었는가 등의 상태 조회가 가능하다.</li>
+<li>작업 A의 결과에 따라 B 또는 C를 선택하여 처리하고 D를 이어서 처리하는 등의 작업 연결 처리가 가능하다.(체이닝)</li>
+<li>첫 번째 특징과 비슷하며 기회주의적이다. 즉, 어떤 제한 조건이 충족되었을 때 즉시 실행된다.</li>
+</ul>
+<p>WorkManager는 내부적으로 아래의 그림과 같이 동작한다.</p>
+<img src="/img/WorkManager_run.png" width="600" height="300">
+<p>API의 버전에 맞게 <code>AlarmManager</code>와 <code>JobScheduler</code>를 사용하고 개발자가 Firebase JobDispatcher 의존성을 추가했다면(즉, 구글 플레이 서비스 사용이 가능하다면)<code>JobDispatcher</code>를 적극 사용한다.</p>
+<p>개발자는 WorkManager를 사용함으로써 상황에 맞는 고민이나 별도의 구현 없이 앱의 종료나 기기의 재부팅된 경우에도 항상 장치에 맞는 가장 적합한 방법을 사용하여 백그라운드 작업을 처리할 수 있게 된다.</p>
+<p><code>그러나 WorkManager가 항상 최선은 아니다.</code></p>
+<p>앱의 종료 여부와 상관없이 수행되어야 하는 작업, 즉 앱의 프로세스 수명과 별도로 살아남기 위한 작업에 사용하는 것을 추천한다.</p>
+<p>예를 들어 이미지를 서버에 업로드해야 하거나, 데이터를 분석하고 이를 데이터베이스에 저장해야 하는 작업에는 <strong>WorkManager</strong>를 사용하는 것이 좋다.</p>
+<p>그러나 사용자가 현재 보고 있는 UI를 빠르게 변경해야 하는 작업이나 물건 구입 과정에서의 결제 진행 등 즉시 처리해야 하는 작업은 WorkManager를 사용하지 않는 것이 좋다.</p>
+<img src="/img/when_to_use_workmanager.png" width="600" height="300">
+<p>WorkManager의 작업은 반드시 실행되지만 그 처리가 상황에 따라 지연되거나 도중에 중단될 경우 다시 실행될 수 있다는 것을 꼭 기억해야 한다.</p>
+<p>적절한 상황에서는 WorkManager는 AlarmManager나 JobScheduler, JobDispatcher를 대체하는 훌륭한 백그라운드 작업 처리 방법이다.</p>
+<p>다음에는 WorkManager를 사용해보는 시간을 갖도록 하겠다.</p>
+<h2 id="참고">참고</h2>
+<ul>
+<li><a href="https://duzi077.tistory.com/222" target="_blank" rel="noopener">WorkManager로 안드로이드 하위 버전부터 오레오 버전까지 백그라운드 작업 통합</a></li>
+<li><a href="http://dktfrmaster.blogspot.com/2018/06/workmanager.html" target="_blank" rel="noopener">[안드로이드] WorkManager에 관하여</a></li>
+<li><a href="https://medium.com/@limgyumin/%EC%83%88%EB%A1%9C%EC%9A%B4-%EC%95%88%EB%93%9C%EB%A1%9C%EC%9D%B4%EB%93%9C-%EB%B0%B1%EA%B7%B8%EB%9D%BC%EC%9A%B4%EB%93%9C-%EC%9E%91%EC%97%85-%EC%B2%98%EB%A6%AC%EB%B2%95-workmanager-f625e07b384c" target="_blank" rel="noopener">새로운 안드로이드 백그라운드 작업 처리법 : WorkManager</a></li>
+</ul>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2019/05/12/What-is-WorkManager/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2019/05/12/How-to-initialize-of-viewModel/"
                             aria-label=": [안드로이드] ViewModel 초기화 - 1"
                         >
@@ -977,59 +1122,6 @@ ViewModel 객체는 자동으로 화면 회전 같은 상태 변화동안 자동
                             href="/2019/04/12/kotlin-chap01/"
                             class="postShorten-excerpt_link link"
                             aria-label=": [커니의 Kotlin] Chap1.1"
-                        >
-                            Continue reading
-                        </a>
-                        
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-right">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2019/04/06/Algo-Anagram/"
-                            aria-label=": [알고리즘] Anagrm"
-                        >
-                            [알고리즘] Anagrm
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2019-04-06T15:32:04+09:00">
-	
-		    Apr 06, 2019
-    	
-    </time>
-    
-        <span>in </span>
-        
-    <a class="category-link" href="/categories/알고리즘/">알고리즘</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-excerpt">
-                    <h2># Anagram이란?</h2>
-<p>동일한 알파벳을 재배열하여 만들 수 있는 문장이나 단어를 말한다.<br>
-예를 들면, <code>listen</code> <code>silent</code> 두 단어는 애너그램이다.</p>
-                    
-                        <a
-                            href="/2019/04/06/Algo-Anagram/"
-                            class="postShorten-excerpt_link link"
-                            aria-label=": [알고리즘] Anagrm"
                         >
                             Continue reading
                         </a>

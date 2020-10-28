@@ -1,0 +1,720 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="VictoryWoo">
+    <title>[Android] Back Button 처리 - VictoryWoo</title>
+    <meta name="author" content="VictoryWoo">
+    
+    
+        <link rel="icon" href="https://woovictory.github.io/assets/images/develop.ico">
+    
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg"},"articleBody":"Prologue\n참고로 해당 글에서 사용되는 코드는 뱅크 샐러드 기술 블로그를 참고하여 작성한 코드입니다.\nAndroid 앱을 사용하다 보면 Back Button 클릭 시, 바로 종료되는 경우도 있고 토스트 메시지를 보여주는 경우도 있다. 사실, 토스트 메시지를 통해 사용자들에게 알려주는 게 더 낫다고 생각하며, 이 기능을 구현하는 방법에 대해 알아보려고 한다.\n\nSubject\n이번 포스팅의 큰 주제는 RxJava를 이용하여 Back Button을 처리하는 것이지만, RxJava를 사용하기 전에 우리가 어떻게 처리했는지에 대해 먼저 살펴보자.\nBack Button 이벤트 구현\n먼저, 물리 버튼인 Back Button의 이벤트를 처리하기 위해 onBackPressed() 함수를 오버라이드 한다. 그리고 기본 로직은 간단하기 때문에 코드와 함께 설명하려고 한다.\n123456789101112private var backPressedTime: Long = 0val TIME_INTERVAL: Long = 2000override fun onBackPressed() &#123;    val currentTime = System.currentTimeMillis()    val intervalTime = currentTime - backPressedTime    if (intervalTime in 0..TIME_INTERVAL) finish()    else &#123;        backPressedTime = currentTime        showToast(R.string.desc_exit)    &#125;&#125;\nBack Button을 처음 클릭했을 때, intervalTime을 구하는데 초기 backPressedTime 값은 0이기 때문에 currentTime 그 자체가 된다. intervalTime이 0~2초 사이인 경우, finish()하게 되는데, 현재 시간이 2초보다 클 수 밖에 없다. 따라서 else 문으로 빠지면서 backPressedTime에 currentTime을 저장하고 토스트 메시지를 보여준다.\n그리고 연속해서 Back Button을 누르게 되면, currentTime - backPressedTime으로 intervalTime을 구하고 이는 0~2초 사이가 되므로 앱을 종료하게 된다. 코드를 보면 어렵지 않게 이해할 수 있는 내용이다.\nBack Button 이벤트 구현 With RxJava\n이번에는 똑같은 기능을 RxJava를 이용해서 구현해보려고 한다. 먼저, 해당 글을 읽기 위해서 RxJava의 Subject에 대해서 어느 정도 개념이 잡혀 있어야 한다고 생각한다. 그러므로 이 글을 먼저 읽어본 뒤, 해당 글을 읽는 것을 추천한다.\n[1] Subject를 만든다.\n\n뒤로가기 버튼을 클릭했을 때, 이벤트를 emit할 Subject를 생성한다.\n참고로 Subject는 Observable이면서 동시에 구독자 역할을 하기 때문에 UI 이벤트 뿐만 아니라 다양한 종류의 item을 발행하고 처리할 때 활용할 수 있다.\n뒤로 가기 버튼을 눌렀을 때 발생하는 이벤트의 시간 간격을 판별하는 로직이 필요하고(가장 최근의 이벤트를 emit할 수 있다.) 뒤로가기 버튼을 누를 당시의 기본값이 필요하므로 BehaviorSubject를 생성해준다.\nSubject에서 데이터를 emit하는 방법은 간단하다. onNext() 함수를 호출하면 된다. 주의할 점은 Subject를 SerializedSubject로 만들어야 한다는 것이다. 이유는 Subject가 Thread Safe하지 않기 때문에 만약, 여러 Thread에서 item을 발행하는 경우 동기화를 보장할 수 없기 때문이다.\n여러 Thread에서 접근할 일이 있다면 SerializedSubject로 만들어야 하지만, 여기서 테스트하는 경우에는 그럴 일이 없다. 하지만, 이런 것을 고려해야 한다는 것을 알려주기 위해 toSerialized()를 통해 SerializedSubject로 만들었다.\n\n1234567private val backButtonSubject: Subject&lt;Long&gt; by lazy &#123;    BehaviorSubject.createDefault(0L).toSerialized()&#125;override fun onBackPressed() &#123;    backButtonSubject.onNext(System.currentTimeMillis())&#125;\n[2] 구독하자.\n\n위에서 뒤로가기 버튼을 클릭했을 때, item을 emit하는 부분을 작업했으니, 구독하는 부분을 구현하면 된다.\n아래 코드에서 핵심은 buffer()이다.\n참고로 buffer()는 기본적으로 스케줄러 없이 현재 스레드에서 동작한다.\n\n1234567891011121314private fun initSubject() &#123;    disposable = backButtonSubject        .observeOn(AndroidSchedulers.mainThread())        .buffer(2, 1)        .map &#123; it[1] - it[0] &lt; DELAY &#125;        .subscribe &#123; willFinish -&gt;            if (willFinish) finish()            else Toast.makeText(                this@MainActivity,                R.string.desc_back_button_finish,                Toast.LENGTH_SHORT            ).show()        &#125;&#125;\nbuffer()는 item는 지정한 갯수만큼 쌓고 있다가, 지정한 갯수가 되면 쌓은 item을 List에 담아서 한번에 emit한다. 이렇게 쌓은 데이터를 통해 it[1] - it[0]을 통해 intervalTime을 구해서 DELAY(2초) 보다 작은지 판단하여 boolean 값으로 변환한다. 결국, 두 이벤트의 시간 차이가 특정 시간인 DELAY보다 짧은 경우 앱을 종료하고, 아닌 경우에는 토스트 메시지를 보여주도록 처리한다.\n\nBack Button을 처리하기 위해 buffer(count, skip) 형태의 함수를 활용했다. buffer(count = 2, skip = 1)은 2개를 쌓으면 item을 emit하고, 기존에 쌓았던 데이터 중 1개를 건너뛰는 걸 의미한다. 따라서 건너뛴 1개는 다음에 item을 쌓을 때 사용된다.\n여기서 buffer()에 대해 찾아보면서 count, skip의 갯수에 따라 동작이 다르다는 걸 알게 되었다.\n먼저, 위의 경우처럼 buffer(count = 2, skip = 1)의 경우에는 count만큼 쌓으면 item을 emit하고 기존에 쌓았던 데이터 중 1개는 건너뜀으로써 다음에 사용한다.\n\n반면, buffer(count = 2, skip = 3)의 경우에는 count만큼 쌓으면 item을 emit하고 세 번째로 들어오는 item 1개를 skip하여 사용하지 않는다.\n\n필자는 위와 같이 이해를 했습니다. 혹시, 이해를 잘못했을 가능성이 있기 때문에 다른 의견이 있다면 알려주시면 감사를 표하도록 하겠습니다. :-)\n요약하면 다음과 같다.\n\nRef\n\nRxJava로 뒤로가기 버튼 확인 기능 구현하기\nAndroid Back Button Event 처리\nRx Buffer - 사진 출처\nRx Buffer - 사진 출처\n\n","dateCreated":"2020-10-28T13:13:28+09:00","dateModified":"2020-10-28T16:37:27+09:00","datePublished":"2020-10-28T13:13:28+09:00","description":"Prologue\n참고로 해당 글에서 사용되는 코드는 뱅크 샐러드 기술 블로그를 참고하여 작성한 코드입니다.\nAndroid 앱을 사용하다 보면 Back Button 클릭 시, 바로 종료되는 경우도 있고 토스트 메시지를 보여주는 경우도 있다. 사실, 토스트 메시지를 통해 사용자들에게 알려주는 게 더 낫다고 생각하며, 이 기능을 구현하는 방법에 대해 알아보려고 한다.","headline":"[Android] Back Button 처리","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://woovictory.github.io/2020/10/28/Android-BackButtonHandle/"},"publisher":{"@type":"Organization","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg","logo":{"@type":"ImageObject","url":"Victory.jpeg"}},"url":"https://woovictory.github.io/2020/10/28/Android-BackButtonHandle/","keywords":"Android, Back Button, RxJava"}</script>
+    <meta name="description" content="Prologue 참고로 해당 글에서 사용되는 코드는 뱅크 샐러드 기술 블로그를 참고하여 작성한 코드입니다. Android 앱을 사용하다 보면 Back Button 클릭 시, 바로 종료되는 경우도 있고 토스트 메시지를 보여주는 경우도 있다. 사실, 토스트 메시지를 통해 사용자들에게 알려주는 게 더 낫다고 생각하며, 이 기능을 구현하는 방법에 대해 알아보려고">
+<meta name="keywords" content="Android,Back Button,RxJava">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="[Android] Back Button 처리">
+<meta property="og:url" content="https://woovictory.github.io/2020/10/28/Android-BackButtonHandle/index.html">
+<meta property="og:site_name" content="VictoryWoo">
+<meta property="og:description" content="Prologue 참고로 해당 글에서 사용되는 코드는 뱅크 샐러드 기술 블로그를 참고하여 작성한 코드입니다. Android 앱을 사용하다 보면 Back Button 클릭 시, 바로 종료되는 경우도 있고 토스트 메시지를 보여주는 경우도 있다. 사실, 토스트 메시지를 통해 사용자들에게 알려주는 게 더 낫다고 생각하며, 이 기능을 구현하는 방법에 대해 알아보려고">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://woovictory.github.io/img/rx_buffer.png">
+<meta property="og:image" content="https://woovictory.github.io/img/rx_buffer_2_1.png">
+<meta property="og:image" content="https://woovictory.github.io/img/rx_buffer_2_3.png">
+<meta property="og:image" content="https://woovictory.github.io/img/rx_buffer_result.png">
+<meta property="og:updated_time" content="2020-10-28T07:37:27.770Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="[Android] Back Button 처리">
+<meta name="twitter:description" content="Prologue 참고로 해당 글에서 사용되는 코드는 뱅크 샐러드 기술 블로그를 참고하여 작성한 코드입니다. Android 앱을 사용하다 보면 Back Button 클릭 시, 바로 종료되는 경우도 있고 토스트 메시지를 보여주는 경우도 있다. 사실, 토스트 메시지를 통해 사용자들에게 알려주는 게 더 낫다고 생각하며, 이 기능을 구현하는 방법에 대해 알아보려고">
+<meta name="twitter:image" content="https://woovictory.github.io/img/rx_buffer.png">
+    
+    
+        
+    
+    
+        <meta property="og:image" content="https://woovictory.github.io/assets/images/Victory.jpeg"/>
+    
+    
+    
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/all.css">
+    <link rel="stylesheet" href="/assets/css/jquery.fancybox.css">
+    <link rel="stylesheet" href="/assets/css/thumbs.css">
+    <link rel="stylesheet" href="/assets/css/tranquilpeak.css">
+    <!--STYLES END-->
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-125410253-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-125410253-1');
+    </script>
+
+
+    
+
+    
+        
+    
+</head>
+
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+        
+            
+        
+    
+
+<header id="header" data-behavior="2">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a
+            class="header-title-link"
+            href="/ "
+            aria-label=""
+        >
+            VictoryWoo
+        </a>
+    </div>
+    
+        
+            <a
+                class="header-right-picture "
+                href="#about"
+                aria-label="Open the link: /#about"
+            >
+        
+        
+            <img class="header-picture" src="/assets/images/Victory.jpeg" alt="Author&#39;s picture"/>
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+
+        
+    
+
+<nav id="sidebar" data-behavior="2">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a
+                    href="/#about"
+                    aria-label="Read more about the author"
+                >
+                    <img class="sidebar-profile-picture" src="/assets/images/Victory.jpeg" alt="Author&#39;s picture"/>
+                </a>
+                <h4 class="sidebar-profile-name">VictoryWoo</h4>
+                
+                    <h5 class="sidebar-profile-bio"><p>기록을 통해 사람들과 공유하는 것을 좋아합니다.</p>
+</h5>
+                
+            </div>
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/"
+                            
+                            rel="noopener"
+                            title="Home"
+                        >
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-categories"
+                            
+                            rel="noopener"
+                            title="Categories"
+                        >
+                        <i class="sidebar-button-icon fa fa-bookmark" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Categories</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-tags"
+                            
+                            rel="noopener"
+                            title="Tags"
+                        >
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Tags</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link open-algolia-search"
+                            href="#search"
+                            
+                            rel="noopener"
+                            title="Search"
+                        >
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Search</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="#about"
+                            
+                            rel="noopener"
+                            title="About"
+                        >
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://github.com/WooVictory"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="GitHub"
+                        >
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://www.facebook.com/WooVictory"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Facebook"
+                        >
+                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Facebook</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://www.linkedin.com/profile/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="LinkedIn"
+                        >
+                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">LinkedIn</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/jhsw0375@gmail.com"
+                            
+                            rel="noopener"
+                            title="Mail"
+                        >
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="2"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            [Android] Back Button 처리
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2020-10-28T13:13:28+09:00">
+	
+		    Oct 28, 2020
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/Android/">Android</a>
+
+
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <h3 id="prologue">Prologue</h3>
+<p>참고로 해당 글에서 사용되는 코드는 <a href="https://medium.com/banksalad/handling-back-button-with-rxjava-d948d8d3db80" target="_blank" rel="noopener">뱅크 샐러드 기술 블로그</a>를 참고하여 작성한 코드입니다.</p>
+<p>Android 앱을 사용하다 보면 Back Button 클릭 시, 바로 종료되는 경우도 있고 토스트 메시지를 보여주는 경우도 있다. 사실, 토스트 메시지를 통해 사용자들에게 알려주는 게 더 낫다고 생각하며, 이 기능을 구현하는 방법에 대해 알아보려고 한다.</p>
+<a id="more"></a>
+<h3 id="subject">Subject</h3>
+<p>이번 포스팅의 큰 주제는 RxJava를 이용하여 Back Button을 처리하는 것이지만, RxJava를 사용하기 전에 우리가 어떻게 처리했는지에 대해 먼저 살펴보자.</p>
+<h4 id="back-button-이벤트-구현">Back Button 이벤트 구현</h4>
+<p>먼저, 물리 버튼인 Back Button의 이벤트를 처리하기 위해 onBackPressed() 함수를 오버라이드 한다. 그리고 기본 로직은 간단하기 때문에 코드와 함께 설명하려고 한다.</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">var</span> backPressedTime: <span class="built_in">Long</span> = <span class="number">0</span></span><br><span class="line"><span class="keyword">val</span> TIME_INTERVAL: <span class="built_in">Long</span> = <span class="number">2000</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onBackPressed</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">val</span> currentTime = System.currentTimeMillis()</span><br><span class="line">    <span class="keyword">val</span> intervalTime = currentTime - backPressedTime</span><br><span class="line">    <span class="keyword">if</span> (intervalTime <span class="keyword">in</span> <span class="number">0.</span>.TIME_INTERVAL) finish()</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        backPressedTime = currentTime</span><br><span class="line">        showToast(R.string.desc_exit)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Back Button을 처음 클릭했을 때, intervalTime을 구하는데 초기 backPressedTime 값은 0이기 때문에 currentTime 그 자체가 된다. intervalTime이 0~2초 사이인 경우, finish()하게 되는데, 현재 시간이 2초보다 클 수 밖에 없다. 따라서 else 문으로 빠지면서 backPressedTime에 currentTime을 저장하고 토스트 메시지를 보여준다.</p>
+<p>그리고 연속해서 Back Button을 누르게 되면, currentTime - backPressedTime으로 intervalTime을 구하고 이는 0~2초 사이가 되므로 앱을 종료하게 된다. 코드를 보면 어렵지 않게 이해할 수 있는 내용이다.</p>
+<h4 id="back-button-이벤트-구현-with-rxjava">Back Button 이벤트 구현 With RxJava</h4>
+<p>이번에는 똑같은 기능을 RxJava를 이용해서 구현해보려고 한다. 먼저, 해당 글을 읽기 위해서 RxJava의 Subject에 대해서 어느 정도 개념이 잡혀 있어야 한다고 생각한다. 그러므로 <a href="https://woovictory.github.io/2020/10/28/RxJava-Subject/">이 글</a>을 먼저 읽어본 뒤, 해당 글을 읽는 것을 추천한다.</p>
+<p>[1] Subject를 만든다.</p>
+<ul>
+<li>뒤로가기 버튼을 클릭했을 때, 이벤트를 emit할 Subject를 생성한다.</li>
+<li>참고로 Subject는 <code>Observable</code>이면서 동시에 구독자 역할을 하기 때문에 <strong>UI 이벤트</strong> 뿐만 아니라 다양한 종류의 item을 발행하고 처리할 때 활용할 수 있다.</li>
+<li>뒤로 가기 버튼을 눌렀을 때 발생하는 이벤트의 시간 간격을 판별하는 로직이 필요하고(가장 최근의 이벤트를 emit할 수 있다.) 뒤로가기 버튼을 누를 당시의 기본값이 필요하므로 <strong>BehaviorSubject</strong>를 생성해준다.</li>
+<li>Subject에서 데이터를 emit하는 방법은 간단하다. onNext() 함수를 호출하면 된다. 주의할 점은 Subject를 <strong>SerializedSubject</strong>로 만들어야 한다는 것이다. 이유는 Subject가 Thread Safe하지 않기 때문에 만약, 여러 Thread에서 item을 발행하는 경우 동기화를 보장할 수 없기 때문이다.</li>
+<li>여러 Thread에서 접근할 일이 있다면 SerializedSubject로 만들어야 하지만, 여기서 테스트하는 경우에는 그럴 일이 없다. 하지만, 이런 것을 고려해야 한다는 것을 알려주기 위해 <code>toSerialized()</code>를 통해 <strong>SerializedSubject</strong>로 만들었다.</li>
+</ul>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">val</span> backButtonSubject: Subject&lt;<span class="built_in">Long</span>&gt; <span class="keyword">by</span> lazy &#123;</span><br><span class="line">    BehaviorSubject.createDefault(<span class="number">0</span>L).toSerialized()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onBackPressed</span><span class="params">()</span></span> &#123;</span><br><span class="line">    backButtonSubject.onNext(System.currentTimeMillis())</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>[2] 구독하자.</p>
+<ul>
+<li>위에서 뒤로가기 버튼을 클릭했을 때, item을 emit하는 부분을 작업했으니, 구독하는 부분을 구현하면 된다.</li>
+<li>아래 코드에서 핵심은 buffer()이다.</li>
+<li>참고로 buffer()는 기본적으로 스케줄러 없이 현재 스레드에서 동작한다.</li>
+</ul>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">fun</span> <span class="title">initSubject</span><span class="params">()</span></span> &#123;</span><br><span class="line">    disposable = backButtonSubject</span><br><span class="line">        .observeOn(AndroidSchedulers.mainThread())</span><br><span class="line">        .buffer(<span class="number">2</span>, <span class="number">1</span>)</span><br><span class="line">        .map &#123; it[<span class="number">1</span>] - it[<span class="number">0</span>] &lt; DELAY &#125;</span><br><span class="line">        .subscribe &#123; willFinish -&gt;</span><br><span class="line">            <span class="keyword">if</span> (willFinish) finish()</span><br><span class="line">            <span class="keyword">else</span> Toast.makeText(</span><br><span class="line">                <span class="keyword">this</span><span class="symbol">@MainActivity</span>,</span><br><span class="line">                R.string.desc_back_button_finish,</span><br><span class="line">                Toast.LENGTH_SHORT</span><br><span class="line">            ).show()</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>buffer()는 item는 지정한 갯수만큼 쌓고 있다가, 지정한 갯수가 되면 쌓은 item을 List에 담아서 한번에 emit한다. 이렇게 쌓은 데이터를 통해 <code>it[1] - it[0]</code>을 통해 intervalTime을 구해서 DELAY(2초) 보다 작은지 판단하여 boolean 값으로 변환한다. 결국, 두 이벤트의 시간 차이가 특정 시간인 DELAY보다 짧은 경우 앱을 종료하고, 아닌 경우에는 토스트 메시지를 보여주도록 처리한다.</p>
+<img src="/img/rx_buffer.png">
+<p>Back Button을 처리하기 위해 buffer(count, skip) 형태의 함수를 활용했다. buffer(count = 2, skip = 1)은 2개를 쌓으면 item을 emit하고, 기존에 쌓았던 데이터 중 1개를 건너뛰는 걸 의미한다. 따라서 건너뛴 1개는 다음에 item을 쌓을 때 사용된다.</p>
+<p>여기서 buffer()에 대해 찾아보면서 count, skip의 갯수에 따라 동작이 다르다는 걸 알게 되었다.<br>
+먼저, 위의 경우처럼 buffer(count = 2, skip = 1)의 경우에는 count만큼 쌓으면 item을 emit하고 기존에 쌓았던 데이터 중 1개는 건너뜀으로써 다음에 사용한다.</p>
+<img src="/img/rx_buffer_2_1.png">
+<p>반면, buffer(count = 2, skip = 3)의 경우에는 count만큼 쌓으면 item을 emit하고 세 번째로 들어오는 item 1개를 skip하여 사용하지 않는다.</p>
+<img src="/img/rx_buffer_2_3.png">
+<p>필자는 위와 같이 이해를 했습니다. 혹시, 이해를 잘못했을 가능성이 있기 때문에 다른 의견이 있다면 알려주시면 감사를 표하도록 하겠습니다. :-)</p>
+<p><strong>요약하면 다음과 같다.</strong></p>
+<img src="/img/rx_buffer_result.png">
+<h3 id="ref">Ref</h3>
+<ul>
+<li><a href="https://medium.com/banksalad/handling-back-button-with-rxjava-d948d8d3db80" target="_blank" rel="noopener">RxJava로 뒤로가기 버튼 확인 기능 구현하기</a></li>
+<li><a href="https://sensibilitycording.tistory.com/5" target="_blank" rel="noopener">Android Back Button Event 처리</a></li>
+<li><a href="https://www.javarticles.com/2018/07/rxjava-observable-buffer.html#prettyPhoto" target="_blank" rel="noopener">Rx Buffer - 사진 출처</a></li>
+<li><a href="http://reactivex.io/documentation/operators/buffer.html" target="_blank" rel="noopener">Rx Buffer - 사진 출처</a></li>
+</ul>
+
+            
+
+
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">TAGGED IN</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/Android/">Android</a> <a class="tag tag--primary tag--small t-link" href="/tags/Back-Button/">Back Button</a> <a class="tag tag--primary tag--small t-link" href="/tags/RxJava/">RxJava</a>
+
+            </div>
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a
+                        class="post-action-btn btn btn--disabled"
+                        aria-hidden="true"
+                    >
+                        
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2020/10/28/Kotlin-Array/"
+                    data-tooltip="[Kotlin] Array 초기화"
+                    aria-label="NEXT: [Kotlin] Array 초기화"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="Share this post"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://woovictory.github.io/2020/10/28/Android-BackButtonHandle/"
+                    title="Share on Facebook"
+                    aria-label="Share on Facebook"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://woovictory.github.io/2020/10/28/Android-BackButtonHandle/"
+                    title="Share on Twitter"
+                    aria-label="Share on Twitter"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://woovictory.github.io/2020/10/28/Android-BackButtonHandle/"
+                    title="Share on Google+"
+                    aria-label="Share on Google+"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a
+                        class="post-action-btn btn btn--default"
+                        href="#disqus_thread"
+                        aria-label="Leave a comment"
+                    >
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+                <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2020 VictoryWoo. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="2">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a
+                        class="post-action-btn btn btn--disabled"
+                        aria-hidden="true"
+                    >
+                        
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2020/10/28/Kotlin-Array/"
+                    data-tooltip="[Kotlin] Array 초기화"
+                    aria-label="NEXT: [Kotlin] Array 초기화"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="Share this post"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://woovictory.github.io/2020/10/28/Android-BackButtonHandle/"
+                    title="Share on Facebook"
+                    aria-label="Share on Facebook"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://woovictory.github.io/2020/10/28/Android-BackButtonHandle/"
+                    title="Share on Twitter"
+                    aria-label="Share on Twitter"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://woovictory.github.io/2020/10/28/Android-BackButtonHandle/"
+                    title="Share on Google+"
+                    aria-label="Share on Google+"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a
+                        class="post-action-btn btn btn--default"
+                        href="#disqus_thread"
+                        aria-label="Leave a comment"
+                    >
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="2">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://woovictory.github.io/2020/10/28/Android-BackButtonHandle/"
+                        aria-label="Share on Facebook"
+                    >
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Share on Facebook</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://twitter.com/intent/tweet?text=https://woovictory.github.io/2020/10/28/Android-BackButtonHandle/"
+                        aria-label="Share on Twitter"
+                    >
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Share on Twitter</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://plus.google.com/share?url=https://woovictory.github.io/2020/10/28/Android-BackButtonHandle/"
+                        aria-label="Share on Google+"
+                    >
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>Share on Google+</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+    
+        
+    
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <img id="about-card-picture" src="/assets/images/Victory.jpeg" alt="Author&#39;s picture"/>
+        
+            <h4 id="about-card-name">VictoryWoo</h4>
+        
+            <div id="about-card-bio"><p>기록을 통해 사람들과 공유하는 것을 좋아합니다.</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>Android Developer</p>
+
+            </div>
+        
+        
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/color_blue.jpeg');"></div>
+        <!--SCRIPTS-->
+<script src="/assets/js/jquery.js"></script>
+<script src="/assets/js/jquery.fancybox.js"></script>
+<script src="/assets/js/thumbs.js"></script>
+<script src="/assets/js/tranquilpeak.js"></script>
+<!--SCRIPTS END-->
+
+
+    
+        <script>
+          var disqus_config = function() {
+            this.page.url = 'https://woovictory.github.io/2020/10/28/Android-BackButtonHandle/';
+              
+            this.page.identifier = '2020/10/28/Android-BackButtonHandle/';
+              
+          };
+          (function() {
+            var d = document, s = d.createElement('script');
+            var disqus_shortname = 'https-woovictory-github-io';
+            s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+          })();
+        </script>
+    
+
+
+
+
+    </body>
+</html>

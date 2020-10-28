@@ -275,6 +275,72 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2019/05/12/How-to-initialize-of-viewModel/"
+                            aria-label=": [안드로이드] ViewModel 초기화 - 1"
+                        >
+                            [안드로이드] ViewModel 초기화 - 1
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2019-05-12T00:45:47+09:00">
+	
+		    May 12, 2019
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/Android/">Android</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <p>이번 포스팅에서 다룰 주제는 Android Architecture Components 중 하나인 <code>ViewModel</code>이다. 해당</p>
+<p>안드로이드 앱 개발을 하다보면 겪는 문제 중 하나는 생명주기와 관련된 것이다. 그 중에서 액티비티와 프래그먼트의 생명주기는 많은 상태와 여러 가지 케이스에 따른 복잡함으로 예전부터 지금까지도 우리에게 까다로운 존재임이 분명하다.</p>
+<p>예를 들면, 런타임에 화면 방향이 전환되거나 언어, 글꼴 배율과 같은 기기 구성이 변경되는 경우를 다루려면 세심한 처리가 필요하다. 이러한 변경이 일어나는 경우, 안드로이드는 실행 중인 액티비티를 종료하고 메모리에서 제거한 후 다시 생성하기 때문에 이 과정에서 액티비티에 종속된 UI 데이터를 유지하는 것은 손이 많이 가는 작업이다.</p>
+<h2 id="화면-회전에-대한-해결책">화면 회전에 대한 해결책</h2>
+<p>액티비티가 종료되기 직전 호출되는 <code>onSaveInstanceState()</code> 콜백에서 액티비티의 상태 또는 데이터를 저장할 수 있지만 <strong>직렬화할 수 없는 객체는 저장할 수 없다.</strong> 왜냐하면 이 방법은 애초에 많은 양의 데이터를 저장하기 위해 디자인되지 않았기 때문이다.</p>
+<p>이번에 공부하면서 처음 본 방법이 또 있다. <strong>유보된 프래그먼트(Retained Fragment)를 사용하는 방법</strong>이다. UI가 없는 워크(헤드리스) 프래그먼트 개념을 도입해 이곳에서 UI에 필요한 데이터를 관리하고 프래그먼트를 setRetainInstance(true)로 설정함으로써 액티비티 재생성시, 프래그먼트를 메모리에 유지(즉, 소멸시키지 않고 유보)시키는 것이다.</p>
+<p>이때 프래그먼트는 액티비티에서 분리(onDetach)된 후 새로운 액티비티로 다시 호스팅(onAttach)될 뿐 소멸과 생성을 반복하지 않는다. 하지만, 프래그먼트 도입은 또 다른 **엣지 케이스(일정한 범위를 넘었을 때, 발생하는 문제)**를 다뤄야 한다는 점에서 새로운 고난의 장을 여는 것을 의미하기도 한다. 그리고 이곳이 데이터를 보관하기에 적합한 곳인가? 혹은 오버 엔지니어링이 아닐까?라는 논쟁의 여지가 존재했다.</p>
+<p>프래그먼트 이슈에 지친 개발자들은 프래그먼트 없이 개발하기와 같은 방법론에 매료될 정도로, 프래그먼트는 혼란스러움을 대표했다.</p>
+<h2 id="viewmodel로-해결하기">ViewModel로 해결하기.</h2>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2019/05/12/How-to-initialize-of-viewModel/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2019/05/02/What-is-ViewModel/"
                             aria-label=": [안드로이드] ViewModel"
                         >
@@ -1044,57 +1110,6 @@ ViewModel 객체는 자동으로 화면 회전 같은 상태 변화동안 자동
                             href="/2019/01/19/Android-MVP-Step11/"
                             class="postShorten-excerpt_link link"
                             aria-label=": [안드로이드] MVP 따라하기 11"
-                        >
-                            Continue reading
-                        </a>
-                        
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-right">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2019/01/19/Android-MVP-Step10/"
-                            aria-label=": [안드로이드] MVP 따라하기 10"
-                        >
-                            [안드로이드] MVP 따라하기 10
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2019-01-19T14:11:31+09:00">
-	
-		    Jan 19, 2019
-    	
-    </time>
-    
-        <span>in </span>
-        
-    <a class="category-link" href="/categories/Android/">Android</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-excerpt">
-                    <p>구글 Architecture에서 설명하는 모델 정의를 살펴보려고 한다.</p>
-                    
-                        <a
-                            href="/2019/01/19/Android-MVP-Step10/"
-                            class="postShorten-excerpt_link link"
-                            aria-label=": [안드로이드] MVP 따라하기 10"
                         >
                             Continue reading
                         </a>
