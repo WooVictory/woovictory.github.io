@@ -13,7 +13,7 @@
         <link rel="icon" href="https://woovictory.github.io/assets/images/develop.ico">
     
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg"},"articleBody":"Prologue\n코틀린도 자바와 마찬가지로 가변인자를 지원하는데, 가변인자에 대해 알아보자.\n\nSubject\n[Usage]\n\n가변 인자를 사용하면 함수를 호출할 때, 인자의 갯수를 유동적으로 지정할 수 있다.\n사용법은 간단하며, 인자 앞에 vararg를 붙이면 된다.\n\n1234567891011/** * created by victory_woo on 2020/10/27 * */fun main(args: Array&lt;String&gt;) &#123;    println(sum(1)) // 1    println(sum(1, 2, 3, 4, 5)) // 15&#125;fun sum(vararg num: Int) = num.sum()\n[배열을 가변인자로 넘기기]\n\n이미 존재하는 배열을 함수의 가변인자(vararg)로 넘겨야 할 때가 있다. 이 경우, 배열 이름 앞에 *를 붙여주면 된다.\n‘*’ : spread operator라고 부른다.\n\n1234567891011121314/** * created by victory_woo on 2020/10/27 * */fun main(args: Array&lt;String&gt;) &#123;    val array = arrayOf(\"Lee\", \"Park\")    print(array) // 1    print(*array) // 2&#125;fun print(vararg s: String) &#123;    println(s.joinToString(\"/\"))&#125;\n1번의 경우에는 정확한 결과를 출력할 수 없다. 2번처럼 *를 배열 앞에 붙여줘야 &quot;Lee/Park&quot;와 같은 결과를 얻을 수 있다. 왜 이런 결과가 나오는지 바이트 코드를 통해 확인해보자.\n1234567891011121314151617181920212223242526272829303132import java.util.ArrayList;import java.util.Arrays;import java.util.List;import kotlin.Metadata;import kotlin.TypeCastException;import kotlin.collections.ArraysKt;import kotlin.jvm.functions.Function1;import kotlin.jvm.internal.Intrinsics;import org.jetbrains.annotations.NotNull;public final class VarargSampleKt &#123;   public static final void main(@NotNull String[] args) &#123;      Intrinsics.checkParameterIsNotNull(args, \"args\");        String[] arr = new String[]&#123;\"Lee\", \"Park\"&#125;;        printWoo((String)arr);        printWoo((String[])Arrays.copyOf(arr, arr.length));      &#125;   &#125;   @NotNull   public static final String[] convert(@NotNull String... s) &#123;      Intrinsics.checkParameterIsNotNull(s, \"s\");      return s;   &#125;   public static final void printWoo(@NotNull String... s) &#123;      Intrinsics.checkParameterIsNotNull(s, \"s\");      String var1 = ArraysKt.joinToString$default(s, (CharSequence)\"/\", (CharSequence)null, (CharSequence)null, 0, (CharSequence)null, (Function1)null, 62, (Object)null);      System.out.println(var1);      System.out.println();   &#125;&#125;\n가변 인자를 받은 print() 함수의 경우, 컴파일 타임에 String을 받는 것으로 인식이 된다. 따라서 array를 가변 인자로 넘기는 경우에는 Array이 String을 인자로 받는 print() 함수에 들어갈 수 없다는 것이다. 바이트 코드를 통해 보면, (String)arr\n반면 *array를 가변 인자로 넘기는 경우, 바이트 코드를 통해 확인해보면 Arrays.copyOf(array, array.length)를 통해 복사한 배열을 String[]로 캐스팅하여 인자로 넘기는 것을 볼 수 있다. *(spread operator)를 명시하여 printWoo() 함수가 받는 인자가 가변 인자라는 것을 알려주어 String[]을 받을 수 있도록 해주는 것으로 생각이 된다.\nprintWoo(arr)의 경우에는 가변 인자라는 것을 명시해주지 않았기 때문에 printWoo() 함수는 String 인자를 받게 되어 있고, arr은 Array이기 때문에 타입이 맞지 않아 컴파일 에러가 발생하는 것으로 생각이 된다. 이를 피하고 싶다면 printWoo(&quot;Lee&quot;, &quot;Park&quot;) 처럼 가변 인자를 명시적으로 기입하면 가능하다.\n만약, vararg 파라미터가 제네릭 타입일 경우, *을 생략해도 Array 타입은 인자로 받아들일 수 있다. 코틀린의 공변성 개념으로, 자기 자신과 자식 객체만을 허용한다는 의미이다.\n1234567891011121314151617181920212223242526import kotlin.collections.ArrayList/** * created by victory_woo on 2020/10/27 * */fun main(args: Array&lt;String&gt;) &#123;    val array = arrayOf(1, 2, 3)    asList(array).forEach &#123;        for (num in it) print(\"$num \")        println()    &#125;    // 1,2,3    asList(-1, 0, *array, 4).forEach &#123;        print(\"$it \")    &#125;    println()    // -1,0,1,2,3,4&#125;fun &lt;T&gt; asList(vararg ts: T): List&lt;T&gt; &#123;    return ArrayList&lt;T&gt;().apply &#123;        ts.forEach &#123; add(it) &#125;    &#125;&#125;\nRef\n\n[Kotlin] 가변 인자(vararg) 사용하기, 배열을 가변 인자로 넘기기\n\n","dateCreated":"2020-10-27T11:13:43+09:00","dateModified":"2020-10-27T12:38:54+09:00","datePublished":"2020-10-27T11:13:43+09:00","description":"Prologue\n코틀린도 자바와 마찬가지로 가변인자를 지원하는데, 가변인자에 대해 알아보자.","headline":"[Kotlin] 가변인자 vararg","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://woovictory.github.io/2020/10/27/Kotlin-vararg/"},"publisher":{"@type":"Organization","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg","logo":{"@type":"ImageObject","url":"Victory.jpeg"}},"url":"https://woovictory.github.io/2020/10/27/Kotlin-vararg/","keywords":"Kotlin, 가변인자, vararg"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg"},"articleBody":"Prologue\n코틀린도 자바와 마찬가지로 가변인자를 지원하는데, 가변인자에 대해 알아보자.\n\nSubject\n[Usage]\n\n가변 인자를 사용하면 함수를 호출할 때, 인자의 갯수를 유동적으로 지정할 수 있다.\n사용법은 간단하며, 인자 앞에 vararg를 붙이면 된다.\n\n1234567891011/** * created by victory_woo on 2020/10/27 * */fun main(args: Array&lt;String&gt;) &#123;    println(sum(1)) // 1    println(sum(1, 2, 3, 4, 5)) // 15&#125;fun sum(vararg num: Int) = num.sum()\n[배열을 가변인자로 넘기기]\n\n이미 존재하는 배열을 함수의 가변인자(vararg)로 넘겨야 할 때가 있다. 이 경우, 배열 이름 앞에 *를 붙여주면 된다.\n‘*’ : spread operator라고 부른다.\n\n1234567891011121314/** * created by victory_woo on 2020/10/27 * */fun main(args: Array&lt;String&gt;) &#123;    val array = arrayOf(\"Lee\", \"Park\")    print(array) // 1    print(*array) // 2&#125;fun print(vararg s: String) &#123;    println(s.joinToString(\"/\"))&#125;\n1번의 경우에는 정확한 결과를 출력할 수 없다. 2번처럼 *를 배열 앞에 붙여줘야 &quot;Lee/Park&quot;와 같은 결과를 얻을 수 있다. 왜 이런 결과가 나오는지 바이트 코드를 통해 확인해보자.\n1234567891011121314151617181920212223242526272829303132import java.util.ArrayList;import java.util.Arrays;import java.util.List;import kotlin.Metadata;import kotlin.TypeCastException;import kotlin.collections.ArraysKt;import kotlin.jvm.functions.Function1;import kotlin.jvm.internal.Intrinsics;import org.jetbrains.annotations.NotNull;public final class VarargSampleKt &#123;   public static final void main(@NotNull String[] args) &#123;      Intrinsics.checkParameterIsNotNull(args, \"args\");        String[] arr = new String[]&#123;\"Lee\", \"Park\"&#125;;        printWoo((String)arr);        printWoo((String[])Arrays.copyOf(arr, arr.length));      &#125;   &#125;   @NotNull   public static final String[] convert(@NotNull String... s) &#123;      Intrinsics.checkParameterIsNotNull(s, \"s\");      return s;   &#125;   public static final void printWoo(@NotNull String... s) &#123;      Intrinsics.checkParameterIsNotNull(s, \"s\");      String var1 = ArraysKt.joinToString$default(s, (CharSequence)\"/\", (CharSequence)null, (CharSequence)null, 0, (CharSequence)null, (Function1)null, 62, (Object)null);      System.out.println(var1);      System.out.println();   &#125;&#125;\n가변 인자를 받은 print() 함수의 경우, 컴파일 타임에 String을 받는 것으로 인식이 된다. 따라서 array를 가변 인자로 넘기는 경우에는 Array이 String을 인자로 받는 print() 함수에 들어갈 수 없다는 것이다. 바이트 코드를 통해 보면, (String)arr\n반면 *array를 가변 인자로 넘기는 경우, 바이트 코드를 통해 확인해보면 Arrays.copyOf(array, array.length)를 통해 복사한 배열을 String[]로 캐스팅하여 인자로 넘기는 것을 볼 수 있다. *(spread operator)를 명시하여 printWoo() 함수가 받는 인자가 가변 인자라는 것을 알려주어 String[]을 받을 수 있도록 해주는 것으로 생각이 된다.\nprintWoo(arr)의 경우에는 가변 인자라는 것을 명시해주지 않았기 때문에 printWoo() 함수는 String 인자를 받게 되어 있고, arr은 Array이기 때문에 타입이 맞지 않아 컴파일 에러가 발생하는 것으로 생각이 된다. 이를 피하고 싶다면 printWoo(&quot;Lee&quot;, &quot;Park&quot;) 처럼 가변 인자를 명시적으로 기입하면 가능하다.\n만약, vararg 파라미터가 제네릭 타입일 경우, *을 생략해도 Array 타입은 인자로 받아들일 수 있다. 코틀린의 공변성 개념으로, 자기 자신과 자식 객체만을 허용한다는 의미이다.\n1234567891011121314151617181920212223242526import kotlin.collections.ArrayList/** * created by victory_woo on 2020/10/27 * */fun main(args: Array&lt;String&gt;) &#123;    val array = arrayOf(1, 2, 3)    asList(array).forEach &#123;        for (num in it) print(\"$num \")        println()    &#125;    // 1,2,3    asList(-1, 0, *array, 4).forEach &#123;        print(\"$it \")    &#125;    println()    // -1,0,1,2,3,4&#125;fun &lt;T&gt; asList(vararg ts: T): List&lt;T&gt; &#123;    return ArrayList&lt;T&gt;().apply &#123;        ts.forEach &#123; add(it) &#125;    &#125;&#125;\nRef\n\n[Kotlin] 가변 인자(vararg) 사용하기, 배열을 가변 인자로 넘기기\n\n","dateCreated":"2020-10-27T11:13:43+09:00","dateModified":"2020-10-27T13:42:46+09:00","datePublished":"2020-10-27T11:13:43+09:00","description":"Prologue\n코틀린도 자바와 마찬가지로 가변인자를 지원하는데, 가변인자에 대해 알아보자.","headline":"[Kotlin] 가변인자 vararg","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://woovictory.github.io/2020/10/27/Kotlin-vararg/"},"publisher":{"@type":"Organization","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg","logo":{"@type":"ImageObject","url":"Victory.jpeg"}},"url":"https://woovictory.github.io/2020/10/27/Kotlin-vararg/","keywords":"Kotlin, 가변인자, vararg"}</script>
     <meta name="description" content="Prologue 코틀린도 자바와 마찬가지로 가변인자를 지원하는데, 가변인자에 대해 알아보자.">
 <meta name="keywords" content="Kotlin,가변인자,vararg">
 <meta property="og:type" content="blog">
@@ -22,7 +22,7 @@
 <meta property="og:site_name" content="VictoryWoo">
 <meta property="og:description" content="Prologue 코틀린도 자바와 마찬가지로 가변인자를 지원하는데, 가변인자에 대해 알아보자.">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2020-10-27T03:38:54.085Z">
+<meta property="og:updated_time" content="2020-10-27T04:42:46.811Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="[Kotlin] 가변인자 vararg">
 <meta name="twitter:description" content="Prologue 코틀린도 자바와 마찬가지로 가변인자를 지원하는데, 가변인자에 대해 알아보자.">
@@ -350,11 +350,14 @@
         <ul class="post-actions post-action-nav">
             <li class="post-action">
                 
-                    <a
-                        class="post-action-btn btn btn--disabled"
-                        aria-hidden="true"
-                    >
-                        
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2020/10/27/Kotlin-internal/"
+                    data-tooltip="[Kotlin] 접근 제한자, 키워드"
+                    aria-label="PREVIOUS: [Kotlin] 접근 제한자, 키워드"
+                >
+                    
                         <i class="fa fa-angle-left" aria-hidden="true"></i>
                         <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
                     </a>
@@ -476,11 +479,14 @@
         <ul class="post-actions post-action-nav">
             <li class="post-action">
                 
-                    <a
-                        class="post-action-btn btn btn--disabled"
-                        aria-hidden="true"
-                    >
-                        
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2020/10/27/Kotlin-internal/"
+                    data-tooltip="[Kotlin] 접근 제한자, 키워드"
+                    aria-label="PREVIOUS: [Kotlin] 접근 제한자, 키워드"
+                >
+                    
                         <i class="fa fa-angle-left" aria-hidden="true"></i>
                         <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
                     </a>

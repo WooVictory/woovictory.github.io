@@ -275,6 +275,149 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2018/04/05/BOJ1963/"
+                            aria-label=": [1963] 소수 경로"
+                        >
+                            [1963] 소수 경로
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2018-04-05T15:47:55+09:00">
+	
+		    Apr 05, 2018
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/algorithm/">algorithm</a>, <a class="category-link" href="/categories/algorithm/BOJ/">BOJ</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <p>문제 : <a href="https://www.acmicpc.net/problem/1963" target="_blank" rel="noopener">https://www.acmicpc.net/problem/1963</a></p>
+<p><code>Key Point</code></p>
+<p>먼저, 에라토스테네스의 체를 이용해 4자리 소수를 구한다.<br>
+그리고 한자리씩 바꾸면서 바뀐 수가 소수인지 확인하면 된다.<br>
+정점의 개수 10000개 이하</p>
+<p><code>Explain</code></p>
+<p>N을 M으로 바꾸는 최소 변환 횟수를 구하는 문제이므로 <code>BFS</code><br>
+한번에 N에서 한자리만 바꿀 수 있고 바꾼 숫자도 <code>소수</code>여야 한다.<br>
+i번째 자리수를 j로 바꾼다. [change]<br>
+next = -1 -&gt; 바꿀 수 없음을 의미하며, 첫번째 자리가 0인 경우를 뜻한다.</p>
+<p><code>Code</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line">public class Exam1963 &#123;</span><br><span class="line">	</span><br><span class="line">	public static int change(int num, int index, int digit) &#123;</span><br><span class="line">		if(index == 0 &amp;&amp; digit == 0) &#123; // indext와 digit이 0이면 첫번째 자리수가 0을 뜻함</span><br><span class="line">			return -1;</span><br><span class="line">		&#125;</span><br><span class="line">		String s = Integer.toString(num);</span><br><span class="line">		StringBuilder sb = new StringBuilder(s);</span><br><span class="line">		sb.setCharAt(index, (char)(digit+&apos;0&apos;));</span><br><span class="line">		// index번째 자리를 digit으로 바꾼다. </span><br><span class="line">		return Integer.parseInt(sb.toString());</span><br><span class="line">	&#125;</span><br><span class="line">	public static void main(String[] args) &#123;</span><br><span class="line">		Scanner sc = new Scanner(System.in);</span><br><span class="line">		boolean[] prime = new boolean[10001];</span><br><span class="line">		</span><br><span class="line">		// 에라토스테네스의 체를 이용한 소수 구하기</span><br><span class="line">		for(int i=2;i&lt;=10000;i++) &#123;</span><br><span class="line">			if(prime[i] == false) &#123;</span><br><span class="line">				for(int j=i*i;j&lt;=10000;j+=i) &#123;</span><br><span class="line">					prime[j] = true;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		for(int i=0;i&lt;=10000;i++) &#123;</span><br><span class="line">			prime[i] = !prime[i];</span><br><span class="line">		&#125;</span><br><span class="line">		// prime[] 배열에 true로 check되어 있는 것들이 소수임!</span><br><span class="line">		</span><br><span class="line">		int test_case = sc.nextInt();</span><br><span class="line">		while(test_case-- &gt;0) &#123;</span><br><span class="line">			int n = sc.nextInt();</span><br><span class="line">			int m = sc.nextInt();</span><br><span class="line">			boolean[] check = new boolean[10001];</span><br><span class="line">			int[] dist = new int[10001];</span><br><span class="line">			dist[n] = 0;</span><br><span class="line">			check[n] = true; // 소수임을 의미</span><br><span class="line">			Queue&lt;Integer&gt; q = new LinkedList&lt;Integer&gt;();</span><br><span class="line">			q.add(n);</span><br><span class="line">			while(!q.isEmpty()) &#123;</span><br><span class="line">				int now_location = q.poll();</span><br><span class="line">				for(int i=0;i&lt;4;i++) &#123;</span><br><span class="line">					for(int j=0;j&lt;=9;j++) &#123;</span><br><span class="line">						int next_location = change(now_location,i,j);</span><br><span class="line">						if(next_location != -1) &#123;</span><br><span class="line">							if(prime[next_location] == true &amp;&amp; check[next_location] == false) &#123;</span><br><span class="line">								// next_location이 prime[] 배열에서 소수로 체크되어있는지와 check[] 배열에는 false로 체크되어있는지</span><br><span class="line">								// 조건을 확인한다. </span><br><span class="line">								// 조건에 맞으면 [prime 배열에 존재하면 ] 소수임을 뜻한다. </span><br><span class="line">								q.add(next_location);</span><br><span class="line">								dist[next_location] = dist[now_location]+1;</span><br><span class="line">								check[next_location] = true; // 소수로 check해버린다.</span><br><span class="line">							&#125; </span><br><span class="line">						&#125;</span><br><span class="line">					&#125;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">			System.out.println(dist[m]);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2018/04/05/BOJ1963/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2018/04/03/BOJ10971/"
+                            aria-label=": [10971] 외판원 순회2"
+                        >
+                            [10971] 외판원 순회2
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2018-04-03T12:05:07+09:00">
+	
+		    Apr 03, 2018
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/algorithm/">algorithm</a>, <a class="category-link" href="/categories/algorithm/BOJ/">BOJ</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <p>문제 : <a href="https://www.acmicpc.net/problem/10971" target="_blank" rel="noopener">https://www.acmicpc.net/problem/10971</a></p>
+<p><code>Key Point</code></p>
+<p><strong>go[i][j]</strong> = 도시 i에서 도시 j로 가기 위한 비용<br>
+어떤 도시를 방문할 지 <strong>city[]</strong> 라는 배열에 넣는다.<br>
+city[0] city[1] … city[N-1] 은 각각 도시1, 도시2, … 도시N-1을 나타냄</p>
+<p><code>Explain</code></p>
+<p>N의 범위 : 2&lt;=N&lt;=10 이므로 모든 경우를 시간 복잡도 안에 구할 수 있다.<br>
+모든 도시를 한번만 거친다고 하였므로 <code>순열</code>을 이용해서 풀 수 있다.<br>
+N = 4일 경우 순회할 수 있는 경우는 4개이다.</p>
+<p>1-&gt;2-&gt;3-&gt;4<br>
+2-&gt;3-&gt;4-&gt;1<br>
+3-&gt;4-&gt;1-&gt;2<br>
+4-&gt;1-&gt;2-&gt;3</p>
+<p>문제에서 N개의 도시를 거쳐 다시 시작했던 지점으로 돌아간다고 했으므로<br>
+1번 도시를 <strong>시작도시</strong>로 정해놓고 (N-1)!개의 경우를 구하면 된다.</p>
+<p><code>Code</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Exam10971</span> </span>&#123;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">// 다음 순열을 구하는 next_permutation() 함수</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">next_permutation</span><span class="params">(<span class="keyword">int</span>[] a)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">int</span> i = a.length-<span class="number">1</span>;</span><br><span class="line">		<span class="keyword">while</span>(i&gt;<span class="number">0</span> &amp;&amp; a[i-<span class="number">1</span>]&gt;=a[i]) &#123;</span><br><span class="line">			i--;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span>(i&lt;=<span class="number">0</span>) &#123;</span><br><span class="line">			<span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		<span class="keyword">int</span> j  = a.length-<span class="number">1</span>;</span><br><span class="line">		<span class="keyword">while</span>(a[j]&lt;=a[i-<span class="number">1</span>]) &#123;</span><br><span class="line">			j--;</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		<span class="keyword">int</span> tmp = a[i-<span class="number">1</span>];</span><br><span class="line">		a[i-<span class="number">1</span>] = a[j];</span><br><span class="line">		a[j] = tmp;</span><br><span class="line">		</span><br><span class="line">		j = a.length-<span class="number">1</span>;</span><br><span class="line">		<span class="keyword">while</span>(i&lt;j) &#123;</span><br><span class="line">			tmp = a[i];</span><br><span class="line">			a[i] = a[j];</span><br><span class="line">			a[j] = tmp;</span><br><span class="line">			i++;</span><br><span class="line">			j--;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> NumberFormatException, IOException </span>&#123;</span><br><span class="line">		BufferedReader bf = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(System.in));</span><br><span class="line">		<span class="keyword">int</span> test_case = Integer.parseInt(bf.readLine());</span><br><span class="line">		<span class="keyword">int</span>[][] cost = <span class="keyword">new</span> <span class="keyword">int</span>[test_case][test_case];</span><br><span class="line">		<span class="comment">// i에서 j로 가기 위한 비용</span></span><br><span class="line">		</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;test_case;i++) &#123;</span><br><span class="line">			<span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;test_case;j++) &#123;</span><br><span class="line">				StringTokenizer st = <span class="keyword">new</span> StringTokenizer(bf.readLine(), <span class="string">" "</span>);</span><br><span class="line">				cost[i][j] = Integer.parseInt(st.nextToken());</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		<span class="keyword">int</span>[] city = <span class="keyword">new</span> <span class="keyword">int</span>[test_case];</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;test_case;i++) &#123;</span><br><span class="line">			city[i] = i; <span class="comment">// 도시를 의미</span></span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		<span class="keyword">int</span> ans = Integer.MAX_VALUE;</span><br><span class="line">		</span><br><span class="line">		<span class="keyword">do</span> &#123;</span><br><span class="line">			<span class="keyword">boolean</span> possible = <span class="keyword">true</span>;</span><br><span class="line">			<span class="keyword">int</span> sum = <span class="number">0</span>;</span><br><span class="line">			<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;test_case-<span class="number">1</span>;i++) &#123;</span><br><span class="line">				<span class="keyword">if</span>(cost[city[i]][city[i+<span class="number">1</span>]] == <span class="number">0</span>) &#123;</span><br><span class="line">					possible = <span class="keyword">false</span>;</span><br><span class="line">				&#125;<span class="keyword">else</span> &#123;</span><br><span class="line">					sum += cost[city[i]][city[i+<span class="number">1</span>]];</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">			</span><br><span class="line">			<span class="keyword">if</span>(possible == <span class="keyword">true</span> &amp;&amp; cost[city[test_case-<span class="number">1</span>]][city[<span class="number">0</span>]] !=<span class="number">0</span>) &#123;</span><br><span class="line">				<span class="comment">// 다음 도시로 갈 수 있고, 처음 도시로 돌아갈 수 있다면</span></span><br><span class="line">				sum+=cost[city[test_case-<span class="number">1</span>]][city[<span class="number">0</span>]];</span><br><span class="line">				<span class="keyword">if</span>(ans&gt;sum)</span><br><span class="line">					ans = sum;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;<span class="keyword">while</span>(next_permutation(city));</span><br><span class="line">		</span><br><span class="line">		System.out.println(ans);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2018/04/03/BOJ10971/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2018/03/31/BOJ1722/"
                             aria-label=": [1722] 순열의 순서"
                         >
@@ -806,130 +949,6 @@ value에 저장한다. 결국, value -&gt; 차이의 최대값</p>
                         <p>
                             <a
                                 href="/2018/03/30/BOJ10819/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-right">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2018/03/27/Javadepue/"
-                            aria-label=": [Java] deque"
-                        >
-                            [Java] deque
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2018-03-27T20:10:54+09:00">
-	
-		    Mar 27, 2018
-    	
-    </time>
-    
-        <span>in </span>
-        
-    <a class="category-link" href="/categories/Java/">Java</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-excerpt">
-                    <p><strong>자료구조</strong>란 자료(data)를 컴퓨터에서 효율적으로 사용하도록 해주는 <strong>알고리즘</strong>을 뜻합니다.<br>
-<code>(효율적 : 실행시간 최소화, 계산의 간편화 등등)</code></p>
-                    
-                        <a
-                            href="/2018/03/27/Javadepue/"
-                            class="postShorten-excerpt_link link"
-                            aria-label=": [Java] deque"
-                        >
-                            Continue reading
-                        </a>
-                        
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2018/03/20/DataStructure-Diff-of-Stack-Queue/"
-                            aria-label=": [자료구조] Stack vs Queue"
-                        >
-                            [자료구조] Stack vs Queue
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2018-03-20T16:16:05+09:00">
-	
-		    Mar 20, 2018
-    	
-    </time>
-    
-        <span>in </span>
-        
-    <a class="category-link" href="/categories/자료구조/">자료구조</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h2 id="stack">Stack</h2>
-<ul>
-<li>Last In First Out(LIFO)의 구조로 나중에 들어간 원소가 가장 먼저 나오는 자료구조이다.</li>
-<li>반대로 제일 먼저 들어간 원소가 가장 늦게 나온다.</li>
-<li>함수의 콜스택에 쓰이고 문자열을 역순으로 출력할 때, 연산자 후위표기법 등에 쓰인다.</li>
-</ul>
-<h2 id="queue">Queue</h2>
-<ul>
-<li>First In First Out(FIFO)의 구조로 먼저 들어간 원소가 먼저 나오는 구조를 갖는다.</li>
-<li>컴퓨터 <strong>버퍼</strong>에서 주로 사용된다. 마구 입력이 되었으나 처리를 하지 못할 때, 버퍼를 만들어 대기 시킨다.</li>
-</ul>
-<h2 id="참고">참고</h2>
-<ul>
-<li><a href="https://jeong-pro.tistory.com/97" target="_blank" rel="noopener">스택, 큐, 덱(Stack, queue, deque)의 특징에 대해 설명해보세요!</a></li>
-</ul>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2018/03/20/DataStructure-Diff-of-Stack-Queue/#post-footer"
                                 class="postShorten-excerpt_link link"
                                 aria-label=""
                             >

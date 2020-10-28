@@ -713,7 +713,7 @@
     </article>
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -745,54 +745,18 @@
 
             </div>
             
-                <div class="postShorten-content">
-                    <p>알고리즘을 푸는데 백트래킹 문제가 나왔다. 근데, 백트래킹의 정확한 의미를 잘 몰라서 간략하게 정리하려고 한다.</p>
-<h2 id="백트래킹">백트래킹</h2>
-<p>위키피디아의 정의를 보면 <strong>한정 조건을 가진 문제를 풀려는 전략</strong>이라고 나와있다. 즉, 모든 조합의 수를 살펴보는 것인데 단 조건이 만족할 때만 살펴본다.</p>
-<p>설명을 덧붙이자면, 어떤 노드의 유망성을 점검한 후, 유망하지 않으면 그 노드의 부모 노드로 되돌아간 후 다른 자손 노드를 검색한다.</p>
-<ul>
-<li>유망성은 조건을 만족하는가 아닌가를 뜻한다.</li>
-<li>즉, 유망하지 않으면 배제를 하고 부모 노드로 돌아가서 풀이 시간이 단축될 수 있다.</li>
-<li>DFS에서 가지치기를 통해 가도되지 않는 루트는 고려하지 않고 탐색하는 완전탐색 기법 중 하나이다.</li>
-</ul>
-<p>백트래킹의 대표적인 문제는 <code>N-Queen 문제</code>이다. 이 문제를 통해서 백트래킹을 한 번 더 이해해보자.</p>
-<p><strong>N-Queen</strong></p>
-<p>크키가 NxN인 체스판 위에 퀸 N개를 서로 공격할 수 없게 놓는 문제이다. N이 주어졌을 때, 퀸을 놓는 방법의 수를 구해보자.</p>
-<p>4x4를 기준으로 문제를 풀어보자. 퀸이 어떻게 이동할 수 있는지만 알면 체스가 무엇인지 몰라도 된다. 퀸은 배치된 칸을 기준으로 오와 열, 대각선 이동이 가능한 말이다.</p>
-<img src="/img/algo_queen.jpeg" width="400" height="200">
-<p>빨간색 선이 퀸이 이동할 수 있는 경로이고, 첫 번째로 배치된 퀸과 공격할 수 없도록 배치하려면 2번째 줄은 2,3번 위치에 퀸을 놓아야 조건을 만족시킬 수 있다. 첫 번째 퀸의 위치를 (1,1)로 하면 트리구조는 다음과 같다.</p>
-<img src="/img/algo_queen2.jpeg" width="400" height="200">
-<p>이 문제를 가지치기를 하지 않는 DFS로 풀었다면 유망하지 않는 즉, 조건에 위배하는 (2,1), (2,2) 지점도 검사했을 것이다. 그러면 연산 횟수가 많아져 시간복잡도도 증가했을 것이다.</p>
-<p>그래서 백트래킹에서 가지치기를 잘해야 한다. 백트래킹은 크게 4가지 절차로 구성되어 있다.</p>
-<ol>
-<li>DFS 수행 - 평소와 같이 깊이 우선 탐색인 DFS를 수행하여 노드를 찾는다.</li>
-<li>유망한 노드 검토 - 방문한 노드를 포함해서 유망한 노드이면 서브트리(하위노드)로 이동하고 그렇지 않으면 백트래킹을 수행하낟.</li>
-<li>방문한 노드의 하위 노드로 이동하여 다시 재귀를 통해 DFS를 수행한다.</li>
-<li>백트래킹 수행 - 방문한 노드를 가지치기를 하고 상위 노드로 백트래킹한 후 DFS를 다시 수행한다.</li>
-</ol>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.Scanner;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 22/05/2019</span></span><br><span class="line"><span class="comment"> * 완탐 : N-Queen</span></span><br><span class="line"><span class="comment"> * 백트래킹의 대표적인 문제.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> N = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> count = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Scanner sc = <span class="keyword">new</span> Scanner(System.in);</span><br><span class="line">        N = sc.nextInt();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= N; i++) &#123;</span><br><span class="line">            <span class="keyword">int</span>[] column = <span class="keyword">new</span> <span class="keyword">int</span>[N + <span class="number">1</span>]; <span class="comment">// N행 까지 담기 위해. index -&gt; 행, value -&gt; 열.</span></span><br><span class="line">            column[<span class="number">1</span>] = i; <span class="comment">// 1행 i열에 퀸을 놓음.</span></span><br><span class="line"></span><br><span class="line">            <span class="comment">// 1. DFS 수행.</span></span><br><span class="line">            <span class="comment">// 1행 i 열에 퀸을 놓았을 경우 dfs 로 가능한 경우를 확인한다.</span></span><br><span class="line">            dfs(column, <span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        System.out.println(count);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">dfs</span><span class="params">(<span class="keyword">int</span>[] column, <span class="keyword">int</span> row)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// row 와 N 이 같다는 말은 N 번째 행까지 퀸을 놓았다는 의미이다.</span></span><br><span class="line">        <span class="comment">// 즉, 퀸을 다 놓았다는 말! 따라서 count 를 증가시킨다.</span></span><br><span class="line">        <span class="keyword">if</span> (row == N) &#123;</span><br><span class="line">            count++;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= N; i++) &#123;</span><br><span class="line">                column[row + <span class="number">1</span>] = i; <span class="comment">// (row+1)행 i열에 퀸을 놓는다.</span></span><br><span class="line"></span><br><span class="line">                <span class="comment">// 2. 유망한 노드인지 판단.</span></span><br><span class="line">                <span class="keyword">if</span> (isPossible(column, row + <span class="number">1</span>)) &#123;</span><br><span class="line">                    <span class="comment">// 3. 서브 트리로 이동.(해당 노드의 하위 노드)</span></span><br><span class="line">                    dfs(column, row + <span class="number">1</span>);</span><br><span class="line">                &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">                    <span class="comment">// 4. 백트래킹 수행. 해당 노드는 가지치기 됨.</span></span><br><span class="line">                    <span class="comment">// 아니면 백트래킹. 0이면 퀸을 못놓는다는 의미.</span></span><br><span class="line">                    column[row+<span class="number">1</span>] = <span class="number">0</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        column[row] = <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">isPossible</span><span class="params">(<span class="keyword">int</span>[] column, <span class="keyword">int</span> row)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// (row+1)이 들어오는데 그 전까지 즉, row 행 전까지 검사한다.</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; row; i++) &#123;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// i 행과 row 행의 열이 같으면 퀸을 놓을 수 없다.</span></span><br><span class="line">            <span class="keyword">if</span> (column[i] == column[row]) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// i 행과 row 행의 열 값이 대각선 위치에 존재하면 퀸을 놓을 수 없다.</span></span><br><span class="line">            <span class="keyword">if</span> (Math.abs(i - row) == Math.abs(column[i] - column[row])) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 위의 경우가 모두 된다면 true 반환한다.</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="참고">참고</h2>
-<ul>
-<li><a href="https://thd0011.tistory.com/19" target="_blank" rel="noopener">[알고리즘] 백트래킹 (Backtracking) 알고리즘</a></li>
-<li><a href="https://medium.com/@jeongdowon/%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98-backtracking-%EC%9D%B4%ED%95%B4%ED%95%98%EA%B8%B0-13492b18bfa1" target="_blank" rel="noopener">[알고리즘] Backtracking 이해하기</a></li>
-<li><a href="https://idea-sketch.tistory.com/29" target="_blank" rel="noopener">뚜벅이 강군 블로그</a></li>
-</ul>
-
+                <div class="postShorten-excerpt">
+                    <h3>Prologue</h3>
+<p>알고리즘을 푸는데 백트래킹 문제가 나왔다. 근데, 백트래킹의 정확한 의미를 잘 몰라서 간략하게 정리하려고 한다.</p>
                     
+                        <a
+                            href="/2019/05/22/What-is-BackTracking/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [알고리즘] 백트래킹"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2019/05/22/What-is-BackTracking/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             

@@ -274,6 +274,184 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2018/10/10/BOJ1927/"
+                            aria-label=": [1927] 최소 힙"
+                        >
+                            [1927] 최소 힙
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2018-10-10T22:17:48+09:00">
+	
+		    Oct 10, 2018
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/algorithm/">algorithm</a>, <a class="category-link" href="/categories/algorithm/BOJ/">BOJ</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <p>문제 : <a href="https://www.acmicpc.net/problem/1927" target="_blank" rel="noopener">https://www.acmicpc.net/problem/1927</a></p>
+<h1 id="풀이-방법">풀이 방법</h1>
+<hr>
+<p>이 문제는 <strong>Priority Queue</strong> 라는 것을 알 수 있는 좋은 문제라고 생각합니다. 문제를 읽어보았을 때 그냥, Queue를 이용해서 풀면 될 것 같다는 생각을 하고 문제를 풀었으나, 큐의 특성상 <strong>선입선출</strong> 즉, 먼저 들어온 것이 큐의 대기열에 있다가 먼저 나가므로 문제에서 원하는 작은 수가 먼저 출력되는 부분을 만족하지 않았습니다.</p>
+<p>이 부분을 해결하기 위해서는 정렬이 필요한데, 정렬하는 부분을 따로 구현을 해줘야 합니다. 그래서 저는 이 방법 말고 분명히 자바에서 제공하는 자료구조 중에서 사용할 수 있는 것이 있다고 판단했습니다. 그리고 C++ 코드에서는 Priority Queue라는 것을 사용하는 것을 보아 자바에서도 비슷한 것이 있을 것이라고 추측했고, 그 추측은 정답이었습니다 :)</p>
+<p>이 문제를 풀 때는 Priority Queue의 natural ordering 속성을 통해서 문제를 해결하였습니다. Priority Queue는 natural ordering에 따라서 큐를 정렬합니다. 한마디로 오름차순으로 큐를 정렬시킨다는 뜻입니다. 이러한 속성을 이용해서 작은 값이 먼저 출력될 수 있도록 문제를 풀 수 있었습니다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.*;</span><br><span class="line"><span class="keyword">import</span> java.util.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BOJ1927</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        BufferedReader bf = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(System.in));</span><br><span class="line">        BufferedWriter bw = <span class="keyword">new</span> BufferedWriter(<span class="keyword">new</span> OutputStreamWriter(System.out));</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        PriorityQueue&lt;Integer&gt; priorityQueue = <span class="keyword">new</span> PriorityQueue&lt;&gt;();</span><br><span class="line">        <span class="keyword">int</span> N = Integer.parseInt(bf.readLine());</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; N; i++) &#123;</span><br><span class="line">            <span class="keyword">int</span> x = Integer.parseInt(bf.readLine());</span><br><span class="line">            <span class="keyword">if</span> (x == <span class="number">0</span>) &#123;</span><br><span class="line">                <span class="keyword">if</span> (!priorityQueue.isEmpty())</span><br><span class="line">                    bw.write(priorityQueue.poll() + <span class="string">"\n"</span>);</span><br><span class="line">                <span class="keyword">else</span></span><br><span class="line">                    bw.write(<span class="number">0</span> + <span class="string">"\n"</span>);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                priorityQueue.add(x);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        bw.flush();</span><br><span class="line">        bw.close();</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="배운-점">배운 점</h1>
+<hr>
+<p>이 문제를 풀면서 배운 점은 Priority Queue라는 자료구조에 대해서 배우게 된 것입니다. 이 자료구조의 특성과 성질을 공부해볼 수 있었습니다.</p>
+<p>먼저, 일반적인 큐(Queue)는 선입선출(FIFO)의 구조를 가집니다. 그렇다면 Priority Queue는 어떻게 다를까요??</p>
+<p><strong>Priority Queue</strong>는 내부적으로 Natural Ordering에 따라서 정렬하는 큐입니다. 그래서 다음의 코드를 테스트해보면 10이라는 숫자가 나와야 하는데, 실제로 1이 나오는 것을 확인할 수 있습니다.</p>
+<p>또한, 무작위로 숫자 값을 넣었을 경우에는 어떻게 될까요??? <strong>이 경우에 오름차순된 상태로 출력되는 것을 확인 할 수 있습니다. 이것이 가장 큰 Priority Queue의 특징입니다. 그리고 Priority Queue는 null을 허용하지 않습니다. 왜냐하면 Natural Ordering에 기반을 두고 있기 때문에 정렬할 수 없는 null은 허용되지 않는 것입니다.</strong></p>
+<p>Priority Queue의 head는 가장 적은 값이 나옵니다. 만약 다수의 엘리먼트가 가장 적은 값이라면, 그 헤드는 그 중에 하나가 되는데 어떤것이 될지는 모릅니다.</p>
+<p><strong>우선 순위 대기열에는 각 요소에 우선순위가 할당되어 있습니다. 우선 순위가 가장 높은 요소가 대기열 맨 위에 나타납니다. 이제는 각 요소에 우선 순위를 지정하는 방법에 따라 다릅니다. 그렇게 하지 않으면 Java가 기본 방식으로 처리합니다. 기본 방식은 가장 값이 작은 요소에 가장 높은 우선 순위가 할당되므로 먼저 큐에서 제거됩니다. 동일한 우선 순위를 가진 요소가 여러 개 있으면 타이는 임의로 끊어집니다.</strong></p>
+<p><code>또한, 생성자 PriorityQueue(initialCapacity, comparator)에서 comparator를 사용하여 순서를 지정할 수도 있습니다.</code></p>
+<blockquote>
+<p>Method</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">함수</th>
+<th style="text-align:center">기능</th>
+<th style="text-align:center">element 삭제유무</th>
+<th style="text-align:center">비어있는 경우</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">peek</td>
+<td style="text-align:center">head를 가져옴</td>
+<td style="text-align:center">X</td>
+<td style="text-align:center">return null</td>
+</tr>
+<tr>
+<td style="text-align:center">poll</td>
+<td style="text-align:center">head를 가져옴</td>
+<td style="text-align:center">O</td>
+<td style="text-align:center">return null</td>
+</tr>
+<tr>
+<td style="text-align:center">remove</td>
+<td style="text-align:center">head를 가져옴</td>
+<td style="text-align:center">X</td>
+<td style="text-align:center">throw exception</td>
+</tr>
+<tr>
+<td style="text-align:center">element</td>
+<td style="text-align:center">head를 가져옴</td>
+<td style="text-align:center">O</td>
+<td style="text-align:center">throw exception</td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">PriorityQueue&lt;Integer&gt; pQueue = <span class="keyword">new</span> PriorityQueue&lt;&gt;();</span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;=<span class="number">10</span>;i++)&#123;</span><br><span class="line">    pQueue.add(i);</span><br><span class="line">&#125;</span><br><span class="line">System.out.println(<span class="string">"result : "</span>+pQueue.peek());</span><br><span class="line"><span class="comment">// 마지막 삽입된 요소 참조!</span></span><br><span class="line"></span><br><span class="line">PriorityQueue&lt;Integer&gt; pQueue2 = <span class="keyword">new</span> PriorityQueue&lt;&gt;();</span><br><span class="line">pQueue2.add(<span class="number">6</span>);</span><br><span class="line">pQueue2.add(<span class="number">11</span>);</span><br><span class="line">pQueue2.add(<span class="number">3</span>);</span><br><span class="line">pQueue2.add(<span class="number">12</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> count = pQueue2.size();</span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;count;i++)&#125;&#123;</span><br><span class="line">    System.out.println(pQueue2.poll());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2018/10/10/BOJ1927/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2018/10/07/BOJ10821/"
+                            aria-label=": [10821] 문자열 개수"
+                        >
+                            [10821] 문자열 개수
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2018-10-07T22:49:43+09:00">
+	
+		    Oct 07, 2018
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/algorithm/">algorithm</a>, <a class="category-link" href="/categories/algorithm/BOJ/">BOJ</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <p>문제 : <a href="https://www.acmicpc.net/problem/10821" target="_blank" rel="noopener">https://www.acmicpc.net/problem/10821</a></p>
+<h1 id="풀이-방법">풀이 방법</h1>
+<hr>
+<p>원래 오늘 풀 문제는 조금 난이도가 있는 문제를 풀어야 했지만, SOPT MT를 갔다와서 체력이 방전되고 컨디션이 좋지 않아서 오늘은 간단한 문제를 풀어보았습니다…;;</p>
+<p>이 문제는 입력을 문자열 한 줄로 받아서 <strong>split()</strong> 함수를 이용해서 “,” 즉, 콤마를 기준으로 문자열을 짜릅니다. 그리고 반환값은 String 배열이기 때문에 배열로 받고 배열의 length를 출력해 주었습니다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BOJ10821</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        BufferedReader bf=<span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(System.in));</span><br><span class="line">        BufferedWriter bw = <span class="keyword">new</span> BufferedWriter(<span class="keyword">new</span> OutputStreamWriter(System.out));</span><br><span class="line">        <span class="comment">//StringTokenizer st = new StringTokenizer(bf.readLine(),",");</span></span><br><span class="line"></span><br><span class="line">        String word = bf.readLine();</span><br><span class="line">        String[] words = word.split(<span class="string">","</span>);</span><br><span class="line">        bw.write(words.length+<span class="string">"\n"</span>);</span><br><span class="line">        bw.flush();</span><br><span class="line">        bw.close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="배운-점">배운 점</h1>
+<hr>
+<p>요즘은 문제를 풀면서 시간 초과가 안나는 것도 고려해가면서 문제를 풀고 있습니다. 그리고 입력과 출력을 받을 때 시간이 적게 걸리는 BufferedReader, BufferedWriter을 사용법을 알게 되었고, 적용해서 문제를 풀고 있습니다. 꾸준히 하는게 중요합니다:)</p>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2018/10/07/BOJ10821/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2018/10/05/BOJ10845/"
                             aria-label=": [10845] 큐"
                         >
@@ -830,173 +1008,6 @@
                             Continue reading
                         </a>
                         
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2018/08/20/9012/"
-                            aria-label=": BOJ :: 9012"
-                        >
-                            BOJ :: 9012
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2018-08-20T23:22:36+09:00">
-	
-		    Aug 20, 2018
-    	
-    </time>
-    
-        <span>in </span>
-        
-    <a class="category-link" href="/categories/algorithm/">algorithm</a>, <a class="category-link" href="/categories/algorithm/BOJ/">BOJ</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <p>알고리즘을 다시 풀려고 하는데, 기억이 하나도 나지 않아서 차근 차근 자바 문법부터 보고 있습니다…ㅎㅎ 하지만, 뭔가 알고리즘을 빨리 시작해서 공부해야 한다는 부담감이 조금씩 있죠… 하지만, 지금의 상황에서는 여러 가지를 하면서 진도를 많이 나가지 못하는 것보다는 범위를 좁혀서 빠르게 공부하는 게 나을 것 같다는 생각을 했습니다…!</p>
-<p>그래서 이번 알고리즘 문제까지 풀고 당분간 우선 순위를 잡아 놓은 것들을 해결하고 나서야 다시 알고리즘을 꾸준하게 풀 수 있을 것 같습니다…ㅜㅜ 조급해 할 필요는 없고 시작하기 위한 기초를 잘 다지기 위한 과정이니까 조급해 하지 맙시다 ^^</p>
-<p><code>문제</code></p>
-<p>괄호 문자열이 주어졌을 때, 올바른 괄호 문자열인지 아닌지를 판단하는 문제입니다.<br>
-괄호 문자열 : ( 와 )로만 이루어진 문자열<br>
-올바른 괄호 문자열 : 괄호의 쌍이 올바른 문제</p>
-<p><strong>문제</strong> : <a href="https://www.acmicpc.net/problem/9012" target="_blank" rel="noopener">https://www.acmicpc.net/problem/9012</a></p>
-<p><code>풀이</code></p>
-<ul>
-<li>여는 괄호 : (</li>
-<li>닫는 괄호 : )</li>
-</ul>
-<p>닫는 괄호의 입장에서 닫는 괄호와 짝이 맞는 여는 괄호는 어디에 있을까요?</p>
-<ol>
-<li>왼쪽에 있어야 합니다.</li>
-<li>아직 짝이 맞지 않아야 합니다.</li>
-<li>1과 2와 해당하는 문자 중에서 가장 오른쪽에 있는 괄호가 어떤 닫는 괄호가 있었을 때 그 닫는 괄호와 짝이 맞는 여는 괄호를 의미하게 됩니다.</li>
-</ol>
-<p>이 성질을 이용해서 Stack을 이욜해서 풀 수 있다.<br>
-1 -&gt; 어떤 순서로 문자열을 검사할 것인지를 판단할 수 있습니다.<br>
-2 -&gt; 2번에 해당하는 여는 괄호를 차례대로 스택에 넣습니다.<br>
-그렇다면 스택에 있는 괄호는 아직 짝이 맞지 않는 괄호이기 때문에 가장 오른쪽에 있는 괄호는 Stack의 top을 의미하게 됩니다. 따라서 stack을 이용하면 시간 복잡도는 O(1)로 줄일 수 있게 됩니다.</p>
-<ul>
-<li>Stack을 이용해서 올바른 괄호 문자열인지 아닌지를 알 수 있습니다.</li>
-<li>( 가 나오면 스택에 (를 넣고 )가 나오면 스택에서 하나를 빼서 (인지 확인합니다.</li>
-<li>또는 하나를 뺄 수 있는지를 확인합니다.</li>
-</ul>
-<p>경우는 세 가지로 나눠 볼 수 있습니다.</p>
-<ol>
-<li>닫는 괄호가 나왔는데 스택이 비어있는 경우 -&gt; 올바른 문자열이라고 할 수 없습니다. 왜냐하면 닫는 괄호에 해당하는 여는 괄호가 없기 때문입니다.</li>
-<li>모든 과정이 끝났고, 스택이 비어있는 경우 -&gt; 올바른 문자열이라고 할 수 있습니다.</li>
-<li>모든 과정이 끝났는데, 스택이 비어있지 않은 경우 -&gt; 여는 괄호에 대한 닫는 괄호가 없기 때문입니다.</li>
-</ol>
-<p>하지만, 다시 생각해보면 스택에는 어차피 여는 괄호를 넣습니다. 따라서 스택에 무엇이 들어있는지 보다는 몇개가 들어있는지가 중요한 문제입니다. 즉, count 변수를 선언해서 체크함으로써 해결 가능합니다.</p>
-<p><code>코드</code></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.BufferedReader;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.io.InputStreamReader;</span><br><span class="line"><span class="keyword">import</span> java.util.Scanner;</span><br><span class="line"><span class="keyword">import</span> java.util.Stack;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BOJ9012</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        Scanner sc = <span class="keyword">new</span> Scanner(System.in);</span><br><span class="line">        <span class="keyword">int</span> test_case = sc.nextInt();</span><br><span class="line">        sc.nextLine();</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; test_case; i++) &#123;</span><br><span class="line">            System.out.println(check(sc.nextLine()));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">check</span><span class="params">(String str)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> count = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; str.length(); i++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (str.charAt(i) == <span class="string">'('</span>) &#123;</span><br><span class="line">                count += <span class="number">1</span>;</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (str.charAt(i) == <span class="string">')'</span>) &#123;</span><br><span class="line">                count -= <span class="number">1</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (count &lt; <span class="number">0</span>) &#123; <span class="comment">// 닫는 괄호에 대한 여는 괄호가 스택에 없음. 문자열에 닫는 괄호가 있어서 count가 음수</span></span><br><span class="line">                <span class="keyword">return</span> <span class="string">"NO"</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (count == <span class="number">0</span>) &#123; <span class="comment">// 스택이 비어있음. 올바른 문자열</span></span><br><span class="line">            <span class="keyword">return</span> <span class="string">"YES"</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123; <span class="comment">// 스택이 비어있지 않음. 올바르지 못한 문자열</span></span><br><span class="line">            <span class="keyword">return</span> <span class="string">"NO"</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2018/08/20/9012/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2018/08/18/aws-hackathon/"
-                            aria-label=": AWS :: amathon"
-                        >
-                            AWS :: amathon
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2018-08-18T22:52:19+09:00">
-	
-		    Aug 18, 2018
-    	
-    </time>
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <p>뒤늦은 후기이지만, 제가 참여한 해커톤에 대한 간단한 리뷰를 해보겠습니다. ^0^</p>
-<p>제가 활동하고 있는 SOPT라는 동아리에서 AppJam이라는 2주 간의 해커톤은 해 본 경험이 있지만, 이렇게 짧은 1박 2일간의 해커톤은 처음이었습니다. 이번 글은 제가 첫 해커톤에 참가해서 느낀 경험을 말해보는 시간입니다. :D</p>
-<h1 id="amathon">Amathon</h1>
-<hr>
-<p>해커톤에 대한 부푼 기대를 안고 참가했습니다. 하지만, 생각과 달리 분위기는 자유로웠고 즐거웠습니다. ㅎㅎ 바로 시작을 하지 않고, 간단한 소개 및 인사말과 후원을 해주신 분들 그리고 여러가지 설명을 해주셨습니다…ㅎㅎㅎ</p>
-<p>먼저, <strong>Amathon</strong>이란??<br>
-<img src="/img/amathon_concept.png" width="700" height="200"></p>
-<h1 id="amathon-session">Amathon Session</h1>
-<hr>
-<img src="/img/amathon_pre_session.png" width="500" height="200">
-<p>그리고 먼저 해커톤을 진행하기에 앞서 사전 교육 세션을 진행했습니다. 저는 이 중에서 <code>Serverless Crawling &amp; Data Analysis</code> 세션을 들었습니다. 이 세션은 AWS에서 제공하는 기능들을 이용해서 크롤링을 진행하고 많은 기능들을 체험해봄으로써 AWS에 친숙해지자는 목적을 담고 있습니다. 덕분에 크롤링이라는 것을 AWS에서 제공하는 기능들을 통해서 경험해보고 좋은 이야기를 들을 수 있었습니다.</p>
-<h1 id="time-table">Time table</h1>
-<hr>
-<img src="/img/amathon_timetable_1.png" width="500" height="200">
-<img src="/img/amathon_timetable_2.png" width="500" height="200">
-<h1 id="requirements">Requirements</h1>
-<hr>
-<img src="/img/amathon1.png" width="500" height="200">
-<img src="/img/amathon2.png" width="500" height="200">
-<h1 id="review">Review</h1>
-<hr>
-<p>첫 해커톤에 대한 기대와 설렘 그리고 부담감이 있었지만, 자유롭고 즐거운 분위기 속에서 즐길 수 있었습니다. 제일 중요한 것은 좋은 팀원들을 만나서 정말 재미있는 해커톤을 진행하였으며, 실력이 좋으신 안드로이드 개발자 선배님을 만나서 <strong>그래들</strong>을 관리하는 법, Pair coding, 안드로이드 스튜디오는 항상 최신 버전으로 유지할 것 등등 유용한 것들을 많이 배울 수 있었습니다.</p>
-<p>또한, 상을 주는 기준은 잘하는 것이 아닌 재미와 asug에서 정한 기준에 따른 수상이었습니다. 저희 팀은 운이 좋게도 <code>기능은 좋지만 디자인이 별로였다</code>상을 받아서 치킨을 선물로 받을 수 있었습니다.</p>
-<p>그리고 참가비 만원을 내고 참가하였지만, 참가자에게 주는 기념품과 제가 받은 상까지 포함하면 소위 말해 <strong>개이득</strong>이었고, 정말 좋은 기회였습니다. 앞으로 해커톤이 생기면 자주 참여하도록 노력할 생각입니다. ^0^</p>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2018/08/18/aws-hackathon/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             

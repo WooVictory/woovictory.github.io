@@ -1,0 +1,708 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="VictoryWoo">
+    <title>[RxJava] Subject - VictoryWoo</title>
+    <meta name="author" content="VictoryWoo">
+    
+    
+        <link rel="icon" href="https://woovictory.github.io/assets/images/develop.ico">
+    
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg"},"articleBody":"Prologue\nAndroid 앱을 사용하다보면 Back Button을 클릭했을 때, 바로 앱이 종료되는 경우와 토스트 메세지가 보여지는 경우가 있다. 이때, Back Button 처리를 위해 RxJava의 Subject를 활용하는 방법을 알아보기 위해 Subject에 대해 먼저 알아보려고 한다.\n\nSubject\nAbout Subject\nSubject 클래스는 구독하고 있는 관찰자(Observer)에게 새로운 값을 전달할 때 사용하는 클래스이다. 따로 Observable로 새로운 값을 만들 필요없이 Subject 객체에 내장된 onNext 함수로 새로운 값을 옵저버에게 전달할 수 있기 때문에 짧은 코드로도 reactive하게 구현하는 게 가능하다. Android에서 제공하는 LiveData와 유사한 역할을 하기도 한다.\n123456789101112131415161718192021import io.reactivex.subjects.PublishSubjectimport util.Log/** * created by victory_woo on 2020/10/28 * */fun main(args: Array&lt;String&gt;) &#123;    val publishName: PublishSubject&lt;String&gt; = PublishSubject.create()    publishName.subscribe &#123;        Log.d(\"Woo94\", it)    &#125;    publishName.onNext(\"Lee\")    publishName.onNext(\"Park\")&#125;// 결과LeePark\nPublishSubject vs BehaviorSubject\nRxJava에서는 AsyncSubject, PublishSubject, BehaviorSubject, RelaySubject가 있지만, 이번에는 가장 많이 사용되는 PublishSubject와 BehaviorSubject에 대해서 알아보겠다.\n먼저, 코드를 통해 차이점을 파악한 뒤 특징에 대해 알아보자.\n12345678910111213141516171819202122232425262728293031import io.reactivex.subjects.BehaviorSubjectimport io.reactivex.subjects.PublishSubjectimport util.Log/** * created by victory_woo on 2020/10/28 * */fun main(args: Array&lt;String&gt;) &#123;    val person = Person()    person.setNextName(\"Lee\")    person.publishName.subscribe &#123;        Log.d(\"Woo94\", \"publishName : $it\")    &#125;    person.behaviorName.subscribe &#123;        Log.d(\"Woo94\", \"behaviorName : $it\")    &#125;    person.setNextName(\"Kim\")&#125;class Person &#123;    var behaviorName: BehaviorSubject&lt;String&gt; = BehaviorSubject.create()    var publishName: PublishSubject&lt;String&gt; = PublishSubject.create()    fun setNextName(name: String) &#123;        behaviorName.onNext(name)        publishName.onNext(name)    &#125;&#125;\nPerson 클래스에 2개의 Subject 객체를 선언하였고 setNextName() 함수를 호출하여, subject 객체의 값을 한번에 바꾸려고 한다. 그리고 publishName과 behaviorName을 구독하기 전에 이름을 &quot;Lee&quot;로 갱신을 미리 했다.\n그리고 코드의 출력 결과는 다음과 같다.\n123main | Woo94 | debug = behaviorName : Leemain | Woo94 | debug = behaviorName : Kimmain | Woo94 | debug = publishName : Kim\nbehaiorName은 구독 전에 갱신한 “Lee” 문자열을 출력하는 반면, publishName은 구독 이후에 갱신한 “Kim” 문자열만 출력하고 있다. 이는 두 객체의 동작 구조가 다르기 때문인데, 이제부터 차이점에 대해 살펴보도록 하자.\nPublishSubject\n\n구독 이후에 발행한 값에 대해서만 값을 받는다.\n아래 다이어그램의 세번째 줄에서 구독하기 이전에 갱신된 빨간공, 초록공은 무시하고 파란공만 받고 있는 것을 볼 수 있다.\n과거의 데이터를 무시하고 새로 갱신되는 값만 보고 싶은 경우 사용하면 좋다.\n대표적으로 버튼을 클릭하는 이벤트를 PublishSubject로 사용하기도 한다.\n\n\nBehaviorSubject\n\n구독하는 시점의 가장 최근에 갱신된 값을 받는다.\n아래 다이어그램의 세번째 줄에서 구독하면 가장 최근에 갱신된 초록색 공과 그 이후에 갱신된 파란색 공을 받는 것을 볼 수 있다.\n구독하는 시점에서 과거에 갱신된 데이터 중 가장 최근의 값이 필요할 때 사용하면 유용하다.\n또한, 초기값을 지정할 수도 있으며, 구독하게 되면 초기 데이터를 먼저 받을 수 있다.\nAndroid에서 Back Button 처리를 위해 BehaviorSubject를 활용하기도 한다.\n\n\n12345678910111213141516171819202122fun test()&#123;\tval subject: BehaviorSubject&lt;String&gt; = BehaviorSubject.createDefault(\"6\")\tsubject.subscribe &#123; data -&gt;\t\tprintln(\"Subscriber #1 =&gt; $data\")\t&#125;\tsubject.onNext(\"1\")\tsubject.onNext(\"3\")\tsubject.subscribe &#123; data -&gt;\t\tprintln(\"Subscriber #2 =&gt; $data\")\t&#125;\tsubject.onNext(\"5\")\tsubject.onComplete()&#125;// 결과Subscriber #1 =&gt; 6Subscriber #1 =&gt; 1Subscriber #1 =&gt; 3Subscriber #2 =&gt; 3Subscriber #1 =&gt; 5Subscriber #2 =&gt; 5\nRef\n\nRxJava: Subject, PublishSubject, BehaviorSubject\n\n","dateCreated":"2020-10-28T01:17:40+09:00","dateModified":"2020-10-28T11:12:58+09:00","datePublished":"2020-10-28T01:17:40+09:00","description":"Prologue\nAndroid 앱을 사용하다보면 Back Button을 클릭했을 때, 바로 앱이 종료되는 경우와 토스트 메세지가 보여지는 경우가 있다. 이때, Back Button 처리를 위해 RxJava의 Subject를 활용하는 방법을 알아보기 위해 Subject에 대해 먼저 알아보려고 한다.","headline":"[RxJava] Subject","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://woovictory.github.io/2020/10/28/RxJava-Subject/"},"publisher":{"@type":"Organization","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg","logo":{"@type":"ImageObject","url":"Victory.jpeg"}},"url":"https://woovictory.github.io/2020/10/28/RxJava-Subject/","keywords":"Android, RxJava, Subject"}</script>
+    <meta name="description" content="Prologue Android 앱을 사용하다보면 Back Button을 클릭했을 때, 바로 앱이 종료되는 경우와 토스트 메세지가 보여지는 경우가 있다. 이때, Back Button 처리를 위해 RxJava의 Subject를 활용하는 방법을 알아보기 위해 Subject에 대해 먼저 알아보려고 한다.">
+<meta name="keywords" content="Android,RxJava,Subject">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="[RxJava] Subject">
+<meta property="og:url" content="https://woovictory.github.io/2020/10/28/RxJava-Subject/index.html">
+<meta property="og:site_name" content="VictoryWoo">
+<meta property="og:description" content="Prologue Android 앱을 사용하다보면 Back Button을 클릭했을 때, 바로 앱이 종료되는 경우와 토스트 메세지가 보여지는 경우가 있다. 이때, Back Button 처리를 위해 RxJava의 Subject를 활용하는 방법을 알아보기 위해 Subject에 대해 먼저 알아보려고 한다.">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://woovictory.github.io/img/rx_publishSubject.png">
+<meta property="og:image" content="https://woovictory.github.io/img/rx_behaviorSubject.png">
+<meta property="og:updated_time" content="2020-10-28T02:12:58.159Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="[RxJava] Subject">
+<meta name="twitter:description" content="Prologue Android 앱을 사용하다보면 Back Button을 클릭했을 때, 바로 앱이 종료되는 경우와 토스트 메세지가 보여지는 경우가 있다. 이때, Back Button 처리를 위해 RxJava의 Subject를 활용하는 방법을 알아보기 위해 Subject에 대해 먼저 알아보려고 한다.">
+<meta name="twitter:image" content="https://woovictory.github.io/img/rx_publishSubject.png">
+    
+    
+        
+    
+    
+        <meta property="og:image" content="https://woovictory.github.io/assets/images/Victory.jpeg"/>
+    
+    
+    
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/all.css">
+    <link rel="stylesheet" href="/assets/css/jquery.fancybox.css">
+    <link rel="stylesheet" href="/assets/css/thumbs.css">
+    <link rel="stylesheet" href="/assets/css/tranquilpeak.css">
+    <!--STYLES END-->
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-125410253-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-125410253-1');
+    </script>
+
+
+    
+
+    
+        
+    
+</head>
+
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+        
+            
+        
+    
+
+<header id="header" data-behavior="2">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a
+            class="header-title-link"
+            href="/ "
+            aria-label=""
+        >
+            VictoryWoo
+        </a>
+    </div>
+    
+        
+            <a
+                class="header-right-picture "
+                href="#about"
+                aria-label="Open the link: /#about"
+            >
+        
+        
+            <img class="header-picture" src="/assets/images/Victory.jpeg" alt="Author&#39;s picture"/>
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+
+        
+    
+
+<nav id="sidebar" data-behavior="2">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a
+                    href="/#about"
+                    aria-label="Read more about the author"
+                >
+                    <img class="sidebar-profile-picture" src="/assets/images/Victory.jpeg" alt="Author&#39;s picture"/>
+                </a>
+                <h4 class="sidebar-profile-name">VictoryWoo</h4>
+                
+                    <h5 class="sidebar-profile-bio"><p>기록을 통해 사람들과 공유하는 것을 좋아합니다.</p>
+</h5>
+                
+            </div>
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/"
+                            
+                            rel="noopener"
+                            title="Home"
+                        >
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-categories"
+                            
+                            rel="noopener"
+                            title="Categories"
+                        >
+                        <i class="sidebar-button-icon fa fa-bookmark" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Categories</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-tags"
+                            
+                            rel="noopener"
+                            title="Tags"
+                        >
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Tags</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link open-algolia-search"
+                            href="#search"
+                            
+                            rel="noopener"
+                            title="Search"
+                        >
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Search</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="#about"
+                            
+                            rel="noopener"
+                            title="About"
+                        >
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://github.com/WooVictory"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="GitHub"
+                        >
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://www.facebook.com/WooVictory"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Facebook"
+                        >
+                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Facebook</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://www.linkedin.com/profile/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="LinkedIn"
+                        >
+                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">LinkedIn</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/jhsw0375@gmail.com"
+                            
+                            rel="noopener"
+                            title="Mail"
+                        >
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="2"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            [RxJava] Subject
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2020-10-28T01:17:40+09:00">
+	
+		    Oct 28, 2020
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/Android/">Android</a>
+
+
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <h3 id="prologue">Prologue</h3>
+<p>Android 앱을 사용하다보면 Back Button을 클릭했을 때, 바로 앱이 종료되는 경우와 토스트 메세지가 보여지는 경우가 있다. 이때, Back Button 처리를 위해 RxJava의 Subject를 활용하는 방법을 알아보기 위해 Subject에 대해 먼저 알아보려고 한다.</p>
+<a id="more"></a>
+<h3 id="subject">Subject</h3>
+<h4 id="about-subject">About Subject</h4>
+<p>Subject 클래스는 구독하고 있는 관찰자(Observer)에게 새로운 값을 전달할 때 사용하는 클래스이다. 따로 Observable로 새로운 값을 만들 필요없이 Subject 객체에 내장된 onNext 함수로 새로운 값을 옵저버에게 전달할 수 있기 때문에 짧은 코드로도 reactive하게 구현하는 게 가능하다. Android에서 제공하는 LiveData와 유사한 역할을 하기도 한다.</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> io.reactivex.subjects.PublishSubject</span><br><span class="line"><span class="keyword">import</span> util.Log</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * created by victory_woo on 2020/10/28</span></span><br><span class="line"><span class="comment"> * */</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">(args: <span class="type">Array</span>&lt;<span class="type">String</span>&gt;)</span></span> &#123;</span><br><span class="line">    <span class="keyword">val</span> publishName: PublishSubject&lt;String&gt; = PublishSubject.create()</span><br><span class="line"></span><br><span class="line">    publishName.subscribe &#123;</span><br><span class="line">        Log.d(<span class="string">"Woo94"</span>, it)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    publishName.onNext(<span class="string">"Lee"</span>)</span><br><span class="line">    publishName.onNext(<span class="string">"Park"</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 결과</span></span><br><span class="line">Lee</span><br><span class="line">Park</span><br></pre></td></tr></table></figure>
+<h4 id="publishsubject-vs-behaviorsubject">PublishSubject vs BehaviorSubject</h4>
+<p>RxJava에서는 AsyncSubject, PublishSubject, BehaviorSubject, RelaySubject가 있지만, 이번에는 가장 많이 사용되는 PublishSubject와 BehaviorSubject에 대해서 알아보겠다.</p>
+<p>먼저, 코드를 통해 차이점을 파악한 뒤 특징에 대해 알아보자.</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> io.reactivex.subjects.BehaviorSubject</span><br><span class="line"><span class="keyword">import</span> io.reactivex.subjects.PublishSubject</span><br><span class="line"><span class="keyword">import</span> util.Log</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * created by victory_woo on 2020/10/28</span></span><br><span class="line"><span class="comment"> * */</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">(args: <span class="type">Array</span>&lt;<span class="type">String</span>&gt;)</span></span> &#123;</span><br><span class="line">    <span class="keyword">val</span> person = Person()</span><br><span class="line">    person.setNextName(<span class="string">"Lee"</span>)</span><br><span class="line">    person.publishName.subscribe &#123;</span><br><span class="line">        Log.d(<span class="string">"Woo94"</span>, <span class="string">"publishName : <span class="variable">$it</span>"</span>)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    person.behaviorName.subscribe &#123;</span><br><span class="line">        Log.d(<span class="string">"Woo94"</span>, <span class="string">"behaviorName : <span class="variable">$it</span>"</span>)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    person.setNextName(<span class="string">"Kim"</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> behaviorName: BehaviorSubject&lt;String&gt; = BehaviorSubject.create()</span><br><span class="line">    <span class="keyword">var</span> publishName: PublishSubject&lt;String&gt; = PublishSubject.create()</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">setNextName</span><span class="params">(name: <span class="type">String</span>)</span></span> &#123;</span><br><span class="line">        behaviorName.onNext(name)</span><br><span class="line">        publishName.onNext(name)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Person 클래스에 2개의 Subject 객체를 선언하였고 setNextName() 함수를 호출하여, subject 객체의 값을 한번에 바꾸려고 한다. 그리고 publishName과 behaviorName을 구독하기 전에 이름을 &quot;Lee&quot;로 갱신을 미리 했다.</p>
+<p>그리고 코드의 출력 결과는 다음과 같다.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">main | Woo94 | debug = behaviorName : Lee</span><br><span class="line">main | Woo94 | debug = behaviorName : Kim</span><br><span class="line">main | Woo94 | debug = publishName : Kim</span><br></pre></td></tr></table></figure>
+<p>behaiorName은 구독 전에 갱신한 “Lee” 문자열을 출력하는 반면, publishName은 구독 이후에 갱신한 “Kim” 문자열만 출력하고 있다. 이는 두 객체의 동작 구조가 다르기 때문인데, 이제부터 차이점에 대해 살펴보도록 하자.</p>
+<h4 id="publishsubject">PublishSubject</h4>
+<ul>
+<li>구독 이후에 발행한 값에 대해서만 값을 받는다.</li>
+<li>아래 다이어그램의 세번째 줄에서 구독하기 이전에 갱신된 빨간공, 초록공은 무시하고 파란공만 받고 있는 것을 볼 수 있다.</li>
+<li>과거의 데이터를 무시하고 새로 갱신되는 값만 보고 싶은 경우 사용하면 좋다.</li>
+<li><strong>대표적으로 버튼을 클릭하는 이벤트를 PublishSubject로 사용하기도 한다.</strong></li>
+</ul>
+<img src="/img/rx_publishSubject.png" width="800" height="400">
+<h4 id="behaviorsubject">BehaviorSubject</h4>
+<ul>
+<li>구독하는 시점의 가장 최근에 갱신된 값을 받는다.</li>
+<li>아래 다이어그램의 세번째 줄에서 구독하면 가장 최근에 갱신된 초록색 공과 그 이후에 갱신된 파란색 공을 받는 것을 볼 수 있다.</li>
+<li>구독하는 시점에서 과거에 갱신된 데이터 중 가장 최근의 값이 필요할 때 사용하면 유용하다.</li>
+<li>또한, 초기값을 지정할 수도 있으며, 구독하게 되면 초기 데이터를 먼저 받을 수 있다.</li>
+<li><strong>Android에서 Back Button 처리를 위해 BehaviorSubject를 활용하기도 한다.</strong></li>
+</ul>
+<img src="/img/rx_behaviorSubject.png" width="800" height="400">
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">test</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="keyword">val</span> subject: BehaviorSubject&lt;String&gt; = BehaviorSubject.createDefault(<span class="string">"6"</span>)</span><br><span class="line">	subject.subscribe &#123; <span class="keyword">data</span> -&gt;</span><br><span class="line">		println(<span class="string">"Subscriber #1 =&gt; <span class="variable">$data</span>"</span>)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	subject.onNext(<span class="string">"1"</span>)</span><br><span class="line">	subject.onNext(<span class="string">"3"</span>)</span><br><span class="line">	subject.subscribe &#123; <span class="keyword">data</span> -&gt;</span><br><span class="line">		println(<span class="string">"Subscriber #2 =&gt; <span class="variable">$data</span>"</span>)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	subject.onNext(<span class="string">"5"</span>)</span><br><span class="line">	subject.onComplete()</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 결과</span></span><br><span class="line">Subscriber #<span class="number">1</span> =&gt; <span class="number">6</span></span><br><span class="line">Subscriber #<span class="number">1</span> =&gt; <span class="number">1</span></span><br><span class="line">Subscriber #<span class="number">1</span> =&gt; <span class="number">3</span></span><br><span class="line">Subscriber #<span class="number">2</span> =&gt; <span class="number">3</span></span><br><span class="line">Subscriber #<span class="number">1</span> =&gt; <span class="number">5</span></span><br><span class="line">Subscriber #<span class="number">2</span> =&gt; <span class="number">5</span></span><br></pre></td></tr></table></figure>
+<h3 id="ref">Ref</h3>
+<ul>
+<li><a href="https://selfish-developer.com/entry/RxJava-Subject-PublishSubject-BehaviorSubject" target="_blank" rel="noopener">RxJava: Subject, PublishSubject, BehaviorSubject</a></li>
+</ul>
+
+            
+
+
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">TAGGED IN</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/Android/">Android</a> <a class="tag tag--primary tag--small t-link" href="/tags/RxJava/">RxJava</a> <a class="tag tag--primary tag--small t-link" href="/tags/Subject/">Subject</a>
+
+            </div>
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a
+                        class="post-action-btn btn btn--disabled"
+                        aria-hidden="true"
+                    >
+                        
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2020/10/27/Kotlin-internal/"
+                    data-tooltip="[Kotlin] 접근 제한자, 키워드"
+                    aria-label="NEXT: [Kotlin] 접근 제한자, 키워드"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="Share this post"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://woovictory.github.io/2020/10/28/RxJava-Subject/"
+                    title="Share on Facebook"
+                    aria-label="Share on Facebook"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://woovictory.github.io/2020/10/28/RxJava-Subject/"
+                    title="Share on Twitter"
+                    aria-label="Share on Twitter"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://woovictory.github.io/2020/10/28/RxJava-Subject/"
+                    title="Share on Google+"
+                    aria-label="Share on Google+"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a
+                        class="post-action-btn btn btn--default"
+                        href="#disqus_thread"
+                        aria-label="Leave a comment"
+                    >
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+                <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2020 VictoryWoo. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="2">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a
+                        class="post-action-btn btn btn--disabled"
+                        aria-hidden="true"
+                    >
+                        
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2020/10/27/Kotlin-internal/"
+                    data-tooltip="[Kotlin] 접근 제한자, 키워드"
+                    aria-label="NEXT: [Kotlin] 접근 제한자, 키워드"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="Share this post"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://woovictory.github.io/2020/10/28/RxJava-Subject/"
+                    title="Share on Facebook"
+                    aria-label="Share on Facebook"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://woovictory.github.io/2020/10/28/RxJava-Subject/"
+                    title="Share on Twitter"
+                    aria-label="Share on Twitter"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://woovictory.github.io/2020/10/28/RxJava-Subject/"
+                    title="Share on Google+"
+                    aria-label="Share on Google+"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a
+                        class="post-action-btn btn btn--default"
+                        href="#disqus_thread"
+                        aria-label="Leave a comment"
+                    >
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="2">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://woovictory.github.io/2020/10/28/RxJava-Subject/"
+                        aria-label="Share on Facebook"
+                    >
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Share on Facebook</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://twitter.com/intent/tweet?text=https://woovictory.github.io/2020/10/28/RxJava-Subject/"
+                        aria-label="Share on Twitter"
+                    >
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Share on Twitter</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://plus.google.com/share?url=https://woovictory.github.io/2020/10/28/RxJava-Subject/"
+                        aria-label="Share on Google+"
+                    >
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>Share on Google+</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+    
+        
+    
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <img id="about-card-picture" src="/assets/images/Victory.jpeg" alt="Author&#39;s picture"/>
+        
+            <h4 id="about-card-name">VictoryWoo</h4>
+        
+            <div id="about-card-bio"><p>기록을 통해 사람들과 공유하는 것을 좋아합니다.</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>Android Developer</p>
+
+            </div>
+        
+        
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/color_blue.jpeg');"></div>
+        <!--SCRIPTS-->
+<script src="/assets/js/jquery.js"></script>
+<script src="/assets/js/jquery.fancybox.js"></script>
+<script src="/assets/js/thumbs.js"></script>
+<script src="/assets/js/tranquilpeak.js"></script>
+<!--SCRIPTS END-->
+
+
+    
+        <script>
+          var disqus_config = function() {
+            this.page.url = 'https://woovictory.github.io/2020/10/28/RxJava-Subject/';
+              
+            this.page.identifier = '2020/10/28/RxJava-Subject/';
+              
+          };
+          (function() {
+            var d = document, s = d.createElement('script');
+            var disqus_shortname = 'https-woovictory-github-io';
+            s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+          })();
+        </script>
+    
+
+
+
+
+    </body>
+</html>

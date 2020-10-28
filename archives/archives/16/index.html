@@ -267,6 +267,163 @@
     <section class="postShorten-group main-content-wrap">
     
     
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2019/01/03/Android-What-is-retrofit/"
+                            aria-label=": [안드로이드] Retrofit"
+                        >
+                            [안드로이드] Retrofit
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2019-01-03T18:14:23+09:00">
+	
+		    Jan 03, 2019
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/Android/">Android</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <h2 id="안드로이드-통신-라이브러리-요약">안드로이드 통신 라이브러리 요약</h2>
+<p>저는 안드로이드 앱을 개발하면 서버와 통신을 하기 위해서 편리한 방법인 Retrofit은 사용했다. 하지만 이러한 편리함을 알기 전에 왜 이렇게 편리하게 사용하는지 살펴보아야 할 것 같다.</p>
+<p>초기에 안드로이드에서의 통신이라면 <strong>HttpClient</strong>를 사용하는 것이었다. HttpClient라고 해도 DefaultHttpClient라고 불리는 Apache HTTP Client와 AndroidHttpClient라는 Http Client 변종 등이 사용되고 있었다. 하지만, HttpClient에는 몇 가지 버그가 있어 2011년에는 Google의 Android Develpoers의 블로그에서 HttpUrlConnection이 권장되고 나서 이쪽이 주로 사용되고 있었다.</p>
+<p>그후, Volley는 사용법이 복잡했던 HttpUrlConnection의 대안으로 Google이 만들었다는 것도 있고 표준 라이브러리로 사용되었다. Square의 OkHttp도 인기가 높고, 많이 사용되어왔다.</p>
+<p>하지만 Android 5.1에서 HttpClient가 Deprecated된 후, HTTPClient에 의존하는 Volley도 Deprecated되었다. Square에서 만들어진 라이브러리인 OkHttp와 그 래퍼인 Retrofit은 단 하나 선택 같은 상태가 되었다.</p>
+<h2 id="retrofit">Retrofit</h2>
+<p>Retrofit은 OkHttp의 상위 구현체로 enqueue와 excute를 사용하여 동기, 비동기 처리를 지원한다. 이러한 비동기 처리를 쉽게 지원하는 volley, retrofit 중에 무엇을 사용할지 고민했으나 인터페이스 내에 어노테이션으로 HTTP 메소드를 정의하여 그 행위를 알아보기 쉽게 표현하여 가독성이 높은 Retrofit을 사용했다. 추가적으로 Retrofit은 플러그인 형태로 클라이언트와 직렬화를 위한 convert를 선택할 수 있어 유지보수에 편하다.</p>
+<p>반면에 volley는 이미지 캐시, 요청에 우선순위를 부여하는 등 추가적인 기능이 있지만 직렬화를 직접 세팅해줘야하고 멀티파트 업로드 시에도 리퀘스트의 재정의가 필요하다.</p>
+<p>이렇듯 추가적인 기능이 더 많은건 volley이지만 간편하고 유지보수에 능하며 좀 더 REST api에 적합한 라이브러리라 생각되어 Retrofit을 사용했다.</p>
+<h2 id="retrofit을-사용한-이유">Retrofit을 사용한 이유?</h2>
+<p>서버와 통신을 하려면 Http 통신을 해야한다. 기본적으로 <code>HttpUrlConnection</code>을 이용한 네트워크 통신이 있지만 매번 connection 설정, input / output stream 생성 및 할당 등 반복적인 작업이 발생한다. 이것을 도와주는 라이브러리가 <code>Okhttp</code>이다. 나는 Okhttp의 존재를 알기만 했고 사용해보지는 않았다.</p>
+<p>Retrofit의 장점은 속도, 편의성, 가독성이 있다. 가장 비교하기 좋은 <code>Okhttp</code>는 사용시 대개 <code>Asynctask</code>를 통해 비동기로 실행하게 되는데 <strong>Asynctask</strong>가 성능상 느리다는 이슈가 있었다. <code>Retrofit</code>에서는 <strong>Asynctask</strong>를 사용하지 않고 자체적인 비동기 실행과 스레드 관리를 통해 속도를 훨씬 빠르게 끌어올렸다. 약 3~10배 차이가 난다고 한다.</p>
+<p>또한 Okhttp에서도 쿼리스트링, <em>request</em>, <em>response</em> 설정 등 반복적인 작업이 필요한데, Retrofit에서는 이런 과정을 모두 라이브러리에 넘겨서 처리하도록 하였다. 따라서 사용자는 함수 호출시에 파라미터만 넘기면 되기에 훨씬 작업량이 줄어들고 사용하기 편리하다.</p>
+<p>마지막으로 <strong>가독성</strong>이 매우 좋다. interface 내에 <strong>annotation</strong>을 사용하여 호출할 함수를 파라미터와 함께 정의해놓고, 네트워크 통신이 필요한 순간에 구현없이 해당 함수를 호출하기만 하면 통신이 이루어지기에 <strong>코드를 읽기가 매우 편하다.</strong> <code>Asynctask</code>를 쓰지 않기에 불필요하게 코드가 길어질 필요도 없으며, 콜백 함수를 통해 결과가 넘어오도록 되어있어 매우 직관적인 설계가 장점이다.</p>
+<p>네트워크 통신에 <code>Volley</code>라는 라이브러리도 있지만 몇가지 문제점이 있었다. StringRequest 생성시 파라미터 값을 <strong>encoding</strong>해주어야 하는 불편함과 통신 실패시 <strong>ErrorResponse</strong> 안에 <strong>ResponseBody</strong>가 담기지 않는 문제가 있다.</p>
+<h3 id="구현-방법">구현 방법</h3>
+<p>application 클래스를 상속받은 <strong>ApplicationController</strong>라는 클래스를 만들고 싱글톤으로 구현하여 onCreate() 내부에 레트로핏 빌더를 이용해 클라이언트와 컨버터를 설정하고 인터페이스를 선택한다.</p>
+<p><strong>application 클래스를 상속받은 이유는?</strong><br>
+메인 액티비티의 통신 부 이전에 retrofit에 대한 세팅을 하기 위해 상속받았다. application 클래스는 애플리케이션 컴포넌트들이 공통으로 사용하는 공유 클래스이다. 해당 클래스를 상속받아 구현한 클래스의 onCreate 메소드는 시스템의 진입점이 되어 가장 먼저 실행된다.</p>
+<h3 id="동기와-비동기란">동기와 비동기란?</h3>
+<p>데이터를 받는 방식인 동기와 비동기. 이 둘의 개념에 대해서 알고 넘어가자.</p>
+<ol>
+<li>동기(synchronous : 동시에 일어나는)</li>
+</ol>
+<p>동기는 말 그대로 동시에 일어난다는 뜻이다. 요청과 그 결과가 동시에 일어난다는 약속인데, 바로 요청을 하면 시간이 얼마가 걸리던지 요청한 자리에서 결과가 즉시 주어져야 한다.</p>
+<ul>
+<li>요청과 결과가 한 자리에서 동시에 일어남</li>
+<li>A 노드와 B 노ㄷ 사이의 작업 처리 단위를 동시에 맞추겠다.</li>
+<li>동기적 일처리 방식 : 순차적으로 일을 스스로 끝내 나가는 방식</li>
+</ul>
+<ol start="2">
+<li>비동기(Asynchronous : 동시에 일어나지 않는)</li>
+</ol>
+<p>비동기는 동시에 일어나지 않는다를 의미한다. 요청과 결과가 동시에 일어나지 않을거라는 약속이다.</p>
+<ul>
+<li>요청한 결과가 그 자리에서 결과가 주어지지 않는다.</li>
+<li>노드 사이의 작업 처리 단위를 동시에 맞추지 않아도 된다.</li>
+<li>비동기적 일처리 방식 : 해야할 일을 위임하고 기다리는 방식</li>
+</ul>
+<p>동기와 비동기는 상황에 따라서 각각의 <strong>장단점</strong>이 존재한다.<br>
+<code>동기방식</code>은 설계가 매우 간단하고 직관적이지만 결과가 주어질 때까지 아무것도 못하고 대기해야 하는 단점이 있고,<br>
+<code>비동기방식</code>은 동기보다 복잡하지만 결과가 주어지는데 시간이 걸리더라도 그 시간 동안 다른 작업을 할 수 있으므로 자원을 효율적으로 사용할 수 있다는 장점이 있다.</p>
+<p>동기와 비동기 방식의 예는 아래의 블로그를 참고하자.</p>
+<p><a href="http://private.tistory.com/24" target="_blank" rel="noopener">공부해서 남주자</a></p>
+<h2 id="참고">참고</h2>
+<ul>
+<li><a href="http://private.tistory.com/24" target="_blank" rel="noopener">동기와 비동기의 개념과 차이</a></li>
+<li><a href="https://wayhome25.github.io/nodejs/2017/02/18/nodejs-06-Asynchronous-synchronous/" target="_blank" rel="noopener">동기와 비동기 프로그래밍 (Asynchronous-synchronous)</a></li>
+</ul>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2019/01/03/Android-What-is-retrofit/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-right">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2019/01/03/Android-ImageLoadingLibrary/"
+                            aria-label=": [안드로이드] Image Loading Library"
+                        >
+                            [안드로이드] Image Loading Library
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2019-01-03T15:19:02+09:00">
+	
+		    Jan 03, 2019
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/Android/">Android</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-excerpt">
+                    <p>앱을 만들면서 ImageView에 사진을 띄우고자 하는 경우가 많았다.</p>
+                    
+                        <a
+                            href="/2019/01/03/Android-ImageLoadingLibrary/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [안드로이드] Image Loading Library"
+                        >
+                            Continue reading
+                        </a>
+                        
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
     <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
@@ -986,340 +1143,6 @@ Fragment와 Activity가 통신할 수 있는 방법에는 3가지 방법이 있�
                             Continue reading
                         </a>
                         
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2018/12/28/Network-Diff-Of-HTTP-HTTPS/"
-                            aria-label=": [네트워크] HTTP와 HTTPS"
-                        >
-                            [네트워크] HTTP와 HTTPS
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2018-12-28T22:35:54+09:00">
-	
-		    Dec 28, 2018
-    	
-    </time>
-    
-        <span>in </span>
-        
-    <a class="category-link" href="/categories/네트워크/">네트워크</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h2 id="http의-문제점">HTTP의 문제점</h2>
-<p>HTTP는 다음과 같은 문제점을 갖는다.</p>
-<ol>
-<li>HTTP는 평문 통신이기 때문에 도청이 가능하다.</li>
-<li>통신 상대를 확인하지 않기 때문에 위장이 가능하다.</li>
-<li>완전성을 증명할 수 없기 때문에 변조가 가능하다.</li>
-</ol>
-<p>위 세 가지는 다른 암호화하지 않은 프로토콜에도 공통되는 문제점들이다.</p>
-<p><strong>TCP/IP는 도청 가능한 네트워크이다.</strong></p>
-<p>TCP/IP 구조의 통신은 전부 통신 경로 상에서 엿볼 수 있다. 패킷을 수집하는 것만으로도 도청할 수 있다. 평문으로 통신을 할 경우 메시지의 의미를 파악할 수 있기 때문에 암호화하여 통신해야 한다.</p>
-<p>1번 문제를 보완하는 방법은 다음과 같다.</p>
-<ol>
-<li>
-<p>통신 자체를 암호화<br>
-SSL(Secure Socket Layer) or TLS(Transport Layer Security) 라는 다른 프로토콜을 조합함으로써 HTTP의 통신 내용을 암호화할 수 있다. SSL을 조합한 HTTP를 HTTPS(HTTP Secure) or HTTP over SSL이라고 부른다.</p>
-</li>
-<li>
-<p>콘텐츠를 암호화<br>
-말 그대로 HTTP를 사용해서 운반하는 내용인 HTTP 메시지에 포함되는 콘텐츠만 암호화하는 것이다. 암호화해서 전송하면 받은 측에서는 그 암호를 해독하여 출력하는 처리가 필요하다.</p>
-</li>
-</ol>
-<p><strong>통신 상대를 확인하지 않기 때문에 위장이 가능하다.</strong></p>
-<p>HTTP에 의한 통신에는 상대가 누구인지 확인하는 처리가 없기 때문에 누구든지 Request를 보낼 수 있다. IP 주소나 포트 등에서 그 웹 서버에 엑세스 제한이 없는 경우 리퀘스트가 오면 상대가 누구든지 무언가의 리스폰스를 반환한다. 이러한 특징은 여러 문제점을 유발한다.</p>
-<ul>
-<li>리퀘스트를 보낸 곳의 서버가 원래 의도한 리스폰스를 보내야 하는 웹 서버인지를 확인할 수 없다.</li>
-<li>리스폰스를 반환한 곳의 클라이언트가 원래 의도한 리퀘스트를 보낸 클라이언트인지를 확인할 수 없다.</li>
-<li>통신하고 있는 상대가 접근이 허가된 상대인지를 확인할 수 없다.</li>
-<li>어디에서 누가 리퀘스트 했는지 확인할 수 없다.</li>
-<li>의미없는 리퀘스트도 수신한다. -&gt; DoS 공격을 방지할 수 없다.</li>
-</ul>
-<p>2번 문제를 보완하는 방법은 다음과 같다.</p>
-<p><code>SSL</code>로 상대를 확인할 수 있다. SSL은 상대를 확인하는 수단으로 <strong>증명서</strong>를 제공하고 있다. 증명서는 신뢰할 수 있는 써드 파티로부터 발행되는 것이기 때문에 서버나 클라이언트가 실재하는 사실을 증명한다.</p>
-<p>이 증명서를 이용함으로써 통신 상대가 내가 통신하고자 하는 서버임을 나타내고 이용자는 개인 정보 누설 등의 위험성이 줄어들게 된다. 한 가지 이점을 더 꼽자면 클라이언트는 이 증명서로 본인 확인을 하고 웹 사이트 인증에서도 이용할 수 있다.</p>
-<blockquote>
-<p>SSL의 작동 과정</p>
-</blockquote>
-<ol>
-<li>클라이언트가 SSL로 암호화된 페이지를 요청한다.(일반적으로 <a href="https://xn--o39a" target="_blank" rel="noopener">https://가</a> 사용된다.)</li>
-<li>서버는 Public Key와 인증서를 함께 전송한다.</li>
-<li>인증서가 신용있다고 판단한 CA(Certificate Authority)로부터 서명된 것인지 판단한다.</li>
-<li>클라이언트는 Public Key를 사용해서 랜덤 대칭 암호화키와 URL, http 데이터를 암호화하여 서버로 전송한다.</li>
-<li>서버는 Private Key를 이용하여 랜덤 대칭 암호화키와 URL, http 데이터를 복호화한다.</li>
-<li>서버는 요청받은 URL에 대한 응답을 랜덤 대칭 암호화키를 이용해서 암호화해서 클라이언트로 전송한다.</li>
-<li>클라이언트는 대칭 키를 이용해서 http 데이터를 복호화하고 데이터를 이용한다.</li>
-</ol>
-<p>SSL의 인증과 암호화 과정을 통해 3번 문제 또한 해결할 수 있다.</p>
-<p><strong>완전성을 증명할 수 없기 때문에 변조가 가능하다.</strong></p>
-<p>여기서 완전성이란 <code>정보의 정확성</code>을 의미한다. 서버 또는 클라이언트에서 수신한 내용이 송신측에서 보낸 내용과 일치한다라는 것을 보장할 수 없는 것이다. 리퀘스트나 리스폰스가 발신된 후에 상대가 수신하는 사이에 누군가에 으해 변조되더라도 이 사실을 알 수 없다. 이와 같이 공격자가 도중에 리퀘스트나 리스폰스를 빼앗아 변조하는 공격을 중간자 공격(Main-in-the-Middle)이라고 부른다.</p>
-<p>3번 문제를 보완하는 방법은 2번 문제를 보완하는 방법으로도 해결이 가능하다.</p>
-<p>MD5, SHA-1 등의 해시 값을 확인하는 방법과 파일의 디지털 서명을 확인하는 방법이 존재하지만 확실히 확인할 수 있는 것은 아니다. 확실히 방지하기에는 <strong>HTTPS</strong>를 사용해야 한다. SSL에는 인증이나 암호화, 그리고 다이제스트 기능을 제공하고 있다.</p>
-<h2 id="https">HTTPS</h2>
-<p>HTTPS는 HTTP 통신하는 소켓 부분은 SSL or TLS라는 프로토콜로 대체한 것이다. HTTP는 원래 TCP와 직접 통신했지만, HTTPS에서는 SSL과 통신하고 SSL이 TCP와 통신하게 된다.<br>
-HTTPS의 SSL에서는 공통키 암호화 방식과 공개키 암호화 방식을 모두 사용한다.(두 개를 혼합한 하이브리드 암호화 시스템) 공통키를 공개키 암호화 방식으로 교환한 다음에 다음부터의 통신은 공통키 암호를 사용하는 방식아.</p>
-<p>[공통키, 공개키, 대칭키 암호화 방식이 뭘까…?]</p>
-<p>모든 웹 페이지에서 HTTPS를 사용하지 않는다. 그 이유는 평문 통신에 비해서 암호화 통신은 CPU나 메모리 등 리소스를 많이 필요로 하기 때문이다. 통신할 때마다 암호화를 하면 리소스를 소비하기 때문에 서버 한 대당 처리할 수 있는 Request 수가 줄어들게 된다. 따라서 민감한 정보를 다룰 때만 HTTPS에 의한 암호화 통신을 사용한다.<br>
-그러나! 개인정보를 주고 받지 않아도 SSL을 이용해야 한다. 어느 사이트에 접속하는지, 어떤 행동을 하는지 공개될 수 있다. 모든 사용자의 행동 및 정보는 보호받아야 할 권리가 있다. 예를 들어, A 사이트에서 로그인 페이지로 넘어갈 때 해커가 가짜 로그인 페이지로 보낼 수 있는 확률도 존재한다.</p>
-<h2 id="참고">참고</h2>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2018/12/28/Network-Diff-Of-HTTP-HTTPS/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2018/12/28/Network-Erro-Flow-Control/"
-                            aria-label=": [네트워크] 흐름/혼잡/오류 제어 기법"
-                        >
-                            [네트워크] 흐름/혼잡/오류 제어 기법
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2018-12-28T19:19:04+09:00">
-	
-		    Dec 28, 2018
-    	
-    </time>
-    
-        <span>in </span>
-        
-    <a class="category-link" href="/categories/네트워크/">네트워크</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <p>TCP의 가장 큰 특징은 <strong>신뢰성</strong>이다. 이러한 신뢰성을 구성해 주는 방법인 <strong>흐름 제어, 혼잡 제어, 오류 제어</strong>에 대해 알아보도록 하자.</p>
-<h2 id="흐름-제어">흐름 제어</h2>
-<p>송신(호스트) &lt;&gt; 수신(호스트)</p>
-<p>흐름 제어는 수신측과 송신측의 데이터 처리 속도 차이를 해결하기 위한 기법이다.<br>
-만약 송신측의 전송량이 수신측의 처리량보다 많은 경우, 전송된 패킷은 수신측의 큐를 넘어서 손실될 문제가 발생할 수 있기 때문에 <strong>송신측의 패킷 전송량을 제어하게 된다.</strong></p>
-<h3 id="흐름-제어-방법">흐름 제어 방법</h3>
-<ol>
-<li>정지-대기(Stop and Wait)</li>
-</ol>
-<img src="/img/stop_and_wait.png" width="400" height="200">
-<ul>
-<li>매번 전송한 패킷에 대해 응답을 받아야만 그 다음 패킷을 전송할 수 있다.</li>
-<li>구조가 간단한 대신, 하나를 주고 하나를 받기 때문에 <strong>비효율적이다.</strong></li>
-</ul>
-<ol start="2">
-<li>슬라이딩 윈도우(Sliding Window)</li>
-</ol>
-<p>수신측에서 설정한 윈도우 크기만큼 송신측에서 확인 응답 없이 세그먼트를 전송할 수 있게 하여 데이터 흐름을 동적으로 조절하는 기법이다.</p>
-<p><strong>이처럼 슬라이딩 윈도우 기법을 통하여 송신 버퍼의 범위는 수신 측의 여유 버퍼 공간을 반영하여 동적으로 바뀜으로써 흐름제어를 수행한다.</strong></p>
-<ul>
-<li>윈도우는 전송, 수신 스테이션 양쪽에서 만들어진 <code>버퍼(Buffer)</code>의 크기이다.</li>
-<li>윈도우의 크기 = (가장 최근 ACK로 응답한 프레임의 수) - (이전에 ACK 프레임을 보낸 프레임의 수)</li>
-<li>슬라이딩 윈도우 기법은 Stop and Wait 기법의 비효율성을 개선한 기법이다.</li>
-<li>ACK 프레임을 수신하지 않더라도 여러 개의 프레임을 연속적으로 전송할 수 있다.</li>
-</ul>
-<img src="/img/error_flow_control_2.png" width="400" height="200">
-<p>위와 같은 구조에서 데이터 0과 1을 전송했다고 가정하면 슬라이딩 윈도우의 구조는 아래와 같이 변한다. 윈도우의 크기는 전송한 데이터 프레임만큼 왼쪽 경계가 줄어들게 된다.</p>
-<img src="/img/error_flow_control_3.png" width="400" height="200">
-<p>이때 수신측에서 ACK라는 프레임을 받게 된다면 전송측은 0과 1 데이터를 정상적으로 받았음을 알게 되고, 전송측은 ACK 프레임에 따른 프레임의 수만큼 오른쪽으로 경계가 확장된다.</p>
-<img src="/img/error_flow_control_4.png" width="400" height="200">
-<blockquote>
-<p>조금 더 자세한 설명</p>
-</blockquote>
-<p><strong># 전송측 윈도우</strong></p>
-<img src="/img/transfer_window.png" width="400" height="200">
-<p><strong># 수신측 윈도우</strong></p>
-<img src="/img/receive_window.png" width="400" height="200">
-<h2 id="혼잡-제어">혼잡 제어</h2>
-<p>송신(호스트) &lt;&gt; 라우터(네트워크)</p>
-<p>혼잡 제어는 송신측의 데이터 전달과 네트워크의 데이터처리 속도 차이를 해결하기 위한 기법이다.</p>
-<p>송신측의 데이터는 지역망이나 인터넷으로 연결된 대형 네트워크를 통해 전달된다. 하지만 이러한 네트워크 상의 라우터가 항상 한가로운 상황은 아니다. 만약, 한 라우터에게 데이터가 몰릴 경우 다시 말해 혼잡할 경우, 라우터는 자신에게 온 데이터를 모두 처리할 수 없다.<br>
-그렇게 되면 호스트들은 또 다시 재전송을 하게 되고 결국 혼잡을 가중시켜 오버플로우나 데이터 손실을 발생시킨다. <strong>따라서, 이러한 네트워크의 혼잡을 피하기 위해 송신측에서는 보내는 데이터의 전송 속도를 강제로 줄이게 된다.</strong></p>
-<h3 id="혼잡-제어-방법">혼잡 제어 방법</h3>
-<ol>
-<li>AIMD</li>
-</ol>
-<p>AIMD(Additive Increase / Multiplicative Decrease)라고 불리며, 합 증가 / 곱 감소라고 부른다.</p>
-<p>처음에 패킷을 하나씩 보내고 이것이 문제없이 도착하면 window 크기(단위 시간내에 보내는 패킷의 수)를 1씩 증가시켜 가면서 전송하는 방법이다. 만일 패킷 전송을 실패하거나 일정한 시간을 넘으면 패킷 전송 속도를 절반으로 줄이게 된다.</p>
-<p>이 방식은 <strong>공평한 방식</strong>이다. 이 방식을 사용하는 여러 호스트가 한 네트워크를 공유하고 있으면 나중에 진입하는 쪽이 처음에는 불리하지만 시간이 흐르면 <code>평형 상태</code>로 수렴하게 되는 특징이 있다.</p>
-<p><strong>문제점은 초기에 네트워크의 높은 대역폭을 사용하지 못하며 오랜 시간이 걸리게 되고 네트워크가 혼잡해지는 상황을 미리 감지하지는 못한다. 즉, 네트워크가 혼잡해지고 나서야 대역폭을 줄이는 방식이다.</strong></p>
-<p>이러한 문제점들을 해결하기 위한 방법은 다음부터 소개될 것이다.</p>
-<ol start="2">
-<li>슬로우 스타트(Slow Start)</li>
-</ol>
-<p>AIMD 방식은 네트워크의 수용량 주변에서는 효율적으로 작동하지만 처음에 전송 속도를 올리는 데 걸리는 시간이 너무 길다는 단점이 있다.</p>
-<p>Slow Start 방식은 AIMD 방식과 마찬가지로 패킷을 하나씩 보내는 것부터 시작하고 이 방식은 패킷이 문제없이 도착하면 각각의 ACK 패킷마다 Window Size를 1씩 늘린다. 즉, 한 주기가 지나면 Window size가 2배가 된다.</p>
-<p>따라서 전송 속도는 AIMD와는 다르게 지수 함수꼴로 증가하게 된다. 대신 <strong>혼잡 현상이 발생하면 Window Size를 1로 떨어뜨리게 된다.</strong></p>
-<p>처음에는 네트워크의 수용량을 예상할 수 있는 정보가 없지만 한번 혼잡 현상이 발생하고 나면 네트워크의 수용량을 어느 정도 예상할 수 있으므로 혼잡 현상이 발생하였던 Window Size의 절반까지는 이전처럼 지수 함수 꼴로 Window Size를 증가시키고 그 이후부터는 완만하게 1씩 증가시키는 방식이다.</p>
-<ol>
-<li>초기 혼잡 Window Size 1로 전송 = 전송 호스트는 하나의 패킷만 전송</li>
-<li>수신 호스트로부터 수신응답을 수신하면 윈도우의 크기를 2로 하여 전송</li>
-<li>수신 호스트로부터 수신응답을 수신하면 윈도우의 크기를 4로 하여 전송</li>
-<li>수신 호스트로부터 수신응답을 수신하면 윈도위의 크기를 8로 하여 전송</li>
-</ol>
-<img src="/img/error_flow_control_10.png" width="400" height="200">
-<ul>
-<li>미리 정해진 임계 값(threshold)에 도달할 때까지 윈도우의 크기를 2배씩 증가시킨다.</li>
-<li>Slow Start란 이름을 사용하지만, 매 전송마다 두 배씩 증가하기 때문에 전송되어지는 데이터의 크기는 지수 함수적으로 증가한다.</li>
-<li>전송되어지는 데이터의 크기가 임계 값에 도달하면 <strong>혼잡 회피</strong> 단계로 넘어간다.</li>
-</ul>
-<ol start="3">
-<li>혼잡 회피(Congestion Avoidance)</li>
-</ol>
-<p>윈도우의 크기가 임계 값에 도달한 이후에 데이터의 손실이 발생할 확률이 높아지게 된다. 이는 데이터를 전송함에 있어서 조심하는 단계이다.</p>
-<p>전송한 데이터에 대한 ACK를 받으면 윈도우의 크기를 1씩 증가시킨다.<br>
-전송하는 데이터의 증가를 왕복시간 동안에 하나씩만 증가시킨다.</p>
-<ul>
-<li>수신 호스트로부터 일정 시간 동안까지 ACK를 수신하지 못하는 경우</li>
-</ul>
-<ol>
-<li>타임아웃의 발생</li>
-<li>네트워크에 혼잡이 발생했다고 인식<br>
--&gt; 윈도우의 크기를 즉, 세그먼트의 수를 1로 줄임<br>
--&gt; 동시에 임계 값을 패킷 손실이 발생하였을 때의 윈도우 크기의 반으로 줄임</li>
-</ol>
-<ol start="4">
-<li>빠른 회복(Fast Recovery)</li>
-</ol>
-<p>빠른 회복은 Congestion이 발생했을 때 Window size를 1로 줄이지 않고 반으로 줄이고 선형 증가시키는 방법이다. 이는 AIMD의 AI 즉, Additive Increase 하는 방법이다.</p>
-<p>Fast Recovery를 적용하면 혼잡 상황을 한 번 겪고 나서부터는 순수한 AIMD 방식으로 동작하게 된다.</p>
-<ol start="5">
-<li>빠른 재전송(Fast Retransmission)</li>
-</ol>
-<p>3개의 연속된 중복 ACK를 수신하는 경우에 패킷의 손실로 간주하여 타임아웃이 발생하기 전에 해당 패킷을 <strong>재전송</strong>한다. 그리고 이러한 현상이 일어난 것은 약간의 혼잡이 발생한 것으로 간주하여 Window Size를 반으로 줄인다.</p>
-<ol start="6">
-<li>TCP Reno</li>
-</ol>
-<p>N개의 중복 ACK 발생 시 ssthresh(slow start threshold)값을 Congestion Window(cwnd) 사이즈의 반으로 줄여 빠른 복구(Fast Recovery)를 수행하여 선형적 증가를 하게 되며, TCP Time Out에 이르면 Slow Start를 시작한다.</p>
-<ol start="7">
-<li>TCP Tahoe</li>
-</ol>
-<p>N개의 중복 ACK 발생 시 바로 Slow Start를 시작한다.</p>
-<p>TCP Tahoe와 TCP Reno는 ssthresh(slow start threshold) 값까지 지수적 증가(Slow-Start)를 하게 되고 ssthresh를 넘어서면 선형적 증가(Additive Increase)를 하는 것까지는 동일하다. 차이가 생기는 기준은 N개의 중복 ACK가 발생할 경우이다.</p>
-<h2 id="오류-제어">오류 제어</h2>
-<p>오류 제어 기법은 오류 검출(Error detection)과 재전송(retransmission)을 포함한다.<br>
-ARQ(Automatic Repeat Request) 기법을 사용하여 프레임이 손상되었거나 손실되었을 경우 재전송을 통해 오류를 복구한다. ARQ 기법은 흐름 제어 기법과 관련되어 있는데 stop and wait은 stop and wait ARQ로, Sliding Window는 GBn(Go-Back-n) ARQ 또는 SR(Selective-Reject) ARQ 형태로 구혀한다.</p>
-<h3 id="오류-제어-방법">오류 제어 방법</h3>
-<blockquote>
-<p>ARQ : 신뢰성 있는 데이터 전달을 위해 재전송을 기반으로 한 에러 제어 방식</p>
-</blockquote>
-<ol>
-<li>Stop and Wait ARQ</li>
-</ol>
-<p>전송측은 수신측에서 보내준 ACK를 받을 때까지 프레임의 복사본을 유지한다.<br>
-식별을 위해 데이터 프레임과 ACK 프레임은 각각 0,1 번호를 부여한다.</p>
-<p>수신측이 데이터를 받지 못했을 경우, NAK를 송신측에게 보내고<br>
-NAK를 받은 송신측은 데이터를 재전송한다.</p>
-<p><strong>만약 데이터나 ACK가 분실되었을 경우 일정 간격의 시간을 두고 타임아웃이 되면 송신측은 데이터를 재전송한다.</strong></p>
-<img src="/img/stop_and_wait_arq.png" width="400" height="200">
-<ol start="2">
-<li>Go-Back-n ARQ(GBn ARQ)</li>
-</ol>
-<p>전송된 프렘이이 손상되거나 분실될 경우, <strong>확인된 마지막 프레임 이후로 모두 재전송</strong>하는 기법이다.</p>
-<p>슬라이딩 윈도우는 연속적인 프레임 전송 기법으로 전송 스테이션은 전송된 모든 프레임의 복사본을 가지고 있어야 하며, ACK와 NAK 모두 각각 구별을 해야한다.</p>
-<ul>
-<li>ACK : 다음 프레임을 전송</li>
-<li>NAK : 손상된 프레임 자체 번호를 반환</li>
-</ul>
-<p><strong>재전송 되는 경우는 다음과 같다.</strong></p>
-<p><strong># 1. NAK 프레임을 받았을 경우</strong></p>
-<p>만약 수신측으로 0부터 5까지의 데이터를 보내었다고 가정한다. 수신측에서 데이터를 받았음을 확인하는 ACK 프레임을 중간 중간 받게 되며, ACK 프레임을 확인한 전송측은 계속해서 데이터를 전송한다.</p>
-<p>그러나 만약 수신측에서 데이터 오류 프레임2가 잘못 되었다는 것을 발견하고 NAK 2를 전송측에 보낸다. NAK 2를 받은 전송측은 데이터 프레임2가 잘못 되었다는 것을 알고 데이터를 재전송한다.</p>
-<p>GBn ARQ의 특징은 바로 이 데이터를 재전송하는 부분이다. GBn ARQ는 NAK(n)을 받아 데이터를 재전송하게 되면, n 데이터만을 재전송하는 것이 아니라 n 데이터 이후의 데이터를 모두 재전송한다.</p>
-<p><strong># 2. 전송 데이터 프레임의 분실</strong></p>
-<p>GBn ARQ의 특징은 확인된 데이터 이후의 모든 데이터 재전송과 수신측의 폐기이다. 수신측에서 데이터 1을 받았는데 갑자기 다음에 데이터 3을 받게 된다면 수신측에서는 데이터 2를 못받았으므로 데이터 3을 폐기하고 NAK 2를 전송측에 보낸다.</p>
-<p>NAK 2를 받은 전송측은 위의 1의 경우에서와 같이 NAK 2 데이터부터 모두 재전송을 실시하며 수신측은 기존 받았던 데이터 중 NAK(n)으로 보내었던 대상 데이터 이후의 데이터를 모두 폐기하고 재전송 받는다.</p>
-<p><strong># 3. 지정된 타임아웃 내의 ACK 프레임 분실(Lost ACK)</strong></p>
-<p>전송 스테이션은 분실된 ACK를 다루기 위해 타이머를 가지고 있다. 전송측에서는 이 타이머의 타임 아웃동안 ACK 데이터를 받지 못했을 경우, 마지막 ACK부터 재전송한다.</p>
-<img src="/img/error_flow_control_6.png" width="400" height="200">
-<p>위의 그림은 송신측이 데이터 3을 보내고 수신측은 데이터 3을 받았지만 오류가 발생했을 경우이다. 이 경우에 송신측은 연속적으로 데이터를 보내지만 수신측은 데이터 3에서 오류가 발생했으므로 NAK 3을 송신측으로 보낸다.</p>
-<p>수신측은 데이터 3 이후로 온 데이터 프레임을 모두 폐기하며 송신측은 데이터 3부터 재전송하게 된다.</p>
-<img src="/img/error_flow_control_7.png" width="400" height="200">
-<p>위의 그림은 송신측에서 데이터 2를 보내는 도중에 분실된 경우이다. 이 경우 수신측은 데이터 0, 1은 맞게 받았지만 2를 받지 않고 3을 받게 되어 받은 데이터를 폐기하고 NAK 2를 송신측에게 보낸다.</p>
-<p>그럼 송신측은 NAK 2를 받고 데이터 2부터 송신측은 수신측으로 데이터를 재전송하게 된다.</p>
-<ul>
-<li>전송측은 NAK 프레임을 받았을 경우, NAK 프레임 번호부터 다시 재전송한다.</li>
-<li>수신측은 원하는 프레임이 아닐 경우 모두 폐기 처리한다.</li>
-<li>타임아웃(ACK 분실)일 경우, 마지막 ACK된 데이터부터 재전송한다.</li>
-</ul>
-<ol start="3">
-<li>Selective-Reject(SR) ARQ</li>
-</ol>
-<p>GBn ARQ의 재전송되는 프레임 이후의 모든 프레임을 재전송하는 단점을 개선한 방법이다. SR ARQ는 손상된, 분실된 프레임만 재전송한다.</p>
-<p>그렇기 때문에 별도의 데이터 재정렬을 수행해야 하며, <strong>별도의 버퍼를 필요로 한다.</strong></p>
-<h2 id="gbn-arq-기법과-sr-arq-기법의-비교">GBn ARQ 기법과 SR ARQ 기법의 비교</h2>
-<img src="/img/error_flow_control_8.png" width="400" height="200">
-<img src="/img/error_flow_control_9.png" width="400" height="200">
-<h2 id="참고">참고</h2>
-<ul>
-<li><a href="http://90nam.tistory.com/23" target="_blank" rel="noopener">TCP Tahoe와 TCP Reno</a></li>
-<li><a href="http://www.jidum.com/jidums/view.do?jidumId=424" target="_blank" rel="noopener">TCP/IP 혼잡제어</a></li>
-<li><a href="http://jsonsang2.tistory.com/17" target="_blank" rel="noopener">흐름 제어와 혼잡 제어</a></li>
-</ul>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2018/12/28/Network-Erro-Flow-Control/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             

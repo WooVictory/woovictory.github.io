@@ -266,6 +266,227 @@
                 <section class="postShorten-group main-content-wrap">
     
     
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2019/05/10/What-is-SOLID/"
+                            aria-label=": [개발상식]객체 지향 디자인의 5대 원칙"
+                        >
+                            [개발상식]객체 지향 디자인의 5대 원칙
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2019-05-10T12:27:56+09:00">
+	
+		    May 10, 2019
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/개발-상식/">개발 상식</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <p>좋은 객체지향 설계를 위해서 다음의 5가지 원칙을 따르는 것이 좋고, 이 원칙들을 기반으로 디자인 패턴이 되기 때문에 알아두면 확실하게 도움이 된다.<br>
+객체지향의 5대 원칙의 앞글자를 따서 SOLID라고 부르기도 한다.</p>
+<h2 id="1-srp">1. SRP</h2>
+<ul>
+<li><code>SRP</code>(Single Responsibility Principle)는 단일 책임 원칙이라고 한다.</li>
+<li><strong>모든 클래스는 단 하나의 책임을 갖는다.</strong> 다시 말해서 클래스를 변경할 이유는 오직 하나여야 한다는 뜻이다.</li>
+<li>책임 영역이 확실해지기 때문에 한 책임의 변경에서 다른 책임의 변경으로의 연쇄 작용에서 자유로울 수 있다.</li>
+<li>책임을 적절히 분배함으로써 코드의 가독성 향상, 유지보수 용이의 이점이 생긴다.</li>
+<li>간단한 예를 들면, 계산기 클래스가 있을 때, 계산을 하는 책임과 GUI를 나타내는 책임은 서로 분리되어야 한다. 계산기 클래스에 GUI를 나타내는 부분까지 있을 경우, 이는 SRP를 위반한다.</li>
+</ul>
+<p><strong>Before Code</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 현재 UserSettingService 클래스에는 두 개의 책임이 있다.</span></span><br><span class="line"><span class="comment">// 1. 변경</span></span><br><span class="line"><span class="comment">// 2. 접근 권한에 대한 부분</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserSettingService</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">changeEmail</span><span class="params">(User user)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(checkAccess(user))&#123;</span><br><span class="line">            <span class="comment">// do someting</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">checkAccess</span><span class="params">(User user)</span></span>&#123;</span><br><span class="line">        <span class="comment">// user check</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>After Code</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 현재 UserSettingService 클래스의 두 개의 책임을 둘로 나눈다.</span></span><br><span class="line"><span class="comment">// 1. 변경(UserSettingService.class)</span></span><br><span class="line"><span class="comment">// 2. 접근 권한에 대한 부분(SecurityService.class)</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserSettingService</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">changeEmail</span><span class="params">(User user)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(SecurityService.checkAccess(user))&#123;</span><br><span class="line">            <span class="comment">// do something.</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SecurityService</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">checkAccess</span><span class="params">(User user)</span></span>&#123;</span><br><span class="line">        <span class="comment">// Check user access.</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="2-ocp">2. OCP</h2>
+<ul>
+<li><code>OCP</code>(Open-Closed Principle)는 개방 폐쇄 원칙이라고 한다.</li>
+<li><strong>기능을 확장하거나 변경하는 것에 대해서는 개방되어야 하지만, 수정에 대해서는 폐쇄되어야 한다.</strong></li>
+<li>변경을 위한 비용은 가능한 줄이고 확장을 위한 비용은 가능한 극대화 해야 한다는 의미이다.</li>
+<li>요구사항의 변경이나 추가사항이 발생하더라도 기존 구성요소는 수정이 일어나지 말아야 하며, 기존 구성요소를 쉽게 확장해서 재사용할 수 있어야 한다는 뜻이다.</li>
+<li>중요 매커니즘은 추상화와 다형성이다.</li>
+<li>예를 들자면, 캐릭터를 하나 생성한다고 가정하자. 각각의 캐릭터가 움직임이 다를 경우 움직임의 패턴 구현을 하위 클래스에 맡긴다면 캐릭터 클래스의 <strong>수정은 필요없고(수정에 대해 폐쇄)</strong> <strong>움직임의 패턴만 재정의하면 된다.(확장에 대한 개방)</strong></li>
+</ul>
+<p><strong>OCP 원칙이 깨질 때의 주요 현상</strong></p>
+<ol>
+<li>다운 캐스팅을 한다.</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">drawCharacter</span><span class="params">(Character character)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(character <span class="keyword">instanceof</span> Missile)&#123; <span class="comment">// 타입 확인.</span></span><br><span class="line">        Missile missile = (Missile) character; <span class="comment">// 다운 캐스팅.</span></span><br><span class="line">        missile.drawSpecific(); <span class="comment">// 미사일일 경우 drawSpecific() 호출.</span></span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        character.draw(); <span class="comment">// 미사일 외의 경우는 draw() 호출.</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>비슷한 if-else 블록이 존재한다.</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Enemy</span> <span class="keyword">extends</span> <span class="title">Character</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> pathPattern;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Enemy</span><span class="params">(<span class="keyword">int</span> pathPattern)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.pathPattern = pathPattern;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">draw</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(pathPattern == <span class="number">1</span>)&#123;</span><br><span class="line">            x +=<span class="number">5</span>;</span><br><span class="line">            y +=<span class="number">5</span>;</span><br><span class="line">        &#125;<span class="keyword">else</span> <span class="keyword">if</span>(pathPattern == <span class="number">2</span>)&#123;</span><br><span class="line">            x +=<span class="number">10</span>;</span><br><span class="line">            y +=<span class="number">10</span>;</span><br><span class="line">        &#125;<span class="keyword">else</span> <span class="keyword">if</span>(pathPattern == <span class="number">3</span>)&#123;</span><br><span class="line">            x +=<span class="number">15</span>;</span><br><span class="line">            y +=<span class="number">15</span>;</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            x +=<span class="number">20</span>;</span><br><span class="line">            y +=<span class="number">20</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>OCP는 자주 사용되는 문법이 <strong>인터페이스</strong>라고 보면 된다.</li>
+</ul>
+<p><strong>Before Code</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 음악을 재생하는 클래스.</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SoundPlayer</span></span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">play</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.print(<span class="string">"play wav"</span>); <span class="comment">// wav 재생.</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">        SoundPlayer sp = <span class="keyword">new</span> SoundPlayer();</span><br><span class="line">        sp.play();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>SoundPlayer 클래스는 기본적으로 wav 파일을 재생할 수 있다. 하지만 다른 포맷의 파일, 예를 들어 mp3 파일을 재생하도록 요구사항이 변경된다면 어떻게 될까?</p>
+<p>이 요구사항을 만족시키기 위해서 SoundPlayer 클래스의 play() 메소드를 수정해야 한다. 그러나 이와 같은 소스 코드 변경은 OCP 원칙에 위배되는 행위다.</p>
+<p>인터페이스를 이용해 OCP 원칙을 지켜보자. 먼저 변해야 하는 것이 무엇인지 정의한다. 위의 예에서는 play() 메소드가 변해야 한다. 따라서 play() 메소드를 인터페이스로 분리한다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">playFile</span>()</span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">play</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Wav</span> <span class="keyword">implements</span> <span class="title">playFile</span>()</span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">play</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.print(<span class="string">"Play wav"</span>); </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Mp3</span> <span class="keyword">implements</span> <span class="title">playFile</span>()</span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">play</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.print(<span class="string">"Play Mp3"</span>); </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>재생하고자 하는 파일 클래스(Wav, Mp3)를 만들어 playFile 인터페이스와 play() 메소드를 재정의하도록 설계한다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SoundPlayer</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> playFile file;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setFile</span><span class="params">(playFile file)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.file = file;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">play</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.play();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">        SoundPlayer sp = <span class="keyword">new</span> SoundPlayer();</span><br><span class="line">        sp.setFile(<span class="keyword">new</span> Wav()); <span class="comment">// 원하는 재생 파일 선택.</span></span><br><span class="line">        sp.serFile(<span class="keyword">new</span> Mp3());</span><br><span class="line">        sp.play();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>SoundPlayer 클래스에서는 playFile 인터페이스를 멤버 변수로 만든다. 그 후 SoundPlayer의 play() 함수는 인터페이스를 상속받아 구현된 클래스의 play() 함수를 실행시키게 한다. main() 함수에서 setFile() 함수를 이용해 우리가 재생하고자 하는 파일의 객체를 지정해준다.</p>
+<p>이와 같은 설계를 디자인 패턴에서는 Strategy Pattern(전략 패턴)이라고 한다. 디자인 패턴은 추후에 공부할 필요가 있을 것 같다.</p>
+<p>아무튼 결과적으로 SoundPlayer 클래스의 변경 없이 재생되는 파일을 바꿀 수 있으므로 위 코드는 OCP 원칙을 만족하게 된다. OCP 원칙을 적용한 설계는 변경에 유연하므로 유지보수 비용을 줄여주고 코드의 가독성 또한 높아지는 효과를 얻을 수 있다.</p>
+<h2 id="3-lsp">3. LSP</h2>
+<ul>
+<li><code>LSP</code>(Liskov Substitution Priciple)는 리스코프 치환 원칙이라고 한다.</li>
+<li>상위 타입의 객체를 하위 타입의 객체로 치환해도 상위 타입을 사용하는 프로그램은 정상적으로 동작해야 한다.</li>
+<li>쉽게 말하면, 자식 클래스는 언제나 자신의 부모 클래스를 교체할 수 있다는 원칙이다. 즉, 부모 클래스와 자식 클래스 사이의 행위에는 <strong>일관성</strong>이 있어야 한다는 원칙이다.</li>
+<li>상속 관계에서는 일반화 관계(IS-A)가 성립해야 한다. 일반화 관계에 있다는 것은 일관성이 있다는 것이다. 따라서 리스코프 치환 원칙은 일반환 관계에 대해 묻는 것이라 할 수 있다.</li>
+</ul>
+<p>이해를 돕기 위해 도형을 예로 하는 설명이 있다.<br>
+도형 클래스와 사각형 클래스가 있고, 사각형 클래스는 도형 클래스를 상속한다.</p>
+<p>(1). 도형은 둘레를 가지고 있다.<br>
+(2). 도형은 넓이를 가지고 있다.<br>
+(3). 도형은 각을 가지고 있다.</p>
+<p>일반화 관계(일관성인지 확인하는 방법은 단어를 교체해보면 알 수 있다. 도형 대신 사각형을 넣어보자.)</p>
+<p>(1). 사각형은 둘레를 가지고 있다.<br>
+(2). 사각형은 넓이를 가지고 있다.<br>
+(3). 사각형은 각을 가지고 있다.</p>
+<p>이상한 부분이 보이지 않는다. 따라서 도형과 사각형 사이에는 일관성이 있다고 할 수 있다.</p>
+<p>그럼 원이라는 도형에 대해서 생각해보자. 원 클래스 역시 도형 클래스의 상속을 받는다고 가정하고 (1) ~ (3)의 도형 단어 대신 원을 대입해보자.</p>
+<p>(1). 원은 둘레를 가지고 있다.<br>
+(2). 원은 넓이를 가지고 있다.<br>
+(3). 원은 각을 가지고 있다.</p>
+<p>원의 경우에는 (3)번 문장이 어색하다는 것을 알 수 있다. 따라서 도형 클래스는 LSP 원칙을 만족하지 않는 설계라고 할 수 있다. (3) 문장에 대해서 일반화 관계가 성립하도록 수정되어야 한다.</p>
+<h2 id="4-isp">4. ISP</h2>
+<ul>
+<li><code>ISP</code>(Interface Segregation Priciple)는 인터페이스 분리 원칙이라고 한다.</li>
+<li>인터페이스는 그 인터페이스를 사용하는 클라이언트를 기준으로 분리해야 한다.</li>
+<li>즉, 자신이 사용하지 않는 기능(인터페이스)에는 영향을 받지 말아야 한다는 의미이다.</li>
+<li>클라이언트는 자신이 사용하지 않는 메소드에 의존하지 않아야 한다. 한 클래스는 자신이 사용하지 않는 인터페이스는 구현하지 않는 편이 낫다. 하나의 일반적인 인터페이스보다는 차라리 여러 개의 구체적인 인터페이스가 낫다는 개념을 갖는다.</li>
+<li>한 가지 예를 들어보자. 우리는 스마트폰으로 전화, 웹서핑, 사진 촬영 등 다양한 기능을 사용할 수 있다. 그런데 전화를 할 때에는 웹 서핑, 사진 촬영 등 다른 기능은 잘 사용하지 않는다. 따라서 전화 기능과 웹 서핑 기능, 사진 촬영 기능은 각각 독립된 인터페이스로 구현하여, 서로에게 영향을 받지 않도록 설계해야 한다. 이렇게 설계된 소프트웨어는 ISP를 통해 시스템 내부의 의존성을 약화시켜 리팩토링, 수정, 재배포를 쉽게 할 수 있다.</li>
+</ul>
+<p><strong>Before Code</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 하나의 인터페이스를 모든 클라이언트가 구현하고 있다.</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">ArticleService</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">list</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">write</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">delete</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UiList</span> <span class="keyword">implements</span> <span class="title">ArticleService</span></span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">list</span><span class="params">()</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">write</span><span class="params">()</span></span>&#123;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">delete</span><span class="params">()</span></span>&#123;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UiWist</span> <span class="keyword">implements</span> <span class="title">ArticleService</span></span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">list</span><span class="params">()</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">write</span><span class="params">()</span></span>&#123;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">delete</span><span class="params">()</span></span>&#123;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UiDist</span> <span class="keyword">implements</span> <span class="title">ArticleService</span></span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">list</span><span class="params">()</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">write</span><span class="params">()</span></span>&#123;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">delete</span><span class="params">()</span></span>&#123;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>After Code</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 각각의 클라이언트별로 interface를 구분한다.</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">ArticleListService</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">list</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">ArticleWriteService</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">write</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">ArticleDeleteService</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">delete</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UiList</span> <span class="keyword">implements</span> <span class="title">ArticleListService</span></span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">list</span><span class="params">()</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UiWist</span> <span class="keyword">implements</span> <span class="title">ArticleWriteService</span></span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">write</span><span class="params">()</span></span>&#123;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UiDist</span> <span class="keyword">implements</span> <span class="title">ArticleDeleteService</span></span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">delete</span><span class="params">()</span></span>&#123;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="5dip">5.DIP</h2>
+<ul>
+<li><code>DIP</code>(Dependency Inversion Principle)는 의존성 역전 원칙이라고 한다.</li>
+<li>고수준 모듈은 저수준 모듈의 구현에 의존해서는 안된다. 저수준 모듈이 고수준 모듈에서 정의한 추상 타입에 의존해야 한다.</li>
+<li><strong>고수준 모듈</strong> : 어떤 의미있는 단일 기능을 제공하는 모듈
+<ul>
+<li>바이트 데이터를 읽어와 암호화하고 결과 바이트 데이터를 쓴다.</li>
+</ul>
+</li>
+<li><strong>저수준 모듈</strong> : 고수준 모듈의 기능을 구현하기 위해 필요한 개별 기능 = 좀 더 작은 모듈
+<ul>
+<li>파일에서 바이트 데이터를 읽어온다.</li>
+<li>AES 알고리즘으로 암호화한다.</li>
+<li>파일에 바이트 데이터를 쓴다.</li>
+</ul>
+</li>
+<li>중간에 interface와 같은 추상화를 통해서 고수준 모듈과 저수준 모듈이 모두 추상 타입에 의존하게 만든다. 추상을 매개로 메시지를 주고 받음으로써 관계를 최대한 느슨하게 만드는 원칙이다.</li>
+</ul>
+<p>설명하는 말들이 어렵다. 모듈도 나오고 이런 추상 타입도 나온다… 쉽게 설명하면 DIP를 만족한다는 것은 의존 관계를 맺을 때, 구체적인 클래스보다는 인터페이스나 추상 클래스와 관계를 맺는다는 것을 의미한다.</p>
+<p>이와 같은 말은 변화하기 어려운 것, 변화가 거의 없는 것에 의존하라고 한다. 의미는 변화하기 어려운 부분들을 추상화하여 인터페이스나 추상 클래스로 참조함으로써 DIP를 지킬 수 있다는 뜻이다.</p>
+<p>예를 들어 핸드폰의 경우 전화를 하거나 문자를 보내거나 앱을 실행하는 것 자체는 변하기 어렵지만 브랜드의 가격, 모델 명등은 변하기 쉽다. 따라서 변하기 어려운 것은 추상화하여 인터페이스나 추상 클래스로 만들어 참조하면 DIP를 만족하게 될 수 있다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Person</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> age;</span><br><span class="line">    <span class="keyword">private</span> Phone phone;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// getter/setter 생략.</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Phone은 추상 클래스.</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Phone</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String phoneNumber;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getPhoneNumber</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> phoneNumber;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setPhoneNumber</span><span class="params">(String phoneNumber)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.phoneNumber = phoneNumber;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">call</span><span class="params">(String phoneNumber)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">turnOn</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">turnOff</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 아래와 같이 상속받아 구현한다.</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GalaxyS7</span> <span class="keyword">extends</span> <span class="title">Phone</span></span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">call</span><span class="params">(String phoneNumber)</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"Call to "</span>+phoneNumber);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">turnOn</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"Turn on GalaxyS7"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">turnOff</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"Turn off GalaxyS7"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>만약 갤럭시 핸드폰이 아니라 LG의 G 시리즈나 아이폰 등도 Phone 클래스를 상속받아서 구현하여 Person의 인스턴스 객체의 속성으로 설정함으로서 의존성을 역전시켜 DIP 원칙을 만족할 수 있다.</p>
+<p>객체지향 설계 5대 원칙을 공부해봤는데 DIP는 아직 이해가 잘 가지 않는 것 같다. 의존성은 결합도를 낮추는게 목표라고 생각한다. 그래서 느슨한 결합을 만들고 그 과정에서 인터페이스나 추상 클래스를 사용하는 것으로 이해가 된다.</p>
+<p>이 부분은 아직 이해가 더 필요한 부분이니 차근 차근 공부해서 보충해나가자.</p>
+<h2 id="참고">참고</h2>
+<ul>
+<li><a href="https://wkdtjsgur100.github.io/solid-principle/" target="_blank" rel="noopener">객체지향 디자인의 5원칙(SOLID 원칙)</a></li>
+<li><a href="https://sticky32.tistory.com/entry/%EC%86%8C%ED%94%84%ED%8A%B8%EC%9B%A8%EC%96%B4SOLID-%EC%9D%98%EC%A1%B4-%EC%97%AD%EC%A0%84-%EC%9B%90%EC%B9%99DIP" target="_blank" rel="noopener">[소프트웨어/SOLID] 의존 역전 원칙(DIP)</a></li>
+<li><a href="https://dev-momo.tistory.com/entry/SOLID-%EC%9B%90%EC%B9%99" target="_blank" rel="noopener">SOLID 원칙</a></li>
+<li><a href="http://www.nextree.co.kr/p6960/" target="_blank" rel="noopener">객체지향 개발 5대 원리: SOLID</a></li>
+<li><a href="https://jungwoon.github.io/solid/2017/07/31/Solid-Principle/" target="_blank" rel="noopener">객체지향 설계 5대 원칙 - SOLID</a></li>
+</ul>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2019/05/10/What-is-SOLID/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-right">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2019/05/07/kotlin-chap2/"
+                            aria-label=": [커니의 Kotlin] Chap2"
+                        >
+                            [커니의 Kotlin] Chap2
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2019-05-07T17:15:30+09:00">
+	
+		    May 07, 2019
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/Book/">Book</a>, <a class="category-link" href="/categories/Book/커니의-Kotlin/">커니의 Kotlin</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-excerpt">
+                    <h2># 코틀린의 특징</h2>
+                    
+                        <a
+                            href="/2019/05/07/kotlin-chap2/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [커니의 Kotlin] Chap2"
+                        >
+                            Continue reading
+                        </a>
+                        
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
     <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
@@ -797,123 +1018,6 @@ ViewModel 객체는 자동으로 화면 회전 같은 상태 변화동안 자동
                             href="/2019/04/02/Algo-BFS/"
                             class="postShorten-excerpt_link link"
                             aria-label=": [알고리즘] 그래프 탐색 Part2. BFS"
-                        >
-                            Continue reading
-                        </a>
-                        
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-right">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2019/04/01/Algo-DFS/"
-                            aria-label=": [알고리즘] 그래프 탐색 Part3. DFS"
-                        >
-                            [알고리즘] 그래프 탐색 Part3. DFS
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2019-04-01T23:07:30+09:00">
-	
-		    Apr 01, 2019
-    	
-    </time>
-    
-        <span>in </span>
-        
-    <a class="category-link" href="/categories/알고리즘/">알고리즘</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-excerpt">
-                    <p><strong>목차</strong></p>
-<ul>
-<li><a href="#%EA%B7%B8%EB%9E%98%ED%94%84-%ED%83%90%EC%83%89%EC%9D%B4%EB%9E%80">그래프 탐색이란</a></li>
-<li><a href="#%EA%B9%8A%EC%9D%B4-%EC%9A%B0%EC%84%A0-%ED%83%90%EC%83%89">깊이 우선 탐색</a></li>
-</ul>
-<h1># 그래프 탐색이란</h1>
-<ul>
-<li>하나의 정점으로부터 시작하여 차례대로 모든 정점들을 한 번씩 방문하는 것</li>
-<li>Ex) 특정 도시에서 다른 도시로 갈 수 있는지 없는지, 전자 회로에서 특정 단자와 단자가 서로 연결되어 있는지 등등</li>
-</ul>
-                    
-                        <a
-                            href="/2019/04/01/Algo-DFS/"
-                            class="postShorten-excerpt_link link"
-                            aria-label=": [알고리즘] 그래프 탐색 Part3. DFS"
-                        >
-                            Continue reading
-                        </a>
-                        
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-right">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2019/04/01/Algo-What-is-DFS/"
-                            aria-label=": [알고리즘] 그래프 탐색 Part1. 개요"
-                        >
-                            [알고리즘] 그래프 탐색 Part1. 개요
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2019-04-01T10:12:18+09:00">
-	
-		    Apr 01, 2019
-    	
-    </time>
-    
-        <span>in </span>
-        
-    <a class="category-link" href="/categories/알고리즘/">알고리즘</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-excerpt">
-                    <h1># 그래프 탐색</h1>
-<p>그래프를 탐색하는 방법에는 널리 사용되는 두 가지 방식이 있다.</p>
-<ul>
-<li>DFS는 깊이 우선 탐색(Depth-First Search)이다.</li>
-<li>BFS는 너비 우선 탐색(Breadth-First Search)이다.</li>
-<li>먼저 <strong>그래프</strong>라는 자료구조에 대한 지식이 있어야 한다.</li>
-</ul>
-                    
-                        <a
-                            href="/2019/04/01/Algo-What-is-DFS/"
-                            class="postShorten-excerpt_link link"
-                            aria-label=": [알고리즘] 그래프 탐색 Part1. 개요"
                         >
                             Continue reading
                         </a>
