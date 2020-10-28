@@ -275,6 +275,91 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2019/05/28/Two-Pointer-Algorithm/"
+                            aria-label=": [알고리즘] 투포인터 알고리즘"
+                        >
+                            [알고리즘] 투포인터 알고리즘
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2019-05-28T12:39:06+09:00">
+	
+		    May 28, 2019
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/algorithm/">algorithm</a>, <a class="category-link" href="/categories/algorithm/BOJ/">BOJ</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <p>신입 개발자를 위한 <a href="https://github.com/WooVictory/Ready-For-Tech-Interview" target="_blank" rel="noopener">Repository</a>를 만들었습니다. 공부한 내용을 정리 중이니 도움이 되신다면 와서 Star를 눌러주시면 감사하겠습니다.</p>
+<p>알고리즘 문제를 풀다가 완전 탐색으로 해결하면 시간 초과가 나서 어떻게 풀어야 하는가 하다가 검색해보니 <code>투 포인터 알고리즘</code>이라는 개념이 나와서 간단하게 정리하고 넘어가겠다.</p>
+<p>1차원 배열이 있고 이 배열에서 각자 다른 원소를 가리키고 있는 2개의 포인터를 조작해가면서 원하는 것을 얻는 형태이다. 이 때문에 투 포인터 알고리즘이라고 부른다.</p>
+<p><strong>대표적인 문제</strong></p>
+<ul>
+<li><a href="https://www.acmicpc.net/problem/2003" target="_blank" rel="noopener">2003</a></li>
+</ul>
+<p>문제는 N칸의 1차원 배열이 있을 때, 부분 배열 중 그 원소의 합이 M이 되는 경우의 수를 구하는 것이다. 모든 경우의 수를 다 테스트해보면, 구간 합을 구간합 배열로 O(1)만에 구한다고 해도 경우의 수가 (N^2)이 된다. 따라서 문제를 풀 수 없다.</p>
+<p>이 문제에서 <strong>각 원소는 자연수이고 M 또한 자연수</strong>인데, 이 조건이 성립하면 사용할 수 있는 알고리즘은 다음과 같다.</p>
+<ul>
+<li>포인터 2개를 준비한다. 시작과 끝을 나타낼 수 있도록 start, end라고 하겠다.</li>
+<li>맨 처음에는 start = end = 0이며, 항상 start&lt;=end 을 만족해야 한다.</li>
+<li>이 두개의 포인터는 현재 부분 배열의 시작과 끝을 가리키는 역할을 한다.</li>
+</ul>
+<p>s = e일 경우 그건 크기가 0인 즉, 아무것도 포함하지 않는 부분 배열을 뜻한다. 이제 아래의 과정을 <strong>start&lt;N</strong> 인 동안 반복한다.</p>
+<ol>
+<li>현재 부분합이 M 이상이거나, 이미 end = N이면 start++</li>
+<li>그렇지 않다면 end++</li>
+<li>현재 부분합이 M과 같다면 count++</li>
+</ol>
+<p>쉽게 이해하자면, start와 end를 무조건 증가시키는 방향으로만 변화시켜가면서, 도중에 부분 배열의 합이 정확히 M이 되는 경우를 세는 것이다.</p>
+<p>그림으로 보는게 편하다. 그림을 그리기에는 시간이 좀 걸려서 내가 보고 이해한 그림을 첨부하겠다. 아래 참고한 블로그를 보면 설명을 아주 잘해주셨다. 이것만 보면 이해가 될 것이다.</p>
+<p>대표적인 문제를 풀어봤다. 백준 2003번으로 <strong>수들의 합2</strong> 문제이다. 풀이는 아래와 같다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 투포인터 알고리즘</span></span><br><span class="line"><span class="comment"> * start : 시작</span></span><br><span class="line"><span class="comment"> * end : 끝</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        BufferedReader br = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(System.in));</span><br><span class="line">        String[] input = br.readLine().split(<span class="string">" "</span>);</span><br><span class="line">        <span class="keyword">int</span> n = parse(input[<span class="number">0</span>]);</span><br><span class="line">        <span class="keyword">int</span> m = parse(input[<span class="number">1</span>]);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span>[] arr = <span class="keyword">new</span> <span class="keyword">int</span>[n + <span class="number">1</span>];</span><br><span class="line"></span><br><span class="line">        String[] num = br.readLine().split(<span class="string">" "</span>);</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; i++) &#123;</span><br><span class="line">            arr[i] = parse(num[i - <span class="number">1</span>]);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> start = <span class="number">0</span>, end = <span class="number">0</span>, sum = <span class="number">0</span>, count = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">            <span class="comment">// 부분합이 m 보다 큰 경우 start 가 가리키는 원소를 빼고</span></span><br><span class="line">            <span class="comment">// start 의 값을 증가시킨다. 즉, start 뒤로 이동.</span></span><br><span class="line">            <span class="keyword">if</span> (sum &gt;= m) &#123;</span><br><span class="line">                sum = sum - arr[start++];</span><br><span class="line"></span><br><span class="line">                <span class="comment">// end 가 n 에 도달하면 종료한다.</span></span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (end == n) &#123;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="comment">// 위의 두 경우에 해당하지 않으면 end 는 뒤로 이동하면서 원소의 값을</span></span><br><span class="line">                <span class="comment">// sum 에 더한다.</span></span><br><span class="line">                sum = sum + arr[end++];</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 부분 합이 m 과 같다면 count 를 증가시켜준다.</span></span><br><span class="line">            <span class="keyword">if</span> (sum == m) &#123;</span><br><span class="line">                count++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(count);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">parse</span><span class="params">(String str)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> Integer.parseInt(str);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="참고">참고</h2>
+<ul>
+<li><a href="https://m.blog.naver.com/kks227/220795165570" target="_blank" rel="noopener">투 포인터(Two Pointers Algorithm), 슬라이딩 윈도우(Sliding Window)</a></li>
+</ul>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2019/05/28/Two-Pointer-Algorithm/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2019/05/28/What-is-Kotlin-Object/"
                             aria-label=": [Kotlin] Object"
                         >
@@ -1202,72 +1287,6 @@ WorkManager는 Android JetPack의 아키텍처의 구성 요소이다.</p>
                         <p>
                             <a
                                 href="/2019/05/12/What-is-WorkManager/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2019/05/12/How-to-initialize-of-viewModel/"
-                            aria-label=": [안드로이드] ViewModel 초기화 - 1"
-                        >
-                            [안드로이드] ViewModel 초기화 - 1
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2019-05-12T00:45:47+09:00">
-	
-		    May 12, 2019
-    	
-    </time>
-    
-        <span>in </span>
-        
-    <a class="category-link" href="/categories/Android/">Android</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <p>이번 포스팅에서 다룰 주제는 Android Architecture Components 중 하나인 <code>ViewModel</code>이다. 해당</p>
-<p>안드로이드 앱 개발을 하다보면 겪는 문제 중 하나는 생명주기와 관련된 것이다. 그 중에서 액티비티와 프래그먼트의 생명주기는 많은 상태와 여러 가지 케이스에 따른 복잡함으로 예전부터 지금까지도 우리에게 까다로운 존재임이 분명하다.</p>
-<p>예를 들면, 런타임에 화면 방향이 전환되거나 언어, 글꼴 배율과 같은 기기 구성이 변경되는 경우를 다루려면 세심한 처리가 필요하다. 이러한 변경이 일어나는 경우, 안드로이드는 실행 중인 액티비티를 종료하고 메모리에서 제거한 후 다시 생성하기 때문에 이 과정에서 액티비티에 종속된 UI 데이터를 유지하는 것은 손이 많이 가는 작업이다.</p>
-<h2 id="화면-회전에-대한-해결책">화면 회전에 대한 해결책</h2>
-<p>액티비티가 종료되기 직전 호출되는 <code>onSaveInstanceState()</code> 콜백에서 액티비티의 상태 또는 데이터를 저장할 수 있지만 <strong>직렬화할 수 없는 객체는 저장할 수 없다.</strong> 왜냐하면 이 방법은 애초에 많은 양의 데이터를 저장하기 위해 디자인되지 않았기 때문이다.</p>
-<p>이번에 공부하면서 처음 본 방법이 또 있다. <strong>유보된 프래그먼트(Retained Fragment)를 사용하는 방법</strong>이다. UI가 없는 워크(헤드리스) 프래그먼트 개념을 도입해 이곳에서 UI에 필요한 데이터를 관리하고 프래그먼트를 setRetainInstance(true)로 설정함으로써 액티비티 재생성시, 프래그먼트를 메모리에 유지(즉, 소멸시키지 않고 유보)시키는 것이다.</p>
-<p>이때 프래그먼트는 액티비티에서 분리(onDetach)된 후 새로운 액티비티로 다시 호스팅(onAttach)될 뿐 소멸과 생성을 반복하지 않는다. 하지만, 프래그먼트 도입은 또 다른 **엣지 케이스(일정한 범위를 넘었을 때, 발생하는 문제)**를 다뤄야 한다는 점에서 새로운 고난의 장을 여는 것을 의미하기도 한다. 그리고 이곳이 데이터를 보관하기에 적합한 곳인가? 혹은 오버 엔지니어링이 아닐까?라는 논쟁의 여지가 존재했다.</p>
-<p>프래그먼트 이슈에 지친 개발자들은 프래그먼트 없이 개발하기와 같은 방법론에 매료될 정도로, 프래그먼트는 혼란스러움을 대표했다.</p>
-<h2 id="viewmodel로-해결하기">ViewModel로 해결하기.</h2>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2019/05/12/How-to-initialize-of-viewModel/#post-footer"
                                 class="postShorten-excerpt_link link"
                                 aria-label=""
                             >

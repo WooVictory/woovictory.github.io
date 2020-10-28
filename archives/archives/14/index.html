@@ -267,6 +267,199 @@
     <section class="postShorten-group main-content-wrap">
     
     
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2019/01/21/Etc-Git-Flow/"
+                            aria-label=": 1일차 [Git] Git-Flow"
+                        >
+                            1일차 [Git] Git-Flow
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2019-01-21T21:35:23+09:00">
+	
+		    Jan 21, 2019
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/Git/">Git</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <p><code>Git-Flow</code> 전략에 대해서 알아볼 예정이다. 기존에 사용하던 방법은 이름을 몰랐고 그냥 프로젝트 팀원한테 배웠던 방식을 사용했다. 이름은 나중에 찾아보니 <strong>Github-Flow</strong>였다. Git-Flow를 알아보기 전에 Github-Flow가 무엇인지 알고 넘어가보자.</p>
+<h2 id="github-flow">Github-Flow</h2>
+<p>기본적으로 Git Repository를 살펴보면 Repository는 Upstream Repository(이하 Upstream Repository), Origin Remote Repository(이하 Origin Repository), Local Repository 이렇게 3가지 부분으로 구성된다.</p>
+<ul>
+<li><strong>Upstream Repository</strong> : 개발자들이 공유하는 저장소로 최신 소스코드가 저장되어 있는 원격 저장소.</li>
+<li><strong>Origin Repository</strong> : Upstream Repository를 Fork한 원격 개인 저장소.</li>
+<li><strong>Local Repository</strong> : 내 컴퓨터에 저장되어 있는 개인 저장소.</li>
+</ul>
+<img src="/img/github_flow_repository_structure.png" width="700" height="500">
+<p>위 그림은 Git Repository 구성과 워크플로우를 설명하고 있다. Local Repository에서 작업을 완료한 후 작업 브랜치를 Origin Repository에 push한다. 그리고 Github에서 Origin Repository에 push한 브랜치를 Upstream Repository로 merge하는 <strong>Pull Request</strong>를 생성하는 코드리뷰를 거친 후 merge 한다. 다시 새로운 작업을 할 때 Local Repository에서 Upstream Repository를 pull 한다.</p>
+<p>이런 워크 플로우를 두는 데에는 한 가지 이유가 있다고 한다. 그 이유는 개발자들의 실험정신(?)을 펼치기 위해서이다. 모두가 공유하고 있는 Repository에서 실험하기에는 위험이 있다고 생각하고, Forked한 Repository를 두면 부담 없이 실험들을 해볼 수 있다고 한다. 무엇보다 이런 구조로 가져갔을 때 개발자가 해야 할 작업들이 <strong>중앙집중식 워크플로우</strong>보다 일이 늘거나 크게 복잡해지지도 않는다고 한다.</p>
+<h2 id="git-flow">Git-Flow</h2>
+<p>Git-Flow를 사용했을 때 작업을 어떻게 하는지 살펴보기 전에 먼저 Git-Flow에 대해서 간단히 살펴보도록 하겠다.<br>
+Git-Flow에는 5가지 종류의 브랜치가 존재한다. 항상 유지되는 메인 브랜치들(masger, develop)과 일정 기간 동안반 유지되는 보조 브랜치들(feature, release, hotfix)이 있다.</p>
+<ul>
+<li>master : 제품으로 출시될 수 있는 브랜치(배포하기 위함)</li>
+<li>develop : 다음 출시 버전을 개발하는 브랜치(이쪽으로 merge함)</li>
+<li>feature : 기능을 개발하는 브랜치(기능별로 feature를 나눔)</li>
+<li>release : 이번 출시 버전을 준비하는 브랜치</li>
+<li>hotfix : 출시 버전에서 발생한 버그를 수정하는 브랜치</li>
+</ul>
+<img src="/img/gitflow_1.png" width="700" height="500">
+<center>Git-flow</center>
+<p>위 그림을 일반적인 개발 흐름으로 살펴보자.</p>
+<p>처음에는 master와 develop 브랜치가 존재한다. 물론 develop 브랜치는 master에서부터 시작된 브랜치이다. develop 브랜치에서는 상시로 버그를 수정한 커밋들이 추가된다. 새로운 기능 추가 작업이 있는 경우 develop 브랜치에서 feature 브랜치를 생성한다.</p>
+<p>feature 브랜치는 언제나 develop 브랜치에서부터 시작하게 된다. 기능 추가 작업이 완료되었다면 feature 브랜치는 develop 브랜치로 merge 된다. develop에 이번 버전에 포함되는 모든 기능이 merge 되었다면 <code>QA</code>를 하기 위해 develop 브랜치에 수정된다. QA를 무사히 통과했다면 release 브랜치를 master와 develop 브랜치로 merge 한다. 마지막으로 출시된 master 브랜치에서 버전 태그를 추가한다.</p>
+<p>그렇다면 우아한 형제들의 안드로이드 개발팀에서는 어떻게 <code>Git-Flow</code>를 지키는지 살펴보도록 하자.</p>
+<p>##작업을 할 때 지켜야할 서로 간의 약속**</p>
+<ol>
+<li>작업을 시작하기 전에 JIRA 티켓을 생성한다.</li>
+<li>하나의 티켓은 되도록 하나의 커밋으로 한다.</li>
+<li>커밋 그래프는 최대한 단순하게 가져간다.</li>
+<li>서로 공유하는 브랜치의 커밋 그래프는 함부로 변경하지 않는다.</li>
+<li>리뷰어에게 꼭 리뷰를 받는다.</li>
+<li>자신의 Pull Request는 스스로 merge 한다.</li>
+</ol>
+<h2 id="우아한-형제들-git-flow">우아한 형제들 Git-Flow</h2>
+<p>아래에는 우아한 형제들에서 실제로 어떻게 작업하는지 알아보겠다. 아래의 Repository와 Branch는 앞으로 설명을 할 때 나오기 때문에 알아두고 가면 한결 수월하게 볼 수 있을 것이다.</p>
+<ul>
+<li>Repositories
+<ul>
+<li>upstream(Upstream Repository) : 중앙 원격 저장소</li>
+<li>origin(Origin Repository) : 내 원격 저장소</li>
+</ul>
+</li>
+<li>Branches
+<ul>
+<li>feature-user(사용자 관련 기능을 구현하는 feature branch)</li>
+<li>bfm-100_login_layout(사용자 관련 기능 중 레이아웃 작업 branch)</li>
+</ul>
+</li>
+</ul>
+<p><strong>1.티켓 처리하기</strong></p>
+<p>앞서 '작업을 할 때 지켜야 할 서로 간의 약속’에서 **하나의 티켓은 되도록 하나의 커밋으로 한다.**라고 했다. 그래서 기능을 구혀하기 전에 여러 개의 티켓으로 작업을 먼저 나누게 된다. 나눠진 티켓 중 <strong>로그인 레이아웃 생성</strong>이라는 티켓이 있고 이 티켓을 처리한다고 가정하고 살펴보겠다.</p>
+<ol>
+<li>
+<p>upstream/feature-user 브랜치에서 작업 브랜치(bfm-100_login_layout)를 생성한다.<br>
+<code>git checkout -b bfm-100_login_layout --track upstream/feature-user</code></p>
+</li>
+<li>
+<p>작업 브랜치에서 소스코드를 수정한다.</p>
+</li>
+<li>
+<p>작업 브랜치에서 변경 사항을 커밋한다.<br>
+<code>git commit -m &quot;BFM-100 로그인 화면 레이아웃 생성&quot;</code></p>
+</li>
+<li>
+<p>만약 커밋이 불필요하게 여러 개로 나뉘어져 있다면 squash?를 한다.(커밋 2개를 합쳐야 한다면)<br>
+<code>git rebase -i HEAD~2</code></p>
+</li>
+<li>
+<p>작업 브랜치를 upstrea/feature-user에 rebase 한다.</p>
+</li>
+<li>
+<p>작업 브랜치를 origin에 push한다.</p>
+</li>
+<li>
+<p>Github에서 bfm-100_login_layout 브랜치를 feature-user 브랜치에 merge하는 Pull Request를 생성한다.</p>
+</li>
+<li>
+<p>같은 feature를 개발하는 동료에게 리뷰 승인을 받은 후 자신의 Pull Request를 merge 한다. 만약 혼자 featur를 개발한다면 1~2명의 동료에게 리뷰 승인을 받은 후 Pull Request를 merge 한다.</p>
+</li>
+</ol>
+<p>위의 절차에서 4,5번 작업을 수행하는 이유는 커밋 그래프를 단순하게 가져가고 의미있는 커밋들로 관리하기 위함이다.</p>
+<p>4번 작업을 예로 들면, ‘BFM-100 로그인 화면 레이아웃 생성’ 작업을 할 때 로그인 화면의 레이아웃을 생성한 커밋 하나와 view의 약간의 간격을 조정한 커밋 하나, 그리고 view의 id를 변경한 커밋하나, 이렇게 3개의 커밋으로 분리된 상태이다. 이 3개의 커밋이 그 의미를 나눌 필요가 없거나 코드 리뷰를 도와주지도 못한다면 커밋을 분리하는 것은 불필요하다고 판단하고 하나의 커밋으로 합치게 된다.</p>
+<p>물론 항상 하나의 커밋으로 합쳐야만하는 것은 아니다. 하나의 티켓에 대한 작업이라도 커밋이 분리되어 있는게 낫다고 생각이 든다면 2개 이상의 커밋으로 나눌 수도 있다. 그러나 대부분은 티켓을 더 작게 나누지 못한 경우일 가능성이 높다.</p>
+<p><strong>2. develop 변경사항을 feature로 가져오기</strong>(Optional)</p>
+<p>작업을 할 때 브랜치의 수명은 되도록 짧게 가져가는게 좋지만, feature 브랜치에서 기능을 완료하는데 해야 할 작업들이 많아서 오래 걸리는 경우들이 있다. 그러다 보면 develop에 추가된 기능들이 필요한 경우가 종종 생기게 된다. 그럴 때는 feature 브랜치에 develop의 변경사항들을 가져와야 한다.</p>
+<ol>
+<li>feature-user 브랜치에 upstream/develop 브랜치를 merge 한다.</li>
+<li>upstream/develop의 변경사항이 merge된 feature-user를 upstream에 push 한다.</li>
+</ol>
+<p><strong>3. 완료된 기능을 이번 출시 버전에 포함시키기</strong></p>
+<p>드디어 feature-user 브랜치에서 작업하던 기능이 완료되었다. 이젠 feature 브랜치를 이번 출시 버전에 포함시키기 위해서 develop에 merge해야 한다.</p>
+<ol>
+<li>develop 브랜치에 upstream/feature-user 브랜치를 merge 한다.</li>
+<li>upstream/feature-user 기능이 merge된 develop를 upstream에 push 한다.</li>
+</ol>
+<p><strong>4. QA 시작하기</strong></p>
+<p>이번 버전에 포함되어야 할 기능들이 모두 완료되었다. 이제부터 출시 담당자가 해야 할 일이 많다. 출시 담당자는 QA를 시작하기 위해 먼저 release 브랜치를 develop 브랜치로부터 따서 생성하고 upstream에 push하여 release 브랜치를 공유한다.</p>
+<ol>
+<li>release-1.0.0 브랜치를 생성한다.</li>
+<li>release-1.0.0 브랜치를 upstream에 push 한다.</li>
+</ol>
+<p><strong>5. QA 중 버그 수정하기</strong></p>
+<p>개발을 완료한 후 QA 중 버그가 발생하지 않으면 좋겠지만 항상 생각치 못한 예외 상황들이 발생하게 된다. 예외 상황이 발생할 때마다 버그 티켓이 하나씩 생성되는데 이 티켓들을 모두 해결해야만 앱을 출시할 수 있다. 버그 티켓들도 티켓이기 때문에 '1. 티켓 처리하기’와 같은 방법으로 처리한다.</p>
+<ol>
+<li>release 브랜치에서 버그 티켓에 대한 브랜치를 생성한다.</li>
+<li>버그를 수정한다.</li>
+<li>버그 티켓에 대해 생성한 브랜치를 작업 브랜치라 하고 작업 브랜치에서 버그 수정 사항을 커밋한다.</li>
+<li>작업 브랜치를 origin[ develop? ]에 push 한다.</li>
+<li>Github에서 bfm-101_bug_login_id_max_length 브랜치를 release-1.0.0에 merge 하는 Pull Request를 생성한다.</li>
+<li>동료에게 리뷰 승인을 받은 후 자신의 Pull Request를 merge 한다.</li>
+</ol>
+<p><strong>6. 앱출시</strong></p>
+<p>발생하는 버그들을 모두 수정했다면 이젠 출시를 준비할 때이다. release 브랜치를 master 브랜치와 develop 브랜치에 merge하고 마지막으로 master 브랜치에서 버전 태그를 달아준다.</p>
+<ol>
+<li>release 브랜치를 최신 상태로 갱신한다.</li>
+<li>release 브랜치를 develop 브랜치에 merge 한다.</li>
+<li>develop 브랜치를 upstream에 push 한다.</li>
+<li>release 브랜치를 master 브랜치에 merge 한다.</li>
+<li>1.0.0 태그를 추가한다.</li>
+<li>master 브랜치와 1.0.0 태그를 upstream에 push 한다.</li>
+</ol>
+<h3 id="중앙집중식-워크플로우">중앙집중식 워크플로우</h3>
+<img src="/img/centralized_workflow.png" width="700" height="500">
+<p>중앙집중식에서 개발자 두 명이 중앙저장소를 clone하고 각자 수정하는 상황을 생각해보자. 한 개발자가 자신이 한 일을 커밋하고 나서 아무 문제 없이 서버에 push한다. 그러면 다른 개발자는 자신의 일을 커밋하고 push 하기 전에 첫 번째 개발자가 한 일을 먼저 Merge 해야 한다. Merge를 해야 첫 번째 개발자가 작업한 내용을 덮어쓰지 않는다. 이런 개념은 Subversion과 같은 중앙집중식 버전 관리 시스템에서 사용하는 방식이고 Git에서도 당연히 이런 워크플로우를 사용할 수 있다.</p>
+<p>팀이 작거나 이미 중앙집중식에 적응한 상황이라면 이 워크플로우에 따라 git을 도입하여 사용할 수 있다. 중앙 저장소를 하나 만들고 개발자 모두에게 Push 권한을 부여한다. 모두에게 Push 권한을 부여해도 Git은 한 개발자가 다른 개발자의 작업 내용을 덮어쓰도록 허용하지 않는다.</p>
+<p>A와 B가 동시에 같은 부분을 수정하는 상황을 생각해보자. A가 먼저 작업을 끝내고 수정한 내용을 서버로 push한다. B도 마찬가지로 작업을 끝내고 수정한 내용을 서버로 push 하려 하지만 서버가 바로 받아주지 않는다. 서버에는 A가 수정한 내용이 추가되었기 때문에 push 하기 전에 Fetch로 받아서 Merge 한 후 Push 할 수 있다 이런 개념을 개발자에게 익숙해서 거부감 없이 도입할 수 있다.</p>
+<h2 id="참고">참고</h2>
+<ul>
+<li><a href="http://woowabros.github.io/experience/2017/10/30/baemin-mobile-git-branch-strategy.html" target="_blank" rel="noopener">우린 Git-flow를 사용하고 있어요</a></li>
+</ul>
+<p><strong>회고</strong></p>
+<p>Github-flow가 편하다는 생각이 아직 사라지지 않는다. 왜냐하면 git-flow는 브랜치가 많고 git의 명령어들이 많이 나와서 헷갈리는 부분이 너무 많다. 하지만 여러 사람이 협업할 때 브랜치를 기능별로 나눠서 하게 되기 때문에 효율이 좋은 것 같다.</p>
+<p>아직 헷갈리는 부분이 많아서 자료를 조금 더 참고해서 공부해야겠다.</p>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2019/01/21/Etc-Git-Flow/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
     <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
@@ -716,57 +909,6 @@
                             href="/2019/01/16/Android-MVP-Step3/"
                             class="postShorten-excerpt_link link"
                             aria-label=": [안드로이드] MVP 따라하기 3"
-                        >
-                            Continue reading
-                        </a>
-                        
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-right">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2019/01/16/Android-MVP-Step2/"
-                            aria-label=": [안드로이드] MVP 따라하기 2"
-                        >
-                            [안드로이드] MVP 따라하기 2
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2019-01-16T19:43:15+09:00">
-	
-		    Jan 16, 2019
-    	
-    </time>
-    
-        <span>in </span>
-        
-    <a class="category-link" href="/categories/Android/">Android</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-excerpt">
-                    <p>이번에는 Android MVP 따라하기 두번째 Step으로 <strong>MVC</strong> 구조를 알아보려 한다. MVC 구조로 작성된 코드를 하나씩 <strong>MVP</strong> 구조로 변경하기 위함이다.</p>
-                    
-                        <a
-                            href="/2019/01/16/Android-MVP-Step2/"
-                            class="postShorten-excerpt_link link"
-                            aria-label=": [안드로이드] MVP 따라하기 2"
                         >
                             Continue reading
                         </a>

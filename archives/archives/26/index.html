@@ -267,6 +267,76 @@
     <section class="postShorten-group main-content-wrap">
     
     
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2018/03/30/BOJ10819/"
+                            aria-label=": [10819] 차이를 최대로"
+                        >
+                            [10819] 차이를 최대로
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2018-03-30T17:19:56+09:00">
+	
+		    Mar 30, 2018
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/algorithm/">algorithm</a>, <a class="category-link" href="/categories/algorithm/BOJ/">BOJ</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <p>문제 : <a href="https://www.acmicpc.net/problem/10819" target="_blank" rel="noopener">https://www.acmicpc.net/problem/10819</a></p>
+<p><code>핵심</code></p>
+<p>순열을 사용해서 전체 경우의 수를 구한다.<br>
+문제에서 N의 범위는 <strong>3&lt;=N&lt;=8</strong>이므로 최대 경우의 수는 8! = 40320이다.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">i=1;i&lt;a.length;i++</span><br></pre></td></tr></table></figure>
+<p><code>풀이</code></p>
+<p>입력받은 정수의 개수 N에 대하여 배열에 들어갈 수를 입력받는다.<br>
+순열을 구하기 전에 오름차순으로 정렬을 한다.<br>
+<strong>next_permutation</strong>을 통해서 N!개의 모든 순열을 구한다. 그리고 _Cal()_이라는 함수를 통해서 해당 순열의 <code>차이의 최대값의 합</code>을 저장한다.<br>
+그리고 처음에 값을 <strong>value</strong>에 저장했다가 Calculate_sum을 통해서 계산되는 차이의 합과 value를 _Math.max_을 이용해서 최대값을 구한다.<br>
+value에 저장한다. 결국, value -&gt; 차이의 최대값</p>
+<p><code>Code</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Exam10819</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> NumberFormatException, IOException </span>&#123;</span><br><span class="line">		</span><br><span class="line">	BufferedReader bf = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(System.in));</span><br><span class="line">	<span class="keyword">int</span> N = Integer.parseInt(bf.readLine());</span><br><span class="line">	<span class="keyword">int</span>[] number_arr = <span class="keyword">new</span> <span class="keyword">int</span>[N];</span><br><span class="line">	StringTokenizer st = <span class="keyword">new</span> StringTokenizer(bf.readLine(), <span class="string">" "</span>);</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;N;i++) &#123;</span><br><span class="line">		number_arr[i] = Integer.parseInt(st.nextToken());</span><br><span class="line">	&#125;</span><br><span class="line">	Arrays.sort(number_arr); <span class="comment">// 정렬</span></span><br><span class="line">		</span><br><span class="line">	<span class="keyword">int</span> value = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">do</span> &#123;</span><br><span class="line">		<span class="keyword">int</span> cal_sum = Calculate_sum(number_arr);</span><br><span class="line">		value = Math.max(value, cal_sum);</span><br><span class="line">		</span><br><span class="line">	&#125;<span class="keyword">while</span>(next_permutation(number_arr));</span><br><span class="line">	</span><br><span class="line">	System.out.println(value);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">Calculate_sum</span><span class="params">(<span class="keyword">int</span>[] arr)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">int</span> sum = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;arr.length;i++) &#123;</span><br><span class="line">		sum = sum + Math.abs(arr[i]-arr[i-<span class="number">1</span>]);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> sum;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">next_permutation</span><span class="params">(<span class="keyword">int</span>[] arr)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">int</span> i = arr.length-<span class="number">1</span>;</span><br><span class="line">	<span class="keyword">while</span>(i&gt;<span class="number">0</span> &amp;&amp; arr[i-<span class="number">1</span>]&gt;=arr[i]) &#123;</span><br><span class="line">		i--;</span><br><span class="line">	&#125;</span><br><span class="line">		</span><br><span class="line">	<span class="keyword">if</span>(i&lt;=<span class="number">0</span>) &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">	&#125;</span><br><span class="line">		</span><br><span class="line">	<span class="keyword">int</span> j = arr.length-<span class="number">1</span>;</span><br><span class="line">	<span class="keyword">while</span>(arr[j]&lt;=arr[i-<span class="number">1</span>]) &#123;</span><br><span class="line">		j--;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">int</span> tmp = arr[i-<span class="number">1</span>];</span><br><span class="line">	arr[i-<span class="number">1</span>] = arr[j];</span><br><span class="line">	arr[j] = tmp;</span><br><span class="line">	</span><br><span class="line">	j = arr.length-<span class="number">1</span>;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">while</span>(i&lt;j) &#123;</span><br><span class="line">		tmp = arr[i];</span><br><span class="line">		arr[i] = arr[j];</span><br><span class="line">		arr[j] = tmp;</span><br><span class="line">		i++;</span><br><span class="line">		j--;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2018/03/30/BOJ10819/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
     <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             

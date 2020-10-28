@@ -266,6 +266,80 @@
                 <section class="postShorten-group main-content-wrap">
     
     
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2018/12/18/PGM14406/"
+                            aria-label=": [Programmers] 소수의 합"
+                        >
+                            [Programmers] 소수의 합
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2018-12-18T21:46:44+09:00">
+	
+		    Dec 18, 2018
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/algorithm/">algorithm</a>, <a class="category-link" href="/categories/algorithm/Programmers/">Programmers</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <ul>
+<li><a href="#%EC%86%8C%EC%88%98%EC%9D%98%ED%95%A9">소수의합</a></li>
+<li><a href="#%EC%97%90%EB%9D%BC%ED%86%A0%EC%8A%A4%ED%85%8C%EB%84%A4%EC%8A%A4%EC%9D%98%EC%B2%B4">에라토스테네스의체</a></li>
+</ul>
+<p>실력을 쌓아 알고리즘 문제를 풀려는 계획을 가지고 있었는데, <code>GoodGid</code>님께서 팩폭을 해주셔서 그 분의 커리큘럼을 따라가는 중입니다. 그래서 <strong>프로그래머스</strong>의 leve1,2 수준의 문제를 먼저 풀고 나태 지옥에 빠지지 않기 위해 푼 문제를 포스팅 할 계획입니다.</p>
+<p>level1을 못풀면 코딩 접어야 한다고 했는데, 다행히도 접을 정도는 아닌가봅니다.</p>
+<h1 id="소수의합">소수의합</h1>
+<p>어려울 줄 알았지만, 생각보다 간단한 문제입니다. N이 주어지면 2부터 N까지의 소수의 합을 구하면 됩니다. 소수의 대한 간단한 정의는 다음과 같습니다.</p>
+<blockquote>
+<p>1과 자기 자신으로만 나누어 떨어지는 수</p>
+</blockquote>
+<p>이에 반대로 1과 자기 자신이 아닌 수로 나누어 떨어지면 소수가 아니라는 생각을 했고 이를 아래와 같이 구현했습니다.</p>
+<ul>
+<li>이미 나누어 떨어짐에도 불구하고 for문을 돌면서 나머지를 계속 검사하기 때문에 <strong>break</strong> 추가해서 문제 해결!</li>
+</ul>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ex1</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        BufferedReader bf = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(System.in));</span><br><span class="line">        BufferedWriter bw = <span class="keyword">new</span> BufferedWriter(<span class="keyword">new</span> OutputStreamWriter(System.out));</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> N = Integer.parseInt(bf.readLine());</span><br><span class="line">        <span class="keyword">int</span> total = <span class="number">0</span>; <span class="comment">// 소수의 합</span></span><br><span class="line">        Boolean isPrime = <span class="keyword">false</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">2</span>;i&lt;=N;i++)&#123;</span><br><span class="line">            isPrime = <span class="keyword">true</span>;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">2</span>;j&lt;i;j++) &#123;</span><br><span class="line">                <span class="comment">// 이 부분은 입력받은 수가 1과 자기 자신을 제외한 수로 나누는 과정</span></span><br><span class="line">                <span class="comment">// 이 과정에서 나누어 떨어진다는 것은 소수가 아닌 배수임을 의미</span></span><br><span class="line">                <span class="comment">// 그렇기 때문에 한번 들어오면 어차피 소수가 아님으로 낭비를 줄이고자</span></span><br><span class="line">                <span class="comment">// break문으로 빠져나옴.</span></span><br><span class="line">                <span class="keyword">if</span> (i % j == <span class="number">0</span>) &#123;</span><br><span class="line">                    isPrime = <span class="keyword">false</span>;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span>(isPrime == <span class="keyword">true</span>)</span><br><span class="line">                total += i;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        bw.write(total+<span class="string">""</span>);</span><br><span class="line">        bw.flush();</span><br><span class="line">        bw.close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="에라토스테네스의체">에라토스테네스의체</h2>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2018/12/18/PGM14406/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
     <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
@@ -824,82 +898,6 @@ Comparator를 구현하면 compare()라는 메소드를 오버라이드 합니�
                         <p>
                             <a
                                 href="/2018/10/21/BOJ10812/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2018/10/19/BOJ10811/"
-                            aria-label=": [10811] 바구니 뒤집기"
-                        >
-                            [10811] 바구니 뒤집기
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2018-10-19T21:27:59+09:00">
-	
-		    Oct 19, 2018
-    	
-    </time>
-    
-        <span>in </span>
-        
-    <a class="category-link" href="/categories/algorithm/">algorithm</a>, <a class="category-link" href="/categories/algorithm/BOJ/">BOJ</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <p>문제 : <a href="https://www.acmicpc.net/problem/10811" target="_blank" rel="noopener">https://www.acmicpc.net/problem/10811</a></p>
-<h1 id="풀이-방법">풀이 방법</h1>
-<hr>
-<ol>
-<li>첫 번째 풀이<br>
-이 문제는 어제 풀었던 도현이의 바구니 시리즈편인 것 같습니다. 그래서 이 문제도 간단하게 배열로 구현했습니다… 하지만, 정답이 틀렸다는 결과가,ㅜㅜ 그래서 무엇이 틀린지 코드를 분석해보는데 틀린 부분이 없었습니다.</li>
-</ol>
-<p>제가 푼 방식은 우선, 바구니를 뒤집을 범위를 입력 받고 난 다음에 i부터 (i+j)/2 까지 반복문을 돌면서 조건을 검사합니다.  int형 변수인 temp를 만듭니다. i번째 바구니와 j번째 바구니를 바꾸고, (i+1)번째 바구니와 (j-1)번째 바구니를 바꿉니다… 이 과정을 반복합니다.</p>
-<p>저는 이 로직으로 구현했습니다만 테스트 케이스는 맞았지만, 정답이 틀렸다는 결과를 얻었습니다.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> language;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.*;</span><br><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"><span class="keyword">import</span> java.util.StringTokenizer;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BOJ10811</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        BufferedReader bf = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(System.in));</span><br><span class="line">        BufferedWriter bw = <span class="keyword">new</span> BufferedWriter(<span class="keyword">new</span> OutputStreamWriter(System.out));</span><br><span class="line"></span><br><span class="line">        StringTokenizer st = <span class="keyword">new</span> StringTokenizer(bf.readLine(), <span class="string">" "</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> N = Integer.parseInt(st.nextToken());</span><br><span class="line">        <span class="keyword">int</span> M = Integer.parseInt(st.nextToken());</span><br><span class="line">        <span class="keyword">int</span>[] arr = <span class="keyword">new</span> <span class="keyword">int</span>[N+<span class="number">1</span>];</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=N;i++)</span><br><span class="line">            arr[i] = i;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> k=<span class="number">0</span>;k&lt;M;k++)&#123;</span><br><span class="line">            st = <span class="keyword">new</span> StringTokenizer(bf.readLine(),<span class="string">" "</span>);</span><br><span class="line">            <span class="keyword">int</span> i = Integer.parseInt(st.nextToken());</span><br><span class="line">            <span class="keyword">int</span> j = Integer.parseInt(st.nextToken());</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> m=i;m&lt;=(i+j)/<span class="number">2</span>;m++)&#123;</span><br><span class="line">                 <span class="keyword">int</span> temp = arr[m];</span><br><span class="line">                 arr[m] = arr[j];</span><br><span class="line">                 arr[j] = temp;</span><br><span class="line">                 j--;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;arr.length;i++)</span><br><span class="line">            System.out.print(arr[i]+<span class="string">" "</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ol start="2">
-<li>Stack을 이용한 풀이<br>
-내 생각에는 정확히 풀었다고 생각을 했는데, 결과는 틀렸다고 했습니다… 그래서 다른 사람들은 도대체 어떻게 풀었으며 제가 예전에 어떻게 풀었는지 확인해보았습니다. 먼저, 예전에 저는 자바가 아닌 C++을 이용해서 풀었습니다. 도움이 되지 않으니 패스, 그리고 다른 사람들은 <strong>Stack</strong>을 이용해서 문제를 풀었습니다. 사람들은 왜 Stack을 사용해서 풀었는지 의문이 생겼고 직접 Stack을 이용해서 문제를 풀어보았습니다.</li>
-</ol>
-<p><strong>Stack은 후입선출(LIFO)의 구조를 가지는 자료구조입니다. 문제에서 원하는대로 바구니를 뒤집을 범위를 입력받으면 Stack에 <code>push</code>하고 다시 <code>pop</code>을 해서 원래 배열에 담으면 뒤집어진 상태로 출력이 되기 때문에 원하는 결과를 얻을 수 있습니다.</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.*;</span><br><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"><span class="keyword">import</span> java.util.Stack;</span><br><span class="line"><span class="keyword">import</span> java.util.StringTokenizer;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BOJ10811</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        BufferedReader bf = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(System.in));</span><br><span class="line">        BufferedWriter bw = <span class="keyword">new</span> BufferedWriter(<span class="keyword">new</span> OutputStreamWriter(System.out));</span><br><span class="line"></span><br><span class="line">        StringTokenizer st = <span class="keyword">new</span> StringTokenizer(bf.readLine(), <span class="string">" "</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> N = Integer.parseInt(st.nextToken());</span><br><span class="line">        <span class="keyword">int</span> M = Integer.parseInt(st.nextToken());</span><br><span class="line">        <span class="keyword">int</span>[] arr = <span class="keyword">new</span> <span class="keyword">int</span>[N + <span class="number">1</span>];</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= N; i++)</span><br><span class="line">            arr[i] = i;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> k = <span class="number">0</span>; k &lt; M; k++) &#123;</span><br><span class="line">            Stack&lt;Integer&gt; stack = <span class="keyword">new</span> Stack&lt;&gt;();</span><br><span class="line">            st = <span class="keyword">new</span> StringTokenizer(bf.readLine(), <span class="string">" "</span>);</span><br><span class="line">            <span class="keyword">int</span> i = Integer.parseInt(st.nextToken());</span><br><span class="line">            <span class="keyword">int</span> j = Integer.parseInt(st.nextToken());</span><br><span class="line"></span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> m = i; m &lt;= j; m++)</span><br><span class="line">                stack.push(arr[m]);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> m = i; m &lt;= j; m++)</span><br><span class="line">                arr[m] = stack.pop();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        StringBuilder sb = <span class="keyword">new</span> StringBuilder();</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= N; i++)</span><br><span class="line">            sb.append(arr[i] + <span class="string">" "</span>);</span><br><span class="line"></span><br><span class="line">        bw.write(sb.toString() + <span class="string">"\n"</span>);</span><br><span class="line">        bw.flush();</span><br><span class="line">        bw.close();</span><br><span class="line">        bf.close();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h1 id="배운점">배운점</h1>
-<hr>
-<p>가끔 다른 사람의 코드를 참고하여 문제를 이해하거나 풀이를 확인해서 로직을 이해하는데 이로 인해 배움을 얻고 이해를 하는 것이 좋은 과정이라고 생각합니다. 굿굿~</p>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2018/10/19/BOJ10811/#post-footer"
                                 class="postShorten-excerpt_link link"
                                 aria-label=""
                             >

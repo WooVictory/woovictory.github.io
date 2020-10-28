@@ -6,26 +6,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="VictoryWoo">
-    <title>[안드로이드] ViewModel 초기화 - 1 - VictoryWoo</title>
+    <title>[Kotlin] Array 초기화 - VictoryWoo</title>
     <meta name="author" content="VictoryWoo">
     
     
         <link rel="icon" href="https://woovictory.github.io/assets/images/develop.ico">
     
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg"},"articleBody":"이번 포스팅에서 다룰 주제는 Android Architecture Components 중 하나인 ViewModel이다. 해당\n안드로이드 앱 개발을 하다보면 겪는 문제 중 하나는 생명주기와 관련된 것이다. 그 중에서 액티비티와 프래그먼트의 생명주기는 많은 상태와 여러 가지 케이스에 따른 복잡함으로 예전부터 지금까지도 우리에게 까다로운 존재임이 분명하다.\n예를 들면, 런타임에 화면 방향이 전환되거나 언어, 글꼴 배율과 같은 기기 구성이 변경되는 경우를 다루려면 세심한 처리가 필요하다. 이러한 변경이 일어나는 경우, 안드로이드는 실행 중인 액티비티를 종료하고 메모리에서 제거한 후 다시 생성하기 때문에 이 과정에서 액티비티에 종속된 UI 데이터를 유지하는 것은 손이 많이 가는 작업이다.\n화면 회전에 대한 해결책\n액티비티가 종료되기 직전 호출되는 onSaveInstanceState() 콜백에서 액티비티의 상태 또는 데이터를 저장할 수 있지만 직렬화할 수 없는 객체는 저장할 수 없다. 왜냐하면 이 방법은 애초에 많은 양의 데이터를 저장하기 위해 디자인되지 않았기 때문이다.\n이번에 공부하면서 처음 본 방법이 또 있다. 유보된 프래그먼트(Retained Fragment)를 사용하는 방법이다. UI가 없는 워크(헤드리스) 프래그먼트 개념을 도입해 이곳에서 UI에 필요한 데이터를 관리하고 프래그먼트를 setRetainInstance(true)로 설정함으로써 액티비티 재생성시, 프래그먼트를 메모리에 유지(즉, 소멸시키지 않고 유보)시키는 것이다.\n이때 프래그먼트는 액티비티에서 분리(onDetach)된 후 새로운 액티비티로 다시 호스팅(onAttach)될 뿐 소멸과 생성을 반복하지 않는다. 하지만, 프래그먼트 도입은 또 다른 **엣지 케이스(일정한 범위를 넘었을 때, 발생하는 문제)**를 다뤄야 한다는 점에서 새로운 고난의 장을 여는 것을 의미하기도 한다. 그리고 이곳이 데이터를 보관하기에 적합한 곳인가? 혹은 오버 엔지니어링이 아닐까?라는 논쟁의 여지가 존재했다.\n프래그먼트 이슈에 지친 개발자들은 프래그먼트 없이 개발하기와 같은 방법론에 매료될 정도로, 프래그먼트는 혼란스러움을 대표했다.\nViewModel로 해결하기.\n","dateCreated":"2019-05-12T00:45:47+09:00","dateModified":"2020-05-12T20:30:54+09:00","datePublished":"2019-05-12T00:45:47+09:00","description":"","headline":"[안드로이드] ViewModel 초기화 - 1","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://woovictory.github.io/2019/05/12/How-to-initialize-of-viewModel/"},"publisher":{"@type":"Organization","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg","logo":{"@type":"ImageObject","url":"Victory.jpeg"}},"url":"https://woovictory.github.io/2019/05/12/How-to-initialize-of-viewModel/","keywords":"Android, 안드로이드, ViewModel, AAC"}</script>
-    <meta name="description" content="이번 포스팅에서 다룰 주제는 Android Architecture Components 중 하나인 ViewModel이다. 해당 안드로이드 앱 개발을 하다보면 겪는 문제 중 하나는 생명주기와 관련된 것이다. 그 중에서 액티비티와 프래그먼트의 생명주기는 많은 상태와 여러 가지 케이스에 따른 복잡함으로 예전부터 지금까지도 우리에게 까다로운 존재임이 분명하다. 예를">
-<meta name="keywords" content="Android,안드로이드,ViewModel,AAC">
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg"},"articleBody":"Prolouge\nKotlin의 가변 인자에 대해 공부하던 중, Array를 생성할 때 생성자와 관련된 내용을 알게 되어서 작성하려고 한다.\n\nSubject\n코틀린은 어떻게 보면 2가지 형태의 배열이 존재한다. 자바의 Primitive Type의 배열을 지원하는 IntArray, LongArray, XXXArray 형태가 그것이다. 이외에도 Array 형태를 가지기도 하는데, 이번에는 Array 형태의 배열에 대해서 알아보려고 한다.\n배열을 생성하는 법\n\n내부에서 제공하는 API를 사용하는 방법\n\n배열을 선언과 동시에 값을 초기화할 경우, arrayOf(value) 함수를 이용하면 된다.\n배열의 크기만 지정하고 값은 나중에 저장할 경우, arrayOfNulls(size) 함수를 이용하면 된다. 이때, 지정된 크기만큼 null로 초기화된다.\n\n\n\n12345678910111213141516/** * created by victory_woo on 2020/10/28 * */fun main(args: Array&lt;String&gt;) &#123;    initTest()&#125;private fun initTest() &#123;    val array: Array&lt;Int&gt; = arrayOf(1, 2, 3) [1,2,3]    val array2 = arrayOfNulls&lt;Int&gt;(3) [null, null, null]    array.forEach &#123; print(\"$it \") &#125;    println()    array2.forEach &#123; print(\"$it \") &#125;&#125;\n\n생성자를 이용하는 방법\n\nArray 생성자를 이용하며, Array(size, 람다식)으로 구성되어 있다.\n람다식을 통해 초기화를 자유롭게 지정할 수 있다.\n\n\n\n1234567891011121314151617/** * created by victory_woo on 2020/10/28 * */fun main(args: Array&lt;String&gt;) &#123;    initWithConstructor()&#125;private fun initWithConstructor() &#123;    val array: Array&lt;Int&gt; = Array(3) &#123; i -&gt; i &#125; [0,1,2]    // 좌측 i : index    // 우측 i : index에 들어갈 값    // i는 0부터 시작.    array.forEach &#123; print(\"$it \") &#125;    println()&#125;\n2번 방법처럼 생성자를 이용해서 Array를 초기화하는 방법은 처음봤다. 항상 arrayOf()를 이용하곤 했는데, 2번 방법도 상황에 따라 유용하게 사용할 수 있을 것 같다.\nRef\n\n[Kotlin 문법] 배열 Array\n\n","dateCreated":"2020-10-28T11:23:33+09:00","dateModified":"2020-10-28T12:20:09+09:00","datePublished":"2020-10-28T11:23:33+09:00","description":"Prolouge\nKotlin의 가변 인자에 대해 공부하던 중, Array를 생성할 때 생성자와 관련된 내용을 알게 되어서 작성하려고 한다.","headline":"[Kotlin] Array 초기화","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://woovictory.github.io/2020/10/28/Kotlin-Array/"},"publisher":{"@type":"Organization","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg","logo":{"@type":"ImageObject","url":"Victory.jpeg"}},"url":"https://woovictory.github.io/2020/10/28/Kotlin-Array/","keywords":"Kotlin, 배열, 코틀린, 초기화, 배열 초기화"}</script>
+    <meta name="description" content="Prolouge Kotlin의 가변 인자에 대해 공부하던 중, Array를 생성할 때 생성자와 관련된 내용을 알게 되어서 작성하려고 한다.">
+<meta name="keywords" content="Kotlin,배열,코틀린,초기화,배열 초기화">
 <meta property="og:type" content="blog">
-<meta property="og:title" content="[안드로이드] ViewModel 초기화 - 1">
-<meta property="og:url" content="https://woovictory.github.io/2019/05/12/How-to-initialize-of-viewModel/index.html">
+<meta property="og:title" content="[Kotlin] Array 초기화">
+<meta property="og:url" content="https://woovictory.github.io/2020/10/28/Kotlin-Array/index.html">
 <meta property="og:site_name" content="VictoryWoo">
-<meta property="og:description" content="이번 포스팅에서 다룰 주제는 Android Architecture Components 중 하나인 ViewModel이다. 해당 안드로이드 앱 개발을 하다보면 겪는 문제 중 하나는 생명주기와 관련된 것이다. 그 중에서 액티비티와 프래그먼트의 생명주기는 많은 상태와 여러 가지 케이스에 따른 복잡함으로 예전부터 지금까지도 우리에게 까다로운 존재임이 분명하다. 예를">
+<meta property="og:description" content="Prolouge Kotlin의 가변 인자에 대해 공부하던 중, Array를 생성할 때 생성자와 관련된 내용을 알게 되어서 작성하려고 한다.">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2020-05-12T11:30:54.403Z">
+<meta property="og:updated_time" content="2020-10-28T03:20:09.318Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="[안드로이드] ViewModel 초기화 - 1">
-<meta name="twitter:description" content="이번 포스팅에서 다룰 주제는 Android Architecture Components 중 하나인 ViewModel이다. 해당 안드로이드 앱 개발을 하다보면 겪는 문제 중 하나는 생명주기와 관련된 것이다. 그 중에서 액티비티와 프래그먼트의 생명주기는 많은 상태와 여러 가지 케이스에 따른 복잡함으로 예전부터 지금까지도 우리에게 까다로운 존재임이 분명하다. 예를">
+<meta name="twitter:title" content="[Kotlin] Array 초기화">
+<meta name="twitter:description" content="Prolouge Kotlin의 가변 인자에 대해 공부하던 중, Array를 생성할 때 생성자와 관련된 내용을 알게 되어서 작성하려고 한다.">
     
     
         
@@ -277,20 +277,20 @@
         <div class="post-header main-content-wrap text-left">
     
         <h1 class="post-title">
-            [안드로이드] ViewModel 초기화 - 1
+            [Kotlin] Array 초기화
         </h1>
     
     
         <div class="post-meta">
-    <time datetime="2019-05-12T00:45:47+09:00">
+    <time datetime="2020-10-28T11:23:33+09:00">
 	
-		    May 12, 2019
+		    Oct 28, 2020
     	
     </time>
     
         <span>in </span>
         
-    <a class="category-link" href="/categories/Android/">Android</a>
+    <a class="category-link" href="/categories/Kotlin/">Kotlin</a>
 
 
     
@@ -302,15 +302,35 @@
     
     <div class="post-content markdown">
         <div class="main-content-wrap">
-            <p>이번 포스팅에서 다룰 주제는 Android Architecture Components 중 하나인 <code>ViewModel</code>이다. 해당</p>
-<p>안드로이드 앱 개발을 하다보면 겪는 문제 중 하나는 생명주기와 관련된 것이다. 그 중에서 액티비티와 프래그먼트의 생명주기는 많은 상태와 여러 가지 케이스에 따른 복잡함으로 예전부터 지금까지도 우리에게 까다로운 존재임이 분명하다.</p>
-<p>예를 들면, 런타임에 화면 방향이 전환되거나 언어, 글꼴 배율과 같은 기기 구성이 변경되는 경우를 다루려면 세심한 처리가 필요하다. 이러한 변경이 일어나는 경우, 안드로이드는 실행 중인 액티비티를 종료하고 메모리에서 제거한 후 다시 생성하기 때문에 이 과정에서 액티비티에 종속된 UI 데이터를 유지하는 것은 손이 많이 가는 작업이다.</p>
-<h2 id="화면-회전에-대한-해결책">화면 회전에 대한 해결책</h2>
-<p>액티비티가 종료되기 직전 호출되는 <code>onSaveInstanceState()</code> 콜백에서 액티비티의 상태 또는 데이터를 저장할 수 있지만 <strong>직렬화할 수 없는 객체는 저장할 수 없다.</strong> 왜냐하면 이 방법은 애초에 많은 양의 데이터를 저장하기 위해 디자인되지 않았기 때문이다.</p>
-<p>이번에 공부하면서 처음 본 방법이 또 있다. <strong>유보된 프래그먼트(Retained Fragment)를 사용하는 방법</strong>이다. UI가 없는 워크(헤드리스) 프래그먼트 개념을 도입해 이곳에서 UI에 필요한 데이터를 관리하고 프래그먼트를 setRetainInstance(true)로 설정함으로써 액티비티 재생성시, 프래그먼트를 메모리에 유지(즉, 소멸시키지 않고 유보)시키는 것이다.</p>
-<p>이때 프래그먼트는 액티비티에서 분리(onDetach)된 후 새로운 액티비티로 다시 호스팅(onAttach)될 뿐 소멸과 생성을 반복하지 않는다. 하지만, 프래그먼트 도입은 또 다른 **엣지 케이스(일정한 범위를 넘었을 때, 발생하는 문제)**를 다뤄야 한다는 점에서 새로운 고난의 장을 여는 것을 의미하기도 한다. 그리고 이곳이 데이터를 보관하기에 적합한 곳인가? 혹은 오버 엔지니어링이 아닐까?라는 논쟁의 여지가 존재했다.</p>
-<p>프래그먼트 이슈에 지친 개발자들은 프래그먼트 없이 개발하기와 같은 방법론에 매료될 정도로, 프래그먼트는 혼란스러움을 대표했다.</p>
-<h2 id="viewmodel로-해결하기">ViewModel로 해결하기.</h2>
+            <h3 id="prolouge">Prolouge</h3>
+<p>Kotlin의 가변 인자에 대해 공부하던 중, Array를 생성할 때 생성자와 관련된 내용을 알게 되어서 작성하려고 한다.</p>
+<a id="more"></a>
+<h3 id="subject">Subject</h3>
+<p>코틀린은 어떻게 보면 2가지 형태의 배열이 존재한다. 자바의 Primitive Type의 배열을 지원하는 IntArray, LongArray, XXXArray 형태가 그것이다. 이외에도 Array<type> 형태를 가지기도 하는데, 이번에는 Array<type> 형태의 배열에 대해서 알아보려고 한다.</type></type></p>
+<h4 id="배열을-생성하는-법">배열을 생성하는 법</h4>
+<ol>
+<li>내부에서 제공하는 API를 사용하는 방법
+<ul>
+<li>배열을 선언과 동시에 값을 초기화할 경우, arrayOf(value) 함수를 이용하면 된다.</li>
+<li>배열의 크기만 지정하고 값은 나중에 저장할 경우, arrayOfNulls(size) 함수를 이용하면 된다. 이때, 지정된 크기만큼 null로 초기화된다.</li>
+</ul>
+</li>
+</ol>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * created by victory_woo on 2020/10/28</span></span><br><span class="line"><span class="comment"> * */</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">(args: <span class="type">Array</span>&lt;<span class="type">String</span>&gt;)</span></span> &#123;</span><br><span class="line">    initTest()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">fun</span> <span class="title">initTest</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">val</span> array: Array&lt;<span class="built_in">Int</span>&gt; = arrayOf(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>) [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>]</span><br><span class="line">    <span class="keyword">val</span> array2 = arrayOfNulls&lt;<span class="built_in">Int</span>&gt;(<span class="number">3</span>) [<span class="literal">null</span>, <span class="literal">null</span>, <span class="literal">null</span>]</span><br><span class="line"></span><br><span class="line">    array.forEach &#123; print(<span class="string">"<span class="variable">$it</span> "</span>) &#125;</span><br><span class="line">    println()</span><br><span class="line">    array2.forEach &#123; print(<span class="string">"<span class="variable">$it</span> "</span>) &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>생성자를 이용하는 방법
+<ul>
+<li>Array 생성자를 이용하며, Array(size, 람다식)으로 구성되어 있다.</li>
+<li>람다식을 통해 초기화를 자유롭게 지정할 수 있다.</li>
+</ul>
+</li>
+</ol>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * created by victory_woo on 2020/10/28</span></span><br><span class="line"><span class="comment"> * */</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">(args: <span class="type">Array</span>&lt;<span class="type">String</span>&gt;)</span></span> &#123;</span><br><span class="line">    initWithConstructor()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">fun</span> <span class="title">initWithConstructor</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">val</span> array: Array&lt;<span class="built_in">Int</span>&gt; = Array(<span class="number">3</span>) &#123; i -&gt; i &#125; [<span class="number">0</span>,<span class="number">1</span>,<span class="number">2</span>]</span><br><span class="line">    <span class="comment">// 좌측 i : index</span></span><br><span class="line">    <span class="comment">// 우측 i : index에 들어갈 값</span></span><br><span class="line">    <span class="comment">// i는 0부터 시작.</span></span><br><span class="line"></span><br><span class="line">    array.forEach &#123; print(<span class="string">"<span class="variable">$it</span> "</span>) &#125;</span><br><span class="line">    println()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>2번 방법처럼 생성자를 이용해서 Array를 초기화하는 방법은 처음봤다. 항상 arrayOf()를 이용하곤 했는데, 2번 방법도 상황에 따라 유용하게 사용할 수 있을 것 같다.</p>
+<h3 id="ref">Ref</h3>
+<ul>
+<li><a href="https://dybz.tistory.com/174" target="_blank" rel="noopener">[Kotlin 문법] 배열 Array</a></li>
+</ul>
 
             
 
@@ -322,7 +342,7 @@
             <div class="post-footer-tags">
                 <span class="text-color-light text-small">TAGGED IN</span><br/>
                 
-    <a class="tag tag--primary tag--small t-link" href="/tags/AAC/">AAC</a> <a class="tag tag--primary tag--small t-link" href="/tags/Android/">Android</a> <a class="tag tag--primary tag--small t-link" href="/tags/ViewModel/">ViewModel</a> <a class="tag tag--primary tag--small t-link" href="/tags/안드로이드/">안드로이드</a>
+    <a class="tag tag--primary tag--small t-link" href="/tags/Kotlin/">Kotlin</a> <a class="tag tag--primary tag--small t-link" href="/tags/배열/">배열</a> <a class="tag tag--primary tag--small t-link" href="/tags/배열-초기화/">배열 초기화</a> <a class="tag tag--primary tag--small t-link" href="/tags/초기화/">초기화</a> <a class="tag tag--primary tag--small t-link" href="/tags/코틀린/">코틀린</a>
 
             </div>
         
@@ -332,14 +352,11 @@
         <ul class="post-actions post-action-nav">
             <li class="post-action">
                 
-                    
-                <a
-                    class="post-action-btn btn btn--default tooltip--top"
-                    href="/2019/05/12/What-is-WorkManager/"
-                    data-tooltip="[Android] Work Manager"
-                    aria-label="PREVIOUS: [Android] Work Manager"
-                >
-                    
+                    <a
+                        class="post-action-btn btn btn--disabled"
+                        aria-hidden="true"
+                    >
+                        
                         <i class="fa fa-angle-left" aria-hidden="true"></i>
                         <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
                     </a>
@@ -349,9 +366,9 @@
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2019/05/10/What-is-SOLID/"
-                    data-tooltip="[개발상식]객체 지향 디자인의 5대 원칙"
-                    aria-label="NEXT: [개발상식]객체 지향 디자인의 5대 원칙"
+                    href="/2020/10/28/RxJava-Subject/"
+                    data-tooltip="[RxJava] Subject"
+                    aria-label="NEXT: [RxJava] Subject"
                 >
                     
                         <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
@@ -376,7 +393,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://woovictory.github.io/2019/05/12/How-to-initialize-of-viewModel/"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://woovictory.github.io/2020/10/28/Kotlin-Array/"
                     title="Share on Facebook"
                     aria-label="Share on Facebook"
                 >
@@ -389,7 +406,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://twitter.com/intent/tweet?text=https://woovictory.github.io/2019/05/12/How-to-initialize-of-viewModel/"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://woovictory.github.io/2020/10/28/Kotlin-Array/"
                     title="Share on Twitter"
                     aria-label="Share on Twitter"
                 >
@@ -402,7 +419,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://plus.google.com/share?url=https://woovictory.github.io/2019/05/12/How-to-initialize-of-viewModel/"
+                    target="new" href="https://plus.google.com/share?url=https://woovictory.github.io/2020/10/28/Kotlin-Array/"
                     title="Share on Google+"
                     aria-label="Share on Google+"
                 >
@@ -461,14 +478,11 @@
         <ul class="post-actions post-action-nav">
             <li class="post-action">
                 
-                    
-                <a
-                    class="post-action-btn btn btn--default tooltip--top"
-                    href="/2019/05/12/What-is-WorkManager/"
-                    data-tooltip="[Android] Work Manager"
-                    aria-label="PREVIOUS: [Android] Work Manager"
-                >
-                    
+                    <a
+                        class="post-action-btn btn btn--disabled"
+                        aria-hidden="true"
+                    >
+                        
                         <i class="fa fa-angle-left" aria-hidden="true"></i>
                         <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
                     </a>
@@ -478,9 +492,9 @@
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2019/05/10/What-is-SOLID/"
-                    data-tooltip="[개발상식]객체 지향 디자인의 5대 원칙"
-                    aria-label="NEXT: [개발상식]객체 지향 디자인의 5대 원칙"
+                    href="/2020/10/28/RxJava-Subject/"
+                    data-tooltip="[RxJava] Subject"
+                    aria-label="NEXT: [RxJava] Subject"
                 >
                     
                         <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
@@ -505,7 +519,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://woovictory.github.io/2019/05/12/How-to-initialize-of-viewModel/"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://woovictory.github.io/2020/10/28/Kotlin-Array/"
                     title="Share on Facebook"
                     aria-label="Share on Facebook"
                 >
@@ -518,7 +532,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://twitter.com/intent/tweet?text=https://woovictory.github.io/2019/05/12/How-to-initialize-of-viewModel/"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://woovictory.github.io/2020/10/28/Kotlin-Array/"
                     title="Share on Twitter"
                     aria-label="Share on Twitter"
                 >
@@ -531,7 +545,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://plus.google.com/share?url=https://woovictory.github.io/2019/05/12/How-to-initialize-of-viewModel/"
+                    target="new" href="https://plus.google.com/share?url=https://woovictory.github.io/2020/10/28/Kotlin-Array/"
                     title="Share on Google+"
                     aria-label="Share on Google+"
                 >
@@ -575,7 +589,7 @@
                     <a
                         class="share-option-btn"
                         target="new"
-                        href="https://www.facebook.com/sharer/sharer.php?u=https://woovictory.github.io/2019/05/12/How-to-initialize-of-viewModel/"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://woovictory.github.io/2020/10/28/Kotlin-Array/"
                         aria-label="Share on Facebook"
                     >
                         <i class="fab fa-facebook" aria-hidden="true"></i><span>Share on Facebook</span>
@@ -588,7 +602,7 @@
                     <a
                         class="share-option-btn"
                         target="new"
-                        href="https://twitter.com/intent/tweet?text=https://woovictory.github.io/2019/05/12/How-to-initialize-of-viewModel/"
+                        href="https://twitter.com/intent/tweet?text=https://woovictory.github.io/2020/10/28/Kotlin-Array/"
                         aria-label="Share on Twitter"
                     >
                         <i class="fab fa-twitter" aria-hidden="true"></i><span>Share on Twitter</span>
@@ -601,7 +615,7 @@
                     <a
                         class="share-option-btn"
                         target="new"
-                        href="https://plus.google.com/share?url=https://woovictory.github.io/2019/05/12/How-to-initialize-of-viewModel/"
+                        href="https://plus.google.com/share?url=https://woovictory.github.io/2020/10/28/Kotlin-Array/"
                         aria-label="Share on Google+"
                     >
                         <i class="fab fa-google-plus" aria-hidden="true"></i><span>Share on Google+</span>
@@ -660,9 +674,9 @@
     
         <script>
           var disqus_config = function() {
-            this.page.url = 'https://woovictory.github.io/2019/05/12/How-to-initialize-of-viewModel/';
+            this.page.url = 'https://woovictory.github.io/2020/10/28/Kotlin-Array/';
               
-            this.page.identifier = '2019/05/12/How-to-initialize-of-viewModel/';
+            this.page.identifier = '2020/10/28/Kotlin-Array/';
               
           };
           (function() {

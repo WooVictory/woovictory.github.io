@@ -275,6 +275,147 @@
                     
                         <a
                             class="link-unstyled"
+                            href="/2019/01/03/Android-What-is-serialization/"
+                            aria-label=": [안드로이드] 직렬화에 관해서"
+                        >
+                            [안드로이드] 직렬화에 관해서
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2019-01-03T21:46:29+09:00">
+	
+		    Jan 03, 2019
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/Android/">Android</a>
+
+
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-content">
+                    <ul>
+<li><a href="#%EC%A7%81%EB%A0%AC%ED%99%94%EB%9E%80?">직렬화란?</a></li>
+<li><a href="#%EC%97%AD%EC%A7%81%EB%A0%AC%ED%99%94%EB%9E%80?">역직렬화란?</a></li>
+<li><a href="#Serializable">Serializable</a></li>
+<li><a href="#Parcelable">Parcelable</a></li>
+</ul>
+<h2 id="직렬화란">직렬화란?</h2>
+<ul>
+<li><strong>직렬화</strong>는 메모리 내에 존재하는 정보를 보다 쉽게 전송 및 전달하기 위해 byte 코드 형태로 나열하는 것이다. 여기서 메모리 내에 존재하는 정보는 즉 객체를 말한다.</li>
+<li>JVM(Java Virtual Machine)의 메모리에 상주 되어있는 객체 데이터를 바이트 형태로 변환하는 기술</li>
+</ul>
+<p>따라서 직렬화는 주로 객체들을 통째로 파일로 저장하거나 전송하고 싶을 때 사용한다. 나는 안드로이드 앱 개발을 할 때 액티비티간의 데이터를 전달할 때 인텐트를 사용하고 이 인텐트에 전달할 데이터를 추가한다.</p>
+<p>복잡한 클래스의 객체를 이동하려는 경우에는 Serializable 또는 Parcelabe을 사용하여 직렬화하여 인텐트에 추가해서 데이터를 이동하면 된다.</p>
+<h2 id="역직렬화란">역직렬화란?</h2>
+<ul>
+<li>byte로 변환된 Data를 원래대로 Object나 Data로 변환하는 기술을 역직렬화라고 한다.</li>
+<li>직렬화된 바이트 형태의 데이터를 객체로 변환해서 JVM으로 상주시키는 형태</li>
+</ul>
+<h2 id="serializable">Serializable</h2>
+<p>Java에서는 Value Object를 쉽게 직렬화 하기위해 <strong>Serializable</strong>이라는 interface가 있다. 이는 Marker Interface로서 단순히 implement하는 것만으로도 JVM에게 직렬화가 가능하다는 것을 알려주기 때문에 사용하는게 매우 쉬운 편이다.</p>
+<p>Serializable은 Android SDK가 아닌 표준 Java의 인터페이스이다.</p>
+<p>이 인터페이스를 구현한 클래스의 객체는 이제 한 액티비티에서 다른 액티비티로 이동할 준비가 된다. 다음 코드를 보자.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.Serializable;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Person</span> <span class="keyword">implements</span> <span class="title">Serializable</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String firstName;</span><br><span class="line">    <span class="keyword">private</span> String lastName;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> age;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Person</span><span class="params">(String firstName, String lastName, <span class="keyword">int</span> age)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.firstName = firstName;</span><br><span class="line">        <span class="keyword">this</span>.lastName = lastName;</span><br><span class="line">        <span class="keyword">this</span>.age = age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getFirstName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> firstName;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setFirstName</span><span class="params">(String firstName)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.firstName = firstName;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getLastName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> lastName;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setLastName</span><span class="params">(String lastName)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.lastName = lastName;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getAge</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setAge</span><span class="params">(<span class="keyword">int</span> age)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.age = age;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Serializable은 해당 클래스가 직렬화 대상이라고 알려주기만 할뿐 어떠한 메소드도 가지지 않는 단순한 <strong>마커 인터페이스</strong>이므로 사용자는 매우 쉽게 사용할 수 있다.</p>
+<p>사용방법이 쉽다는 것은 곧 시스템적인 비용이 비싸다는 것을 의미한다.</p>
+<p><strong>Serializable</strong>은 내부에서 <code>Reflection</code>을 사용하여 직렬화를 처리한다. Reflection은 프로세스 동작 중에 사용되며 처리 과정 중에 많은 추가 객체를 생성한다. 이 많은 쓰레기들은 가비지 컬렉터의 타깃이 되고 가비지 컬렉터의 과도한 동작으로 인하여 성능 저하 및 배터리 소모가 발생한다.</p>
+<h2 id="parcelable">Parcelable</h2>
+<p><strong>Parcelable</strong>은 직렬화를 위한 또 다른 인터페이스이다. Serializable과는 달리 표준 Java가 아닌 Android SDK의 인터페이스이다.</p>
+<p>Parcelabledms Reflection을 사용하지 않도록 설계되엇다. Serializable과는 달리 직렬화 처리 방법을 사용자가 명시적으로 작성하기 때문에 자동으로 처리하기 위한 Reflection이 필요없다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> android.os.Parcel;</span><br><span class="line"><span class="keyword">import</span> android.os.Parcelable;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Person</span> <span class="keyword">implements</span> <span class="title">Parcelable</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String firstName;</span><br><span class="line">    <span class="keyword">private</span> String lastName;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> age;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Person</span><span class="params">(String firstName, String lastName, <span class="keyword">int</span> age)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.firstName = firstName;</span><br><span class="line">        <span class="keyword">this</span>.lastName = lastName;</span><br><span class="line">        <span class="keyword">this</span>.age = age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getFirstName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> firstName;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setFirstName</span><span class="params">(String firstName)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.firstName = firstName;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getLastName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> lastName;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setLastName</span><span class="params">(String lastName)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.lastName = lastName;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getAge</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setAge</span><span class="params">(<span class="keyword">int</span> age)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.age = age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">describeContents</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">writeToParcel</span><span class="params">(Parcel dest, <span class="keyword">int</span> flags)</span> </span>&#123;</span><br><span class="line">        dest.writeString(<span class="keyword">this</span>.firstName);</span><br><span class="line">        dest.writeString(<span class="keyword">this</span>.lastName);</span><br><span class="line">        dest.writeInt(<span class="keyword">this</span>.age);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="title">Person</span><span class="params">(Parcel in)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.firstName = in.readString();</span><br><span class="line">        <span class="keyword">this</span>.lastName = in.readString();</span><br><span class="line">        <span class="keyword">this</span>.age = in.readInt();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> Parcelable.Creator&lt;Person&gt; CREATOR = <span class="keyword">new</span> Parcelable.Creator&lt;Person&gt;() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> Person <span class="title">createFromParcel</span><span class="params">(Parcel source)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> Person(source);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> Person[] newArray(<span class="keyword">int</span> size) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> Person[size];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>마커 인터페이스인 Serializable과는 달리 <strong>Parcelable</strong>은 구현해야 하는 필수 메소드를 포함하기 때문에 클래스에 <code>보일러 플레이트</code> 코드가 추가된다. 이는 클래스를 이해하기 어렵고 새로운 기능을 추가하기 힘들게 만든다. 또한 코드의 추가로 클래스가 복잡해질수록 유지 보수가 어려워지는 원인이 된다.</p>
+<p>Parcelable의 사용법은 조금 어렵다. 필수적으로 정의해야 하는 메소드가 두 가지가 있다.</p>
+<p><strong>describeContent()</strong></p>
+<ul>
+<li>Parcel 객체에 내용을 기술한다. FileDescriptor 같은 특별한 객체가 들어가면 이 부분을 통해서 알려줘야 한다. 보통은 0을 리턴한다.</li>
+</ul>
+<p><strong>writeToParcel(Parcel out, int flag)</strong></p>
+<ul>
+<li>직렬화시 container 역할을 하는 Parcel안에 데이터를 넣는 작업을 한다.</li>
+</ul>
+<p>이 두가지 메소드를 정의해야함과 동시에 <code>CREATOR</code>라는 static field(정적 필드)를 반드시 가지고 있어야 한다. 이는 선언과 동시에 초기화 되어야 한다. <strong>CREATOR 객체는 나중에 역직렬화 시 사용된다.</strong></p>
+<p>CREATOR 구현에는 다음의 두 가지 메소드를 구현해야 한다.</p>
+<p><strong>createFromParcel(Parcel source)</strong></p>
+<ul>
+<li>parcel된 데이터를 다시 원래대로 객체로 변환시켜 주는 작업을 한다.</li>
+</ul>
+<p><strong>newArray(int size)</strong></p>
+<ul>
+<li>전달하는 객체가 배열일 경우 즉, Parcel.createTypeArray()를 호출했을 때 불리며 배열을 다시 할당하기 위해 사용한다.</li>
+</ul>
+<p>parcelable은 이러한 분해와 조립을 돕는다. 이 과정에서 순서가 있고 직렬화될 변수들을 직접 세팅하여 빠른 속도를 낸다.</p>
+<p>Serializable이 시스템 비용을 발생한다면 Parcelable은 구현과 유지, 보수에 드는 사용자의 노력을 비용으로 지불해야 한다.</p>
+<h2 id="parcelable-vs-serializable">Parcelable VS Serializable</h2>
+<p>인터넷에서는 Parcelable과 Serializable을 비교하는 정보들을 많이 찾을 수 있다. 인터넷에서 쉽게 접할 수 있는 접근법과 다른 접근법이 존재하기에 여기에 적으려고 한다. 이 글의 참고는 아래에 적어놓았다.</p>
+<ol>
+<li>Parcelable이 Serializable보다 빠르다.</li>
+</ol>
+<img src="/img/parcelable_vs_serializable_speed.png" width="500" height="300">
+<p>많이 볼 수 있는 위의 결과는 Parcelable이 Serializable보다 10배 이상 빠르다는 것을 보여준다. 일부분도 그렇게 생각한다고 한다.</p>
+<ol start="2">
+<li>다른 의견</li>
+</ol>
+<p>두번째 의견은 <strong>기본 사용법에 의한 Serializable</strong>은 Parcelable보다 느리다는 것이다. 이 말의 뜻을 잘 살펴보면 다음과 같다.</p>
+<p>Parcelable은 위에서 설명한 것처럼 하나의 클래스 객체만을 위한 특별한 사용자 정의 코드를 작성해야만 한다. 사용자가 정의한 코드의 도움으로 <strong>Parcelable</strong>은 Serializable과는 달리 쓰레기를 생성할 이유가 없고 그 결과 성능도 더 좋다.</p>
+<p>그러나 <strong>기본 사용법에 의한 Serializable</strong>은 Java의 자동 직렬화 프로세스를 사용한다. 이 과정은 분명 Parcelable과 같은 수고로움은 없지만 처리 과정에서 많은 쓰레기를 만들어낸다. 따라서 더 나쁜 결과를 보여주게 된다.</p>
+<p>지금부터 조금 다른 방법으로 Serializable을 사용해 볼 것이다. Serializable에서 자동으로 처리되는 직렬화 <strong>프로세스는 사용자가 구현한 writeObject(), readObject() 메소드로 대체될 수 있다.</strong> 사용자가 구현한 직렬화 메소드와 함께 Serializable 접근 방식을 사용하려면 다음의 메소드를 반드시 구현해야 한다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">writeObject</span><span class="params">(java.io.ObjectOutputStream out)</span></span></span><br><span class="line"><span class="function">    <span class="keyword">throws</span> IOException</span>;</span><br><span class="line">    </span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">readObject</span><span class="params">(java.io.ObjectInputStream in)</span></span></span><br><span class="line"><span class="function">    <span class="keyword">throws</span> IOException, ClassNotFoundException</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">readObjectNoData</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    <span class="keyword">throws</span> ObjectStreamException</span>;</span><br></pre></td></tr></table></figure>
+<p>마치 Parcelable의 사용법처럼 Serializable의 writeObject()와 readObject() 메소드에는 해당 클래스에 맞는 처리 로직을 포함시킬 수 있다. 제대로 수행된다면 기본 사용법에 의한 Serializable 방식에서 발생하는 쓰레기가 더 이상 생성되지 않을 것이다.</p>
+<p>이 글 원본 작성자가 테스트한 결과는 놀랍다고 한다. 특정 클래스 처리 로직을 구현한 Serializable은 Parcelable보다 쓰기 속도가 3배 이상, 읽기의 경우 1.6배 더 빠르다고 한다.</p>
+<h2 id="잠깐">잠깐!</h2>
+<p>기본 사용법에 의한 Serializable보다 Parcelable이 빠르다고 했다. 그 이유를 살펴보면 Serializable은 내부적으로 <strong>리플렉션</strong>을 사용해서 이로 인해 많은 오브젝트 생성과 그에 따라 잦은 GC의 동작으로 인해 애플리케이션의 성능을 낮추는 배터리를 소모한다.</p>
+<p>그렇다면 Parcelable은 왜 더 빠른 것일까??</p>
+<p>Parcelable은 IPC(프로세스간 통신)을 이용하기 때문이다. 프로세스들 사이에서 서로 데이터를 주고 받는 것을 <code>IPC</code>라고 한다. 프로세스간의 메모리 영역은 서로 공유할 수 없기에 Parcelable 인터페이스는 커널 메모리를 통해 데이터를 다른 프로세스로 전달하는 통로를 만들어준다.</p>
+<img src="/img/parcelable_IPC.png" width="500" height="300">
+<h2 id="잠깐">잠깐!</h2>
+<p>위에서 등장하는 보일러플레이트 코드는 무엇일까???</p>
+<p>IT 업계에서 <strong>보일러 플레이트</strong>는 변경없이 재사용할 수 있는 저작품을 의미하며 보일러 플레이트 코드는 재사용이 가능한 코드를 의미한다.</p>
+<p>이 보일러 플레이트라는 단어는 철강 업계에서 유래되었는데 증기 보일러 내에 사용되는 커다란 압연 강판을 보일러 플레이트라고 불었으며 “강철처럼 튼튼하다.” &quot;반복적으로 재사용이 가능할 정도로 강력하다&quot;라는 의미가 있다고 한다.</p>
+<h2 id="참고">참고</h2>
+<ul>
+<li><a href="https://aroundck.tistory.com/3114" target="_blank" rel="noopener">[Java] writeObject 와 readObject 는 무엇인가?</a> - 참고해야할 자료 즉, 추후 공부해야할 내용들</li>
+<li><a href="https://medium.com/udacity-android-nanodegree/android-parcelable-vs-serializable-f2d7d2f4a2a" target="_blank" rel="noopener">Android : Parcelable vs Serializable</a></li>
+<li><a href="https://medium.com/@limgyumin/parcelable-vs-serializable-%EC%A0%95%EB%A7%90-serializable%EC%9D%80-%EB%8A%90%EB%A6%B4%EA%B9%8C-bc2b9a7ba810" target="_blank" rel="noopener">Parcelable vs Serializable , 정말 Serializable은 느릴까?</a></li>
+</ul>
+
+                    
+                        
+
+
+                    
+                    
+                        <p>
+                            <a
+                                href="/2019/01/03/Android-What-is-serialization/#post-footer"
+                                class="postShorten-excerpt_link link"
+                                aria-label=""
+                            >
+                                Comment and share
+                            </a>
+                        </p>
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-bottom">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
                             href="/2019/01/03/Android-What-is-retrofit/"
                             aria-label=": [안드로이드] Retrofit"
                         >
@@ -1088,57 +1229,6 @@ Fragment와 Activity가 통신할 수 있는 방법에는 3가지 방법이 있�
                             href="/2019/01/02/Java-Type-of-Error/"
                             class="postShorten-excerpt_link link"
                             aria-label=": [Java] RunTime Error vs Compile Error"
-                        >
-                            Continue reading
-                        </a>
-                        
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-right">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2018/12/31/Java-static-concept/"
-                            aria-label=": [Java] Static"
-                        >
-                            [Java] Static
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2018-12-31T11:52:46+09:00">
-	
-		    Dec 31, 2018
-    	
-    </time>
-    
-        <span>in </span>
-        
-    <a class="category-link" href="/categories/Java/">Java</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-excerpt">
-                    <p><code>Static</code>이라는 키워드는 보통 변수나 메소드 앞에서 사용한다.</p>
-                    
-                        <a
-                            href="/2018/12/31/Java-static-concept/"
-                            class="postShorten-excerpt_link link"
-                            aria-label=": [Java] Static"
                         >
                             Continue reading
                         </a>
