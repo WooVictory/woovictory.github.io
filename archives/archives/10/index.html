@@ -318,7 +318,7 @@
     </article>
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -350,51 +350,17 @@
 
             </div>
             
-                <div class="postShorten-content">
+                <div class="postShorten-excerpt">
                     <p>신입 개발자를 위한 <a href="https://github.com/WooVictory/Ready-For-Tech-Interview" target="_blank" rel="noopener">Repository</a>를 만들었습니다. 공부한 내용을 정리 중이니 도움이 되신다면 와서 Star를 눌러주시면 감사하겠습니다.</p>
-<p>알고리즘 문제를 풀다가 완전 탐색으로 해결하면 시간 초과가 나서 어떻게 풀어야 하는가 하다가 검색해보니 <code>투 포인터 알고리즘</code>이라는 개념이 나와서 간단하게 정리하고 넘어가겠다.</p>
-<p>1차원 배열이 있고 이 배열에서 각자 다른 원소를 가리키고 있는 2개의 포인터를 조작해가면서 원하는 것을 얻는 형태이다. 이 때문에 투 포인터 알고리즘이라고 부른다.</p>
-<p><strong>대표적인 문제</strong></p>
-<ul>
-<li><a href="https://www.acmicpc.net/problem/2003" target="_blank" rel="noopener">2003</a></li>
-</ul>
-<p>문제는 N칸의 1차원 배열이 있을 때, 부분 배열 중 그 원소의 합이 M이 되는 경우의 수를 구하는 것이다. 모든 경우의 수를 다 테스트해보면, 구간 합을 구간합 배열로 O(1)만에 구한다고 해도 경우의 수가 (N^2)이 된다. 따라서 문제를 풀 수 없다.</p>
-<p>이 문제에서 <strong>각 원소는 자연수이고 M 또한 자연수</strong>인데, 이 조건이 성립하면 사용할 수 있는 알고리즘은 다음과 같다.</p>
-<ul>
-<li>포인터 2개를 준비한다. 시작과 끝을 나타낼 수 있도록 start, end라고 하겠다.</li>
-<li>맨 처음에는 start = end = 0이며, 항상 start&lt;=end 을 만족해야 한다.</li>
-<li>이 두개의 포인터는 현재 부분 배열의 시작과 끝을 가리키는 역할을 한다.</li>
-</ul>
-<p>s = e일 경우 그건 크기가 0인 즉, 아무것도 포함하지 않는 부분 배열을 뜻한다. 이제 아래의 과정을 <strong>start&lt;N</strong> 인 동안 반복한다.</p>
-<ol>
-<li>현재 부분합이 M 이상이거나, 이미 end = N이면 start++</li>
-<li>그렇지 않다면 end++</li>
-<li>현재 부분합이 M과 같다면 count++</li>
-</ol>
-<p>쉽게 이해하자면, start와 end를 무조건 증가시키는 방향으로만 변화시켜가면서, 도중에 부분 배열의 합이 정확히 M이 되는 경우를 세는 것이다.</p>
-<p>그림으로 보는게 편하다. 그림을 그리기에는 시간이 좀 걸려서 내가 보고 이해한 그림을 첨부하겠다. 아래 참고한 블로그를 보면 설명을 아주 잘해주셨다. 이것만 보면 이해가 될 것이다.</p>
-<p>대표적인 문제를 풀어봤다. 백준 2003번으로 <strong>수들의 합2</strong> 문제이다. 풀이는 아래와 같다.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 투포인터 알고리즘</span></span><br><span class="line"><span class="comment"> * start : 시작</span></span><br><span class="line"><span class="comment"> * end : 끝</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        BufferedReader br = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(System.in));</span><br><span class="line">        String[] input = br.readLine().split(<span class="string">" "</span>);</span><br><span class="line">        <span class="keyword">int</span> n = parse(input[<span class="number">0</span>]);</span><br><span class="line">        <span class="keyword">int</span> m = parse(input[<span class="number">1</span>]);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span>[] arr = <span class="keyword">new</span> <span class="keyword">int</span>[n + <span class="number">1</span>];</span><br><span class="line"></span><br><span class="line">        String[] num = br.readLine().split(<span class="string">" "</span>);</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; i++) &#123;</span><br><span class="line">            arr[i] = parse(num[i - <span class="number">1</span>]);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> start = <span class="number">0</span>, end = <span class="number">0</span>, sum = <span class="number">0</span>, count = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">            <span class="comment">// 부분합이 m 보다 큰 경우 start 가 가리키는 원소를 빼고</span></span><br><span class="line">            <span class="comment">// start 의 값을 증가시킨다. 즉, start 뒤로 이동.</span></span><br><span class="line">            <span class="keyword">if</span> (sum &gt;= m) &#123;</span><br><span class="line">                sum = sum - arr[start++];</span><br><span class="line"></span><br><span class="line">                <span class="comment">// end 가 n 에 도달하면 종료한다.</span></span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (end == n) &#123;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="comment">// 위의 두 경우에 해당하지 않으면 end 는 뒤로 이동하면서 원소의 값을</span></span><br><span class="line">                <span class="comment">// sum 에 더한다.</span></span><br><span class="line">                sum = sum + arr[end++];</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 부분 합이 m 과 같다면 count 를 증가시켜준다.</span></span><br><span class="line">            <span class="keyword">if</span> (sum == m) &#123;</span><br><span class="line">                count++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(count);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">parse</span><span class="params">(String str)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> Integer.parseInt(str);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="참고">참고</h2>
-<ul>
-<li><a href="https://m.blog.naver.com/kks227/220795165570" target="_blank" rel="noopener">투 포인터(Two Pointers Algorithm), 슬라이딩 윈도우(Sliding Window)</a></li>
-</ul>
-
                     
+                        <a
+                            href="/2019/05/28/Two-Pointer-Algorithm/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [알고리즘] 투포인터 알고리즘"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2019/05/28/Two-Pointer-Algorithm/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             
@@ -403,7 +369,7 @@
     </article>
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -435,70 +401,18 @@
 
             </div>
             
-                <div class="postShorten-content">
-                    <p>코틀린에는 static 개념이 없다. 사실 개념이 없다기 보다는 static keyword가 없기 때문에 Java의 static 개념을 코틀린에서 표현할 수 없다. 그래서 이를 어떻게 표현하는지 중점적으로 살펴보겠다.</p>
-<ul>
-<li>싱글톤을 정의하는 방법</li>
-<li>동반 객체 companion object를 이용한 팩토리 메소드 구현</li>
-<li>익명 클래스 선언</li>
-</ul>
-<p>위의 3가지를 <strong>object</strong> keyword를 이용해 표현한다.</p>
-<h2 id="싱글톤">싱글톤</h2>
-<p>코틀린에서는 object를 이용하여 클래스를 정의함과 동시에 객체를 생성할 수 있다. 말 그대로 싱글톤을 쉽게 구현할 수 있다. 이해하기 쉽게 간단한 예제를 만들었다.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SharedPreference</span></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> SharedPreference INSTACNE=<span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">SharedPreference</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(INSTACNE == <span class="keyword">null</span>)&#123;</span><br><span class="line">            INSTACNE = SharedPreference();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>위 코드는 자바에서 사용할 수 있는 간단한 싱글톤 패턴 구현 코드이다. 그럼 이제 코틀린에서 object를 사용해 바꿔보자.</p>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">object</span> SharedPreference&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> const <span class="keyword">val</span> NAME = <span class="string">"Test"</span></span><br><span class="line">    <span class="keyword">private</span> const <span class="keyword">val</span> MODE = Context.MODE_PRIVATE</span><br><span class="line">    <span class="keyword">private</span> latedinit <span class="keyword">var</span> preferences: SharedPreferences</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">init</span><span class="params">(context: <span class="type">Context</span>)</span></span> &#123;</span><br><span class="line">        preferences = context.getSharedPreferences(NAME, MODE)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 생략.</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">(args: <span class="type">Array</span>&lt;<span class="type">String</span>&gt;)</span></span>&#123;</span><br><span class="line">    SharedPreference.init(applicationContext)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>위의 코드처럼 object로 선언하면 클래스 선언과 동시에 객체가 생성된다. 따라서 객체 이름을 통해 property나 메소드에 접근할 수 있다.</p>
-<p>object 클래스는 가장 바깥 클래스로 선언될 수도 있고, 내부에 중첩된 클래스 형태로 선언될 수도 있다. 하지만, 어떤 방식으로 선언되었던 간에 존재하는 object는 단일 객체만 존재한다.</p>
-<h2 id="companion-object">companion object</h2>
-<p>코틀린에서는 static을 지원하지 않는 대신 <code>top-level function</code>을 통해 같은 효과를 낼 수 있다. 단, top-level function은 class 내부에 선언된 private property에는 접근할 수 없는 제한을 받는다.</p>
-<p>이를 해결하기 위해서 <code>companion object</code>라는 개념이 존재한다. 클래스의 인스턴스 생성과 상관없이 호출해야 하지만 class의 내부 정보에 접근할 수 있는 함수가 필요할 때 companion obejct를 class 내부에 선언한다. <strong>Java로 따지면 class 내부에 static 함수를 넣는다고 생각하면 된다.</strong></p>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span></span>&#123;</span><br><span class="line">    <span class="keyword">companion</span> <span class="keyword">object</span>&#123;</span><br><span class="line">        <span class="function"><span class="keyword">fun</span> <span class="title">print</span><span class="params">()</span></span>&#123;</span><br><span class="line">            println(<span class="string">"Companion obejct call!!"</span>)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">(args: <span class="type">Array</span>&lt;<span class="type">String</span>&gt;)</span></span>&#123;</span><br><span class="line">    A.print()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>이처럼 A 클래스 내부에서 선언된 companion object는 호출할 때 클래스 이름으로 바로 호출할 수 있다. (Java의 static 함수와 동일한 형태이다.)</p>
-<p>또한, <code>companion object</code>는 외부 클래스의 private property에도 접근이 가능하기 때문에, factory method를 만들 때 적합하다.</p>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span> <span class="keyword">private</span> <span class="keyword">constructor</span></span>(<span class="keyword">val</span> nickname: String)&#123;</span><br><span class="line">    <span class="keyword">companion</span> <span class="keyword">object</span>&#123;</span><br><span class="line">        <span class="function"><span class="keyword">fun</span> <span class="title">newSubscribingUser</span><span class="params">(email: <span class="type">String</span>)</span></span> = User(email.substringBefore(<span class="string">'@'</span>))</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">fun</span> <span class="title">newFacebookUser</span><span class="params">(accountId: <span class="type">Int</span>)</span></span> = User(getFacebookName(accountId))</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">(args: <span class="type">Array</span>&lt;<span class="type">String</span>&gt;)</span></span>&#123;</span><br><span class="line">    <span class="keyword">val</span> subscribingUser = User.newSubscribingUser(<span class="string">"jhsw0375@gmail.com"</span>)</span><br><span class="line">    <span class="keyword">val</span> facebookUser = User.newFacebookUser(<span class="number">4</span>)</span><br><span class="line"></span><br><span class="line">    println(subscribingUser.nickname)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>위에서 User 클래스는 <strong>private constructor</strong>를 가지기 때문에 외부에서 생성할 수 없다. 따라서 외부에서는 companion으로 제공되는 factory method를 이용해서만 객체를 생성할 수 있도록 제한할 수 있다.</p>
-<h2 id="companion-object의-사용">companion object의 사용</h2>
-<p>companion object는 클래스 내부에 정의된 일반 객체이다. 따라서 아래와 같은 작업이 가능하다.</p>
-<ul>
-<li>companion object에 이름 명명</li>
-<li>companion object 내부에 확장 함수나 property 정의</li>
-<li>인터페이스 상속</li>
-</ul>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span></span>(<span class="keyword">val</span> name: String)&#123;</span><br><span class="line">    <span class="keyword">companion</span> <span class="keyword">object</span> Loader&#123;</span><br><span class="line">        <span class="function"><span class="keyword">fun</span> <span class="title">fromJSON</span><span class="params">(jsonText: <span class="type">String</span>)</span></span>: Person = ... 생략.</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">(args: <span class="type">Array</span>&lt;<span class="type">String</span>&gt;)</span></span>&#123;</span><br><span class="line">    person = Person.Loader.fromJSON(<span class="string">"&#123;name: 'kim'&#125;"</span>)</span><br><span class="line">    person = Person.fromJSON(<span class="string">"&#123;name: 'lee'&#125;"</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>companion object에 이름을 붙일 수 있으며, 이름을 통해서 호출할 수도 있고 그냥 호출할 수도 있다.</p>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">JSONFactory</span>&lt;<span class="type">T</span>&gt; </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">fromJSON</span><span class="params">(jsonText: <span class="type">String</span>)</span></span>: T</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span></span>(<span class="keyword">val</span> name: String)&#123;</span><br><span class="line">    <span class="keyword">companion</span> <span class="keyword">object</span>: JSONFactory&#123;</span><br><span class="line">        <span class="keyword">override</span> fromJSON(jsonText: String): Person = ... 생략</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> loadFromText<span class="type">&lt;T&gt;</span><span class="params">(factory: <span class="type">JSONFactory</span>&lt;<span class="type">T</span>&gt;)</span></span>: T&#123;</span><br><span class="line">    ... 생략.</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">(args: <span class="type">Array</span>&lt;<span class="type">String</span>&gt;)</span></span>&#123;</span><br><span class="line">    loadFromText(Person)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>위의 코드처럼 companion object가 특정 interface를 구현할 수도 있고, 이 interface를 넘겨줄 때는 외부 class 이름을 사용한다.</p>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">ClickListener</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">onClick</span><span class="params">()</span></span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">(args: <span class="type">Array</span>&lt;<span class="type">String</span>&gt;)</span></span>&#123;</span><br><span class="line">    setClickAction(<span class="keyword">object</span>: ClickListener&#123;</span><br><span class="line">        <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onClick</span><span class="params">()</span></span>&#123;</span><br><span class="line">            println(<span class="string">"clicked!"</span>)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">setClickAction</span><span class="params">(clickListener: <span class="type">ClickListener</span>)</span></span>&#123;</span><br><span class="line">    clickListener.onClick()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>위의 코드에서 익명 클래스는 singleton이 아니다. 따라서 호출시 매번 객체가 생성된다는 점과 익명 클래스 내에서는 외부 클래스의 변수에 접근하여 값을 수정할 수도 있다.</p>
-<h2 id="sharedpreferences-예제">SharedPreferences 예제</h2>
-<p>Android에서는 간단한 값을 저장하기 위해서 <code>SharedPreferences</code>를 사용한다. 프로그램 어디서나 이 객체를 사용할 수 있어야 하기 때문에 일반적으로 <strong>Singleton</strong>을 이용해 구현하곤 한다. 자바에서는 싱글톤을 손쉽게 구현할 수 있다. 마찬가지로 코틀린에서도 object 개념을 사용해서 간단하게 구현할 수 있다.</p>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">object</span> SharedPreferenceManager&#123;</span><br><span class="line">    <span class="keyword">private</span> const <span class="keyword">val</span> PREF_TOKEN = <span class="string">"token"</span></span><br><span class="line">    <span class="keyword">private</span> const <span class="keyword">val</span> NAME = <span class="string">"Test"</span></span><br><span class="line">    <span class="keyword">private</span> const <span class="keyword">val</span> MODE = Context.MODE_PRIVATE</span><br><span class="line">    <span class="keyword">private</span> latedinit <span class="keyword">var</span> preferences: SharedPreferences</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">init</span><span class="params">(context: <span class="type">Context</span>)</span></span>&#123;</span><br><span class="line">        preferences = context.getSharedPreferences(NAME, MODE)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 확장 함수를 사용한다. 따라서 edit(), apply() 함수를 호출할 필요가 없다. 모든 작업을 이 함수 하나로 대체할 수 있다.</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">inline</span> <span class="function"><span class="keyword">fun</span> SharedPreferences.<span class="title">edit</span><span class="params">(operation: (<span class="type">SharedPreferences</span>.<span class="type">Editor</span>)</span></span> -&gt; <span class="built_in">Unit</span>)&#123;</span><br><span class="line">        <span class="keyword">val</span> editor = edit()</span><br><span class="line">        operation(edit)</span><br><span class="line">        editor.apply()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> token: String</span><br><span class="line">        <span class="keyword">get</span>() = preferences.getString(PREF_TOKEN,<span class="string">""</span>)</span><br><span class="line">        <span class="keyword">set</span>(value) = preferences.edit&#123;</span><br><span class="line">            it.putString(PREF_TOKEN, value)</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>간단하게 토큰을 저장하는 예제이다. 저장해서 확인해보는 과정까지 거친 코드이므로 잘 동작한다. 확장 함수를 만들어서 이를 통해 edit(), apply() 함수를 직접 호출할 필요가 없다. 작성한 함수만 사용하면 되기 때문이다.</p>
-<p>또한, 여러 개의 함수를 만들 필요 없이 하나의 함수만 사용하면 되고 저장할 값이 필요하다면 token 처럼 만들어서 사용자 지정 get,set을 사용하여 값을 가져오고 저장하는 과정을 거치면 된다.</p>
-<p>이 클래스를 만들기 위해서 처음에 어떻게 잘 짤 수 있을까를 먼저 고민해보았다. 그런데 바보 같은 생각이라는 걸 깨달았다. 처음부터 잘 짤 수는 없는 것이다. 완벽한 코드는 없으면 코드를 짜면서 공부를 하면서 수정하면 되는 것이다.</p>
-<p>그러니 처음부터 완벽한 코드를 짜려고 애쓰지 않도록 마음 먹었다. 리팩토링을 하면 나의 코드를 더 발전시켜 나갈 수 있으니 말이다. 오늘은 여기까지!</p>
-<h2 id="참고">참고</h2>
-<ul>
-<li><a href="http://lomza.totem-soft.com/tutorial-how-to-use-sharedpreferences-in-kotlin/" target="_blank" rel="noopener">[Tutorial] How to use SharedPreferences in Kotlin</a></li>
-<li><a href="https://tourspace.tistory.com/109" target="_blank" rel="noopener">[Kotlin] 코틀린 object</a></li>
-</ul>
-
+                <div class="postShorten-excerpt">
+                    <h3>Prologue</h3>
+<p>코틀린에는 static 개념이 없다. 사실 개념이 없다기 보다는 static keyword가 없기 때문에 Java의 static 개념을 코틀린에서 표현할 수 없다. 그래서 이를 어떻게 표현하는지 중점적으로 살펴보겠다.</p>
                     
+                        <a
+                            href="/2019/05/28/What-is-Kotlin-Object/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [Kotlin] Object"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2019/05/28/What-is-Kotlin-Object/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             
@@ -663,7 +577,7 @@
     </article>
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -695,285 +609,17 @@
 
             </div>
             
-                <div class="postShorten-content">
+                <div class="postShorten-excerpt">
                     <p>모듈화를 함에 있어서 UML이 무엇인지, UML을 이용해 클래스 다이어그램을 작성하는 방법을 공부하기 위한 포스팅이다.</p>
-<ul>
-<li>UML(Unified Modeling Language)
-<ul>
-<li>시스템을 모델로 표현해주는 대표적인 모델링 언어.</li>
-</ul>
-</li>
-<li>UML 다이어그램의 종류
-<ol>
-<li>구조 다이어그램
-<ul>
-<li><strong>클래스 다이어그램</strong>, 객체 다이어그램, 복합체 구조 다이어그램, 배치 다이어그램, 컴포넌트 다이어그램, 패키지 다이어그램.</li>
-</ul>
-</li>
-<li>행위 다이어그램
-<ul>
-<li>활동 다이어그램, 상태 머신 다이어그램, 유즈 케이스 다이어그램, 상호작용 다이어그램.</li>
-</ul>
-</li>
-</ol>
-</li>
-<li>UML 작성 도구
-<ul>
-<li><a href="http://staruml.io/" target="_blank" rel="noopener">http://staruml.io/</a></li>
-<li><a href="http://www.umlet.com/" target="_blank" rel="noopener">http://www.umlet.com/</a></li>
-</ul>
-</li>
-</ul>
-<h3 id="클래스-다이어그램이란">클래스 다이어그램이란</h3>
-<ul>
-<li>시간에 따라 변하지 않는 시스템의 정적인 면을 보여주는 대표적인 UML 구조 다이어그램이다.</li>
-<li>목적 : 시스템을 구성하는 클래스들 사이의 관계를 표현한다.</li>
-</ul>
-<h3 id="클래스">클래스</h3>
-<ul>
-<li>클래스란
-<ol>
-<li>동일한 속성과 행위를 정의한 객체의 집합.</li>
-<li>객체를 생성하는 설계도.</li>
-</ol>
-</li>
-<li>클래스는 <strong>변화의 기본 단위</strong>
-<ul>
-<li>디자인 패턴을 제대로 이해하려면 만들진 프로그램을 흔들어보고 어떤 것이 변화되는지를 잘 살펴봐야 한다.</li>
-</ul>
-</li>
-<li>UML 클래스의 표현은 아래 그림과 같다.
-<ul>
-<li>가장 위 : 클래스 이름</li>
-<li>중간 : 속성(클래스의 특징, 변수)</li>
-<li>마지막 : 연산(클래스가 수행하는 책임, 메소드)</li>
-<li>경우에 따라 속성과 연산 부분은 생략 가능.</li>
-</ul>
-</li>
-</ul>
-<img src="/img/uml-class.png" width="400" height="300">
-<ul>
-<li>속성과 연산의 가시화를 정의
-<ul>
-<li>UML에서는 접근 제어자를 사용해 나타낼 수 있다.</li>
-</ul>
-</li>
-</ul>
-<img src="/img/access-controller.png" width="600" height="300">
-<ul>
-<li>분석 단계와 설계 단계에서의 클래스 다이어그램은 아래와 같다.
-<ul>
-<li>분석 단계는 조금 더 간략하게 표시한다.</li>
-<li>설계 단계는 보다 더 세밀하게 작성한다.</li>
-</ul>
-</li>
-</ul>
-<img src="/img/uml-class-example.png" width="600" height="300">
-<h3 id="관계">관계</h3>
-<p>UML에서 제공하는 클래스들 사이의 관계는 아래의 표와 같다.<br>
-표를 먼저 보고 각 관계의 의미에 대해서 알아보도록 하자.</p>
-<img src="/img/association.png" width="800" height="300">
-<p>서로 의미있는 클래스들의 관계에는 크게 4가지 종류가 있다.<br>
-일반적인 의미의 연결 관계인 <code>연관(association) 관계</code>, 전체와 부분을 나타내는 <code>집합(aggregation) 관계</code>, 다른 클래스의 속성을 물려받는 <code>상속(inheritance) 관계</code>, 그리고 한 클래스가 다른 클래스에 영향을 미치는 <code>의존(dependency) 관계</code>가 있다.</p>
-<img src="/img/sample_association4.jpg" width="600" height="300">
-<p>연관 관계와 의존 관계를 구분 짓는 가장 큰 기준은<br>
-<strong>참조하는 클래스 인스턴스의 참조를 계속 유지하고 있느냐, 아니냐</strong>이다.<br>
-아래의 코드에서 확인할 수 있다.</p>
-<ul>
-<li>연관 관계 : 참조를 유지한다.</li>
-<li>의존 관계 : 참조를 짧게 유지하고 빠르게 끊는다.</li>
-</ul>
-<p><strong>의존(dependency) 관계</strong></p>
-<ul>
-<li>일반적으로 한 클래스가 다른 클래스를 사용하는 경우.
-<ol>
-<li>클래스의 속성에서 참조할 때</li>
-<li>매개변수, 인자로 사용될 때</li>
-<li>메소드 내부의 지역 변수로 참조될 때</li>
-</ol>
-</li>
-<li>1 : 연관 관계 / 2,3 : 의존 관계</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">A</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">A</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="comment">// 생성자.</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">callA</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="comment">// 의존 관계 : 이 메소드 내부에서만 c의 참조를 유지한다.</span></span><br><span class="line">        <span class="comment">// 메소드 실행이 종료되면 c의 참조도 사라진다.</span></span><br><span class="line">        C c = <span class="keyword">new</span> C();</span><br><span class="line">        c.callC();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">C</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 생략.</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>위의 코드에서 확인할 수 있는 것처럼 짧은 시간 동안 이용하는 관계</li>
-<li>UML에서는 다음과 같이 점선으로 나타낸다.</li>
-</ul>
-<img src="/img/dependency.jpg" width="600" height="300">
-<p><strong>연관 관계</strong></p>
-<ul>
-<li>오랜 시간 동안 같이 할 객체와의 관계</li>
-<li>예를 들어, 자동차와 자동차를 소유한 사람의 관계</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">A</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> C c;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">A</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 생성자.</span></span><br><span class="line">        <span class="comment">// 연관 : 클래스 C에 대한 참조를 계속 유지하고 있음.</span></span><br><span class="line">        <span class="keyword">this</span>.c = <span class="keyword">new</span> C();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">callA</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.c.callC();</span><br><span class="line">    &#125;    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">C</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 생략.</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<img src="/img/association.jpg" width="600" height="300">
-<h4 id="의존-관계dependency">의존 관계(dependency)</h4>
-<p>클래스가 연관, 상속, 집합 관계로 엮여 있는 것은 아니지만, 한 곳이 변경되면 그것을 사용하는 다른 곳도 같이 변경해줘야 하는 관계를 표현할 때 주로 사용한다. 주의해야 할 점은 연관 관계와 달리 <strong>의존 관계의 경우에는 클래스 인스턴스의 참조를 유지하고 있지 않다는 점이다.</strong> 참조를 계속적으로 유지하게 되면 이는 연관 관계로 표현해야 한다.</p>
-<p>주로 다음과 같은 세 가지 경우에 의존 관계로 표현한다.</p>
-<ol>
-<li>한 클래스의 메소드가 다른 클래스의 객체를 인자로 받아 그 객체의 메소드를 사용한다.(가장 일반적이다.)</li>
-<li>한 클래스의 메소드가 또 다른 클래스의 객체를 반환한다.</li>
-<li>다른 클래스의 메소드가 또 다른 클래스의 객체를 반환한다. 이때 이 메소드를 호출하여 반환되는 객체의 메소드를 사용한다.</li>
-</ol>
-<h4 id="연관-관계association">연관 관계(association)</h4>
-<p>한 객체가 다른 객체와 연결되어 있음을 나타낼 때 그들을 연관 관계로 지칭한다. 이 연관 관계에서 중요하게 볼 점은 <strong>연관 관계의 방향</strong>과 <strong>멀티플리시티</strong>이다.</p>
-<p>연관 관계는 방향성을 가지며 양방향과 단방향으로 구분지을 수 있다.</p>
-<ul>
-<li>단방향 연관 관계 : 한쪽은 알지만 다른 쪽은 상대방의 존재를 모른다.
-<ul>
-<li>화살표로 표시한다.</li>
-<li>아래의 UML House 클래스는 Person 클래스의 존재를 알고 있지만, Person은 House 클래스의 존재를 모른다.</li>
-<li>House 클래스만 Person 클래스에 대한 참조값을 가지고 있고, Person은 House에 대한 어떠한 참조값도 가지고 있지 않는다.</li>
-</ul>
-</li>
-</ul>
-<img src="/img/sample_association2.jpg" width="600" height="300">
-<ul>
-<li>양방향 연관 관계 : 연결된 클래스들이 서로의 존재를 알고 있다.
-<ul>
-<li>실선으로 표시한다.</li>
-<li>아래의 UML의 의미는 House와 Person 클래스는 서로의 존재를 알고 있으며, 반드시 한 사람 이상이 House에 속해야 한다는 뜻이다.</li>
-</ul>
-</li>
-</ul>
-<img src="/img/sample_association1.jpg" width="600" height="300">
-<p>다대다 연관 관계는 양방향 연관 관계로 표현되는 것이 적절하다. 하지만 양방향 연관 관계를 구현하는 것은 복잡하기 때문에 보통 다대다 연관 관계를 <strong>일대다 단방향 연관 관계</strong>로 변환해 구현한다. -&gt; 연관 클래스</p>
-<ul>
-<li>연관 클래스
-<ul>
-<li>연관 관계에 추가할 속성이나 행위가 있을 때 사용한다.</li>
-<li>연관 클래스를 일반 클래스로 변환
-<ul>
-<li>연관 클래스는 연관 관계가 있는 두 클래스 사이에 위치하며, 점선을 사용해 연결한다.</li>
-<li><strong>이 연관 클래스를 일반 클래스로 변환하여 다대다에서 일대다 연관 관계로 변환한다.</strong></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<img src="/img/association-class-example.png" width="800" height="300">
-<h4 id="일반화-관계">일반화 관계</h4>
-<ul>
-<li>한 클래스가 다른 클래스를 포함하는 상위 개념일 때 두 클래스 사이에는 일반화 관계가 존재한다.</li>
-<li>객체지향 개념에서는 일반화 관계를 <code>상속 관계(IS-A)</code>라고 한다</li>
-</ul>
-<img src="/img/generalization-class.png" width="800" height="300">
-<ul>
-<li>부모 클래스
-<ul>
-<li>추상적인 개념이며 위의 그림에서 가전제품에 해당.</li>
-<li>자식 클래스에게 공통 속성이나 기능을 제공한다.</li>
-<li>ex) 제조번호, 제조 회사 같은 공통 속성과 turnOn/Off 같은 공통 기능을 두고 자식 클래스에서 상속받아 구현할 수 있다.</li>
-</ul>
-</li>
-<li>자식 클래스
-<ul>
-<li>구체적인 개념이며 아래의 제품들에 해당.</li>
-</ul>
-</li>
-<li>추상 클래스
-<ul>
-<li>추상 메소드를 하나 이상 갖는 클래스</li>
-<li>추상 메소드
-<ul>
-<li>부모 클래스에서 구현부 없이 선언부만 있는 함수</li>
-<li>ex) turnOn/Off는 자식 클래스에서 구현함에 따라 달라지기 때문에 부모 클래스에서 추상 메소드로 선언한다.</li>
-</ul>
-</li>
-<li>일반적인 클래스와 달리 객체를 생성할 수 없다.</li>
-</ul>
-</li>
-<li>UML에서의 표현
-<ul>
-<li>이탤릭체 사용.</li>
-</ul>
-</li>
-</ul>
-<img src="/img/abstract-class-uml.png" width="800" height="300">
-<h4 id="집합-관계">집합 관계</h4>
-<ul>
-<li>연관 관계의 특별 경우로 <strong>전체와 부분의 관계</strong>를 명확하게 명시하고자 할 때 사용한다.</li>
-<li>aggregation(집합)과 composition(구성)을 구분하는 기분은 <strong>lifeCycle이 같느냐, 같지 않느냐</strong>이다.</li>
-<li>lifeCycle이란 클래스 인스턴스의 생명주기를 말하는 것으로 생성에서 소멸까지의 과정이다.</li>
-</ul>
-<ol>
-<li>집합 관계(aggregation)</li>
-</ol>
-<ul>
-<li>한 객체가 다른 객체를 포함하는 것
-<ul>
-<li><strong>부분</strong>을 나타내는 객체를 다른 객체와 공유할 수 있다.</li>
-</ul>
-</li>
-<li><strong>전체</strong>를 가리키는 클래스 방향에 빈 마름모 표시</li>
-<li>전체 객체의 lifeCycle과 부분 객체의 lifeCycle은 독립적이다.
-<ul>
-<li>즉, 전체 객체가 사라진다 해도 부분 객체는 사라지지 않는다.</li>
-</ul>
-</li>
-<li>예시 : 생성자에서 참조값을 인자로 받아 필드 세팅</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Computer</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> MainBoard mb;</span><br><span class="line">    <span class="keyword">private</span> CPU c;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Computer</span><span class="params">(MainBorad mb, CPU c)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.mb = mb;</span><br><span class="line">        <span class="keyword">this</span>.c = c;</span><br><span class="line">        <span class="comment">// 집합 연관 : 부분과 전체의 관계</span></span><br><span class="line">        <span class="comment">// 부분이 되는 객체를 외부에서 생성하여 넘겨 받는다.</span></span><br><span class="line">        <span class="comment">// 따라서 Computer 클래스가 없어져도 부분이 되는 객체들은 사라지지 않는다.</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ol start="2">
-<li>합성 관계(Composition)</li>
-</ol>
-<ul>
-<li>부분 객체가 전체 객체에 속하는 관계
-<ul>
-<li><strong>부분</strong>을 나타내는 객체를 다른 객체와 공유할 수 없다.</li>
-</ul>
-</li>
-<li><strong>전체</strong>를 가리키는 클래스 방향에 채워진 마름모로 표시</li>
-<li>전체 객체의 lifeCycle과 부분 객체의 lifeCycle은 의존적이다.
-<ul>
-<li>즉, 전체 객체가 없어지면 부분 객체도 없어진다.</li>
-</ul>
-</li>
-<li>예시 : 생성자에서 필드에 대한 객체를 생성한다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Computer</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> MainBoard mb;</span><br><span class="line">    <span class="keyword">private</span> CPU c;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 생성자</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Computer</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.mb = <span class="keyword">new</span> MainBoard();</span><br><span class="line">        <span class="keyword">this</span>.c = <span class="keyword">new</span> CPU();</span><br><span class="line">        <span class="comment">// 합성 : 집합 관계 중에서도 강한 집합체의 의미를 갖는다.</span></span><br><span class="line">        <span class="comment">// 부분을 이루는 객체가 없이는 전체가 아무런 의미를 갖지 못한다.</span></span><br><span class="line">        <span class="comment">// Computer 클래스가 사라져 버리면 내부에서 생성된 MainBoard, CPU도 같이 사라진다.</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>aggregation과 composition을 쉽게 설명하면 모자와 안경을 쓴 사람을 생각해보자. 이 사람을 구성하고 있는 요소에는 눈,팔,다리와 같이 사람이 죽으면 같이 없어지는 요소들이 있고, 안경,모자와 같이 바꿔 사용할 수 있는 요소들이 있다.</p>
-<p>즉, 눈,팔,다리는 사람과 lifeCycle이 같은 Composition 관계이고 안경이나 모자는 Aggregation 관계인 것이다.</p>
-<img src="/img/set-uml-example.png" width="800" height="300">
-<h4 id="인터페이스와-실체화-관계">인터페이스와 실체화 관계</h4>
-<ul>
-<li>인터페이스란
-<ul>
-<li><strong>책임</strong>이며, 어떤 객체의 책임이란 객체가 해야 하는 일 또는 객체가 할 수 있는 일이다.</li>
-<li>즉, 객체가 외부에 제공하는 서비스나 기능은 객체가 수행하는 책임으로 본다.</li>
-<li>공통되는 능력이 있는 것들을 대표하는 관점</li>
-</ul>
-</li>
-<li>UML에서의 인터페이스 표현
-<ul>
-<li>빈 삼각형과 점선을 이용</li>
-</ul>
-</li>
-<li>객체 지향 개념에서는 실체화 관계를 <strong>can do this</strong> 관계라고 한다.</li>
-</ul>
-<img src="/img/interface-uml.png" width="800" height="300">
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Flyable</span></span>&#123;</span><br><span class="line">    <span class="comment">// 생략.</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Plane</span> <span class="keyword">implements</span> <span class="title">Flyable</span></span>&#123;</span><br><span class="line">    <span class="comment">// 생략.</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Bird</span> <span class="keyword">implements</span> <span class="title">Flyable</span></span>&#123;</span><br><span class="line">    <span class="comment">// 생략.</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="참고">참고</h2>
-<ul>
-<li><a href="https://gmlwjd9405.github.io/2018/07/04/class-diagram.html" target="_blank" rel="noopener">[UML] 클래스 다이어그램 작성법</a></li>
-<li><a href="https://geniusduck.tistory.com/entry/UML-%EA%B8%B0%EB%B3%B8%ED%8E%B8-%EA%B8%B0%EB%B3%B8-%ED%91%9C%EA%B8%B0-%ED%98%95%EC%8B%9D-%EB%B0%8F-%EA%B4%80%EA%B3%84%ED%91%9C%ED%98%84%EB%B2%95" target="_blank" rel="noopener">UML - 기본편 ( 기본 표기 형식 및 관계 표현법 )</a></li>
-</ul>
-
                     
+                        <a
+                            href="/2019/05/13/What-is-UML/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [개발 상식] UML"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2019/05/13/What-is-UML/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             
@@ -1084,7 +730,7 @@
     </article>
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -1116,89 +762,18 @@
 
             </div>
             
-                <div class="postShorten-content">
-                    <h2 id="1-service란">1. Service란?</h2>
+                <div class="postShorten-excerpt">
+                    <h2>1. Service란?</h2>
 <p><strong>Service</strong>는 안드로이드 Application을 구성하는 4대 컴포넌트 중 하나이다. Activity처럼 사용자와 상호 작용을 하는 컴포넌트는 아니다. 때문에 UI가 존재하지 않으며 <strong>Background</strong>에서 동작하는 컴포넌트이다.</p>
-<p>Service가 실행되고 있는 상태라면 안드로이드 OS에서는 해당 Process를 왠만하면 죽이지 않도록 방지하고 관리하게 된다. 그렇기 때문에 메모리 부족이나, 특별한 경우를 제외하고는 Background 동작을 수행하도록 설계되었다.</p>
-<img src="/img/android_service.png" width="600" height="300">
-<h2 id="2-service는-왜-필요할까">2. Service는 왜 필요할까?</h2>
-<p>'Android Application을 구성하기 위해서 Service는 왜 필요할까?'라고 생각을 할 수 있다. 그 이유는 Activity 즉, 사용자가 보고 있는 화면이 종료된 상태에서도 동작하기 위해서 만들어졌고, 개발자는 구현을 해야 한다.</p>
-<p>예를 들어서 Mp3 플레이어 같은 기능을 활용하는 경우가 될 수 있다. Mp3 플레이어는 화면이 종료된 상태에서도 계속 노래를 재생해야 하기 때문에 Background에서도 동작하도록 만들어야 한다. 따라서 <strong>Service</strong>를 사용해 구현하면 된다.</p>
-<ul>
-<li>파일 다운로드 같은 경우에도 사용할 수 있다.</li>
-<li>애플리케이션이 실행 중이지 않을 때도 작업해야 하는 경우에도 사용할 수 있다.(애플리케이션이 실행 중일 때만 작업해야 하는 경우 <strong>스레드</strong> 사용을 권장한다.)</li>
-</ul>
-<p><strong><code>주의</code></strong><br>
-Service가 Background에서 동작을 수행하는 컴포넌트라고 해서 Main Thread에서 실행되는 것이라고 생각하지 않을 수도 있다. 명심해야 할 점은 Android 4대 컴포넌트들은 모두 Main Thread에서 실행된다.</p>
-<p>따라서 CPU 자원을 많이 소모하거나 네트워크 통신과 같은 시간이 오래 걸리는 작업은 별도의 Thread를 만들어서 처리해야 한다. 이 부분은 아래에서 ANR과 함께 설명하겠다.</p>
-<h2 id="3-service-사용-방법">3. Service 사용 방법</h2>
-<p>2가지 방법이 있으면 <code>startService()</code>와 <code>bindService()</code>이다.</p>
-<ol>
-<li><strong>startService() - 시작 타입의 서비스</strong></li>
-</ol>
-<ul>
-<li>서비스를 상속받는 클래스를 작성하며, 정적 리시버와 유사하게 매니페스트 파일에 등록한다.</li>
-<li>한 번 시작되면 백그라운드에서 무한정 실행된다.</li>
-<li>작업을 완료하면 서비스가 종료된다.</li>
-<li>간단한 작업들만 수행한다.</li>
-<li>호출한 곳에 결과값을 반환하지 않고 계속해서 서비스한다.(음악 재생, 파일 다운로드 등)</li>
-<li>하나의 프로세스 안에서 동작하며, 패키지내 컴포넌트들과 유기적으로 통신하는 역할을 한다.</li>
-<li>생명 주기 : onCreate() -&gt; onStartCommand() -&gt; 실행 -&gt; onDestroy() -&gt; stopService()</li>
-</ul>
-<img src="/img/android_startService.png" width="600" height="300">
-<ol start="2">
-<li><strong>bindService() - 연결 타입의 서비스</strong></li>
-</ol>
-<ul>
-<li>클라이언트 - 서버와 같이 동작하며 호출자(액티비티)에서 서비스에게 어떤 것을 요청하고 서비스는 요청을 처리한 후 결과값을 반환한다. (서비스가 서버의 역할을 수행.)</li>
-<li>액티비티가 사라지면 서비스도 자동적으로 destroy되면서 없어진다.</li>
-<li>하나의 서비스가 다수의 액티비티와 연결될 수 있다.</li>
-<li>프로세스 내에서 다른 컴포넌트들과 서로 유기적으로 통신을 하며 <strong>또한, 어플 내의 기능을 외부에 제공하는 경우에 많이 사용된다. 즉, 다른 프로세스들 간에서도 Data 공유 및 통신이 유기적으로 가능하다.</strong></li>
-<li>생명 주기 : onCreate() -&gt; onBind() -&gt; 실행 -&gt; onUnbind() -&gt; onDestory() -&gt; stopService()</li>
-</ul>
-<img src="/img/android_bindService.png" width="600" height="300">
-<ol start="3">
-<li><strong>intentService</strong></li>
-</ol>
-<ul>
-<li>내부적으로 handlerThread가 동작하는 서비스</li>
-<li>루퍼가 message Queue에 들어온 요청에 대해 순차적으로 처리한다.</li>
-<li>Queue가 비게 되면 자동으로 서비스가 종료된다.</li>
-<li>동시에 처리하는게 아니므로 성능은 조금 떨어지지만 순차적 실행이 보장된다.</li>
-</ul>
-<h2 id="4-service-사용시-주의사항">4. Service 사용시 주의사항.</h2>
-<p>Android는 Linux 기반의 프로그램이다. 프레임워크 단에는 Linux로 구현되어 있다. 메모리 관리 또한 Linux 정책을 따르며 Linux Kernel에 의해서 관리된다.</p>
-<img src="/img/android_linux_kernel.png" width="600" height="300">
-<p>결국 여러 프로세스들을 커널에서 관리한다고 짐작할 수 있다.<br>
-또한 하나의 프로세스 안에는 애플리케이션, 안드로이드 4대 컴포넌트, 스레드 등을 구성하고 있다. 즉, 4대 컴포넌트의 운명 또한 리눅스 커널에 달려있다는 걸 의미한다.</p>
-<p>만약, 메모리 부족이나 과부하 등과 같은 현상이 발생했을 때 리눅스 커널이 프로세스를 강제로 종료시킬 수 있다.</p>
-<img src="/img/android_process.png" width="600" height="300">
-<p>여기서 주의해야 할 점이 있다. 바로 모든 컴포넌트들이 <strong>Main Thread</strong> 안에서 실행된다는 점이다. 안드로이드에서 Main Thread는 UI 작업을 처리하는 Thread이다. 따라서 Main Thread에서는 네트워크 작업이나 시간이 오래 걸리는 작업을 하게 되면 앱의 반응성이 낮아질 수 있다. 사용자의 불편함을 방지하고나 시스템이 <code>ANR</code> 상태로 전환시킬 수 있다.</p>
-<p>Service 역시 Main Thread에서 동작하기 때문에 시간이 오래 걸리는 작업을 할 경우에는 별도의 작업 Thread를 만들어서 동작을 처리해야 한다. 그리고 작업 결과를 UI Thread에 반영하기 위해서 쓰레드 간 통신 방법을 이용해 반영해야 한다.</p>
-<p>쓰레드간 통신 방법은 다음의 글을 참고하면 보면 될 것 같다.<br>
-<strong><a href="https://woovictory.github.io/2019/01/07/Android-For-Interview-4/">쓰레드간 통신 방법</a></strong></p>
-<p><strong>추가적인 내용들은 빠른 시일 내에 공부해서 포스팅할 예정이다.</strong></p>
-<h2 id="참고">참고</h2>
-<ul>
-<li><a href="https://limkydev.tistory.com/43" target="_blank" rel="noopener">[Android] 서비스(Service) 전반적인 개념</a></li>
-<li><a href="https://arabiannight.tistory.com/entry/%EC%95%88%EB%93%9C%EB%A1%9C%EC%9D%B4%EB%93%9CAndroid-Service-%EC%82%AC%EC%9A%A9%EB%B2%95" target="_blank" rel="noopener">안드로이드/Android Service 사용법</a></li>
-</ul>
-
                     
+                        <a
+                            href="/2019/05/12/What-is-Service/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [안드로이드] Service"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2019/05/12/What-is-Service/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             
@@ -1232,7 +807,7 @@ Service가 Background에서 동작을 수행하는 컴포넌트라고 해서 Mai
             </a>
           </li>
         
-        <li class="pagination-number">page 10 of 26</li>
+        <li class="pagination-number">page 10 of 25</li>
     </ul>
 </div>
 

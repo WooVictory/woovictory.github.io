@@ -318,7 +318,7 @@
     </article>
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -350,80 +350,23 @@
 
             </div>
             
-                <div class="postShorten-content">
-                    <h2 id="http의-문제점">HTTP의 문제점</h2>
+                <div class="postShorten-excerpt">
+                    <h2>HTTP의 문제점</h2>
 <p>HTTP는 다음과 같은 문제점을 갖는다.</p>
 <ol>
 <li>HTTP는 평문 통신이기 때문에 도청이 가능하다.</li>
 <li>통신 상대를 확인하지 않기 때문에 위장이 가능하다.</li>
 <li>완전성을 증명할 수 없기 때문에 변조가 가능하다.</li>
 </ol>
-<p>위 세 가지는 다른 암호화하지 않은 프로토콜에도 공통되는 문제점들이다.</p>
-<p><strong>TCP/IP는 도청 가능한 네트워크이다.</strong></p>
-<p>TCP/IP 구조의 통신은 전부 통신 경로 상에서 엿볼 수 있다. 패킷을 수집하는 것만으로도 도청할 수 있다. 평문으로 통신을 할 경우 메시지의 의미를 파악할 수 있기 때문에 암호화하여 통신해야 한다.</p>
-<p>1번 문제를 보완하는 방법은 다음과 같다.</p>
-<ol>
-<li>
-<p>통신 자체를 암호화<br>
-SSL(Secure Socket Layer) or TLS(Transport Layer Security) 라는 다른 프로토콜을 조합함으로써 HTTP의 통신 내용을 암호화할 수 있다. SSL을 조합한 HTTP를 HTTPS(HTTP Secure) or HTTP over SSL이라고 부른다.</p>
-</li>
-<li>
-<p>콘텐츠를 암호화<br>
-말 그대로 HTTP를 사용해서 운반하는 내용인 HTTP 메시지에 포함되는 콘텐츠만 암호화하는 것이다. 암호화해서 전송하면 받은 측에서는 그 암호를 해독하여 출력하는 처리가 필요하다.</p>
-</li>
-</ol>
-<p><strong>통신 상대를 확인하지 않기 때문에 위장이 가능하다.</strong></p>
-<p>HTTP에 의한 통신에는 상대가 누구인지 확인하는 처리가 없기 때문에 누구든지 Request를 보낼 수 있다. IP 주소나 포트 등에서 그 웹 서버에 엑세스 제한이 없는 경우 리퀘스트가 오면 상대가 누구든지 무언가의 리스폰스를 반환한다. 이러한 특징은 여러 문제점을 유발한다.</p>
-<ul>
-<li>리퀘스트를 보낸 곳의 서버가 원래 의도한 리스폰스를 보내야 하는 웹 서버인지를 확인할 수 없다.</li>
-<li>리스폰스를 반환한 곳의 클라이언트가 원래 의도한 리퀘스트를 보낸 클라이언트인지를 확인할 수 없다.</li>
-<li>통신하고 있는 상대가 접근이 허가된 상대인지를 확인할 수 없다.</li>
-<li>어디에서 누가 리퀘스트 했는지 확인할 수 없다.</li>
-<li>의미없는 리퀘스트도 수신한다. -&gt; DoS 공격을 방지할 수 없다.</li>
-</ul>
-<p>2번 문제를 보완하는 방법은 다음과 같다.</p>
-<p><code>SSL</code>로 상대를 확인할 수 있다. SSL은 상대를 확인하는 수단으로 <strong>증명서</strong>를 제공하고 있다. 증명서는 신뢰할 수 있는 써드 파티로부터 발행되는 것이기 때문에 서버나 클라이언트가 실재하는 사실을 증명한다.</p>
-<p>이 증명서를 이용함으로써 통신 상대가 내가 통신하고자 하는 서버임을 나타내고 이용자는 개인 정보 누설 등의 위험성이 줄어들게 된다. 한 가지 이점을 더 꼽자면 클라이언트는 이 증명서로 본인 확인을 하고 웹 사이트 인증에서도 이용할 수 있다.</p>
-<blockquote>
-<p>SSL의 작동 과정</p>
-</blockquote>
-<ol>
-<li>클라이언트가 SSL로 암호화된 페이지를 요청한다.(일반적으로 <a href="https://xn--o39a" target="_blank" rel="noopener">https://가</a> 사용된다.)</li>
-<li>서버는 Public Key와 인증서를 함께 전송한다.</li>
-<li>인증서가 신용있다고 판단한 CA(Certificate Authority)로부터 서명된 것인지 판단한다.</li>
-<li>클라이언트는 Public Key를 사용해서 랜덤 대칭 암호화키와 URL, http 데이터를 암호화하여 서버로 전송한다.</li>
-<li>서버는 Private Key를 이용하여 랜덤 대칭 암호화키와 URL, http 데이터를 복호화한다.</li>
-<li>서버는 요청받은 URL에 대한 응답을 랜덤 대칭 암호화키를 이용해서 암호화해서 클라이언트로 전송한다.</li>
-<li>클라이언트는 대칭 키를 이용해서 http 데이터를 복호화하고 데이터를 이용한다.</li>
-</ol>
-<p>SSL의 인증과 암호화 과정을 통해 3번 문제 또한 해결할 수 있다.</p>
-<p><strong>완전성을 증명할 수 없기 때문에 변조가 가능하다.</strong></p>
-<p>여기서 완전성이란 <code>정보의 정확성</code>을 의미한다. 서버 또는 클라이언트에서 수신한 내용이 송신측에서 보낸 내용과 일치한다라는 것을 보장할 수 없는 것이다. 리퀘스트나 리스폰스가 발신된 후에 상대가 수신하는 사이에 누군가에 으해 변조되더라도 이 사실을 알 수 없다. 이와 같이 공격자가 도중에 리퀘스트나 리스폰스를 빼앗아 변조하는 공격을 중간자 공격(Main-in-the-Middle)이라고 부른다.</p>
-<p>3번 문제를 보완하는 방법은 2번 문제를 보완하는 방법으로도 해결이 가능하다.</p>
-<p>MD5, SHA-1 등의 해시 값을 확인하는 방법과 파일의 디지털 서명을 확인하는 방법이 존재하지만 확실히 확인할 수 있는 것은 아니다. 확실히 방지하기에는 <strong>HTTPS</strong>를 사용해야 한다. SSL에는 인증이나 암호화, 그리고 다이제스트 기능을 제공하고 있다.</p>
-<h2 id="https">HTTPS</h2>
-<p>HTTPS는 HTTP 통신하는 소켓 부분은 SSL or TLS라는 프로토콜로 대체한 것이다. HTTP는 원래 TCP와 직접 통신했지만, HTTPS에서는 SSL과 통신하고 SSL이 TCP와 통신하게 된다.<br>
-HTTPS의 SSL에서는 공통키 암호화 방식과 공개키 암호화 방식을 모두 사용한다.(두 개를 혼합한 하이브리드 암호화 시스템) 공통키를 공개키 암호화 방식으로 교환한 다음에 다음부터의 통신은 공통키 암호를 사용하는 방식아.</p>
-<p>[공통키, 공개키, 대칭키 암호화 방식이 뭘까…?]</p>
-<p>모든 웹 페이지에서 HTTPS를 사용하지 않는다. 그 이유는 평문 통신에 비해서 암호화 통신은 CPU나 메모리 등 리소스를 많이 필요로 하기 때문이다. 통신할 때마다 암호화를 하면 리소스를 소비하기 때문에 서버 한 대당 처리할 수 있는 Request 수가 줄어들게 된다. 따라서 민감한 정보를 다룰 때만 HTTPS에 의한 암호화 통신을 사용한다.<br>
-그러나! 개인정보를 주고 받지 않아도 SSL을 이용해야 한다. 어느 사이트에 접속하는지, 어떤 행동을 하는지 공개될 수 있다. 모든 사용자의 행동 및 정보는 보호받아야 할 권리가 있다. 예를 들어, A 사이트에서 로그인 페이지로 넘어갈 때 해커가 가짜 로그인 페이지로 보낼 수 있는 확률도 존재한다.</p>
-<h2 id="참고">참고</h2>
-
                     
+                        <a
+                            href="/2018/12/28/Network-Diff-Of-HTTP-HTTPS/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [네트워크] HTTP와 HTTPS"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2018/12/28/Network-Diff-Of-HTTP-HTTPS/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             
@@ -432,7 +375,7 @@ HTTPS의 SSL에서는 공통키 암호화 방식과 공개키 암호화 방식�
     </article>
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -464,186 +407,17 @@ HTTPS의 SSL에서는 공통키 암호화 방식과 공개키 암호화 방식�
 
             </div>
             
-                <div class="postShorten-content">
+                <div class="postShorten-excerpt">
                     <p>TCP의 가장 큰 특징은 <strong>신뢰성</strong>이다. 이러한 신뢰성을 구성해 주는 방법인 <strong>흐름 제어, 혼잡 제어, 오류 제어</strong>에 대해 알아보도록 하자.</p>
-<h2 id="흐름-제어">흐름 제어</h2>
-<p>송신(호스트) &lt;&gt; 수신(호스트)</p>
-<p>흐름 제어는 수신측과 송신측의 데이터 처리 속도 차이를 해결하기 위한 기법이다.<br>
-만약 송신측의 전송량이 수신측의 처리량보다 많은 경우, 전송된 패킷은 수신측의 큐를 넘어서 손실될 문제가 발생할 수 있기 때문에 <strong>송신측의 패킷 전송량을 제어하게 된다.</strong></p>
-<h3 id="흐름-제어-방법">흐름 제어 방법</h3>
-<ol>
-<li>정지-대기(Stop and Wait)</li>
-</ol>
-<img src="/img/stop_and_wait.png" width="400" height="200">
-<ul>
-<li>매번 전송한 패킷에 대해 응답을 받아야만 그 다음 패킷을 전송할 수 있다.</li>
-<li>구조가 간단한 대신, 하나를 주고 하나를 받기 때문에 <strong>비효율적이다.</strong></li>
-</ul>
-<ol start="2">
-<li>슬라이딩 윈도우(Sliding Window)</li>
-</ol>
-<p>수신측에서 설정한 윈도우 크기만큼 송신측에서 확인 응답 없이 세그먼트를 전송할 수 있게 하여 데이터 흐름을 동적으로 조절하는 기법이다.</p>
-<p><strong>이처럼 슬라이딩 윈도우 기법을 통하여 송신 버퍼의 범위는 수신 측의 여유 버퍼 공간을 반영하여 동적으로 바뀜으로써 흐름제어를 수행한다.</strong></p>
-<ul>
-<li>윈도우는 전송, 수신 스테이션 양쪽에서 만들어진 <code>버퍼(Buffer)</code>의 크기이다.</li>
-<li>윈도우의 크기 = (가장 최근 ACK로 응답한 프레임의 수) - (이전에 ACK 프레임을 보낸 프레임의 수)</li>
-<li>슬라이딩 윈도우 기법은 Stop and Wait 기법의 비효율성을 개선한 기법이다.</li>
-<li>ACK 프레임을 수신하지 않더라도 여러 개의 프레임을 연속적으로 전송할 수 있다.</li>
-</ul>
-<img src="/img/error_flow_control_2.png" width="400" height="200">
-<p>위와 같은 구조에서 데이터 0과 1을 전송했다고 가정하면 슬라이딩 윈도우의 구조는 아래와 같이 변한다. 윈도우의 크기는 전송한 데이터 프레임만큼 왼쪽 경계가 줄어들게 된다.</p>
-<img src="/img/error_flow_control_3.png" width="400" height="200">
-<p>이때 수신측에서 ACK라는 프레임을 받게 된다면 전송측은 0과 1 데이터를 정상적으로 받았음을 알게 되고, 전송측은 ACK 프레임에 따른 프레임의 수만큼 오른쪽으로 경계가 확장된다.</p>
-<img src="/img/error_flow_control_4.png" width="400" height="200">
-<blockquote>
-<p>조금 더 자세한 설명</p>
-</blockquote>
-<p><strong># 전송측 윈도우</strong></p>
-<img src="/img/transfer_window.png" width="400" height="200">
-<p><strong># 수신측 윈도우</strong></p>
-<img src="/img/receive_window.png" width="400" height="200">
-<h2 id="혼잡-제어">혼잡 제어</h2>
-<p>송신(호스트) &lt;&gt; 라우터(네트워크)</p>
-<p>혼잡 제어는 송신측의 데이터 전달과 네트워크의 데이터처리 속도 차이를 해결하기 위한 기법이다.</p>
-<p>송신측의 데이터는 지역망이나 인터넷으로 연결된 대형 네트워크를 통해 전달된다. 하지만 이러한 네트워크 상의 라우터가 항상 한가로운 상황은 아니다. 만약, 한 라우터에게 데이터가 몰릴 경우 다시 말해 혼잡할 경우, 라우터는 자신에게 온 데이터를 모두 처리할 수 없다.<br>
-그렇게 되면 호스트들은 또 다시 재전송을 하게 되고 결국 혼잡을 가중시켜 오버플로우나 데이터 손실을 발생시킨다. <strong>따라서, 이러한 네트워크의 혼잡을 피하기 위해 송신측에서는 보내는 데이터의 전송 속도를 강제로 줄이게 된다.</strong></p>
-<h3 id="혼잡-제어-방법">혼잡 제어 방법</h3>
-<ol>
-<li>AIMD</li>
-</ol>
-<p>AIMD(Additive Increase / Multiplicative Decrease)라고 불리며, 합 증가 / 곱 감소라고 부른다.</p>
-<p>처음에 패킷을 하나씩 보내고 이것이 문제없이 도착하면 window 크기(단위 시간내에 보내는 패킷의 수)를 1씩 증가시켜 가면서 전송하는 방법이다. 만일 패킷 전송을 실패하거나 일정한 시간을 넘으면 패킷 전송 속도를 절반으로 줄이게 된다.</p>
-<p>이 방식은 <strong>공평한 방식</strong>이다. 이 방식을 사용하는 여러 호스트가 한 네트워크를 공유하고 있으면 나중에 진입하는 쪽이 처음에는 불리하지만 시간이 흐르면 <code>평형 상태</code>로 수렴하게 되는 특징이 있다.</p>
-<p><strong>문제점은 초기에 네트워크의 높은 대역폭을 사용하지 못하며 오랜 시간이 걸리게 되고 네트워크가 혼잡해지는 상황을 미리 감지하지는 못한다. 즉, 네트워크가 혼잡해지고 나서야 대역폭을 줄이는 방식이다.</strong></p>
-<p>이러한 문제점들을 해결하기 위한 방법은 다음부터 소개될 것이다.</p>
-<ol start="2">
-<li>슬로우 스타트(Slow Start)</li>
-</ol>
-<p>AIMD 방식은 네트워크의 수용량 주변에서는 효율적으로 작동하지만 처음에 전송 속도를 올리는 데 걸리는 시간이 너무 길다는 단점이 있다.</p>
-<p>Slow Start 방식은 AIMD 방식과 마찬가지로 패킷을 하나씩 보내는 것부터 시작하고 이 방식은 패킷이 문제없이 도착하면 각각의 ACK 패킷마다 Window Size를 1씩 늘린다. 즉, 한 주기가 지나면 Window size가 2배가 된다.</p>
-<p>따라서 전송 속도는 AIMD와는 다르게 지수 함수꼴로 증가하게 된다. 대신 <strong>혼잡 현상이 발생하면 Window Size를 1로 떨어뜨리게 된다.</strong></p>
-<p>처음에는 네트워크의 수용량을 예상할 수 있는 정보가 없지만 한번 혼잡 현상이 발생하고 나면 네트워크의 수용량을 어느 정도 예상할 수 있으므로 혼잡 현상이 발생하였던 Window Size의 절반까지는 이전처럼 지수 함수 꼴로 Window Size를 증가시키고 그 이후부터는 완만하게 1씩 증가시키는 방식이다.</p>
-<ol>
-<li>초기 혼잡 Window Size 1로 전송 = 전송 호스트는 하나의 패킷만 전송</li>
-<li>수신 호스트로부터 수신응답을 수신하면 윈도우의 크기를 2로 하여 전송</li>
-<li>수신 호스트로부터 수신응답을 수신하면 윈도우의 크기를 4로 하여 전송</li>
-<li>수신 호스트로부터 수신응답을 수신하면 윈도위의 크기를 8로 하여 전송</li>
-</ol>
-<img src="/img/error_flow_control_10.png" width="400" height="200">
-<ul>
-<li>미리 정해진 임계 값(threshold)에 도달할 때까지 윈도우의 크기를 2배씩 증가시킨다.</li>
-<li>Slow Start란 이름을 사용하지만, 매 전송마다 두 배씩 증가하기 때문에 전송되어지는 데이터의 크기는 지수 함수적으로 증가한다.</li>
-<li>전송되어지는 데이터의 크기가 임계 값에 도달하면 <strong>혼잡 회피</strong> 단계로 넘어간다.</li>
-</ul>
-<ol start="3">
-<li>혼잡 회피(Congestion Avoidance)</li>
-</ol>
-<p>윈도우의 크기가 임계 값에 도달한 이후에 데이터의 손실이 발생할 확률이 높아지게 된다. 이는 데이터를 전송함에 있어서 조심하는 단계이다.</p>
-<p>전송한 데이터에 대한 ACK를 받으면 윈도우의 크기를 1씩 증가시킨다.<br>
-전송하는 데이터의 증가를 왕복시간 동안에 하나씩만 증가시킨다.</p>
-<ul>
-<li>수신 호스트로부터 일정 시간 동안까지 ACK를 수신하지 못하는 경우</li>
-</ul>
-<ol>
-<li>타임아웃의 발생</li>
-<li>네트워크에 혼잡이 발생했다고 인식<br>
--&gt; 윈도우의 크기를 즉, 세그먼트의 수를 1로 줄임<br>
--&gt; 동시에 임계 값을 패킷 손실이 발생하였을 때의 윈도우 크기의 반으로 줄임</li>
-</ol>
-<ol start="4">
-<li>빠른 회복(Fast Recovery)</li>
-</ol>
-<p>빠른 회복은 Congestion이 발생했을 때 Window size를 1로 줄이지 않고 반으로 줄이고 선형 증가시키는 방법이다. 이는 AIMD의 AI 즉, Additive Increase 하는 방법이다.</p>
-<p>Fast Recovery를 적용하면 혼잡 상황을 한 번 겪고 나서부터는 순수한 AIMD 방식으로 동작하게 된다.</p>
-<ol start="5">
-<li>빠른 재전송(Fast Retransmission)</li>
-</ol>
-<p>3개의 연속된 중복 ACK를 수신하는 경우에 패킷의 손실로 간주하여 타임아웃이 발생하기 전에 해당 패킷을 <strong>재전송</strong>한다. 그리고 이러한 현상이 일어난 것은 약간의 혼잡이 발생한 것으로 간주하여 Window Size를 반으로 줄인다.</p>
-<ol start="6">
-<li>TCP Reno</li>
-</ol>
-<p>N개의 중복 ACK 발생 시 ssthresh(slow start threshold)값을 Congestion Window(cwnd) 사이즈의 반으로 줄여 빠른 복구(Fast Recovery)를 수행하여 선형적 증가를 하게 되며, TCP Time Out에 이르면 Slow Start를 시작한다.</p>
-<ol start="7">
-<li>TCP Tahoe</li>
-</ol>
-<p>N개의 중복 ACK 발생 시 바로 Slow Start를 시작한다.</p>
-<p>TCP Tahoe와 TCP Reno는 ssthresh(slow start threshold) 값까지 지수적 증가(Slow-Start)를 하게 되고 ssthresh를 넘어서면 선형적 증가(Additive Increase)를 하는 것까지는 동일하다. 차이가 생기는 기준은 N개의 중복 ACK가 발생할 경우이다.</p>
-<h2 id="오류-제어">오류 제어</h2>
-<p>오류 제어 기법은 오류 검출(Error detection)과 재전송(retransmission)을 포함한다.<br>
-ARQ(Automatic Repeat Request) 기법을 사용하여 프레임이 손상되었거나 손실되었을 경우 재전송을 통해 오류를 복구한다. ARQ 기법은 흐름 제어 기법과 관련되어 있는데 stop and wait은 stop and wait ARQ로, Sliding Window는 GBn(Go-Back-n) ARQ 또는 SR(Selective-Reject) ARQ 형태로 구혀한다.</p>
-<h3 id="오류-제어-방법">오류 제어 방법</h3>
-<blockquote>
-<p>ARQ : 신뢰성 있는 데이터 전달을 위해 재전송을 기반으로 한 에러 제어 방식</p>
-</blockquote>
-<ol>
-<li>Stop and Wait ARQ</li>
-</ol>
-<p>전송측은 수신측에서 보내준 ACK를 받을 때까지 프레임의 복사본을 유지한다.<br>
-식별을 위해 데이터 프레임과 ACK 프레임은 각각 0,1 번호를 부여한다.</p>
-<p>수신측이 데이터를 받지 못했을 경우, NAK를 송신측에게 보내고<br>
-NAK를 받은 송신측은 데이터를 재전송한다.</p>
-<p><strong>만약 데이터나 ACK가 분실되었을 경우 일정 간격의 시간을 두고 타임아웃이 되면 송신측은 데이터를 재전송한다.</strong></p>
-<img src="/img/stop_and_wait_arq.png" width="400" height="200">
-<ol start="2">
-<li>Go-Back-n ARQ(GBn ARQ)</li>
-</ol>
-<p>전송된 프렘이이 손상되거나 분실될 경우, <strong>확인된 마지막 프레임 이후로 모두 재전송</strong>하는 기법이다.</p>
-<p>슬라이딩 윈도우는 연속적인 프레임 전송 기법으로 전송 스테이션은 전송된 모든 프레임의 복사본을 가지고 있어야 하며, ACK와 NAK 모두 각각 구별을 해야한다.</p>
-<ul>
-<li>ACK : 다음 프레임을 전송</li>
-<li>NAK : 손상된 프레임 자체 번호를 반환</li>
-</ul>
-<p><strong>재전송 되는 경우는 다음과 같다.</strong></p>
-<p><strong># 1. NAK 프레임을 받았을 경우</strong></p>
-<p>만약 수신측으로 0부터 5까지의 데이터를 보내었다고 가정한다. 수신측에서 데이터를 받았음을 확인하는 ACK 프레임을 중간 중간 받게 되며, ACK 프레임을 확인한 전송측은 계속해서 데이터를 전송한다.</p>
-<p>그러나 만약 수신측에서 데이터 오류 프레임2가 잘못 되었다는 것을 발견하고 NAK 2를 전송측에 보낸다. NAK 2를 받은 전송측은 데이터 프레임2가 잘못 되었다는 것을 알고 데이터를 재전송한다.</p>
-<p>GBn ARQ의 특징은 바로 이 데이터를 재전송하는 부분이다. GBn ARQ는 NAK(n)을 받아 데이터를 재전송하게 되면, n 데이터만을 재전송하는 것이 아니라 n 데이터 이후의 데이터를 모두 재전송한다.</p>
-<p><strong># 2. 전송 데이터 프레임의 분실</strong></p>
-<p>GBn ARQ의 특징은 확인된 데이터 이후의 모든 데이터 재전송과 수신측의 폐기이다. 수신측에서 데이터 1을 받았는데 갑자기 다음에 데이터 3을 받게 된다면 수신측에서는 데이터 2를 못받았으므로 데이터 3을 폐기하고 NAK 2를 전송측에 보낸다.</p>
-<p>NAK 2를 받은 전송측은 위의 1의 경우에서와 같이 NAK 2 데이터부터 모두 재전송을 실시하며 수신측은 기존 받았던 데이터 중 NAK(n)으로 보내었던 대상 데이터 이후의 데이터를 모두 폐기하고 재전송 받는다.</p>
-<p><strong># 3. 지정된 타임아웃 내의 ACK 프레임 분실(Lost ACK)</strong></p>
-<p>전송 스테이션은 분실된 ACK를 다루기 위해 타이머를 가지고 있다. 전송측에서는 이 타이머의 타임 아웃동안 ACK 데이터를 받지 못했을 경우, 마지막 ACK부터 재전송한다.</p>
-<img src="/img/error_flow_control_6.png" width="400" height="200">
-<p>위의 그림은 송신측이 데이터 3을 보내고 수신측은 데이터 3을 받았지만 오류가 발생했을 경우이다. 이 경우에 송신측은 연속적으로 데이터를 보내지만 수신측은 데이터 3에서 오류가 발생했으므로 NAK 3을 송신측으로 보낸다.</p>
-<p>수신측은 데이터 3 이후로 온 데이터 프레임을 모두 폐기하며 송신측은 데이터 3부터 재전송하게 된다.</p>
-<img src="/img/error_flow_control_7.png" width="400" height="200">
-<p>위의 그림은 송신측에서 데이터 2를 보내는 도중에 분실된 경우이다. 이 경우 수신측은 데이터 0, 1은 맞게 받았지만 2를 받지 않고 3을 받게 되어 받은 데이터를 폐기하고 NAK 2를 송신측에게 보낸다.</p>
-<p>그럼 송신측은 NAK 2를 받고 데이터 2부터 송신측은 수신측으로 데이터를 재전송하게 된다.</p>
-<ul>
-<li>전송측은 NAK 프레임을 받았을 경우, NAK 프레임 번호부터 다시 재전송한다.</li>
-<li>수신측은 원하는 프레임이 아닐 경우 모두 폐기 처리한다.</li>
-<li>타임아웃(ACK 분실)일 경우, 마지막 ACK된 데이터부터 재전송한다.</li>
-</ul>
-<ol start="3">
-<li>Selective-Reject(SR) ARQ</li>
-</ol>
-<p>GBn ARQ의 재전송되는 프레임 이후의 모든 프레임을 재전송하는 단점을 개선한 방법이다. SR ARQ는 손상된, 분실된 프레임만 재전송한다.</p>
-<p>그렇기 때문에 별도의 데이터 재정렬을 수행해야 하며, <strong>별도의 버퍼를 필요로 한다.</strong></p>
-<h2 id="gbn-arq-기법과-sr-arq-기법의-비교">GBn ARQ 기법과 SR ARQ 기법의 비교</h2>
-<img src="/img/error_flow_control_8.png" width="400" height="200">
-<img src="/img/error_flow_control_9.png" width="400" height="200">
-<h2 id="참고">참고</h2>
-<ul>
-<li><a href="http://90nam.tistory.com/23" target="_blank" rel="noopener">TCP Tahoe와 TCP Reno</a></li>
-<li><a href="http://www.jidum.com/jidums/view.do?jidumId=424" target="_blank" rel="noopener">TCP/IP 혼잡제어</a></li>
-<li><a href="http://jsonsang2.tistory.com/17" target="_blank" rel="noopener">흐름 제어와 혼잡 제어</a></li>
-</ul>
-
                     
+                        <a
+                            href="/2018/12/28/Network-Erro-Flow-Control/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [네트워크] 흐름/혼잡/오류 제어 기법"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2018/12/28/Network-Erro-Flow-Control/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             
@@ -652,7 +426,7 @@ NAK를 받은 송신측은 데이터를 재전송한다.</p>
     </article>
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -684,47 +458,17 @@ NAK를 받은 송신측은 데이터를 재전송한다.</p>
 
             </div>
             
-                <div class="postShorten-content">
+                <div class="postShorten-excerpt">
                     <p>패킷 교환 방식은 접속 방식에 따라서 데이터 그램 방식과 가상회선 방식으로 구분된다.</p>
-<h2 id="데이터그램-패킷-교환-방식">데이터그램 패킷 교환 방식</h2>
-<p>데이터를 전송하기 전에 논리적 연결이 설정되지 않으며 패킷이 독립적으로 전송된다.<br>
-이를 <code>데이터그램</code>이라 한다.<br>
-패킷을 수신한 라우터는 최적의 경로를 선택하여 패킷을 전송하는데 하나의 메시지에서 분할된 여러 패킷은 서로 다른 경로로 전송될 수 있다.(<strong>비연결 지향형</strong>)<br>
-<strong>송신 측에서 전송한 순서와 수신 측에 도착한 순서가 다를 수 있다.</strong></p>
-<img src="/img/datagram_packet.png" width="500" height="200">
-<h2 id="가상회선-패킷-교환-방식">가상회선 패킷 교환 방식</h2>
-<p>데이터를 전송하기 전에 논리적 연결이 설정되는데, 이를 가상회선이라고 한다.(<strong>연결 지향형</strong>) 각 패킷에는 가상회선 식별 번호(VCI)가 포함되고, 모든 패킷을 전송하면 가상회선이 해제되고 패킷들은 전송된 순서대로 도착한다.<br>
-데이터 그램은 패킷마다 라우터가 경로를 선택하지만,<br>
-가상회선 방식은 경로를 설정할 때 한 번만 수행한다.</p>
-<img src="/img/virtual_circut_packet.png" width="500" height="200">
-<h2 id="비교">비교</h2>
-<p>정해진 시간 안이나 다량의 데이터를 연속으로 보낼 때는 <strong>가상 회선 방식</strong>이 적합하다.<br>
-짧은 메시지의 일시적인 전송에는 <strong>데이터그램 방식</strong>이 적합하다.</p>
-<p>네트워크 내의 한 노드가 다운되면 <strong>데이터그램 방식</strong>은 다른 경로를 새로 설정하지만,<br>
-<strong>가상회선 방식</strong>은 그 노드를 지나는 모든 가상회선을 잃게 된다.</p>
-<p>[부족한 내용 업데이트 해야 함.]</p>
-<h2 id="참고">참고</h2>
-<ul>
-<li><a href="http://gotwo.tistory.com/107" target="_blank" rel="noopener">데이터그램 패킷 교환 vs 가상회선 패킷 교환</a></li>
-<li><a href="http://blog.naver.com/PostView.nhn?blogId=eronica&amp;logNo=40007289876" target="_blank" rel="noopener">참고할 예정 : 패킷교환방식인 데이터그램방식과 가상회선방식을 비교</a></li>
-<li><a href="http://security-nanglam.tistory.com/179" target="_blank" rel="noopener">참고할 예정 : [데이터그램(Datagram) &amp;  가상회선(Virtual Circuit)]</a></li>
-</ul>
-
                     
+                        <a
+                            href="/2018/12/28/Network-Packet-Switching-Method/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [네트워크] 가상회선 패킷 교환 vs 데이터그램 패킷 교환"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2018/12/28/Network-Packet-Switching-Method/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             
@@ -733,7 +477,7 @@ NAK를 받은 송신측은 데이터를 재전송한다.</p>
     </article>
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -765,79 +509,17 @@ NAK를 받은 송신측은 데이터를 재전송한다.</p>
 
             </div>
             
-                <div class="postShorten-content">
+                <div class="postShorten-excerpt">
                     <p>인터넷은 트랜스포트 계층에 연결형 프로토콜과 비연결형 프로토콜. 이렇게 두 개의 주된 프로토콜을 갖는다.</p>
-<h2 id="udp"># UDP</h2>
-<p>UDP(User Datagram Protocol, 사용자 데이터그램 프로토콜)는 <strong>비연결형</strong> 프로토콜이다. IP 데이터크램을 캡슐화하여 보내는 방법과 연결 설정을 하지 않고 보내는 방법을 제공한다.</p>
-<p>UDP는 흐름제어, 오류제어 또는 손상된 세그먼트의 수신에 대한 재전송을 하지 않는다. 이 모두가 사용자 프로세스의 몫이다. UDP가 행하는 것은 포트들을 사용하여 IP 프로토콜에 인터페이스를 제공하는 것이다.</p>
-<p>UDP가 특별히 유용한 분야는 <code>클라이언트-서버 상황</code>이다. 종종 클라이언트는 서버로 짧은 요청을 보내고 짧은 응답을 기대한다. 만약 요청 또는 응답이 손실되면, 클라이언트는 time-out되고 다시 시도할 수 있다. <strong>코드가 간단할 뿐만 아니라 TCP처럼 초기 설정에서 요구되는 프로토콜에서보다 적은 메시지가 요구된다.</strong></p>
-<p><strong>UDP가 사용되는 분야</strong></p>
-<ol>
-<li>DNS<br>
-어떤 호스트 네임의 IP 주소를 찾을 필요가 있는 프로그램은 DNS 서버로 호스트 네임을 포함한 UDP 패킷을 보낸다. 이 서버는 호스트의 IP 주소를 포함한 UDP 패킷으로 응답한다. 사전에 설정이 필요하지 않으며 그 후에 해제가 필요하지 않다.</li>
-</ol>
-<ol start="2">
-<li>실시간 멀티미디어<br>
-실시간 멀티미디어의 응용이 많아지면서 오디오와 비디오 패킷 형식으로 전송하는 <code>실시간 트랜스포트 프로토콜(RTP :: Real-time Transprot Protocol)</code>이 탄생했다.<br>
-RTP의 기본 기능은 UDP 패킷의 단일 스트림으로 몇몇 실시간 데이터 스트림을 <strong>멀티 플렉싱</strong>하는 것이다. UDP 스트림은 단일 목적지 또는 다중 목적지들로 전송될 수 있다. RTP는 단지 UDP를 사용하기 때문에 전달, 지연, 손실 등에 대한 보장이 없다.<br>
-[멀티플렉싱이 뭘까…?]</li>
-</ol>
-<p>이런 점들을 보완하기 위한 몇 가지 장치들이 존재한다. RTP 스트림에서 보내지는 각 패킷은 바로 전 패킷보다 <strong>하나 높은 번호가 주어진다.</strong> 이런 번호 부여 방식은 목적지로 하여금 어느 패킷이 분실되었는지 알 수 있게 한다. 만약 한 패킷이 없다면 이를 획득하기 위해 목적지에서의 최상의 동작은 보간(Interpolation)에 의해 손실한 값에 대한 근사치를 얻는 것이다.<br>
-재전송은 재전송된 패킷이 유용하기에 너무 늦게 도착하므로 실용적인 옵션이 아니다. 그러므로 RTP는 확인 응답이 없고 재전송을 요청하는 메커니즘도 없다.</p>
-<p>서로 다른 경로로 패킷을 처리함에도 순서를 부여하거나 재조립을 하거나 또는 흐름제어, 혼잡제어 등의 신뢰성 처리를 하지 않기 때문에 속도가 빠르며 네트워크 부하가 적다는 장점이 있지만, 신뢰성 있는 데이터의 전송을 보장하지 못한다는 단점도 존재한다.</p>
-<h2 id="tcp"># TCP</h2>
-<p>대부분의 인터넷 응용분야들은 <strong>신뢰성과 순차적인 전달</strong>을 필요로 한다. UDP로는 이를 만족시킬 수 없으므로 다른 프로토콜이 필요하여 탄생한 것이 <code>TCP</code>이다.</p>
-<p>TCP(Transmission Control Protocol, 전송제어 프로토콜)는 신뢰성이 없는 인터넷을 통해 종단간에 <strong>신뢰성 있는 바이트 스트림</strong>을 전송하도록 특별히 설계되었다. TCP 서비스는 송신자와 수신자 모두가 소켓이라고 부르는 종단점을 생성함으로써 이루어진다. 각 소켓은 호스트의 IP 주소와 그 호스트에 국한된 16비트로 구성된 포트라고 불리는 소켓 번호를 갖는다. TCP 서비스를 하기 위해서는 송신측 소켓과 수신측 소켓이 연결되어 있어야 한다.</p>
-<p>또한, TCP는 연결형 프로토콜로 3-way-handshake 과정을 통해서 연결을 설정하고 4-way-handshake 과정을 통해서 연결을 해제[가상 회선 방식]한다. 흐름 제어 및 혼잡 제어를 통해 높은 <strong>신뢰성</strong>을 보장한다. 그러나 이러한 기능 때문에 UDP보다 속도가 느리다. 그리고 전송 순서를 보장하며 수신 여부를 확인할 수 있다.<br>
-<strong>TCP는 연속성보다 신뢰성이 있는 전송이 중요할 때 사용하는 프로토콜이다.</strong><br>
-하나의 연결을 설정하려면 한쪽(서버)은 listen과 accept를 실행함으로써 연결 요청을 수동적으로 기다린다. 이 listen과 accept는 특정 근원지를 명시할 수도 있고 하지 않을 수도 있다. 다른 한 쪽(client)은 connect를 실행하고 목적지 IP 주소와 포트 번호, 수신 가능한 최대 TCP 세그먼트 크기 그리고 기타 사용자 데이터를 명시한다.</p>
-<p><strong>1. TCP 연결방식</strong></p>
-<p>모든 TCP 연결은 <strong>전이중(full-duplex), 점대점(point to point) 방식</strong>이다.<br>
-전이중이란 전송이 양방향으로 동시에 일어날 수 있음을 의미하며<br>
-점대점이란 각 연결이 정확히 2개의 종단점을 가지고 있음을 의미한다.<br>
-TCP는 멀티캐스팅이나 브로드캐스팅을 지원하지 않는다. 또한 메시지 스트림이 아니라 바이트 스트림의 형태를 갖는다. 메시지의 시작에서 끝까지 경계가 유지되지 않는다.</p>
-<p><strong>2. TCP 특징</strong></p>
-<ul>
-<li>TCP 연결상의 모든 바이트가 고유의 32-비트 순서번호(sequence number)를 갖는다.</li>
-<li>송수신 TCP 개체들은 세그먼트의 형태로서 데이터를 주고받는다. 한 세그먼트는 고정 2바이트 헤더와 그 뒤를 따르는 0개 이상의 데이터 바이트들로 구성된다.</li>
-<li>TCP 소프트웨어는 세그먼트가 얼마나 커야 하는지를 결정한다.</li>
-<li>세그먼트 크기에는 두 가지 제약요소가 있다.
-<ul>
-<li>모든 세그먼트들은 TCP 헤더를 포함하여 IP 수용량인 65,515 바이트를 넘을 수 없다는 것.</li>
-<li>모든 네트워크는 정해진 **MTU(Maximum transfer Unit,최대 전송 단위)**를 갖는데 각 세그먼트는 이 MTU를 넘을 수 없다는 것.</li>
-</ul>
-</li>
-<li>TCP는 IP와 함께 사용하는데 IP가 데이터의 배달을 처리한다면 TCP는 패킷을 추적 및 관리한다.</li>
-<li>TCP는 신뢰성있는 데이터 전송을 지원하는 연결 지향형 프로토콜이다.</li>
-<li>연결지향형인 TCP는 3-way-handshake 과정을 통해 연결 후 통신을 시작한다.</li>
-<li>TCP에서 사용하는 포트 번호의 수는 0 ~ 65535(=2^16)이며, 총 65536개가 사용 가능하다.</li>
-<li></li>
-</ul>
-<p>TCP 개체들에 의해 사용되는 기본 프로토콜은 동적으로 윈도우 크기를 조절할 수 있는 <strong>슬라이딩 윈도우(Sliding Window)프로토콜</strong>이다. 송신자는 한 세그먼트를 전송할 때, <strong>타이머를 구동</strong>시킨다. 그 세그먼트가 목적지에 도달하면 수신측 TCP 개체는 다음에 받으려고 하는 순서번호와 같은 응답 번호를 포함하는 세그먼트를 송신측으로 보낸다. 보낼 데이터가 있다면 그 데이터와 함께 보낸다.<br>
--Ex) 예를 들어, 송신측에 보낼 세그먼트가 3개 있고 번호는 1,2,3이라고 하자. 송신자는 1번 세그먼트를 수신측에 보낸다. 세그먼트가 목적지에 도달하면 수신측 TCP는 다음에 받으려고 하는 순서번호와 같은 확인 응답 번호 2를 포함하는 세그먼트를 송신측에 보낸다.</p>
-<p>만일 확인 응답의 수신 전에 보낼 때 구동시킨 타이머가 종료되면 송신자는 그 세그먼트를 재전송한다. 세그먼트들이 순서가 뒤바뀐 상태로 도착할 수 있으며, 재전송 경우에 대해 올바르게 수신된 상태인지를 알 수 있도록 장치가 필요하며, 스트림 내의 각 바이트가 자기 고유의 <code>offset</code>을 가지고 있는데 이것을 장치로 한다.</p>
-<p>TCP에서 <strong>흐름 제어</strong>는 가변크기의 <code>슬라이딩 윈도우</code>를 사용하여 처리된다. window size 필드는 확인 응답된 바이트에서 시작하여 얼마나 많은 바이트가 보내질 수 있는지를 나타낸다. 그러나 이 경우 좋지 않은 상황이 발생할 수 있다. 송신자는 응용프로그램에서 데이터가 올 때마다 전송할 필요가 없고 수신자도 마찬가지로 데이터를 받은 즉시 확인 응답을 해야 하는 것은 아니다.<br>
-<strong>버퍼를 사용하면 되기 때문에 데이터를 모아서 보내거나 그것을 받고 애플리케이션에게 모아서 전달할 수 있는 것이다.</strong></p>
-<p>인터렉티브 에디터<br>
-네이글 알고리즘<br>
-애플리케이션에서 수신된 데이터를 1바이트씩 가져가는 것<br>
-3가지 추후 공부</p>
-
                     
+                        <a
+                            href="/2018/12/28/Network-UDP-TCP-Concept/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [네트워크] UDP와 TCP"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2018/12/28/Network-UDP-TCP-Concept/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             
@@ -846,7 +528,7 @@ TCP는 멀티캐스팅이나 브로드캐스팅을 지원하지 않는다. 또�
     </article>
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -878,82 +560,19 @@ TCP는 멀티캐스팅이나 브로드캐스팅을 지원하지 않는다. 또�
 
             </div>
             
-                <div class="postShorten-content">
-                    <h2 id="3-way-handshake와-4-way-handshake">3-Way-Handshake와 4-Way-Handshake</h2>
+                <div class="postShorten-excerpt">
+                    <h2>3-Way-Handshake와 4-Way-Handshake</h2>
 <p>네트워크를 사용한 통신에서 TCP 통신을 하는 경우, 3-way-handshake라는 과정을 거친다.</p>
 <p>TPC/IP 프로토콜을 이용해서 통신하는 두 종단간에 데이터 전송 전 정확한 데이터 전송을 보장하기 위해 사전에 연결하는 과정이다.</p>
-<p><strong>연결 성립(Connection Extablishment)</strong></p>
-<img src="/img/tcp_ip_3_way_handshake.png" width="600" height="300">
-<ol>
-<li>클라이언트는 서버에 접속을 요청하는 SYN(a) 패킷을 보낸다.</li>
-<li>서버는 클라이언트의 요청인 SYN(a)을 받고 클라이언트에게 요청을 수락한다는 ACK(a+1)과 SYN(b)가 설정된 패킷을 클라이언트에게 발송한다.</li>
-<li>클라이언트는 서버의 수락 응답인 ACK(a+1)과 SYN(b) 패킷을 받고 ACK(b+1)을 서버로 보내면 연결이 성립(establish)된다.</li>
-</ol>
-<p><strong>연결 종료(Connection Termination)</strong></p>
-<p>TCP 통신에서 3-way-handshake를 통한 연결을 해제하는 과정이다.</p>
-<img src="/img/tcp_ip_4_way_handshake.png" width="600" height="300">
-<ol>
-<li>클라이언트가 연결을 종료하겠다는 FIN 플래그를 전송한다.</li>
-<li>서버는 클라이언트의 요청(FIN)을 받고 알겠다는 확인 메시지로 ACK를 보낸다.<br>
-2-1) 그리고 나서는 데이터를 모두 보낼 때까지 잠깐 TIME_OUT이 된다.(서버측 :: 자신의 통신이 끝날 때까지 기다리며 서버는 해당 포트에 연결되어 있는 Application에게 close() 을 요청한다.)</li>
-<li>데이터를 모두 보내고 통신이 끝났으면 연결이 종료되었다고 클라이언트에게 FIN 플래그를 전송한다.(close() 요청을 받은 Application은 종료 프로세스를 진행하고 FIN 패킷을 Client에게 전송!)</li>
-<li>클라이언트는 FIN 메시지를 확인했다는 메시지(ACK)를 서버에게 보낸다.<br>
-4-1) 클라이언트는 아직 서버로부터 받지 못한 데이터가 있을 것을 대비해 일정 시간 동안 세션을 남겨놓고 잉여 패킷을 기다리는 과정을 거친다.(TIME_WAIT)[TIME_WAIT에서 일정 시간이 지나면 close 된다.]</li>
-<li>클라이언트의 ACK 메시지를 받은 서버는 소켓 연결을 close 한다.</li>
-</ol>
-<p>연결 설정과 종료 단계에서 차이가 나는 이유는 클라이언트가 데이터 전송을 마쳤다고 하더라도 서버는 아직 보낼 데이터가 남아있을 수 있기 때문이다.<br>
-따라서 일단, 클라이언트는 FIN에 대한 확인 응답인 ACK를 먼저 보내고, 데이터를 모두 전송한 후 서버 자신도 FIN을 보내기 때문이다.</p>
-<p>클라이언트의 FIN 전송 후 ACK를 기다리는 FIN_WAIT1과 서버의 ACK를 받은 후 서버의 FIN을 기다리는 FIN_WAIT2는 일정 시간 후 TIME_OUT이 되면 스스로 연결을 종료한다.<br>
-그러나 CLOSE_WAIT은 Application에서 close()를 적절하게 처리해주지 못하면 CLOSE_WAIT 상태로 계속 기다리게 된다. CLOSE_WAIT 상태인 연결이 많아지면 <strong>Hang</strong>이 걸려 더 이상 연결을 하지 못하는 경우가 생긴다.</p>
-<p>[Hang이 뭘까…?]</p>
-<blockquote>
-<p>SYN Packet과 ACK Packet란?</p>
-</blockquote>
-<p>SYN :: synchronize sequence number<br>
-ACK :: acknowledgement</p>
-<p><code>TCP Header</code>에는 Control Bit(플래그 비트, 6bit)라는 부분이 존재한다. 각각의 비트들은 의미를 가지고 있으며, <strong>Urg-Ack-Psh-Rst-Syn-Fin</strong> 이다. 해당 위치의 비트가 1이면 해당 패킷이 어떠한 내용을 담고 있는 패킷인지를 나타낸다.<br>
-ex)<br>
-SYN 패킷일 경우에는 000010이 되고<br>
-ACK 패킷일 경우에는 010000이 된다.</p>
-<blockquote>
-<p>왜 패킷의 종류가 두개인가?</p>
-</blockquote>
-<p>일단 연결을 성립하려면 서로 통신이 가능한지를 먼저 파악하기 위해 패킷을 먼저 주고받아야 한다는 것까지는 이해가 쉽다. 그런데 두 종류의 패킷을 주고 받는다. 이는 <strong>요청</strong>과 <strong>응답</strong>에 대한 패킷을 주고 받아야 하기 때문에 두 종류인 것이다.</p>
-<blockquote>
-<p>2-way가 아니고 3-way인 이유는??</p>
-</blockquote>
-<p>비유를 들어보자.<br>
-클라이언트가 자신의 목소리가 들리는지 물어본다.(SYN)<br>
-서버는 클라이언트의 목소리가 들린다고 말한다.(SYN+1) 그리고 자신의 목소리가 들리는지 물어본다.(ACK)<br>
-클라이언트는 서버의 목소리가 들린다고 말한다.(ACK+1)</p>
-<p>이런 과정인 셈이다. TCP Connection은 양방향성 Connection이다. 클라이언트에서 서버에게 존재를 알리고 패킷을 보낼 수 있다는 것을 알리듯, 서버에서도 클라이언트에게 존재를 알리고 패킷을 보낼 수 있다는 신호를 보내야 한다. <strong>그렇기 때문에 2-way-handshake로는 부족하므로 3-way-handshake를 사용한다.</strong></p>
-<blockquote>
-<p>sequence number가 난수인 이유는?</p>
-</blockquote>
-<p>처음 클라이언트에서 SYN 패킷을 보낼 때 <strong>Sequence Number에는 랜덤한 숫자가 담겨진다.</strong><br>
-초기 sequence number를 ISN이라고 한다. ISN이 0부터 시작하지 않고 난수를 생성해서 number를 설정하는 이유는 무엇일까?<br>
-Connection을 맺을 때 사용하는 포트(port)는 유한 범위 내에서 사용하고 시간이 지남에 따라 재사용된다. 따라서 두 통신 호스트가 과거에 사용된 포트 번호 쌍을 사용하는 가능성이 존재한다. 서버측에서는 패킷의 SYN을 보고 패킷을 구분하게 되는데 난수가 아닌 순차적인 number가 전송된다면 이전의 connection으로부터 오는 패킷으로 인식할 수 있다.<br>
-<strong>이러한 문제가 발생할 가능성을 줄이기 위해 난수로 ISN을 설정하는 것이다.</strong></p>
-<h2 id="참고">참고</h2>
-<ul>
-<li><a href="http://asfirstalways.tistory.com/356" target="_blank" rel="noopener">TCP 3-way-handshake &amp; 4-way-handshake</a></li>
-</ul>
-
                     
+                        <a
+                            href="/2018/12/28/Network-TCP-3-4-WayHandShake/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [네트워크] 3&amp;4 Way Handshake"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2018/12/28/Network-TCP-3-4-WayHandShake/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             
@@ -962,7 +581,7 @@ Connection을 맺을 때 사용하는 포트(port)는 유한 범위 내에서 �
     </article>
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -994,54 +613,18 @@ Connection을 맺을 때 사용하는 포트(port)는 유한 범위 내에서 �
 
             </div>
             
-                <div class="postShorten-content">
-                    <h2 id="http란">HTTP란?</h2>
+                <div class="postShorten-excerpt">
+                    <h2>HTTP란?</h2>
 <p>HTTP(HyperText Transfer Protocol)의 약자로 하이퍼 텍스트 문서를 교환하기 위하여 사용된 통신 규약이다. 즉, Web Server와 Web Clinet 간의 통신을 하기 위한 통신 규약이다.</p>
-<p><strong>HTTP</strong>는 1989년 팀 버너스-리에 의해 처음 설계되어 인터넷을 통한 월드 와이드 웹(WWW) 기반에서 전 세계적인 정보 공유를 이루는데 큰 역할을 하였다.</p>
-<p>HTTP는 웹에서만 사용하는 프로토콜로 TCP/IP 기반으로 한 지점에서 다른 지점(서버와 클라이언트)으로 요청(request)과 응답(response)을 전송한다.</p>
-<h2 id="http-특징">HTTP 특징</h2>
-<ul>
-<li>HTTP 메시지는 HTTP 서버와 HTTP 클라이언트에 의해서 해석된다.</li>
-<li>TCP/IP를 이용하는 응용 프로토콜이다.</li>
-<li><strong>HTTP는 연결 상태를 유지하지 않는 비연결성 프로토콜이다.</strong>[이러한 단점을 해결하기 위해 쿠키와 세션이 등장.]</li>
-<li>HTTP는 연결을 유지하지 않는 프로토콜이기 때문에 요청(request)와 응답(response) 방식으로 동작한다.</li>
-</ul>
-<p><strong>동작</strong></p>
-<img src="/img/http.png" width="500" height="200">
-<p>사용자(Client)가 브라우저를 통해서 어떠한 서비스를 url을 통해서 혹은 다른 방법으로 <strong>요청</strong>(request)을 하면 서버에서는 해당 요청 사항에 맞는 결과를 찾아서 사용자에게 <strong>응답</strong>(response)하는 형태로 동작한다.</p>
-<ul>
-<li>요청 : client -&gt; server</li>
-<li>응답 : server -&gt; client</li>
-</ul>
-<p>HTML 문서만이 HTTP 통신을 위한 유일한 정보 문서는 아니다. Plain text로부터 JSON 데이터 및 XML과 같은 형태의 정보도 주고 받을 수 있으며 보통은 client가 어떤 정보를 어떻게 받고 싶은지 명시해주는 경우가 많다.<br>
-(HTML 형태로 받고 싶은지, JSON 형태로 받고 싶은지)</p>
-<h2 id="http의-get과-post-비교">HTTP의 GET과 POST 비교</h2>
-<p>GET과 POST 둘 다 HTTP 프로토콜을 이용해서 서버에 무엇인가를 <strong>요청</strong>할 때 사용하는 방식이다. PUT과 DELETE도 있지만 지금은 둘의 특징을 제대로 이해하여 기술의 목적에 맞게 알맞은 용도로 사용할 수 있도록 하자.</p>
-<p><code>1. GET</code></p>
-<p>GET 방식은 요청하는 <strong>데이터가 HTTP Request Message의 Header 부분의 url에 담겨서 전송된다.</strong> “url?(데이터)” 처럼 request를 보내는 것이다.</p>
-<p>이러한 방식은 url이라는 공간에 데이터가 담겨가기 때문에 전송할 수 있는 <strong>데이터의 크기가 제한적이다.</strong> 또한, 보안이 필요한 데이터에 대해서는 데이터가 그대로 노출되므로 GET 방식은 적절하지 않다.<br>
-ex) password</p>
-<p><code>2. POST</code></p>
-<p>POST 방식은 <strong>HTTP Message의 Body 부분에 데이터가 담겨서 전송된다.</strong> 따라서 GET 방식에 비해서 더 큰 데이터를 보낼 수 있어 큰 데이터를 요청하는 경우에 사용할 수 있다. 보안적인 측면에서는 암호화를 하지 않은 이상 차이가 없다.</p>
-<p>GET은 가져오는 의미를 가지고 있다. 서버에서 어떤 데이터를 가져와서 보여주는 용도이지 서버의 값이나 상태 등을 변경하지 않는다. <strong>SELECT</strong> 적인 성향을 갖고 있다.<br>
-반면에 POST는 서버의 값이나 상태를 <strong>변경</strong>하기 위해서 또는 <strong>추가</strong>하기 위해서 사용된다.</p>
-<p>GET 방식의 요청은 브라우저에서 <code>Caching</code>할 수 있다. 따라서 POST 방식보다 빠르게 응답할 수 있다. POST 방식으로 요청해야 할 데이터의 크기 작고 보안적인 문제가 없다는 이유로 GET 방식으로 요청을 한다면 기존에 Caching 되었던 데이터가 요청될 가능성이 존재한다. 때문에 목적에 맞는 기술을 사용해야 한다.</p>
-
                     
+                        <a
+                            href="/2018/12/28/Network-HTTP-Method-Diff-Of-GET-POST/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [네트워크] HTTP"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2018/12/28/Network-HTTP-Method-Diff-Of-GET-POST/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             

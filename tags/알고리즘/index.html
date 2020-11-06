@@ -657,7 +657,7 @@
     </article>
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -689,51 +689,17 @@
 
             </div>
             
-                <div class="postShorten-content">
+                <div class="postShorten-excerpt">
                     <p>신입 개발자를 위한 <a href="https://github.com/WooVictory/Ready-For-Tech-Interview" target="_blank" rel="noopener">Repository</a>를 만들었습니다. 공부한 내용을 정리 중이니 도움이 되신다면 와서 Star를 눌러주시면 감사하겠습니다.</p>
-<p>알고리즘 문제를 풀다가 완전 탐색으로 해결하면 시간 초과가 나서 어떻게 풀어야 하는가 하다가 검색해보니 <code>투 포인터 알고리즘</code>이라는 개념이 나와서 간단하게 정리하고 넘어가겠다.</p>
-<p>1차원 배열이 있고 이 배열에서 각자 다른 원소를 가리키고 있는 2개의 포인터를 조작해가면서 원하는 것을 얻는 형태이다. 이 때문에 투 포인터 알고리즘이라고 부른다.</p>
-<p><strong>대표적인 문제</strong></p>
-<ul>
-<li><a href="https://www.acmicpc.net/problem/2003" target="_blank" rel="noopener">2003</a></li>
-</ul>
-<p>문제는 N칸의 1차원 배열이 있을 때, 부분 배열 중 그 원소의 합이 M이 되는 경우의 수를 구하는 것이다. 모든 경우의 수를 다 테스트해보면, 구간 합을 구간합 배열로 O(1)만에 구한다고 해도 경우의 수가 (N^2)이 된다. 따라서 문제를 풀 수 없다.</p>
-<p>이 문제에서 <strong>각 원소는 자연수이고 M 또한 자연수</strong>인데, 이 조건이 성립하면 사용할 수 있는 알고리즘은 다음과 같다.</p>
-<ul>
-<li>포인터 2개를 준비한다. 시작과 끝을 나타낼 수 있도록 start, end라고 하겠다.</li>
-<li>맨 처음에는 start = end = 0이며, 항상 start&lt;=end 을 만족해야 한다.</li>
-<li>이 두개의 포인터는 현재 부분 배열의 시작과 끝을 가리키는 역할을 한다.</li>
-</ul>
-<p>s = e일 경우 그건 크기가 0인 즉, 아무것도 포함하지 않는 부분 배열을 뜻한다. 이제 아래의 과정을 <strong>start&lt;N</strong> 인 동안 반복한다.</p>
-<ol>
-<li>현재 부분합이 M 이상이거나, 이미 end = N이면 start++</li>
-<li>그렇지 않다면 end++</li>
-<li>현재 부분합이 M과 같다면 count++</li>
-</ol>
-<p>쉽게 이해하자면, start와 end를 무조건 증가시키는 방향으로만 변화시켜가면서, 도중에 부분 배열의 합이 정확히 M이 되는 경우를 세는 것이다.</p>
-<p>그림으로 보는게 편하다. 그림을 그리기에는 시간이 좀 걸려서 내가 보고 이해한 그림을 첨부하겠다. 아래 참고한 블로그를 보면 설명을 아주 잘해주셨다. 이것만 보면 이해가 될 것이다.</p>
-<p>대표적인 문제를 풀어봤다. 백준 2003번으로 <strong>수들의 합2</strong> 문제이다. 풀이는 아래와 같다.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 투포인터 알고리즘</span></span><br><span class="line"><span class="comment"> * start : 시작</span></span><br><span class="line"><span class="comment"> * end : 끝</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        BufferedReader br = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(System.in));</span><br><span class="line">        String[] input = br.readLine().split(<span class="string">" "</span>);</span><br><span class="line">        <span class="keyword">int</span> n = parse(input[<span class="number">0</span>]);</span><br><span class="line">        <span class="keyword">int</span> m = parse(input[<span class="number">1</span>]);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span>[] arr = <span class="keyword">new</span> <span class="keyword">int</span>[n + <span class="number">1</span>];</span><br><span class="line"></span><br><span class="line">        String[] num = br.readLine().split(<span class="string">" "</span>);</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; i++) &#123;</span><br><span class="line">            arr[i] = parse(num[i - <span class="number">1</span>]);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> start = <span class="number">0</span>, end = <span class="number">0</span>, sum = <span class="number">0</span>, count = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">            <span class="comment">// 부분합이 m 보다 큰 경우 start 가 가리키는 원소를 빼고</span></span><br><span class="line">            <span class="comment">// start 의 값을 증가시킨다. 즉, start 뒤로 이동.</span></span><br><span class="line">            <span class="keyword">if</span> (sum &gt;= m) &#123;</span><br><span class="line">                sum = sum - arr[start++];</span><br><span class="line"></span><br><span class="line">                <span class="comment">// end 가 n 에 도달하면 종료한다.</span></span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (end == n) &#123;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="comment">// 위의 두 경우에 해당하지 않으면 end 는 뒤로 이동하면서 원소의 값을</span></span><br><span class="line">                <span class="comment">// sum 에 더한다.</span></span><br><span class="line">                sum = sum + arr[end++];</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 부분 합이 m 과 같다면 count 를 증가시켜준다.</span></span><br><span class="line">            <span class="keyword">if</span> (sum == m) &#123;</span><br><span class="line">                count++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(count);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">parse</span><span class="params">(String str)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> Integer.parseInt(str);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="참고">참고</h2>
-<ul>
-<li><a href="https://m.blog.naver.com/kks227/220795165570" target="_blank" rel="noopener">투 포인터(Two Pointers Algorithm), 슬라이딩 윈도우(Sliding Window)</a></li>
-</ul>
-
                     
+                        <a
+                            href="/2019/05/28/Two-Pointer-Algorithm/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [알고리즘] 투포인터 알고리즘"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2019/05/28/Two-Pointer-Algorithm/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             

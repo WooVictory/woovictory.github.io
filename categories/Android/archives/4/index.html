@@ -475,7 +475,7 @@
     </article>
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -507,7 +507,7 @@
 
             </div>
             
-                <div class="postShorten-content">
+                <div class="postShorten-excerpt">
                     <ol>
 <li><a href="https://woovictory.github.io/2019/04/21/What-is-MVVM/">[Android] MVVM Part.1</a></li>
 <li><a href="https://woovictory.github.io/2019/04/21/What-is-MVVM/">[Android] MVVM Part.2</a></li>
@@ -520,162 +520,15 @@
 </ul>
 <p>Architecture 패턴에는 일반적으로 사용하는 MVC, MVP, MVVM이 있다. 이러한 Architecture 적용으로 얻는 이점은 안정적인 서비스 개발을 할 수 있으며 유지 보수를 빠르게 할 수 있다는 것이다.</p>
 <p>먼저, MVP Architecture부터 살펴보자.</p>
-<h2 id="1-mvp">1. MVP</h2>
-<img src="/img/mvp_android.png" width="600" height="200">
-<ul>
-<li>Presenter : View에서 요청한 정보를 Model로부터 가공해서 View로 전달하는 부분</li>
-</ul>
-<p>Model과 View는 MVC와 동일하지만 사용자 입력을 View에서 받는다. 그리고 Model과 View는 각각 Presenter와 상호 작용을 하게 된다. 항상 Presenter를 거쳐 동작하는 셈이다.</p>
-<p>그러므로 View와 Model은 서로를 알 필요가 전혀 없다. Presenter만 알면 된다. 그래서 MVC의 단점인 View와 Model의 의존성이 없어지게 된다.</p>
-<p><code>정리하자면</code></p>
-<ol>
-<li>View로 사용자의 입력이 들어온다.</li>
-<li>View는 Presenter에 작업 요청을 한다.</li>
-<li>Presenter에서 필요한 데이터를 Model에 요청한다.</li>
-<li>Model은 Presenter에 필요한 데이터를 응답한다.</li>
-<li>Presenter는 View에 데이터를 응답한다.</li>
-<li>View는 Presenter로부터 받은 데이터로 화면에 보여주게 된다.</li>
-</ol>
-<p>View에서 비즈니스 로직을 분리하는 부분은 성공적이다. Model 역시 분할되어 있어서 적용하기 쉽다. 하지만, View와 Presenter의 1:1 관계를 유지하는 덕분에 몇 가지 단점이 생긴다.</p>
-<ul>
-<li>중복 코드 발생한다.</li>
-<li>View에 대한 의존성이 강해진다.</li>
-</ul>
-<p><strong>중복 코드?</strong></p>
-<p>간단한 예를 들어보겠다.<br>
-로그인과 로그아웃은 어떠한 화면에서도 호출될 수 있다. 기획상으로 가능하다면 말이다.<br>
-A/B/C/D 4개의 화면이 있고, 언제든 로그인만 호출할 수 있다. 대부분은 로그인 Acitivity로 이동시키고 이를 구현하면 된다.</p>
-<p>반대로 로그아웃이다. 단순하게 로그아웃한다고 생각해보자. 로그아웃 역시 A/B/C/D 화면에서 언제든 접근할 수 있다.</p>
-<p><strong>MVP에서는?</strong></p>
-<p>로그인, 로그아웃을 처리하는 비즈니스 로직은 A/B/C/D 화면에 종속적인 Presenter 4개에서 모두 호출하게 된다. 모델에서 실제 로그인, 로그아웃 처리 로직이 있는 부분은 가져다가 사용하는 것이다.</p>
-<p>여기서 <strong>공통 코드</strong>가 발생하게 된다.</p>
-<p><strong>공통 코드?</strong></p>
-<p>MVP에서 발생하는 공통 코드를 어떻게 해결할 수 있을까?</p>
-<ul>
-<li>Presenter도 상속을 받아서 공통 코드를 해결</li>
-<li>별도의 공통 로직을 가지는 새로운 클래스를 생성</li>
-<li>Presenter 분리?</li>
-</ul>
-<p>위와 같은 공통 코드를 관리할 수는 있다.</p>
-<p><strong>MVVM은 View Model 분리의 시작</strong></p>
-<p>위에서 적은 Presenter를 분리하면 MVVM이 된다. <strong>View에 대한 모델을 분리하였기 때문에 ViewModel이다.</strong></p>
-<p>즉,ViewModel은 View에 대한 모델 분리가 있어야 한다. View에서 사용하는 중복적인 Presenter의 코드가 발생하면 이를 ViewModel 하나로 분리해주는게 가장 이상적이다.</p>
-<p>MVP의 기본 개념인 View와 Presenter의 1:1 관계 유지에서 벗어나기 위해서는 MVVM이 가장 좋은 해결책으로 보인다. 조금 더 이쁜 코드를 만들기 위해서는 최소한 View에 대한 Model은 정의해주어야 한다. 그렇게 해야 아래와 같은 처리가 가능해진다.</p>
-<ul>
-<li>View에 대한 종속성을 줄인다.
-<ul>
-<li>종속성을 줄이기 위해 ReactiveX, Databinding 등을 이용할 수 있다.</li>
-</ul>
-</li>
-<li>View에 대한 Model 정의가 명확해야 한다.
-<ul>
-<li>이 ViewModel은 언제든 View에서 가져다 쓰기만 하면 되고, 불필요한 경우 해당 ViewModel만 버릴 수 있어야 한다.</li>
-</ul>
-</li>
-<li>ViewModel에 대한 테스트가 가능해진다.
-<ul>
-<li>View에 대한 테스트와 완전하게 분리 가능하여 비즈니스 로직이 아닌 각각의 ViewModel 테스트가 가능해진다.</li>
-</ul>
-</li>
-</ul>
-<p><strong>MVVM의 ViewModel이란?</strong></p>
-<p>MVVM은 고민을 많이 해야 하는 구조이다.</p>
-<ul>
-<li>ViewModel 분리가 필요할까?</li>
-<li>분리했을 때 얻는 이점은?</li>
-<li>종속성은?
-<ul>
-<li>ReactiveX, DataBinding 등을 이용해 해결할 수 있다.</li>
-</ul>
-</li>
-<li>테스트 코드는?
-<ul>
-<li>테스트 코드는 유용해야 한다.</li>
-</ul>
-</li>
-</ul>
-<p>View에 대한 모델을 모두 분리한다면? 다음과 같이 구성할 수 있을 것이다.</p>
-<ul>
-<li>LoginViewModel : 로그인만 하는 모델</li>
-<li>LogoutViewModel : 로그아웃만 하는 모델</li>
-<li>UserInfoViewModel : 사용자 정보만을 가져와 가공한다.</li>
-</ul>
-<p>여기까지 MVP와 MVVM에 대해 차이점과 ViewModel에 대해 조금 알아봤다. 이제는 MVVM을 알아보도록 하자.</p>
-<h2 id="2-mvvm">2. MVVM</h2>
-<img src="/img/mvvm_android.png" width="600" height="200">
-<p>Presenter 대신에 ViewModel이 존재한다.</p>
-<ul>
-<li>ViewModel : View를 표현하기 위해 만들어진 View를 위한 Model</li>
-</ul>
-<p>MVVM에서는 두 가지 디자인 패턴을 사용한다. <strong>Command 패턴</strong>과 <strong>Data binding</strong>이다. 이 두 가지 디자인 패턴을 사용함으로써 View와 ViewModel은 의존성이 완전히 사라지게 된다.</p>
-<p>View에서 입력이 들어오고 Command 패턴을 통해서 ViewModel에 명령을 내리게 되고 Data binding으로 인해 ViewModel의 값이 변화하면 바로 View의 정보가 바뀌게 된다.</p>
-<p><code>정리하자면</code></p>
-<ol>
-<li>View에 입력이 들어오면 Command 패턴으로 ViewModel에 명령을 한다.</li>
-<li>ViewModel은 필요한 데이터를 Model에 요청한다.</li>
-<li>Model은 ViewModel에 필요한 데이터를 응답한다.</li>
-<li>ViewModel은 응답 받은 데이터를 가공해서 저장한다.</li>
-<li>View는 ViewModel과의 Data Binding으로 인해 자동으로 갱신된다.</li>
-</ol>
-<p><strong>왜 MVVM을 사용할까?</strong></p>
-<p>전통적인 UI 개발에서 개발자는 윈도우, 사용자 컨트롤, 페이지를 사용해서 View를 만들곤 했다. 그리고 모든 논리 로직이 들어간 코드(핸들링, 초기화 그리고 데이터 모델 등)를 뷰 클래스에 정의한다. 이러한 방법은 뷰 클래스의 크기를 늘리고 UI와 데이터 그리고 비즈니스 사이의 <code>매우 강한 의존성</code>을 형성한다.</p>
-<p>이와 같은 상황에서 여러 개발자들은 동시에 같은 뷰에서 작업하기 힘들어 질 것이다. 즉, 협업하는 상황에서 같은 화면을 함께 개발하지 못하고 서로 다른 화면을 개발해야 하는 비효율적인 상황이 발생할 것이다. 또한, 다른 개발자가 코드를 바꾸면 다른 부분을 망가뜨릴 위험도 존재한다.</p>
-<p><strong>이처럼 모든 코드들이 한 클래스에 있는 것은 유지보수 그리고 테스트를 하는데 있어서 좋지 않다.</strong></p>
-<ol>
-<li>뷰(UI)</li>
-<li>모델(UI 상에 보여지고 있는 데이터)</li>
-<li>글루 코드(핸들링과 바인딩 그리고 비즈니스 로직)</li>
-</ol>
-<ul>
-<li>글루 코드 : 서로 다른 코드를 접착시키는 코드</li>
-<li>비즈니스 로직 : 데이터의 처리가 이루어지는 부분</li>
-</ul>
-<p>MVVM에서 글루 코드는 뷰 모델이다. 그래서 애플리케이션의 구조를 더욱 간단하고 유지가능할 수 있게 만들기 위해서는 <strong>관심사의 분리</strong>에 집중해야 한다.</p>
-<p>만약, 뷰 모델에서의 프로퍼티 값이 변하게 되면 데이터 바인딩과 노티피케이션을 통해 자동으로 새로운 값을 알려준다. 만약 사용자가 저장하기 버튼을 클릭하는 액션을 뷰에서 취했을 때, 뷰모델은 요청된 명령을 실행한다. 이 과정에서 뷰모델은 모델의 데이터를 수정하고 뷰는 데이터를 수정하지 않는다. 뷰는 모델의 존재를 모른다. 반면 뷰 모델과 모델은 뷰를 인식하지 않는다. 모델은 뷰와 뷰 모델의 존재를 모른다.</p>
-<p><strong>MVVM에 대해</strong></p>
-<p>MVVM 패턴을 지켜 개발된 앱은 아래의 특징을 갖는다.</p>
-<ol>
-<li>관심사의 분리 - 하나의 소프트웨어를 최대한 기능적으로 작은 단위로 나눈다</li>
-<li>테스트가 쉬워지고 큰 프로젝트도 상대적으로 관리하기 좋다.</li>
-<li>SOLID 원칙을 지향한다.</li>
-<li>앱이 구조적으로 약한 결합의 컴포넌트로 나눠진다.</li>
-</ol>
-<p>대체적으로 위와 같은 장점에 대해서 이야기를 하지만 결국 가장 큰 목적은 <strong>유지보수가 쉽고 테스트가 용이한 코드를 만드는 것이다.</strong></p>
-<img src="/img/mvvm.png" width="600" height="200">
-<p>View는 ViewModel에게 클릭 이벤트, 필요한 데이터 요청 등을 명시적으로 하고 ViewModel이 notify할 때까지 기다리게 된다.</p>
-<p>동일하게 ViewModel은 Model을 통해 데이터를 요청하고 기다리게 된다. 각각의 컴포넌트간 참조를 갖지 않고 <strong>단방향(View -&gt; ViewModel -&gt; Model)의 의존성만을 갖게 된다.</strong></p>
-<p><strong>정리</strong></p>
-<ol>
-<li>뷰, 뷰모델, 모델 이 셋은 서로의 존재를 몰라야 한다.<br>
--&gt; 서로 간의 의존성을 최대한 제거함으로써 유지보수가 쉽고 테스트 가능한 코드가 된다.</li>
-<li>뷰에서 액션을 받으면 뷰모델에서 비즈니스 로직을 실행한다.</li>
-<li>뷰 모델은 모델의 데이터를 수정한다.</li>
-<li>뷰 모델은 데이터 바인딩과 노티피케이션을 통해 뷰를 수정한다.</li>
-<li>뷰와 뷰 모델은 n:m의 관계이다.</li>
-<li>오직 뷰모델만이 모델에 접근할 수 있고 뷰는 모델에 접근하지 못한다.</li>
-</ol>
-<h2 id="참고"># 참고</h2>
-<ul>
-<li><a href="https://black-jin0427.tistory.com/133" target="_blank" rel="noopener">[번역] MVVM 디자인 패턴의 기본 이해</a></li>
-<li><a href="https://magi82.github.io/android-mvc-mvp-mvvm/" target="_blank" rel="noopener">MVC, MVP, MVVM 비교</a></li>
-<li><a href="https://thdev.tech/androiddev/2017/03/12/Android-MVVM-Architecture-intro/" target="_blank" rel="noopener">Android MVVM 어떻게 구현하는게 좋을까?</a></li>
-</ul>
-
                     
+                        <a
+                            href="/2019/06/09/What-is-MVVM/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [Android] MVVM Part.1"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2019/06/09/What-is-MVVM/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             
@@ -837,7 +690,7 @@ A/B/C/D 4개의 화면이 있고, 언제든 로그인만 호출할 수 있다. �
     </article>
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -869,89 +722,18 @@ A/B/C/D 4개의 화면이 있고, 언제든 로그인만 호출할 수 있다. �
 
             </div>
             
-                <div class="postShorten-content">
-                    <h2 id="1-service란">1. Service란?</h2>
+                <div class="postShorten-excerpt">
+                    <h2>1. Service란?</h2>
 <p><strong>Service</strong>는 안드로이드 Application을 구성하는 4대 컴포넌트 중 하나이다. Activity처럼 사용자와 상호 작용을 하는 컴포넌트는 아니다. 때문에 UI가 존재하지 않으며 <strong>Background</strong>에서 동작하는 컴포넌트이다.</p>
-<p>Service가 실행되고 있는 상태라면 안드로이드 OS에서는 해당 Process를 왠만하면 죽이지 않도록 방지하고 관리하게 된다. 그렇기 때문에 메모리 부족이나, 특별한 경우를 제외하고는 Background 동작을 수행하도록 설계되었다.</p>
-<img src="/img/android_service.png" width="600" height="300">
-<h2 id="2-service는-왜-필요할까">2. Service는 왜 필요할까?</h2>
-<p>'Android Application을 구성하기 위해서 Service는 왜 필요할까?'라고 생각을 할 수 있다. 그 이유는 Activity 즉, 사용자가 보고 있는 화면이 종료된 상태에서도 동작하기 위해서 만들어졌고, 개발자는 구현을 해야 한다.</p>
-<p>예를 들어서 Mp3 플레이어 같은 기능을 활용하는 경우가 될 수 있다. Mp3 플레이어는 화면이 종료된 상태에서도 계속 노래를 재생해야 하기 때문에 Background에서도 동작하도록 만들어야 한다. 따라서 <strong>Service</strong>를 사용해 구현하면 된다.</p>
-<ul>
-<li>파일 다운로드 같은 경우에도 사용할 수 있다.</li>
-<li>애플리케이션이 실행 중이지 않을 때도 작업해야 하는 경우에도 사용할 수 있다.(애플리케이션이 실행 중일 때만 작업해야 하는 경우 <strong>스레드</strong> 사용을 권장한다.)</li>
-</ul>
-<p><strong><code>주의</code></strong><br>
-Service가 Background에서 동작을 수행하는 컴포넌트라고 해서 Main Thread에서 실행되는 것이라고 생각하지 않을 수도 있다. 명심해야 할 점은 Android 4대 컴포넌트들은 모두 Main Thread에서 실행된다.</p>
-<p>따라서 CPU 자원을 많이 소모하거나 네트워크 통신과 같은 시간이 오래 걸리는 작업은 별도의 Thread를 만들어서 처리해야 한다. 이 부분은 아래에서 ANR과 함께 설명하겠다.</p>
-<h2 id="3-service-사용-방법">3. Service 사용 방법</h2>
-<p>2가지 방법이 있으면 <code>startService()</code>와 <code>bindService()</code>이다.</p>
-<ol>
-<li><strong>startService() - 시작 타입의 서비스</strong></li>
-</ol>
-<ul>
-<li>서비스를 상속받는 클래스를 작성하며, 정적 리시버와 유사하게 매니페스트 파일에 등록한다.</li>
-<li>한 번 시작되면 백그라운드에서 무한정 실행된다.</li>
-<li>작업을 완료하면 서비스가 종료된다.</li>
-<li>간단한 작업들만 수행한다.</li>
-<li>호출한 곳에 결과값을 반환하지 않고 계속해서 서비스한다.(음악 재생, 파일 다운로드 등)</li>
-<li>하나의 프로세스 안에서 동작하며, 패키지내 컴포넌트들과 유기적으로 통신하는 역할을 한다.</li>
-<li>생명 주기 : onCreate() -&gt; onStartCommand() -&gt; 실행 -&gt; onDestroy() -&gt; stopService()</li>
-</ul>
-<img src="/img/android_startService.png" width="600" height="300">
-<ol start="2">
-<li><strong>bindService() - 연결 타입의 서비스</strong></li>
-</ol>
-<ul>
-<li>클라이언트 - 서버와 같이 동작하며 호출자(액티비티)에서 서비스에게 어떤 것을 요청하고 서비스는 요청을 처리한 후 결과값을 반환한다. (서비스가 서버의 역할을 수행.)</li>
-<li>액티비티가 사라지면 서비스도 자동적으로 destroy되면서 없어진다.</li>
-<li>하나의 서비스가 다수의 액티비티와 연결될 수 있다.</li>
-<li>프로세스 내에서 다른 컴포넌트들과 서로 유기적으로 통신을 하며 <strong>또한, 어플 내의 기능을 외부에 제공하는 경우에 많이 사용된다. 즉, 다른 프로세스들 간에서도 Data 공유 및 통신이 유기적으로 가능하다.</strong></li>
-<li>생명 주기 : onCreate() -&gt; onBind() -&gt; 실행 -&gt; onUnbind() -&gt; onDestory() -&gt; stopService()</li>
-</ul>
-<img src="/img/android_bindService.png" width="600" height="300">
-<ol start="3">
-<li><strong>intentService</strong></li>
-</ol>
-<ul>
-<li>내부적으로 handlerThread가 동작하는 서비스</li>
-<li>루퍼가 message Queue에 들어온 요청에 대해 순차적으로 처리한다.</li>
-<li>Queue가 비게 되면 자동으로 서비스가 종료된다.</li>
-<li>동시에 처리하는게 아니므로 성능은 조금 떨어지지만 순차적 실행이 보장된다.</li>
-</ul>
-<h2 id="4-service-사용시-주의사항">4. Service 사용시 주의사항.</h2>
-<p>Android는 Linux 기반의 프로그램이다. 프레임워크 단에는 Linux로 구현되어 있다. 메모리 관리 또한 Linux 정책을 따르며 Linux Kernel에 의해서 관리된다.</p>
-<img src="/img/android_linux_kernel.png" width="600" height="300">
-<p>결국 여러 프로세스들을 커널에서 관리한다고 짐작할 수 있다.<br>
-또한 하나의 프로세스 안에는 애플리케이션, 안드로이드 4대 컴포넌트, 스레드 등을 구성하고 있다. 즉, 4대 컴포넌트의 운명 또한 리눅스 커널에 달려있다는 걸 의미한다.</p>
-<p>만약, 메모리 부족이나 과부하 등과 같은 현상이 발생했을 때 리눅스 커널이 프로세스를 강제로 종료시킬 수 있다.</p>
-<img src="/img/android_process.png" width="600" height="300">
-<p>여기서 주의해야 할 점이 있다. 바로 모든 컴포넌트들이 <strong>Main Thread</strong> 안에서 실행된다는 점이다. 안드로이드에서 Main Thread는 UI 작업을 처리하는 Thread이다. 따라서 Main Thread에서는 네트워크 작업이나 시간이 오래 걸리는 작업을 하게 되면 앱의 반응성이 낮아질 수 있다. 사용자의 불편함을 방지하고나 시스템이 <code>ANR</code> 상태로 전환시킬 수 있다.</p>
-<p>Service 역시 Main Thread에서 동작하기 때문에 시간이 오래 걸리는 작업을 할 경우에는 별도의 작업 Thread를 만들어서 동작을 처리해야 한다. 그리고 작업 결과를 UI Thread에 반영하기 위해서 쓰레드 간 통신 방법을 이용해 반영해야 한다.</p>
-<p>쓰레드간 통신 방법은 다음의 글을 참고하면 보면 될 것 같다.<br>
-<strong><a href="https://woovictory.github.io/2019/01/07/Android-For-Interview-4/">쓰레드간 통신 방법</a></strong></p>
-<p><strong>추가적인 내용들은 빠른 시일 내에 공부해서 포스팅할 예정이다.</strong></p>
-<h2 id="참고">참고</h2>
-<ul>
-<li><a href="https://limkydev.tistory.com/43" target="_blank" rel="noopener">[Android] 서비스(Service) 전반적인 개념</a></li>
-<li><a href="https://arabiannight.tistory.com/entry/%EC%95%88%EB%93%9C%EB%A1%9C%EC%9D%B4%EB%93%9CAndroid-Service-%EC%82%AC%EC%9A%A9%EB%B2%95" target="_blank" rel="noopener">안드로이드/Android Service 사용법</a></li>
-</ul>
-
                     
+                        <a
+                            href="/2019/05/12/What-is-Service/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [안드로이드] Service"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2019/05/12/What-is-Service/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             
@@ -960,7 +742,7 @@ Service가 Background에서 동작을 수행하는 컴포넌트라고 해서 Mai
     </article>
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -992,111 +774,18 @@ Service가 Background에서 동작을 수행하는 컴포넌트라고 해서 Mai
 
             </div>
             
-                <div class="postShorten-content">
+                <div class="postShorten-excerpt">
                     <p>이번에 공부할 내용은 <strong>WorkManager</strong>이다.<br>
 백그라운드를 다루는 안드로이드의 새 버전들의 출시로 인해, 백그라운드 다루기는 이전보다 더 복잡해져다. 그래서 구글은 <code>JetPack</code>의 일부로 이러한 백그라운드 작버을 도와주기 위해 WorkManager를 출시했다.</p>
-<p>먼저, 왜 만들어지게 되었고, 왜 필요한지를 알 필요가 있다고 생각한다. 사용하는 것도 중요하지만 내가 왜 사용하는지 <strong>이유</strong>를 알고 쓰는게 더 중요하기 때문이다.</p>
-<p>아래와 같은 3개의 구성으로 나누도록 하겠다.</p>
-<ol>
-<li>메모리</li>
-<li>현재 존재하는 백그라운드 처리 방법</li>
-<li>WorkManager</li>
-</ol>
-<h2 id="1-메모리">1. 메모리</h2>
-<p>안드로이드 커널은 리눅스 커널을 기반으로 해서 만들어졌다. 안드로이드 커널과 모든 리눅스 커널들의 가장 큰 차이점은 <code>스왑 공간(Swap Space)</code>가 없다는 것이다.</p>
-<p>리눅스의 스왑공간은 램이 꽉 찼을 때 사용된다. 시스템은 더 많은 메모리 리소스를 필요로 하지만 램이 꽉 찼을 때, 메모리 상의 비활성 페이지를 <strong>스왑 공간</strong>으로 이동시킨다. 스왑공간은 램의 용량이 작은 디바이스에 도움이 되긴 하지만, 램의 용량을 늘리는 것을 대체할 수는 없다. 스왑공간은 램보다 Access time이 훨씬 느린 하드 드라이브에 위치하기 때문이다.</p>
-<p>안드로이드에서는 스왑공간 같은 개념이 없다. 시스템의 메모리가 다 소진되었을 때, OOM 킬러를 이용해 프로레스스 강제 종료시켜버린다. OOM 킬러는 <strong>Visible 상태</strong>와 <strong>소모된 메모리의 양</strong>에 기반하여 프로세스를 정리하여 여유 메모리를 확보한다.</p>
-<p>모든 프로세스는 액티비티 매니저가 부여한 자신의 <code>oom_adj</code> 점수를 가지고 있다. 이 점수는 애플리케이션의 상태(Foreground, Background, Background Service 등등)의 조합이다. 아래는 모든 <code>oom_adj</code> 값을 보여준다.</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"># Define the oom_adj values for the classes of processes that can be</span><br><span class="line"># killed by the kernel.  These are used in ActivityManagerService.</span><br><span class="line">    setprop ro.FOREGROUND_APP_ADJ 0</span><br><span class="line">    setprop ro.VISIBLE_APP_ADJ 1</span><br><span class="line">    setprop ro.SECONDARY_SERVER_ADJ 2</span><br><span class="line">    setprop ro.BACKUP_APP_ADJ 2</span><br><span class="line">    setprop ro.HOME_APP_ADJ 4</span><br><span class="line">    setprop ro.HIDDEN_APP_MIN_ADJ 7</span><br><span class="line">    setprop ro.CONTENT_PROVIDER_ADJ 14</span><br><span class="line">    setprop ro.EMPTY_APP_ADJ 15</span><br></pre></td></tr></table></figure>
-<p>프로세스의 <code>oom_adj</code>의 값이 클수록 커널의 OOM 킬러에게 정리당하기 쉽다. OOM 킬러는 현재 사용 가능한 여유메모리 크기와 <code>oom_adj</code> 임계값을 기반으로 구성한 규칙을 사용한다. 즉, OOM 킬러의 조건은 아래와 같다.</p>
-<p><strong>여유 메모리 공간의 크기가 X보다 작을 때, oom_adj 값이 Y보다 큰 프로세스를 정리하라!</strong></p>
-<p>즉, 앱이 메모리를 적게 소비할수록 프로세스가 정리되지 않고 중요한 내용을 다룰 기회가 더 많아진다는 것이다. 두번째로 중요한 내용은 애플리케이션의 상태에 대해 이해하는 것이다. 그래서 앱이 백그라운드에 진입했을 때에도 뭔가를 지속적으로 하고 싶다면 <strong>서비스</strong> 컴포넌트를 사용해야 한다.</p>
-<ul>
-<li>서비스는 UI를 제공하지 않고, 백그라운드에서 오래 걸리는 동작을 수행할 수 있도록 하는 4대 컴포넌트 중 하나이다.</li>
-<li>서비스를 사용해야 했던 이유는 아래와 같다.
-<ol>
-<li>시스템에게 이 프로세스가 오래 걸리는 작업이 있음을 알려주고, 그에 맞는 <strong>oom_adj</strong> 점수를 얻도록 하기 위함이다.</li>
-<li>안드로이드 애플리케이션의 4대 컴포넌트 중 하나이다.</li>
-<li>서비스를 별개의 프로세스에서 실행시킬 수 있다.</li>
-</ol>
-</li>
-</ul>
-<p>사용했을 때의 이점이 있기 때문에 좋아 보인다. 하지만, 서비스 사용의 단점이 있다.</p>
-<ol>
-<li>프로세스가 계속 실행되고 있는 것이므로 배터리를 엄청나게 소모한다.</li>
-<li>마시멜로우 버전부터 도즈 모드(Doze)가 도입되었다.</li>
-<li>누가 버전에서 더 발전되었고 오레오 버전에서 더욱 강화되었다.</li>
-</ol>
-<p>도즈 모드는 사용자가 디바이스의 스크린을 끄고 나면 네트워크 통신, Sync, GPS, 알람, 와이파이 스캔 등을 비활성화 시켜버린다. 사용자가 스크린을 켜거나 디바이스를 충전기에 연결할 때까지 유지된다. 그리고 중요하지 않은 일을 수행하는 앱의 개수를 줄임으로써 디바이스의 배터리를 절약하도록 한다.</p>
-<p>또한, 오레오 버전으로 타게팅된 앱이 백그라운드 서비스 생성을 허가받지 않은 채로 <code>startService()</code> 메소드를 호출하려고 하면 백그라운드 서비스 제한이 있어서 <code>IllegalStateException</code> 예외를 던진다.</p>
-<p>'그럼 오레오 버전으로 타게팅 하지 않으면 되잖아?'라고 생각할 수 있다. 구글의 정책을 살펴보도록 하자.</p>
-<ul>
-<li>2018년 8월 : 새로 출시되는 앱들은 반드시 API 26(Oreo 8.0) 이상</li>
-<li>2018년 11월 : 기존 앱들도 API 26(Oreo 8.0) 이상.</li>
-<li>2019년 이후 : 매년 targetSdkVersion 요구사항이 향상될 것이다. 안드로이드가 매년 새로운 버전을 낼 때마다, 모든 앱들은 해당 API 레벨 이상을 타겟팅 해야 한다.</li>
-</ul>
-<p><strong>이를 통해 알 수 있는 것은 백그라운드 작업을 위해 더 이상 서비스를 사용하지 않게 될 것이라는 것이다.</strong></p>
-<h2 id="2-현재-존재하는-백그라운드-처리-방법">2. 현재 존재하는 백그라운드 처리 방법</h2>
-<p><strong>AlarmManager와 BroadcastReceiver 사용</strong></p>
-<p>지정한 타이밍에 시스템에서 알림이 오고 여기에 맞춰 백그라운드 작업을 수행할 수 있었다. 하지만, 킷캣(K, API 19) 버전에서는 알림이 미뤄지거나 한 번에 몰아서 오는 등 정확한 실행을 보장하지 않게 된다.</p>
-<p><code>BroadcastReceiver</code>를 통해서 기기의 부팅, 네트워크 연결 등의 디바이스 이벤트를 시스템으로부터 전파받아서 특정 작업을 수행해왔는데 누가(N, API 24)버전에서 특정 인텐트에 대한 동작이 제한되고, 오레오(O, API 26)버전에서 암시적 브로드캐스트 리시버 등록을 차단하는 등 제한이 추가되고 있다.</p>
-<p>그래서 대안책이 <strong>Job</strong>을 사용하는 것이다.</p>
-<p><strong>JobScheduler 사용</strong></p>
-<p>롤리팝(L, API 21) 버전에서 <code>JobScheduler</code>를 제공한다. 부정확해진 Alarm Manager의 대안이기도 했고, 결국 백그라운드 작업을 배제할 수 없었기 때문이다. 하지만, API 2에서 사용할 수 있다는 제약으로 인해 API 21 이전과 이후 버전을 나누어 <code>AlarmManager</code>와 <code>JobScheduler</code>를 각각 사용해서 구현해야 하는 번거로운 문제가 생겼다.</p>
-<p><strong>JobDispatcher 사용</strong></p>
-<p>이후에 구글은 Firebase JobDispatcher를 제공하기 시작했다. JobDispatcher는 진저브레드(G, API 9) 버전 이상을 지원한다. 그리고 내부적으로 <code>AlarmManager</code>와 <code>JobScheduler</code>를 선택해준다. 이를 통해서 개발자가 하는 일은 한 가지로 줄었으나, 구글 플레이 서비스에 의존하게 되어 아마존/주욱 제조사 디바이스에서는 기능을 사용할 수 없다. 결국, 구글 플레이 서비스를 지원하지 않는 디바이스에서는 <code>AlarmManager</code>와 <code>JobScheduler</code>를 각각 사용해서 구현해야 한다.</p>
-<p><strong>JobIntentService 사용</strong></p>
-<p>다른 대안으로 <code>JobIntentService</code>를 사용하는 방법이 있다. 하지만, 정확한 시간에 작업이 수행되지 않기 때문에 오레오에서 Job을 빨리 수행하는데는 도움이 되지 않는다.</p>
-<p><strong>Android-Job(Evernote) 라이브러리(Third party library) 사용</strong></p>
-<p>이는 자동으로 안드로이브 버전에 따라 <code>AlarmManager</code>, <code>JobScheduler</code>, <code>JobDispatcher</code>들 중 어떤 것을 사용할지 결정해주는 라이브러리이다. WorkManager를 제외하고 생각한다면 가장 좋은 라이브러리라고 평가받고 있다.</p>
-<p>하지만, Evernote가 새로운 가이드 안을 발표했다. 안드로이드 버전에 따라 백그라운드 API가 수시로 변경되어서 버전별로 분기가 필요하고 복잡한 API 사용이 힘들었을텐데 앞으로 Evernote는 Android Job 라이브러리를 배포하여 개발자들에게 편의를 제공해왔지만 더 이상 지원하지 않고 <code>WorkManager</code> 사용을 권장한다는 내용이다.</p>
-<p>결국, 현재 실행 중인 안드로이드 버전에 따라서 백그라운드 서비스 API를 다르게 호출시키고 관리해야 한다. 디바이스의 안드로이드 버전과 구글 플레이 서비스 여부에 따라 백그라운드 서비스를 지원하기 까다롭다. 그래서 Google I/O에서 <code>WorkManager</code>라는 해결책을 제공해주었다.</p>
-<h2 id="3-workmanager">3. WorkManager</h2>
-<p>2018년 Google I/O에서는 안드로이드의 백그라운드 작업을 도와줄 WorkManager가 공개되었다.<br>
-WorkManager는 Android JetPack의 아키텍처의 구성 요소이다.</p>
-<p>WorkManager는 다음과 같은 특징을 갖는다.</p>
-<img src="/img/workmanager_feature.png" width="600" height="300">
-<ul>
-<li>실행이 보장된다. 또한 제약 조건을 가지고 실행할 수 있다. 예를 들어, 네트워크 연결시에만 처리되는 작업을 추가하면 네트워크가 연결되면 반드시 실행된다.</li>
-<li>장치의 상태를 존중한다. 도즈 모드에 진입하면 일을 처리하기 위해 기기를 깨우거나 하지 않는다.</li>
-<li>실행 중인가, 대기 중인가, 완료되었는가 등의 상태 조회가 가능하다.</li>
-<li>작업 A의 결과에 따라 B 또는 C를 선택하여 처리하고 D를 이어서 처리하는 등의 작업 연결 처리가 가능하다.(체이닝)</li>
-<li>첫 번째 특징과 비슷하며 기회주의적이다. 즉, 어떤 제한 조건이 충족되었을 때 즉시 실행된다.</li>
-</ul>
-<p>WorkManager는 내부적으로 아래의 그림과 같이 동작한다.</p>
-<img src="/img/WorkManager_run.png" width="600" height="300">
-<p>API의 버전에 맞게 <code>AlarmManager</code>와 <code>JobScheduler</code>를 사용하고 개발자가 Firebase JobDispatcher 의존성을 추가했다면(즉, 구글 플레이 서비스 사용이 가능하다면)<code>JobDispatcher</code>를 적극 사용한다.</p>
-<p>개발자는 WorkManager를 사용함으로써 상황에 맞는 고민이나 별도의 구현 없이 앱의 종료나 기기의 재부팅된 경우에도 항상 장치에 맞는 가장 적합한 방법을 사용하여 백그라운드 작업을 처리할 수 있게 된다.</p>
-<p><code>그러나 WorkManager가 항상 최선은 아니다.</code></p>
-<p>앱의 종료 여부와 상관없이 수행되어야 하는 작업, 즉 앱의 프로세스 수명과 별도로 살아남기 위한 작업에 사용하는 것을 추천한다.</p>
-<p>예를 들어 이미지를 서버에 업로드해야 하거나, 데이터를 분석하고 이를 데이터베이스에 저장해야 하는 작업에는 <strong>WorkManager</strong>를 사용하는 것이 좋다.</p>
-<p>그러나 사용자가 현재 보고 있는 UI를 빠르게 변경해야 하는 작업이나 물건 구입 과정에서의 결제 진행 등 즉시 처리해야 하는 작업은 WorkManager를 사용하지 않는 것이 좋다.</p>
-<img src="/img/when_to_use_workmanager.png" width="600" height="300">
-<p>WorkManager의 작업은 반드시 실행되지만 그 처리가 상황에 따라 지연되거나 도중에 중단될 경우 다시 실행될 수 있다는 것을 꼭 기억해야 한다.</p>
-<p>적절한 상황에서는 WorkManager는 AlarmManager나 JobScheduler, JobDispatcher를 대체하는 훌륭한 백그라운드 작업 처리 방법이다.</p>
-<p>다음에는 WorkManager를 사용해보는 시간을 갖도록 하겠다.</p>
-<h2 id="참고">참고</h2>
-<ul>
-<li><a href="https://duzi077.tistory.com/222" target="_blank" rel="noopener">WorkManager로 안드로이드 하위 버전부터 오레오 버전까지 백그라운드 작업 통합</a></li>
-<li><a href="http://dktfrmaster.blogspot.com/2018/06/workmanager.html" target="_blank" rel="noopener">[안드로이드] WorkManager에 관하여</a></li>
-<li><a href="https://medium.com/@limgyumin/%EC%83%88%EB%A1%9C%EC%9A%B4-%EC%95%88%EB%93%9C%EB%A1%9C%EC%9D%B4%EB%93%9C-%EB%B0%B1%EA%B7%B8%EB%9D%BC%EC%9A%B4%EB%93%9C-%EC%9E%91%EC%97%85-%EC%B2%98%EB%A6%AC%EB%B2%95-workmanager-f625e07b384c" target="_blank" rel="noopener">새로운 안드로이드 백그라운드 작업 처리법 : WorkManager</a></li>
-</ul>
-
                     
+                        <a
+                            href="/2019/05/12/What-is-WorkManager/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [Android] Work Manager"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2019/05/12/What-is-WorkManager/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             

@@ -318,7 +318,7 @@
     </article>
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -350,89 +350,18 @@
 
             </div>
             
-                <div class="postShorten-content">
-                    <h2 id="1-service란">1. Service란?</h2>
+                <div class="postShorten-excerpt">
+                    <h2>1. Service란?</h2>
 <p><strong>Service</strong>는 안드로이드 Application을 구성하는 4대 컴포넌트 중 하나이다. Activity처럼 사용자와 상호 작용을 하는 컴포넌트는 아니다. 때문에 UI가 존재하지 않으며 <strong>Background</strong>에서 동작하는 컴포넌트이다.</p>
-<p>Service가 실행되고 있는 상태라면 안드로이드 OS에서는 해당 Process를 왠만하면 죽이지 않도록 방지하고 관리하게 된다. 그렇기 때문에 메모리 부족이나, 특별한 경우를 제외하고는 Background 동작을 수행하도록 설계되었다.</p>
-<img src="/img/android_service.png" width="600" height="300">
-<h2 id="2-service는-왜-필요할까">2. Service는 왜 필요할까?</h2>
-<p>'Android Application을 구성하기 위해서 Service는 왜 필요할까?'라고 생각을 할 수 있다. 그 이유는 Activity 즉, 사용자가 보고 있는 화면이 종료된 상태에서도 동작하기 위해서 만들어졌고, 개발자는 구현을 해야 한다.</p>
-<p>예를 들어서 Mp3 플레이어 같은 기능을 활용하는 경우가 될 수 있다. Mp3 플레이어는 화면이 종료된 상태에서도 계속 노래를 재생해야 하기 때문에 Background에서도 동작하도록 만들어야 한다. 따라서 <strong>Service</strong>를 사용해 구현하면 된다.</p>
-<ul>
-<li>파일 다운로드 같은 경우에도 사용할 수 있다.</li>
-<li>애플리케이션이 실행 중이지 않을 때도 작업해야 하는 경우에도 사용할 수 있다.(애플리케이션이 실행 중일 때만 작업해야 하는 경우 <strong>스레드</strong> 사용을 권장한다.)</li>
-</ul>
-<p><strong><code>주의</code></strong><br>
-Service가 Background에서 동작을 수행하는 컴포넌트라고 해서 Main Thread에서 실행되는 것이라고 생각하지 않을 수도 있다. 명심해야 할 점은 Android 4대 컴포넌트들은 모두 Main Thread에서 실행된다.</p>
-<p>따라서 CPU 자원을 많이 소모하거나 네트워크 통신과 같은 시간이 오래 걸리는 작업은 별도의 Thread를 만들어서 처리해야 한다. 이 부분은 아래에서 ANR과 함께 설명하겠다.</p>
-<h2 id="3-service-사용-방법">3. Service 사용 방법</h2>
-<p>2가지 방법이 있으면 <code>startService()</code>와 <code>bindService()</code>이다.</p>
-<ol>
-<li><strong>startService() - 시작 타입의 서비스</strong></li>
-</ol>
-<ul>
-<li>서비스를 상속받는 클래스를 작성하며, 정적 리시버와 유사하게 매니페스트 파일에 등록한다.</li>
-<li>한 번 시작되면 백그라운드에서 무한정 실행된다.</li>
-<li>작업을 완료하면 서비스가 종료된다.</li>
-<li>간단한 작업들만 수행한다.</li>
-<li>호출한 곳에 결과값을 반환하지 않고 계속해서 서비스한다.(음악 재생, 파일 다운로드 등)</li>
-<li>하나의 프로세스 안에서 동작하며, 패키지내 컴포넌트들과 유기적으로 통신하는 역할을 한다.</li>
-<li>생명 주기 : onCreate() -&gt; onStartCommand() -&gt; 실행 -&gt; onDestroy() -&gt; stopService()</li>
-</ul>
-<img src="/img/android_startService.png" width="600" height="300">
-<ol start="2">
-<li><strong>bindService() - 연결 타입의 서비스</strong></li>
-</ol>
-<ul>
-<li>클라이언트 - 서버와 같이 동작하며 호출자(액티비티)에서 서비스에게 어떤 것을 요청하고 서비스는 요청을 처리한 후 결과값을 반환한다. (서비스가 서버의 역할을 수행.)</li>
-<li>액티비티가 사라지면 서비스도 자동적으로 destroy되면서 없어진다.</li>
-<li>하나의 서비스가 다수의 액티비티와 연결될 수 있다.</li>
-<li>프로세스 내에서 다른 컴포넌트들과 서로 유기적으로 통신을 하며 <strong>또한, 어플 내의 기능을 외부에 제공하는 경우에 많이 사용된다. 즉, 다른 프로세스들 간에서도 Data 공유 및 통신이 유기적으로 가능하다.</strong></li>
-<li>생명 주기 : onCreate() -&gt; onBind() -&gt; 실행 -&gt; onUnbind() -&gt; onDestory() -&gt; stopService()</li>
-</ul>
-<img src="/img/android_bindService.png" width="600" height="300">
-<ol start="3">
-<li><strong>intentService</strong></li>
-</ol>
-<ul>
-<li>내부적으로 handlerThread가 동작하는 서비스</li>
-<li>루퍼가 message Queue에 들어온 요청에 대해 순차적으로 처리한다.</li>
-<li>Queue가 비게 되면 자동으로 서비스가 종료된다.</li>
-<li>동시에 처리하는게 아니므로 성능은 조금 떨어지지만 순차적 실행이 보장된다.</li>
-</ul>
-<h2 id="4-service-사용시-주의사항">4. Service 사용시 주의사항.</h2>
-<p>Android는 Linux 기반의 프로그램이다. 프레임워크 단에는 Linux로 구현되어 있다. 메모리 관리 또한 Linux 정책을 따르며 Linux Kernel에 의해서 관리된다.</p>
-<img src="/img/android_linux_kernel.png" width="600" height="300">
-<p>결국 여러 프로세스들을 커널에서 관리한다고 짐작할 수 있다.<br>
-또한 하나의 프로세스 안에는 애플리케이션, 안드로이드 4대 컴포넌트, 스레드 등을 구성하고 있다. 즉, 4대 컴포넌트의 운명 또한 리눅스 커널에 달려있다는 걸 의미한다.</p>
-<p>만약, 메모리 부족이나 과부하 등과 같은 현상이 발생했을 때 리눅스 커널이 프로세스를 강제로 종료시킬 수 있다.</p>
-<img src="/img/android_process.png" width="600" height="300">
-<p>여기서 주의해야 할 점이 있다. 바로 모든 컴포넌트들이 <strong>Main Thread</strong> 안에서 실행된다는 점이다. 안드로이드에서 Main Thread는 UI 작업을 처리하는 Thread이다. 따라서 Main Thread에서는 네트워크 작업이나 시간이 오래 걸리는 작업을 하게 되면 앱의 반응성이 낮아질 수 있다. 사용자의 불편함을 방지하고나 시스템이 <code>ANR</code> 상태로 전환시킬 수 있다.</p>
-<p>Service 역시 Main Thread에서 동작하기 때문에 시간이 오래 걸리는 작업을 할 경우에는 별도의 작업 Thread를 만들어서 동작을 처리해야 한다. 그리고 작업 결과를 UI Thread에 반영하기 위해서 쓰레드 간 통신 방법을 이용해 반영해야 한다.</p>
-<p>쓰레드간 통신 방법은 다음의 글을 참고하면 보면 될 것 같다.<br>
-<strong><a href="https://woovictory.github.io/2019/01/07/Android-For-Interview-4/">쓰레드간 통신 방법</a></strong></p>
-<p><strong>추가적인 내용들은 빠른 시일 내에 공부해서 포스팅할 예정이다.</strong></p>
-<h2 id="참고">참고</h2>
-<ul>
-<li><a href="https://limkydev.tistory.com/43" target="_blank" rel="noopener">[Android] 서비스(Service) 전반적인 개념</a></li>
-<li><a href="https://arabiannight.tistory.com/entry/%EC%95%88%EB%93%9C%EB%A1%9C%EC%9D%B4%EB%93%9CAndroid-Service-%EC%82%AC%EC%9A%A9%EB%B2%95" target="_blank" rel="noopener">안드로이드/Android Service 사용법</a></li>
-</ul>
-
                     
+                        <a
+                            href="/2019/05/12/What-is-Service/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [안드로이드] Service"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2019/05/12/What-is-Service/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             
@@ -441,7 +370,7 @@ Service가 Background에서 동작을 수행하는 컴포넌트라고 해서 Mai
     </article>
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -473,111 +402,18 @@ Service가 Background에서 동작을 수행하는 컴포넌트라고 해서 Mai
 
             </div>
             
-                <div class="postShorten-content">
+                <div class="postShorten-excerpt">
                     <p>이번에 공부할 내용은 <strong>WorkManager</strong>이다.<br>
 백그라운드를 다루는 안드로이드의 새 버전들의 출시로 인해, 백그라운드 다루기는 이전보다 더 복잡해져다. 그래서 구글은 <code>JetPack</code>의 일부로 이러한 백그라운드 작버을 도와주기 위해 WorkManager를 출시했다.</p>
-<p>먼저, 왜 만들어지게 되었고, 왜 필요한지를 알 필요가 있다고 생각한다. 사용하는 것도 중요하지만 내가 왜 사용하는지 <strong>이유</strong>를 알고 쓰는게 더 중요하기 때문이다.</p>
-<p>아래와 같은 3개의 구성으로 나누도록 하겠다.</p>
-<ol>
-<li>메모리</li>
-<li>현재 존재하는 백그라운드 처리 방법</li>
-<li>WorkManager</li>
-</ol>
-<h2 id="1-메모리">1. 메모리</h2>
-<p>안드로이드 커널은 리눅스 커널을 기반으로 해서 만들어졌다. 안드로이드 커널과 모든 리눅스 커널들의 가장 큰 차이점은 <code>스왑 공간(Swap Space)</code>가 없다는 것이다.</p>
-<p>리눅스의 스왑공간은 램이 꽉 찼을 때 사용된다. 시스템은 더 많은 메모리 리소스를 필요로 하지만 램이 꽉 찼을 때, 메모리 상의 비활성 페이지를 <strong>스왑 공간</strong>으로 이동시킨다. 스왑공간은 램의 용량이 작은 디바이스에 도움이 되긴 하지만, 램의 용량을 늘리는 것을 대체할 수는 없다. 스왑공간은 램보다 Access time이 훨씬 느린 하드 드라이브에 위치하기 때문이다.</p>
-<p>안드로이드에서는 스왑공간 같은 개념이 없다. 시스템의 메모리가 다 소진되었을 때, OOM 킬러를 이용해 프로레스스 강제 종료시켜버린다. OOM 킬러는 <strong>Visible 상태</strong>와 <strong>소모된 메모리의 양</strong>에 기반하여 프로세스를 정리하여 여유 메모리를 확보한다.</p>
-<p>모든 프로세스는 액티비티 매니저가 부여한 자신의 <code>oom_adj</code> 점수를 가지고 있다. 이 점수는 애플리케이션의 상태(Foreground, Background, Background Service 등등)의 조합이다. 아래는 모든 <code>oom_adj</code> 값을 보여준다.</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"># Define the oom_adj values for the classes of processes that can be</span><br><span class="line"># killed by the kernel.  These are used in ActivityManagerService.</span><br><span class="line">    setprop ro.FOREGROUND_APP_ADJ 0</span><br><span class="line">    setprop ro.VISIBLE_APP_ADJ 1</span><br><span class="line">    setprop ro.SECONDARY_SERVER_ADJ 2</span><br><span class="line">    setprop ro.BACKUP_APP_ADJ 2</span><br><span class="line">    setprop ro.HOME_APP_ADJ 4</span><br><span class="line">    setprop ro.HIDDEN_APP_MIN_ADJ 7</span><br><span class="line">    setprop ro.CONTENT_PROVIDER_ADJ 14</span><br><span class="line">    setprop ro.EMPTY_APP_ADJ 15</span><br></pre></td></tr></table></figure>
-<p>프로세스의 <code>oom_adj</code>의 값이 클수록 커널의 OOM 킬러에게 정리당하기 쉽다. OOM 킬러는 현재 사용 가능한 여유메모리 크기와 <code>oom_adj</code> 임계값을 기반으로 구성한 규칙을 사용한다. 즉, OOM 킬러의 조건은 아래와 같다.</p>
-<p><strong>여유 메모리 공간의 크기가 X보다 작을 때, oom_adj 값이 Y보다 큰 프로세스를 정리하라!</strong></p>
-<p>즉, 앱이 메모리를 적게 소비할수록 프로세스가 정리되지 않고 중요한 내용을 다룰 기회가 더 많아진다는 것이다. 두번째로 중요한 내용은 애플리케이션의 상태에 대해 이해하는 것이다. 그래서 앱이 백그라운드에 진입했을 때에도 뭔가를 지속적으로 하고 싶다면 <strong>서비스</strong> 컴포넌트를 사용해야 한다.</p>
-<ul>
-<li>서비스는 UI를 제공하지 않고, 백그라운드에서 오래 걸리는 동작을 수행할 수 있도록 하는 4대 컴포넌트 중 하나이다.</li>
-<li>서비스를 사용해야 했던 이유는 아래와 같다.
-<ol>
-<li>시스템에게 이 프로세스가 오래 걸리는 작업이 있음을 알려주고, 그에 맞는 <strong>oom_adj</strong> 점수를 얻도록 하기 위함이다.</li>
-<li>안드로이드 애플리케이션의 4대 컴포넌트 중 하나이다.</li>
-<li>서비스를 별개의 프로세스에서 실행시킬 수 있다.</li>
-</ol>
-</li>
-</ul>
-<p>사용했을 때의 이점이 있기 때문에 좋아 보인다. 하지만, 서비스 사용의 단점이 있다.</p>
-<ol>
-<li>프로세스가 계속 실행되고 있는 것이므로 배터리를 엄청나게 소모한다.</li>
-<li>마시멜로우 버전부터 도즈 모드(Doze)가 도입되었다.</li>
-<li>누가 버전에서 더 발전되었고 오레오 버전에서 더욱 강화되었다.</li>
-</ol>
-<p>도즈 모드는 사용자가 디바이스의 스크린을 끄고 나면 네트워크 통신, Sync, GPS, 알람, 와이파이 스캔 등을 비활성화 시켜버린다. 사용자가 스크린을 켜거나 디바이스를 충전기에 연결할 때까지 유지된다. 그리고 중요하지 않은 일을 수행하는 앱의 개수를 줄임으로써 디바이스의 배터리를 절약하도록 한다.</p>
-<p>또한, 오레오 버전으로 타게팅된 앱이 백그라운드 서비스 생성을 허가받지 않은 채로 <code>startService()</code> 메소드를 호출하려고 하면 백그라운드 서비스 제한이 있어서 <code>IllegalStateException</code> 예외를 던진다.</p>
-<p>'그럼 오레오 버전으로 타게팅 하지 않으면 되잖아?'라고 생각할 수 있다. 구글의 정책을 살펴보도록 하자.</p>
-<ul>
-<li>2018년 8월 : 새로 출시되는 앱들은 반드시 API 26(Oreo 8.0) 이상</li>
-<li>2018년 11월 : 기존 앱들도 API 26(Oreo 8.0) 이상.</li>
-<li>2019년 이후 : 매년 targetSdkVersion 요구사항이 향상될 것이다. 안드로이드가 매년 새로운 버전을 낼 때마다, 모든 앱들은 해당 API 레벨 이상을 타겟팅 해야 한다.</li>
-</ul>
-<p><strong>이를 통해 알 수 있는 것은 백그라운드 작업을 위해 더 이상 서비스를 사용하지 않게 될 것이라는 것이다.</strong></p>
-<h2 id="2-현재-존재하는-백그라운드-처리-방법">2. 현재 존재하는 백그라운드 처리 방법</h2>
-<p><strong>AlarmManager와 BroadcastReceiver 사용</strong></p>
-<p>지정한 타이밍에 시스템에서 알림이 오고 여기에 맞춰 백그라운드 작업을 수행할 수 있었다. 하지만, 킷캣(K, API 19) 버전에서는 알림이 미뤄지거나 한 번에 몰아서 오는 등 정확한 실행을 보장하지 않게 된다.</p>
-<p><code>BroadcastReceiver</code>를 통해서 기기의 부팅, 네트워크 연결 등의 디바이스 이벤트를 시스템으로부터 전파받아서 특정 작업을 수행해왔는데 누가(N, API 24)버전에서 특정 인텐트에 대한 동작이 제한되고, 오레오(O, API 26)버전에서 암시적 브로드캐스트 리시버 등록을 차단하는 등 제한이 추가되고 있다.</p>
-<p>그래서 대안책이 <strong>Job</strong>을 사용하는 것이다.</p>
-<p><strong>JobScheduler 사용</strong></p>
-<p>롤리팝(L, API 21) 버전에서 <code>JobScheduler</code>를 제공한다. 부정확해진 Alarm Manager의 대안이기도 했고, 결국 백그라운드 작업을 배제할 수 없었기 때문이다. 하지만, API 2에서 사용할 수 있다는 제약으로 인해 API 21 이전과 이후 버전을 나누어 <code>AlarmManager</code>와 <code>JobScheduler</code>를 각각 사용해서 구현해야 하는 번거로운 문제가 생겼다.</p>
-<p><strong>JobDispatcher 사용</strong></p>
-<p>이후에 구글은 Firebase JobDispatcher를 제공하기 시작했다. JobDispatcher는 진저브레드(G, API 9) 버전 이상을 지원한다. 그리고 내부적으로 <code>AlarmManager</code>와 <code>JobScheduler</code>를 선택해준다. 이를 통해서 개발자가 하는 일은 한 가지로 줄었으나, 구글 플레이 서비스에 의존하게 되어 아마존/주욱 제조사 디바이스에서는 기능을 사용할 수 없다. 결국, 구글 플레이 서비스를 지원하지 않는 디바이스에서는 <code>AlarmManager</code>와 <code>JobScheduler</code>를 각각 사용해서 구현해야 한다.</p>
-<p><strong>JobIntentService 사용</strong></p>
-<p>다른 대안으로 <code>JobIntentService</code>를 사용하는 방법이 있다. 하지만, 정확한 시간에 작업이 수행되지 않기 때문에 오레오에서 Job을 빨리 수행하는데는 도움이 되지 않는다.</p>
-<p><strong>Android-Job(Evernote) 라이브러리(Third party library) 사용</strong></p>
-<p>이는 자동으로 안드로이브 버전에 따라 <code>AlarmManager</code>, <code>JobScheduler</code>, <code>JobDispatcher</code>들 중 어떤 것을 사용할지 결정해주는 라이브러리이다. WorkManager를 제외하고 생각한다면 가장 좋은 라이브러리라고 평가받고 있다.</p>
-<p>하지만, Evernote가 새로운 가이드 안을 발표했다. 안드로이드 버전에 따라 백그라운드 API가 수시로 변경되어서 버전별로 분기가 필요하고 복잡한 API 사용이 힘들었을텐데 앞으로 Evernote는 Android Job 라이브러리를 배포하여 개발자들에게 편의를 제공해왔지만 더 이상 지원하지 않고 <code>WorkManager</code> 사용을 권장한다는 내용이다.</p>
-<p>결국, 현재 실행 중인 안드로이드 버전에 따라서 백그라운드 서비스 API를 다르게 호출시키고 관리해야 한다. 디바이스의 안드로이드 버전과 구글 플레이 서비스 여부에 따라 백그라운드 서비스를 지원하기 까다롭다. 그래서 Google I/O에서 <code>WorkManager</code>라는 해결책을 제공해주었다.</p>
-<h2 id="3-workmanager">3. WorkManager</h2>
-<p>2018년 Google I/O에서는 안드로이드의 백그라운드 작업을 도와줄 WorkManager가 공개되었다.<br>
-WorkManager는 Android JetPack의 아키텍처의 구성 요소이다.</p>
-<p>WorkManager는 다음과 같은 특징을 갖는다.</p>
-<img src="/img/workmanager_feature.png" width="600" height="300">
-<ul>
-<li>실행이 보장된다. 또한 제약 조건을 가지고 실행할 수 있다. 예를 들어, 네트워크 연결시에만 처리되는 작업을 추가하면 네트워크가 연결되면 반드시 실행된다.</li>
-<li>장치의 상태를 존중한다. 도즈 모드에 진입하면 일을 처리하기 위해 기기를 깨우거나 하지 않는다.</li>
-<li>실행 중인가, 대기 중인가, 완료되었는가 등의 상태 조회가 가능하다.</li>
-<li>작업 A의 결과에 따라 B 또는 C를 선택하여 처리하고 D를 이어서 처리하는 등의 작업 연결 처리가 가능하다.(체이닝)</li>
-<li>첫 번째 특징과 비슷하며 기회주의적이다. 즉, 어떤 제한 조건이 충족되었을 때 즉시 실행된다.</li>
-</ul>
-<p>WorkManager는 내부적으로 아래의 그림과 같이 동작한다.</p>
-<img src="/img/WorkManager_run.png" width="600" height="300">
-<p>API의 버전에 맞게 <code>AlarmManager</code>와 <code>JobScheduler</code>를 사용하고 개발자가 Firebase JobDispatcher 의존성을 추가했다면(즉, 구글 플레이 서비스 사용이 가능하다면)<code>JobDispatcher</code>를 적극 사용한다.</p>
-<p>개발자는 WorkManager를 사용함으로써 상황에 맞는 고민이나 별도의 구현 없이 앱의 종료나 기기의 재부팅된 경우에도 항상 장치에 맞는 가장 적합한 방법을 사용하여 백그라운드 작업을 처리할 수 있게 된다.</p>
-<p><code>그러나 WorkManager가 항상 최선은 아니다.</code></p>
-<p>앱의 종료 여부와 상관없이 수행되어야 하는 작업, 즉 앱의 프로세스 수명과 별도로 살아남기 위한 작업에 사용하는 것을 추천한다.</p>
-<p>예를 들어 이미지를 서버에 업로드해야 하거나, 데이터를 분석하고 이를 데이터베이스에 저장해야 하는 작업에는 <strong>WorkManager</strong>를 사용하는 것이 좋다.</p>
-<p>그러나 사용자가 현재 보고 있는 UI를 빠르게 변경해야 하는 작업이나 물건 구입 과정에서의 결제 진행 등 즉시 처리해야 하는 작업은 WorkManager를 사용하지 않는 것이 좋다.</p>
-<img src="/img/when_to_use_workmanager.png" width="600" height="300">
-<p>WorkManager의 작업은 반드시 실행되지만 그 처리가 상황에 따라 지연되거나 도중에 중단될 경우 다시 실행될 수 있다는 것을 꼭 기억해야 한다.</p>
-<p>적절한 상황에서는 WorkManager는 AlarmManager나 JobScheduler, JobDispatcher를 대체하는 훌륭한 백그라운드 작업 처리 방법이다.</p>
-<p>다음에는 WorkManager를 사용해보는 시간을 갖도록 하겠다.</p>
-<h2 id="참고">참고</h2>
-<ul>
-<li><a href="https://duzi077.tistory.com/222" target="_blank" rel="noopener">WorkManager로 안드로이드 하위 버전부터 오레오 버전까지 백그라운드 작업 통합</a></li>
-<li><a href="http://dktfrmaster.blogspot.com/2018/06/workmanager.html" target="_blank" rel="noopener">[안드로이드] WorkManager에 관하여</a></li>
-<li><a href="https://medium.com/@limgyumin/%EC%83%88%EB%A1%9C%EC%9A%B4-%EC%95%88%EB%93%9C%EB%A1%9C%EC%9D%B4%EB%93%9C-%EB%B0%B1%EA%B7%B8%EB%9D%BC%EC%9A%B4%EB%93%9C-%EC%9E%91%EC%97%85-%EC%B2%98%EB%A6%AC%EB%B2%95-workmanager-f625e07b384c" target="_blank" rel="noopener">새로운 안드로이드 백그라운드 작업 처리법 : WorkManager</a></li>
-</ul>
-
                     
+                        <a
+                            href="/2019/05/12/What-is-WorkManager/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [Android] Work Manager"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2019/05/12/What-is-WorkManager/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             
@@ -652,7 +488,7 @@ WorkManager는 Android JetPack의 아키텍처의 구성 요소이다.</p>
     </article>
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -684,136 +520,18 @@ WorkManager는 Android JetPack의 아키텍처의 구성 요소이다.</p>
 
             </div>
             
-                <div class="postShorten-content">
+                <div class="postShorten-excerpt">
                     <p>좋은 객체지향 설계를 위해서 다음의 5가지 원칙을 따르는 것이 좋고, 이 원칙들을 기반으로 디자인 패턴이 되기 때문에 알아두면 확실하게 도움이 된다.<br>
 객체지향의 5대 원칙의 앞글자를 따서 SOLID라고 부르기도 한다.</p>
-<h2 id="1-srp">1. SRP</h2>
-<ul>
-<li><code>SRP</code>(Single Responsibility Principle)는 단일 책임 원칙이라고 한다.</li>
-<li><strong>모든 클래스는 단 하나의 책임을 갖는다.</strong> 다시 말해서 클래스를 변경할 이유는 오직 하나여야 한다는 뜻이다.</li>
-<li>책임 영역이 확실해지기 때문에 한 책임의 변경에서 다른 책임의 변경으로의 연쇄 작용에서 자유로울 수 있다.</li>
-<li>책임을 적절히 분배함으로써 코드의 가독성 향상, 유지보수 용이의 이점이 생긴다.</li>
-<li>간단한 예를 들면, 계산기 클래스가 있을 때, 계산을 하는 책임과 GUI를 나타내는 책임은 서로 분리되어야 한다. 계산기 클래스에 GUI를 나타내는 부분까지 있을 경우, 이는 SRP를 위반한다.</li>
-</ul>
-<p><strong>Before Code</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 현재 UserSettingService 클래스에는 두 개의 책임이 있다.</span></span><br><span class="line"><span class="comment">// 1. 변경</span></span><br><span class="line"><span class="comment">// 2. 접근 권한에 대한 부분</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserSettingService</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">changeEmail</span><span class="params">(User user)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(checkAccess(user))&#123;</span><br><span class="line">            <span class="comment">// do someting</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">checkAccess</span><span class="params">(User user)</span></span>&#123;</span><br><span class="line">        <span class="comment">// user check</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>After Code</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 현재 UserSettingService 클래스의 두 개의 책임을 둘로 나눈다.</span></span><br><span class="line"><span class="comment">// 1. 변경(UserSettingService.class)</span></span><br><span class="line"><span class="comment">// 2. 접근 권한에 대한 부분(SecurityService.class)</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserSettingService</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">changeEmail</span><span class="params">(User user)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(SecurityService.checkAccess(user))&#123;</span><br><span class="line">            <span class="comment">// do something.</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SecurityService</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">checkAccess</span><span class="params">(User user)</span></span>&#123;</span><br><span class="line">        <span class="comment">// Check user access.</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="2-ocp">2. OCP</h2>
-<ul>
-<li><code>OCP</code>(Open-Closed Principle)는 개방 폐쇄 원칙이라고 한다.</li>
-<li><strong>기능을 확장하거나 변경하는 것에 대해서는 개방되어야 하지만, 수정에 대해서는 폐쇄되어야 한다.</strong></li>
-<li>변경을 위한 비용은 가능한 줄이고 확장을 위한 비용은 가능한 극대화 해야 한다는 의미이다.</li>
-<li>요구사항의 변경이나 추가사항이 발생하더라도 기존 구성요소는 수정이 일어나지 말아야 하며, 기존 구성요소를 쉽게 확장해서 재사용할 수 있어야 한다는 뜻이다.</li>
-<li>중요 매커니즘은 추상화와 다형성이다.</li>
-<li>예를 들자면, 캐릭터를 하나 생성한다고 가정하자. 각각의 캐릭터가 움직임이 다를 경우 움직임의 패턴 구현을 하위 클래스에 맡긴다면 캐릭터 클래스의 <strong>수정은 필요없고(수정에 대해 폐쇄)</strong> <strong>움직임의 패턴만 재정의하면 된다.(확장에 대한 개방)</strong></li>
-</ul>
-<p><strong>OCP 원칙이 깨질 때의 주요 현상</strong></p>
-<ol>
-<li>다운 캐스팅을 한다.</li>
-</ol>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">drawCharacter</span><span class="params">(Character character)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(character <span class="keyword">instanceof</span> Missile)&#123; <span class="comment">// 타입 확인.</span></span><br><span class="line">        Missile missile = (Missile) character; <span class="comment">// 다운 캐스팅.</span></span><br><span class="line">        missile.drawSpecific(); <span class="comment">// 미사일일 경우 drawSpecific() 호출.</span></span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        character.draw(); <span class="comment">// 미사일 외의 경우는 draw() 호출.</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ol start="2">
-<li>비슷한 if-else 블록이 존재한다.</li>
-</ol>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Enemy</span> <span class="keyword">extends</span> <span class="title">Character</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> pathPattern;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Enemy</span><span class="params">(<span class="keyword">int</span> pathPattern)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.pathPattern = pathPattern;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">draw</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(pathPattern == <span class="number">1</span>)&#123;</span><br><span class="line">            x +=<span class="number">5</span>;</span><br><span class="line">            y +=<span class="number">5</span>;</span><br><span class="line">        &#125;<span class="keyword">else</span> <span class="keyword">if</span>(pathPattern == <span class="number">2</span>)&#123;</span><br><span class="line">            x +=<span class="number">10</span>;</span><br><span class="line">            y +=<span class="number">10</span>;</span><br><span class="line">        &#125;<span class="keyword">else</span> <span class="keyword">if</span>(pathPattern == <span class="number">3</span>)&#123;</span><br><span class="line">            x +=<span class="number">15</span>;</span><br><span class="line">            y +=<span class="number">15</span>;</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            x +=<span class="number">20</span>;</span><br><span class="line">            y +=<span class="number">20</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>OCP는 자주 사용되는 문법이 <strong>인터페이스</strong>라고 보면 된다.</li>
-</ul>
-<p><strong>Before Code</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 음악을 재생하는 클래스.</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SoundPlayer</span></span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">play</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.print(<span class="string">"play wav"</span>); <span class="comment">// wav 재생.</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">        SoundPlayer sp = <span class="keyword">new</span> SoundPlayer();</span><br><span class="line">        sp.play();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>SoundPlayer 클래스는 기본적으로 wav 파일을 재생할 수 있다. 하지만 다른 포맷의 파일, 예를 들어 mp3 파일을 재생하도록 요구사항이 변경된다면 어떻게 될까?</p>
-<p>이 요구사항을 만족시키기 위해서 SoundPlayer 클래스의 play() 메소드를 수정해야 한다. 그러나 이와 같은 소스 코드 변경은 OCP 원칙에 위배되는 행위다.</p>
-<p>인터페이스를 이용해 OCP 원칙을 지켜보자. 먼저 변해야 하는 것이 무엇인지 정의한다. 위의 예에서는 play() 메소드가 변해야 한다. 따라서 play() 메소드를 인터페이스로 분리한다.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">playFile</span>()</span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">play</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Wav</span> <span class="keyword">implements</span> <span class="title">playFile</span>()</span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">play</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.print(<span class="string">"Play wav"</span>); </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Mp3</span> <span class="keyword">implements</span> <span class="title">playFile</span>()</span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">play</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.print(<span class="string">"Play Mp3"</span>); </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>재생하고자 하는 파일 클래스(Wav, Mp3)를 만들어 playFile 인터페이스와 play() 메소드를 재정의하도록 설계한다.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SoundPlayer</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> playFile file;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setFile</span><span class="params">(playFile file)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.file = file;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">play</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.play();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">        SoundPlayer sp = <span class="keyword">new</span> SoundPlayer();</span><br><span class="line">        sp.setFile(<span class="keyword">new</span> Wav()); <span class="comment">// 원하는 재생 파일 선택.</span></span><br><span class="line">        sp.serFile(<span class="keyword">new</span> Mp3());</span><br><span class="line">        sp.play();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>SoundPlayer 클래스에서는 playFile 인터페이스를 멤버 변수로 만든다. 그 후 SoundPlayer의 play() 함수는 인터페이스를 상속받아 구현된 클래스의 play() 함수를 실행시키게 한다. main() 함수에서 setFile() 함수를 이용해 우리가 재생하고자 하는 파일의 객체를 지정해준다.</p>
-<p>이와 같은 설계를 디자인 패턴에서는 Strategy Pattern(전략 패턴)이라고 한다. 디자인 패턴은 추후에 공부할 필요가 있을 것 같다.</p>
-<p>아무튼 결과적으로 SoundPlayer 클래스의 변경 없이 재생되는 파일을 바꿀 수 있으므로 위 코드는 OCP 원칙을 만족하게 된다. OCP 원칙을 적용한 설계는 변경에 유연하므로 유지보수 비용을 줄여주고 코드의 가독성 또한 높아지는 효과를 얻을 수 있다.</p>
-<h2 id="3-lsp">3. LSP</h2>
-<ul>
-<li><code>LSP</code>(Liskov Substitution Priciple)는 리스코프 치환 원칙이라고 한다.</li>
-<li>상위 타입의 객체를 하위 타입의 객체로 치환해도 상위 타입을 사용하는 프로그램은 정상적으로 동작해야 한다.</li>
-<li>쉽게 말하면, 자식 클래스는 언제나 자신의 부모 클래스를 교체할 수 있다는 원칙이다. 즉, 부모 클래스와 자식 클래스 사이의 행위에는 <strong>일관성</strong>이 있어야 한다는 원칙이다.</li>
-<li>상속 관계에서는 일반화 관계(IS-A)가 성립해야 한다. 일반화 관계에 있다는 것은 일관성이 있다는 것이다. 따라서 리스코프 치환 원칙은 일반환 관계에 대해 묻는 것이라 할 수 있다.</li>
-</ul>
-<p>이해를 돕기 위해 도형을 예로 하는 설명이 있다.<br>
-도형 클래스와 사각형 클래스가 있고, 사각형 클래스는 도형 클래스를 상속한다.</p>
-<p>(1). 도형은 둘레를 가지고 있다.<br>
-(2). 도형은 넓이를 가지고 있다.<br>
-(3). 도형은 각을 가지고 있다.</p>
-<p>일반화 관계(일관성인지 확인하는 방법은 단어를 교체해보면 알 수 있다. 도형 대신 사각형을 넣어보자.)</p>
-<p>(1). 사각형은 둘레를 가지고 있다.<br>
-(2). 사각형은 넓이를 가지고 있다.<br>
-(3). 사각형은 각을 가지고 있다.</p>
-<p>이상한 부분이 보이지 않는다. 따라서 도형과 사각형 사이에는 일관성이 있다고 할 수 있다.</p>
-<p>그럼 원이라는 도형에 대해서 생각해보자. 원 클래스 역시 도형 클래스의 상속을 받는다고 가정하고 (1) ~ (3)의 도형 단어 대신 원을 대입해보자.</p>
-<p>(1). 원은 둘레를 가지고 있다.<br>
-(2). 원은 넓이를 가지고 있다.<br>
-(3). 원은 각을 가지고 있다.</p>
-<p>원의 경우에는 (3)번 문장이 어색하다는 것을 알 수 있다. 따라서 도형 클래스는 LSP 원칙을 만족하지 않는 설계라고 할 수 있다. (3) 문장에 대해서 일반화 관계가 성립하도록 수정되어야 한다.</p>
-<h2 id="4-isp">4. ISP</h2>
-<ul>
-<li><code>ISP</code>(Interface Segregation Priciple)는 인터페이스 분리 원칙이라고 한다.</li>
-<li>인터페이스는 그 인터페이스를 사용하는 클라이언트를 기준으로 분리해야 한다.</li>
-<li>즉, 자신이 사용하지 않는 기능(인터페이스)에는 영향을 받지 말아야 한다는 의미이다.</li>
-<li>클라이언트는 자신이 사용하지 않는 메소드에 의존하지 않아야 한다. 한 클래스는 자신이 사용하지 않는 인터페이스는 구현하지 않는 편이 낫다. 하나의 일반적인 인터페이스보다는 차라리 여러 개의 구체적인 인터페이스가 낫다는 개념을 갖는다.</li>
-<li>한 가지 예를 들어보자. 우리는 스마트폰으로 전화, 웹서핑, 사진 촬영 등 다양한 기능을 사용할 수 있다. 그런데 전화를 할 때에는 웹 서핑, 사진 촬영 등 다른 기능은 잘 사용하지 않는다. 따라서 전화 기능과 웹 서핑 기능, 사진 촬영 기능은 각각 독립된 인터페이스로 구현하여, 서로에게 영향을 받지 않도록 설계해야 한다. 이렇게 설계된 소프트웨어는 ISP를 통해 시스템 내부의 의존성을 약화시켜 리팩토링, 수정, 재배포를 쉽게 할 수 있다.</li>
-</ul>
-<p><strong>Before Code</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 하나의 인터페이스를 모든 클라이언트가 구현하고 있다.</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">ArticleService</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">list</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">write</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">delete</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UiList</span> <span class="keyword">implements</span> <span class="title">ArticleService</span></span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">list</span><span class="params">()</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">write</span><span class="params">()</span></span>&#123;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">delete</span><span class="params">()</span></span>&#123;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UiWist</span> <span class="keyword">implements</span> <span class="title">ArticleService</span></span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">list</span><span class="params">()</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">write</span><span class="params">()</span></span>&#123;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">delete</span><span class="params">()</span></span>&#123;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UiDist</span> <span class="keyword">implements</span> <span class="title">ArticleService</span></span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">list</span><span class="params">()</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">write</span><span class="params">()</span></span>&#123;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">delete</span><span class="params">()</span></span>&#123;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>After Code</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 각각의 클라이언트별로 interface를 구분한다.</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">ArticleListService</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">list</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">ArticleWriteService</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">write</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">ArticleDeleteService</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">delete</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UiList</span> <span class="keyword">implements</span> <span class="title">ArticleListService</span></span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">list</span><span class="params">()</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UiWist</span> <span class="keyword">implements</span> <span class="title">ArticleWriteService</span></span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">write</span><span class="params">()</span></span>&#123;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UiDist</span> <span class="keyword">implements</span> <span class="title">ArticleDeleteService</span></span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">delete</span><span class="params">()</span></span>&#123;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="5dip">5.DIP</h2>
-<ul>
-<li><code>DIP</code>(Dependency Inversion Principle)는 의존성 역전 원칙이라고 한다.</li>
-<li>고수준 모듈은 저수준 모듈의 구현에 의존해서는 안된다. 저수준 모듈이 고수준 모듈에서 정의한 추상 타입에 의존해야 한다.</li>
-<li><strong>고수준 모듈</strong> : 어떤 의미있는 단일 기능을 제공하는 모듈
-<ul>
-<li>바이트 데이터를 읽어와 암호화하고 결과 바이트 데이터를 쓴다.</li>
-</ul>
-</li>
-<li><strong>저수준 모듈</strong> : 고수준 모듈의 기능을 구현하기 위해 필요한 개별 기능 = 좀 더 작은 모듈
-<ul>
-<li>파일에서 바이트 데이터를 읽어온다.</li>
-<li>AES 알고리즘으로 암호화한다.</li>
-<li>파일에 바이트 데이터를 쓴다.</li>
-</ul>
-</li>
-<li>중간에 interface와 같은 추상화를 통해서 고수준 모듈과 저수준 모듈이 모두 추상 타입에 의존하게 만든다. 추상을 매개로 메시지를 주고 받음으로써 관계를 최대한 느슨하게 만드는 원칙이다.</li>
-</ul>
-<p>설명하는 말들이 어렵다. 모듈도 나오고 이런 추상 타입도 나온다… 쉽게 설명하면 DIP를 만족한다는 것은 의존 관계를 맺을 때, 구체적인 클래스보다는 인터페이스나 추상 클래스와 관계를 맺는다는 것을 의미한다.</p>
-<p>이와 같은 말은 변화하기 어려운 것, 변화가 거의 없는 것에 의존하라고 한다. 의미는 변화하기 어려운 부분들을 추상화하여 인터페이스나 추상 클래스로 참조함으로써 DIP를 지킬 수 있다는 뜻이다.</p>
-<p>예를 들어 핸드폰의 경우 전화를 하거나 문자를 보내거나 앱을 실행하는 것 자체는 변하기 어렵지만 브랜드의 가격, 모델 명등은 변하기 쉽다. 따라서 변하기 어려운 것은 추상화하여 인터페이스나 추상 클래스로 만들어 참조하면 DIP를 만족하게 될 수 있다.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Person</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> age;</span><br><span class="line">    <span class="keyword">private</span> Phone phone;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// getter/setter 생략.</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Phone은 추상 클래스.</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Phone</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String phoneNumber;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getPhoneNumber</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> phoneNumber;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setPhoneNumber</span><span class="params">(String phoneNumber)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.phoneNumber = phoneNumber;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">call</span><span class="params">(String phoneNumber)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">turnOn</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">turnOff</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 아래와 같이 상속받아 구현한다.</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GalaxyS7</span> <span class="keyword">extends</span> <span class="title">Phone</span></span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">call</span><span class="params">(String phoneNumber)</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"Call to "</span>+phoneNumber);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">turnOn</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"Turn on GalaxyS7"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">turnOff</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"Turn off GalaxyS7"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>만약 갤럭시 핸드폰이 아니라 LG의 G 시리즈나 아이폰 등도 Phone 클래스를 상속받아서 구현하여 Person의 인스턴스 객체의 속성으로 설정함으로서 의존성을 역전시켜 DIP 원칙을 만족할 수 있다.</p>
-<p>객체지향 설계 5대 원칙을 공부해봤는데 DIP는 아직 이해가 잘 가지 않는 것 같다. 의존성은 결합도를 낮추는게 목표라고 생각한다. 그래서 느슨한 결합을 만들고 그 과정에서 인터페이스나 추상 클래스를 사용하는 것으로 이해가 된다.</p>
-<p>이 부분은 아직 이해가 더 필요한 부분이니 차근 차근 공부해서 보충해나가자.</p>
-<h2 id="참고">참고</h2>
-<ul>
-<li><a href="https://wkdtjsgur100.github.io/solid-principle/" target="_blank" rel="noopener">객체지향 디자인의 5원칙(SOLID 원칙)</a></li>
-<li><a href="https://sticky32.tistory.com/entry/%EC%86%8C%ED%94%84%ED%8A%B8%EC%9B%A8%EC%96%B4SOLID-%EC%9D%98%EC%A1%B4-%EC%97%AD%EC%A0%84-%EC%9B%90%EC%B9%99DIP" target="_blank" rel="noopener">[소프트웨어/SOLID] 의존 역전 원칙(DIP)</a></li>
-<li><a href="https://dev-momo.tistory.com/entry/SOLID-%EC%9B%90%EC%B9%99" target="_blank" rel="noopener">SOLID 원칙</a></li>
-<li><a href="http://www.nextree.co.kr/p6960/" target="_blank" rel="noopener">객체지향 개발 5대 원리: SOLID</a></li>
-<li><a href="https://jungwoon.github.io/solid/2017/07/31/Solid-Principle/" target="_blank" rel="noopener">객체지향 설계 5대 원칙 - SOLID</a></li>
-</ul>
-
                     
+                        <a
+                            href="/2019/05/10/What-is-SOLID/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [개발상식]객체 지향 디자인의 5대 원칙"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2019/05/10/What-is-SOLID/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             
@@ -924,7 +642,7 @@ WorkManager는 Android JetPack의 아키텍처의 구성 요소이다.</p>
     </article>
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -956,83 +674,18 @@ WorkManager는 Android JetPack의 아키텍처의 구성 요소이다.</p>
 
             </div>
             
-                <div class="postShorten-content">
-                    <h2 id="viewmodel"># ViewModel</h2>
+                <div class="postShorten-excerpt">
+                    <h2># ViewModel</h2>
 <p><strong>ViewModel</strong> 클래스는 라이프 사이클을 고려하여 UI 관련된 데이터를 저장하고 관리하기 위해 설계되었다. 화면 전환과 같이 설정이 변경되는 상황에서도 data가 계속 남아있을 수 있도록 해준다.</p>
-<p>안드로이드 프레임워크는 Activity, Fragment와 같은 UI 컨트롤러의 라이프사이클(즉, 생명주기)을 관리한다. 프레임워크는 사용자의 특정한 동작이나 완전히 예상치 못한 장치의 이벤트에 대한 응답으로 UI 컨트롤러를 파괴(Destroy)하고 재생성(re-create)하는 것을 결정하기도 한다.(액티비티가 종료되고 재생성되는 경우가 해당된다.)</p>
-<p>시스템이 UI 컨트롤러를 파괴, 재생성하면 그 안에 저장해두었던 UI 관련 데이터들은 모두 사라진다. 예를 들어, 앱에는 사용자의 목록과 같은 데이터가 포함되어 있을 수 있다. 갑자기 설정이 변경되어 Activity가 재 생성될 때, 새로운 Activity 인스턴스는 사용자의 목록을 다시 불러와야 한다.</p>
-<p>단순한 데이터를 다룰 때에는 Activity의 <code>onSaveInstanceState()</code> 함수를 이용해 Bundle 객체에 저장하고 <code>onCreate()</code> 함수에서 Bundle 객체에 저장된 데이터를 불러올 수 있다. 하지만, 이 경우에는 bitmap과 리스트 형식의 많은 양의 데이터가 아닌 직렬화, 역직렬화가 가능한 작은 데이터에 적합하다.<br>
-즉, 잠재적으로 데이터의 양이 많다면 적절한 방법이 아니다.</p>
-<p>또 다른 문제는 UI 컨트롤러가 자주 비동기 호출을 만들어서 반환하는데 다소 시간이 걸릴 수 있다는 것이다. 잠재적인 메모리 누수를 피하기 위해 UI 컨트롤러는 Destroy 된 후에 시스템이 instance를 정리하기 전에 비동기 호출을 관리할 필요가 있다.<br>
-이런 관리 작업은 엄청난 유지보수를 필요로 하고, 상태 변화로 인해 객체를 재생성하는 경우, 이미 만들어진 객체를 다시 호출해야 하므로 리소스가 낭비된다.</p>
-<p>Activity, Fragment와 같은 UI 컨트롤러는 사용자에게 UI 데이터를 보여주고, 사용자 액션에 반응하고, 권한 요청과 같은 OS의 요청을 처리하는 용도로 사용된다.</p>
-<p>데이터베이스나 네트워크로부터 데이터를 불러오는 동작은 UI 컨트롤러에서 수행하면 클래스의 크기가 커지게 된다. 따라서 UI 컨트롤러에 과도한 책임이 할당되면 클래스가 단일화되어 테스트가 매우 어려워질 수 있다.</p>
-<p>그래서 <code>ViewModel</code>을 사용함으로써 UI 컨트롤러의 로직으로부터 UI 로직과 데이터 소유권을 분리할 수 있는 매우 효과적인 방법이다.</p>
-<h2 id="viewmodel-예시"># ViewModel 예시.</h2>
-<p>Google의 Android Architecture Components(이하 AAC)에서 UI 컨트롤러들을 위한 헬퍼 클래스인 <code>ViewModel</code>을 제공한다.<br>
-ViewModel 객체는 자동으로 화면 회전 같은 상태 변화동안 자동으로 유지되고 새로운 액티비티 또는 프래그먼트에서도 데이터를 즉시 사용할 수 있다.</p>
-<p><strong>MainViewModel</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainViewModel</span> <span class="keyword">extends</span> <span class="title">ViewModel</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> MutableLiveData&lt;List&lt;User&gt;&gt; userList;</span><br><span class="line">    <span class="keyword">public</span> LiveData&lt;List&lt;User&gt;&gt; getUsers()&#123;</span><br><span class="line">        <span class="keyword">if</span>(userList == <span class="keyword">null</span>)&#123;</span><br><span class="line">            userList = <span class="keyword">new</span> MutableLiveData&lt;List&lt;User&gt;&gt;();</span><br><span class="line">            loadUsers();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> userList;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">loadUsers</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="comment">// Do an asynchronous operation to fetch userList.</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>MainActivity</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> <span class="keyword">extends</span> <span class="title">AppCompatActivity</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span></span>&#123;</span><br><span class="line">        <span class="comment">// Create a ViewModel the first time the system calls an activity's onCreate() method.</span></span><br><span class="line">        <span class="comment">// Re-created activities receive the same MyViewModel instance created by the first activity.</span></span><br><span class="line"></span><br><span class="line">        MainViewModel viewModel = ViewModelProviders.of(<span class="keyword">this</span>).get(MainViewModel.class);</span><br><span class="line">        viewModel.getUsers().observe(<span class="keyword">this</span>, userList -&gt;&#123;</span><br><span class="line">            <span class="comment">// update UI</span></span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>만약 액티비티가 재생성이 된다면 처음 만들어진 <code>MainViewModel</code> 인스턴스를 받게 된다. 이 인스턴스를 호출한 액티비티 또는 프래그먼트가 destroy 되어 메모리 해제가 되기 전까지 데이터를 유지하고 있어서 데이터를 보관하고 있다가 화면 회전 같은 상태 변화가 발생해도 데이터를 유지하게 된다.</p>
-<p>안드로이드 프레임워크는 내부적으로 class, ViewModel의 Map을 관리하므로 이미 존재하는 ViewModel의 레퍼런스를 가져올 때마다 그 인스턴스를 반환하게 된다.</p>
-<p>ViewModel을 소유한 액티비티가 종료되면 프레임워크는 자동으로 ViewModel 객체의 onCleared() 메소드를 호출할 것이다. 그렇다면 우리는 이 함수를 오버라이드하여 리소스를 해제하면 된다.</p>
-<p>ViewModel 인스턴스는 뷰나 <code>LifecycleOwners</code>의 특정 인스턴스보다 오래 유지되도록 설계되었다. 이런 설계는 ViewModel 인스턴스가 뷰나 Lifecycle 인스턴스를 모르기 때문에 ViewModel에 대해 더 쉽게 테스트를 작성할 수 있게 해준다.</p>
-<p>ViewModel 인스턴스는 <strong>LiveData</strong> 인스턴스와 같은 <code>LifecycleObservers</code>를 포함할 수 있다. 하지만, LiveData와 같은 라이프사이클 기반의 Observable 클래스의 변화를 관찰해서는 안된다. 만약, ViewModel이 시스템 서비스를 찾는 등의 이유로 Application Context가 필요하다면, <code>AndroidViewModel</code> 클래스를 상속받아서 생성자에서 Application 객체를 받도록 구현할 수 있다.</p>
-<ul>
-<li>주의 : ViewModel 인스턴스는 반드시 뷰, Lifecycle, Activity 참조를 가지고 있는 어떤 클래스도 참조를 유지하면 안된다. 이유는 메모리 누수가 발생할 수 있기 때문이다.</li>
-</ul>
-<h2 id="viewmodel-생명주기"># ViewModel 생명주기.</h2>
-<p>ViewModel의 생명주기는 <code>ViewModelProvider</code>에 전달된 Lifecycle에 생명주기 범위가 지정된다.<br>
-즉, 주어진 액티비티가 살아있는 동안 ViewModel 객체는 메모리에 계속 남아있는다.<br>
-액티비티의 경우에는 finish될 때, 프래그먼트의 경우에는 액티비티로부터 detached될 때까지이다.</p>
-<img src="/img/viewmodel-lifecycle.png" width="600" height="200">
-<p>위의 그림에서 ViewModel의 스코프를 확인할 수 있다. 그림은 Activity가 화면 회전되었을 때의 생명주기를 나타낸다. 화면이 회전해도 상태 변경이 되는 상황에서도 살아 있음을 보여준다. Fragment의 기본 생명주기에 따른 ViewModel의 생존시간도 동일하다.</p>
-<p>일반적으로 ViewModel 인스턴스를 Activity의 시작점인 onCreate()에서 요청할 것이다. onCreate() 함수는 상황에 따라 여러 번 호출될 수 있지만, ViewModel 객체는 최초 요청부터 Activity가 소멸될 때까지 메모리에 유지된다.</p>
-<h2 id="의문점"># 의문점?!</h2>
-<p><strong>A 액티비티에서 ViewModel 객체를 생성하면 scope는 A 액티비티의 생명주기를 따르낟. 만약, B 액티비티에서 ViewModel에 저장된 값을 재사용하고 싶다면??</strong></p>
-<p>B 액티비티에서 ViewModelProviders로 객체를 다시 구해오면 A 액티비티에서 만든 객체가 아닌 새로운 객체를 만들어낸다.</p>
-<p><a href="https://stackoverflow.com/questions/49364550/android-livedata-how-to-reuse-the-same-viewmodel-on-different-activities" target="_blank" rel="noopener">how to reuse the same ViewModel on different activites</a></p>
-<p>위의 글을 보면 싱글톤 팩토리로 동작하는 custom ViewModel Factory를 전달하여 다른 액티비티에서도 동일한 ViewModel 인스턴스를 받을 수 있는 방법이 있다.<br>
-하지만, 다른 액티비티의 생명주기에서 ViewModel 객체를 유지하는 것은 안티패턴이다.</p>
-<p>RxJava와 다르게 생명주기에 따라 데이터를 보관/관리 해주는 LiveData의 장점을 버리는 방식이라고 생각된다.</p>
-<p>따라서 ViewModel의 객체를 유지시키는 것이 아닌 DataSource나 Repository를 싱글톤으로 유지하는 것이 더 추천되는 방식이다.<br>
-<a href="https://stackoverflow.com/questions/49364550/android-livedata-how-to-reuse-the-same-viewmodel-on-different-activities/49365126#49365126" target="_blank" rel="noopener">https://stackoverflow.com/questions/49364550/</a></p>
-<img src="/img/viewmodel-viewModel_reuse.png" width="600" height="200">
-<p>ViewModel의 객체를 유지시키는 방식이 아닌 Other data layers(data source, data source를 관리하는 Repository)를 싱글톤 객체로 만들어 데이터를 유지시켜 다른 Activity들에서 새로운 ViewModel 객체를 만들어 Repository를 통해 보관중이 데이터를 가져오는 방식이다.</p>
-<h2 id="fragment-간-데이터-공유"># Fragment 간 데이터 공유.</h2>
-<p>하나의 액티비티 안에서 2개 이상의 프래그먼트 간에 데이터를 주고 받는 구조는 흔한 경우다. 이럴 때는 프래그먼트의 scope를 사용하는 것이 아닌 프래그먼트들을 감싸고 있는 액티비티의 scope를 전달하면 된다.</p>
-<p>즉, 프래그먼트들이 액티비티 scope의 ViewModel을 서로 공유하도록 구현하면 된다.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SharedViewModel</span> <span class="keyword">extends</span> <span class="title">ViewModel</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> MutableLiveData&lt;Item&gt; selected = <span class="keyword">new</span> MutableLiveData&lt;Item&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">select</span><span class="params">(Item item)</span> </span>&#123;</span><br><span class="line">        selected.setValue(item);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> LiveData&lt;Item&gt; <span class="title">getSelected</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> selected;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MasterFragment</span> <span class="keyword">extends</span> <span class="title">Fragment</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> SharedViewModel model;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        model = ViewModelProviders.of(getActivity()).get(SharedViewModel.class);</span><br><span class="line">        itemSelector.setOnClickListener(item -&gt; &#123;</span><br><span class="line">            model.select(item);</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DetailFragment</span> <span class="keyword">extends</span> <span class="title">Fragment</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        SharedViewModel model = ViewModelProviders.of(getActivity()).get(SharedViewModel.class);</span><br><span class="line">        model.getSelected().observe(<span class="keyword">this</span>, &#123; item -&gt;</span><br><span class="line">           <span class="comment">// Update the UI.</span></span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><code>ViewModelProvider</code>를 얻을 때, 두 프래그먼트 모두 <strong>getActivity()</strong> 메소드를 이요하고 있다. 같은 Activity를 이용하여 같은 ViewModel 객체를 요청하므로 동일한 객체가 얻어진다.</p>
-<p>이 접근 방법은 다음과 같은 이점이 존재한다.</p>
-<ul>
-<li>Activity가 각 Fragment간 데이터 전달 시에 추가적인 작업을 할 필요가 없다.</li>
-<li>각 Fragment는 ViewModel 외에 다른 객체나 상태에 대해 더 알 필요가 없다. 그러므로 다른 Fragment가 사라지더라도 정상적으로 동작할 것이다.</li>
-<li>각 Fragment는 다른 Fragment의 라이프사이클을 신경쓰지 않고, 자신의 라이프사이클 대로 작업을 수행할 수 있다.</li>
-</ul>
-<h2 id="참고"># 참고</h2>
-<ul>
-<li><a href="https://duzi077.tistory.com/196" target="_blank" rel="noopener">Android Architecture Components ViewModel이란?</a></li>
-<li><a href="http://dktfrmaster.blogspot.com/2018/02/viewmodel.html" target="_blank" rel="noopener">[안드로이드] Architecture Component 1 - ViewModel 공식문서 번역</a></li>
-</ul>
-
                     
+                        <a
+                            href="/2019/05/02/What-is-ViewModel/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [안드로이드] ViewModel"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2019/05/02/What-is-ViewModel/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             
@@ -1041,7 +694,7 @@ ViewModel 객체는 자동으로 화면 회전 같은 상태 변화동안 자동
     </article>
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -1073,73 +726,18 @@ ViewModel 객체는 자동으로 화면 회전 같은 상태 변화동안 자동
 
             </div>
             
-                <div class="postShorten-content">
+                <div class="postShorten-excerpt">
                     <p>MVVM을 이해하기 위해 알아보는 <code>LiveData</code><br>
 추후 더 자세한 내용을 정리할 예정.</p>
-<h2 id="livedata란"># LiveData란?</h2>
-<p>직역하면 살아있는 데이터? 이렇게 생각할 수 있다. LiveData는 LifeCycle을 알고 있는 DataType이라고 생각하면 좋다. 이처럼 LifeCycle을 알고 있으면 필요할 때 변경하고 필요하지 않을 때 변경하지 않을 수 있다.</p>
-<p>또한, LiveData는 Observer 패턴을 따른다. 즉 데이터의 변경이 일어났을 때 콜백으로 받아 처리할 수 있다. 이렇게 데이터의 변경이 일어날때마다 콜백을 실행하는데 LifeCycle을 알고 있기 때문에 필요하지 않을 때는 콜백이 실행되지 않는다.</p>
-<p>예를 들어 Activity에 선언되어 있는 LiveData의 경우 Activity가 Start, Resume 상태일 때는 콜백을 실행하지만 다른 액티비티로 넘어가 있는 onStop 등의 상태일 때는 실행되지 않는다.</p>
-<img src="/img/livedata_android.png" width="600" height="200">
-<ul>
-<li>postValue : 간단히 데이터가 변경된다.</li>
-</ul>
-<p>이렇듯 onStart, onResume의 상태일 때 A와 B를 받는 옵저버 콜백은 실행되지만 onStop일 때 C와 D일 때는 실행되지 않고(옵저버 되지 않음) 다시 액티비티가 실행되면 가장 최신의 데이터인 D를 실행한다.(옵저버 됨) 이렇듯 LiveData를 사용하면 RxJava나 Interface Callback을 사용할 때 보다 더 깔끔하게 처리할 수 있다.</p>
-<h2 id="간단한-예제"># 간단한 예제</h2>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">UserProfileViewModel</span> : <span class="type">ViewModel</span></span>()&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// MutableLiveData란 변경할 수 있는 LiveData 형이다.</span></span><br><span class="line">    <span class="comment">// 일반적인 LiveData형은 변경할 수 없고 오로지 데이터의 변경값만을 소비하는데 반해</span></span><br><span class="line">    <span class="comment">// MutableLiveData는 데이터를 UI Thread와 Background Thread에서 선택적으로 바꿀 수 있다.</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">val</span> _post = MutableLiveData&lt;User&gt;()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">// _post로 선언된 MutableLiveData를 post를 통해 발행한다.</span></span><br><span class="line">    <span class="comment">// 이렇듯 ViewModel에서만 _post를 변경할 수 있기 때문에 보안에 더 좋다.</span></span><br><span class="line">    <span class="keyword">val</span> post : LiveData&lt;User&gt;</span><br><span class="line">        <span class="keyword">get</span>() = _post</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>위와 같은 데이터를 Activity에서 받으려면</li>
-</ul>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">PostActivity</span></span>() : AppCompatActivity()&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreate</span><span class="params">(savedInstanceState : <span class="type">Bundle</span>?)</span></span>&#123;</span><br><span class="line">        ...</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 위의 ViewModel에서 post LiveData를 Observe한다.</span></span><br><span class="line">        <span class="comment">// 첫 번째 인자는 UI이며 해당 인자로 어떤 UI Thread를 사용할 지 결정한다.</span></span><br><span class="line">        <span class="comment">// 두 번째는 Observe 콜백이다.</span></span><br><span class="line">        postViewModel.post.observe(<span class="keyword">this</span>,</span><br><span class="line">            Oberserver&#123;</span><br><span class="line">                post -&gt; postTitle.text = post?.title</span><br><span class="line">            &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>LiveData 콜백을 실행하는 방법은 아래처럼 두 가지가 있다.</p>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// MutableLiveData에ㅓ setValue, postValue 실행 하는 경우</span></span><br><span class="line"></span><br><span class="line">post.setValue(post) <span class="comment">// UI Thread 즉, Main Thread에서 실행</span></span><br><span class="line">post.postValue(post) <span class="comment">// Background Thread에서 실행</span></span><br></pre></td></tr></table></figure>
-<p>사실 LiveData를 더 잘쓰려면 <strong>데이터바인딩</strong>과 함께 사용해야 좋은 효과를 낼 수 있다. 왜냐하면 위에서처럼 Observe 패턴을 이용해서 UI를 직접 변경해줄 필요 없이 xml 상에서 깔끔하게 처리할 수 있다.</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">TextView</span></span></span><br><span class="line"><span class="tag">    <span class="attr">....</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:text</span>=<span class="string">"@&#123;viewModel.post.title&#125;/&gt;</span></span></span><br></pre></td></tr></table></figure>
-<p>이처럼 아주 깔끔하게 선언할 수 있다 이제 title이 변경되는대로 TextView UI는 알아서 변경이 된다.</p>
-<p>그렇다면 LiveData Observer UI(Activity, Fragment)가 사라진다면? 더 이상 새로운 데이터를 발행하지 않는다. rx로 따지면 Dispose가 필요없다. 즉, 데이터를 더 이상 발행하지 않기 때문에 알아서 구독을 해지하는 것으로 생각이 든다.</p>
-<h2 id="livedata-변형하기"># LiveData 변형하기</h2>
-<p>간단하게 살펴보고 추후에 자세하게 살펴보도록 하겠다.</p>
-<p><strong>Map</strong></p>
-<ul>
-<li>LiveData의 변경을 다른 LiveData에게 알려주는 메소드.</li>
-</ul>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> userLiveData : LiveData&lt;User&gt; = ...</span><br><span class="line"><span class="keyword">val</span> userNameLiveDat = Transformations.map(userLiveData, user -&gt; &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">"<span class="subst">$&#123;user.firstName&#125;</span>, <span class="subst">$&#123;user.lastName&#125;</span>"</span> <span class="comment">// String을 리턴한다.</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-<p>UserLiveData의 변경사항을 Observe해서 map 함수를 통해서 원하는 값으로 변경한 뒤 String을 리턴한다. 즉, 새로운 LiveData를 리턴하는게 아니라 데이터만 변경한다.</p>
-<p><strong>SwitchMap</strong></p>
-<ul>
-<li>LiveData의 변경사항을 받아서 다른 LiveData를 발행한다. 일반적으로 RoomDatabase를 LiveData로 쓸 때 많이 사용된다고 한다.</li>
-</ul>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> userIdLiveData : MutableLiveData = ...</span><br><span class="line"><span class="keyword">val</span> userLiveData : LiveData = Transformations.switchMap(userIdLiveData, id -&gt; </span><br><span class="line">    repository.getUserById(id)) <span class="comment">// LiveData를 리턴한다.</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">setUserId</span><span class="params">(userId : <span class="type">String</span>)</span></span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.userIdLiveData.setValue(userId)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>SwitchMap은 데이터의 인자값에 따라 다른 LiveData를 발행한다. repository.getUserById(id)는 RooDatabase에서 ID 값에 따라 유저값을 가져오며 return 값이 LiveData이다. 즉, 인자 값에 따라서 다른 데이터 소스(LiveData)를 보낼 수 있다.</p>
-<p><strong>MediatorLiveData</strong></p>
-<ul>
-<li>여러 데이터 소스를 한 곳에서 Observe할 때 사용한다.</li>
-</ul>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> liveData1:LiveData = ...</span><br><span class="line"><span class="keyword">val</span> liveData2: LiveData = ...</span><br><span class="line"></span><br><span class="line"><span class="keyword">val</span> liveDataMerger:MediatorLiveData = new MediatorLiveData&lt;&gt;()</span><br><span class="line"> liveDataMerger.addSource(liveData1, value -&gt; liveDataMerger.setValue(value))</span><br><span class="line"> liveDataMerger.addSource(liveData2, value -&gt; liveDataMerger.setValue(value))</span><br></pre></td></tr></table></figure>
-<p>예를 들어 Fragment별로 LiveData<error>가 있고 이걸 Activity 한 곳에서 Crashlytics에 기록한다거나 Toast 메시지를 띄울 때 Fragment의 LiveData를 Activity의 MediatorLiveData를 통해 사용할 수 있다.</error></p>
-<p>LiveData는 많은 기능이 있는 것 같다. 하지만 혼자 쓰기 보다는 DataBinding, ViewModel과 함께 MVVM 패턴에서 사용될 때 효과가 더욱 두드러질 것 같다는 생각이 든다.</p>
-<p>LiveData와 관련된 자세한 내용을 추후에 공부해서 올릴 예정이다.<br>
-앞으로도 열심히하길~</p>
-<h2 id="참고"># 참고</h2>
-<ul>
-<li><a href="https://medium.com/harrythegreat/jetpack-android-livedata-%EC%95%8C%EC%95%84%EB%B3%B4%EA%B8%B0-ed49a6f17de3" target="_blank" rel="noopener">Jetpack Android — LiveData 알아보기</a></li>
-</ul>
-
                     
+                        <a
+                            href="/2019/04/30/What-is-LiveData/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [안드로이드] LiveData"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2019/04/30/What-is-LiveData/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             
