@@ -267,7 +267,7 @@
     <section class="postShorten-group main-content-wrap">
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -276,9 +276,9 @@
                         <a
                             class="link-unstyled"
                             href="/2018/12/27/DataStructure-HashTable/"
-                            aria-label=": [자료구조] Hash"
+                            aria-label=": [Data Structure] Hash"
                         >
-                            [자료구조] Hash
+                            [Data Structure] Hash
                         </a>
                     
                 </h1>
@@ -299,121 +299,19 @@
 
             </div>
             
-                <div class="postShorten-content">
-                    <h2 id="hasttable">HastTable</h2>
+                <div class="postShorten-excerpt">
+                    <h2>HastTable</h2>
 <p><code>Hash(또는 HashMap)</code>은 내부적으로 배열을 사용하여 데이터를 저장하기 때문에 인덱스를 이용한 빠른 검색 속도를 갖는다. 특정한 값을 searching하는데 데이터 고유의 <strong>인덱스</strong>로 접근하게 되므로 average case에 대하여 시간 복잡도가 O(1)이 되는 것이다.<br>
 [항상 O(1)이 아니고 average case에 대해서 O(1)인 것은 collision 때문이다.]</p>
-<p>그리고 데이터의 삽입과 삭제 시 기존 데이터를 밀어내거나 다시 채우는 작업이 필요없도록 <strong>특별한 알고리즘</strong>을 이용하여 데이터와 연관된 고유한 숫자를 만들어 낸 뒤 이를 인덱스로 사용한다. 특정 데이터가 저장되는 인덱스는 그 데이터만의 고유한 위치이기 때문에 삽입 시 다른 데이터의 사이에 끼어들거나 삭제 시 다른 데이터로 채울 필요가 없으므로 추가적인 데이터의 이동이 없다.</p>
-<p><strong>'특별한 알고리즘’이라는 것을 통해서 고유한 인덱스 값을 설정하는 것이 중요한 포인트이다.</strong><br>
-앞서 언급한 특별한 알고리즘을 해시 메소드 또는 해시 함수라고 하고 이 메소드에 의해 반환되는 데이터의 <strong>고유한 숫자 값</strong>을 <strong>hashCode</strong>라고 한다.<br>
-Java에서는 Object 클래스의 _hashCode()_라는 메소드를 이용하여 모든 객체의 hashcode 값을 쉽게 구할 수 있다.</p>
-<p>hash 메소드를 구현하는 가장 간단한 방법은 <strong>나머지 연산자를 이용</strong>하는 것이다. <em>저장할 데이터의 값을 저장할 hash table의 크기로 나누고 나머지 연산 결과를 데이터의 인덱스로 사용하는 것이다.</em> 하지만 이렇게 하면 문제점이 발생한다.</p>
-<p>만약 3의 배수로 이루어진 데이터 9개를 저장한다고 가정해보자.<br>
-저장하려는 데이터 : 3,6,9,12,15,18,21,24,27<br>
-hashcode 값 계산<br>
-3 % 9 == 3<br>
-6 % 9 == 6<br>
-9 % 9 == 0<br>
-12 % 9 == 3<br>
-15 % 9 == 6<br>
-18 % 9 == 0<br>
-21 % 9 == 3<br>
-24 % 9 == 6<br>
-27 % 9 == 3</p>
-<p>계산 결과 hashcode 값이 0,3,6으로 집중되고 있다. <em>이렇게 되면 같은 index로 접근하게 되는 value가 많아져 데이터를 저장할 수 없게 되는 충돌 현상이 발생한다.</em> 이를 <strong>Collision</strong>이라고 한다.</p>
-<p>이런 충돌을 최소화 하기 위한 가장 간단한 방법은 나머지 연산의 값이 중복되지 않도록 테이블의 크기를 <code>소수(Prime number)</code>로 만드는 것이다. 위와 동일한 입장일 경우, 저장하려는 데이터의 크기가 9이므로 9보다 큰 소수인 11로 나머지 연산을 해보자.</p>
-<p>hashcode 값 계산<br>
-3 % 11 == 3<br>
-6 % 11 == 6<br>
-9 % 11 == 9<br>
-12 % 11 == 1<br>
-15 % 11 == 4<br>
-18 % 11 == 7<br>
-21 % 11 == 10<br>
-24 % 11 == 2<br>
-27 % 11 == 5</p>
-<p>중복되는 값이 깨끗하게 사라진 것을 확인할 수 있다. 하지만 이 방법으로 모든 것이 해결된 것일까?? 위의 과정에서 데이터의 성질이 달라져 다른 값이 들어올 수 있게 된 경우는 어떨까?</p>
-<p>예를 들어 26이라는 데이터를 추가적으로 저장해야 한다면 데이터의 크기는 10이 되고 10보다 큰 소수는 11로 나머지 연산자 방법을 수행해준다.</p>
-<p>26 % 11 == 4</p>
-<p>결과를 확인해보니 다시 중복이 발생하였다. 바로 <code>Collision</code>이 발생한 것이다. <em>Hash Table의 크기를 소수로 만드는 것은 충돌을 줄일 수는 있지만 원천적으로 해결해주지는 못한다.</em></p>
-<p>충돌이 많아질수록 Searching에 필요한 시간 복잡도가 O(1)에서 O(n)에 가까워진다.<br>
-<em>어설픈 해쉬 함수는 해시를 해시답게 사용하지 못하도록 한다. 좋은 해쉬 함수를 선택하는 것은 해쉬 테이블의 성능 향상에 필수적인 것이다.</em></p>
-<p>두 개의 키가 같은 인덱스로 hashing(hash 함수를 통해 계산됨을 의미)되면 같은 곳에 저장할 수 없게 된다.(Collision)<br>
-따라서 해싱된 인덱스에 이미 다른 값이 들어가 있다면 데이터를 저장할 다른 위치를 찾은 뒤에야 저장할 수 있는 것이다. 따라서 충돌 해결은 필수적이며 그 방법들에 대해 알아보고자 한다.</p>
-<p>기본적인 두 가지 방법을 알아보자. 해시 충돌을 해결하기 위한 다양한 자료가 있지만, 다음 두 가지 방법을 응용한 방법들이다.</p>
-<h2 id="open-address-방식개방-주소법">Open Address 방식(개방 주소법)</h2>
-<p>해시 충돌이 발생하면 즉 삽입하려는 해시 버킷이 이미 사용 중인 경우, <code>다른</code> 해시 버킷에 해당 자료를 삽입하는 방식이다.</p>
-<ul>
-<li>버킷(bucket)이란 바구니와 같은 개념으로 데이터를 저장하기 위한 공간이라고 생각하면 된다.</li>
-</ul>
-<p>공개 주소 방식이라고도 불리는 이 알고리즘은 Collision(충돌)이 발생하면 데이터를 저장할 장소. 즉 다른 해시 버킷을 찾아 헤맨다. 이 과정에서도 여러 방법들이 존재하는데 다음 3가지에 대해 간단하게 알아보자.</p>
-<ol>
-<li>
-<p>Linear Probing<br>
-순차적으로 탐색하며 비어있는 버킷을 찾을 때까지 계속 진행된다. Worst case의 경우 비어있는 버킷을 찾지 못하고 탐색을 시작한 위치까지 되돌아 올 수 있다.</p>
-</li>
-<li>
-<p>Quadratic probing<br>
-2차 함수를 이용해 탐색할 위치를 찾는다.</p>
-</li>
-<li>
-<p>Double hashing probing</p>
-</li>
-</ol>
-<p>하나의 해쉬 함수에서 충돌이 발생하면 2차 해쉬 함수를 이용해 새로운 주소를 할당한다. 위 두가지 방법에 비해 많은 연산량을 요구한다.</p>
-<h2 id="seperate-chaining-방식분리-연결법">Seperate Chaining 방식(분리 연결법)</h2>
-<p>참고로 Java 7에서는 Seperate Chaining 방식을 사용하여 HashMap을 구현하고 있다.</p>
-<blockquote>
-<p>Why?</p>
-</blockquote>
-<p>HashMap의 특성상 remove() 메소드가 빈번하게 일어날 수 있는데 데이터를 삭제할 때 OpenAddress 방식은 처리가 효율적이기 어렵다. 또한 저장된 Key-value 쌍의 개수가 일정 개수 이상 많아지면 보통 Seperate Chaining 방식에 비해 Open Address 방식이 느리다.</p>
-<p><strong>연결 리스트를 사용하는 방식(LinkedList)</strong></p>
-<p>각각의 버킷들을 연결리스트(Linked List)로 만들어 Collision이 발생하면 해당 버킷의 list에 추가하는 방식이다. 연결 리스트의 특징을 그대로 이어받아 삭제 또는 삽입 간단하다. 하지만 단점도 그대로 물려받아 작은 데이터들을 저장할 때 연결 리스트 자체의 오버헤드가 부담이 된다.</p>
-<p>일반적으로 Open Address 방법은 Seperate Chaining 방식보다 느리다. Open Address의 경우 해시 버킷을 채운 밀도가 높아질수록 Worst Case 발생 빈도가 더 높아지기 때문이다. 반면에 Seperate Chaining 방식의 경우 해시 충돌이 잘 발생하지 않도록 <strong>보조 해시 함수</strong>를 통해 조정할 수 있다면 Worst Case에 가까워지는 것을 줄일 수 있다.</p>
-<p><a href="https://d2.naver.com/helloworld/831311" target="_blank" rel="noopener">보조 해시 함수에 대한 글</a></p>
-<p><strong>Tree를 사용하는 방식(Red-Black-Tree)</strong></p>
-<p>기본적인 알고리즘은 Seperate Chaining 방식과 동일하며 연결 리스트 대신 트리를 사용하는 방식이다. 여기서 연결 리스트를 사용할 것인가와 트리를 사용할 것인가에 대한 기준은 <strong>하나의 버킷에 할당된 Key-Value 쌍의 개수</strong>이다.</p>
-<p>트리는 기본적으로 메모리 사용량이 많고 데이터 개수가 적을 때 Worst Case를 살펴보면 트리와 연결 리스트의 성능 상의 차이가 거의 없다. 따라서 메모리 측면을 봤을 때 데이터 개수가 적을 때는 연결 리스트를 사용한다.</p>
-<blockquote>
-<p>데이터가 적다는 것은 얼마나 적다는 것을 의미할까??</p>
-</blockquote>
-<p>앞에서 언급한 것처럼 기준은 하나의 버킷에 할당되는 Key-Value 쌍의 개수이다. 이 Key-Value 쌍의 개수가 6개, 8개를 기준으로 결정한다.</p>
-<p>오잉…? 왜 기준이 2개인가?? 이는 아래에서 설명하겠다.</p>
-<p>결론부터 말하자면 연결 리스트의 기준과 트리의 기준을 6과 8로 잡은 것은 변경하는데 <strong>소요되는 비용을 줄이기 위함</strong>이다.<br>
-한 가지 상황을 가정해보자.<br>
-해시 버킷에 6개의 Key-Value 쌍이 들어있다. 그리고 하나의 값이 추가되었다. 만약 기준이 6과 7이라면 자료 구조를 연결 리스트에서 트리로 변경해야 한다. 그러다가 바로 하나의 값이 삭제된다면 다시 트리에서 연결 리스트로 자료구조를 변경해야 한다.</p>
-<p>각각 자료구조로 넘어가는 기준이 1이라면 Switching 할 때 생기는 비용이 너무 많이 필요하게 되는 것이다. <strong>그래서 2라는 여유를 남겨두고 기준을 잡아준 것이다.</strong><br>
-따라서 데이터의 개수가 6개 -&gt; 7개로 증가했을 때는 연결 리스트의 자료구조를 취하고 있을 것이고<br>
-8개 -&gt; 7개로 감소했을 때는 트리의 자료 구조를 취하고 있을 것이다.</p>
-<ul>
-<li>참고로 Java 8을 구현하는데 사용하는 트리는 RBT이다.</li>
-</ul>
-<p><strong>해시 버킷 동적 확장(Resize)</strong></p>
-<p>해시 버킷의 개수가 적다면 메모리 사용을 아낄 수 있지만 해시 충돌로 인해 성능상 손실이 발생할 수도 있다. 그래서 HashMap은 Key-Value 쌍 데이터 개수가 <strong>일정 개수 이상</strong>이 되면 해시 버킷의 개수를 두배로 늘린다. 이렇게 늘리면 해시 충돌로 인한 성능 손실 문제를 어느 정도 해결할 수 있다.</p>
-<blockquote>
-<p>일정 개수 이상??</p>
-</blockquote>
-<p>해시 버킷 크기를 두 배로 확장하는 임계점은 현재 데이터 개수가 해시 버킷의 개수의 75%가 될 때이다. 0.75라는 숫자는 load factor로 HashMap의 생성자에서 지정할 수도 있다.</p>
-<h2 id="참고">참고</h2>
-<ul>
-<li><a href="http://asfirstalways.tistory.com/332?category=688193" target="_blank" rel="noopener">hashcode와 HashMap에 대해서</a></li>
-</ul>
-
                     
+                        <a
+                            href="/2018/12/27/DataStructure-HashTable/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [Data Structure] Hash"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2018/12/27/DataStructure-HashTable/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             

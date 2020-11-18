@@ -267,79 +267,7 @@
     <section class="postShorten-group main-content-wrap">
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2018/04/12/BOJ5014/"
-                            aria-label=": [5014] 스타트링크"
-                        >
-                            [5014] 스타트링크
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2018-04-12T01:18:20+09:00">
-	
-		    Apr 12, 2018
-    	
-    </time>
-    
-        <span>in </span>
-        
-    <a class="category-link" href="/categories/algorithm/">algorithm</a>, <a class="category-link" href="/categories/algorithm/BOJ/">BOJ</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <p><code>Key Point</code></p>
-<p>BFS를 통해 문제를 플었다. 큐를 이용해 문제를 해결하였다.<br>
-만약, U층 위, 또는 D층 아래에 해당하는 층이 없을 때는, 엘리베이터는 움직이지 않는다.<br>
-(1 ≤ S, G ≤ F ≤ 1000000, 0 ≤ U, D ≤ 1000000)</p>
-<p><code>Explain</code></p>
-<p>방문한 적이 있는지 확인할 수 있도록 dist라는 배열을 만들어서 방문하지 않았다면 -1<br>
-방문하였고, 이동했다면 1씩 증가해주었다.<br>
-dist[current]가 이전에 계산했던 이동횟수를 저장하고 있다.<br>
-F : 건물의 총 층 수<br>
-S : 강호가 위치한 층<br>
-G : 강호가 가려는 층<br>
-U : 위로 U층만큼 이동<br>
-D : 아래로 D층만큼 이동</p>
-<p><code>Code</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">public class Exam5014 &#123;</span><br><span class="line"></span><br><span class="line">	public static void main(String[] args) &#123;</span><br><span class="line">		Scanner sc = new Scanner(System.in);</span><br><span class="line">		int F = sc.nextInt(); // 건물의 층 수</span><br><span class="line">		int S = sc.nextInt(); // 강호가 위치해 있는 층</span><br><span class="line">		int G = sc.nextInt(); // 강호가 이동하려는 층</span><br><span class="line">		int U = sc.nextInt(); // 위로 U층만큼 이동하는 버튼</span><br><span class="line">		int D = sc.nextInt(); // 아래로 D층만큼 이동하는 버튼</span><br><span class="line">		</span><br><span class="line">		int[] dist = new int[F+1]; </span><br><span class="line">		Arrays.fill(dist, -1);</span><br><span class="line">		Queue&lt;Integer&gt; q = new LinkedList&lt;Integer&gt;();</span><br><span class="line">		dist[S] = 0;</span><br><span class="line">		q.add(S);</span><br><span class="line">		while(!q.isEmpty()) &#123;</span><br><span class="line">			int current = q.poll();</span><br><span class="line">			if(current + U &lt;=F &amp;&amp; dist[current+U] == -1) &#123;</span><br><span class="line">				q.add(current+U);</span><br><span class="line">				dist[current+U] = dist[current]+1;</span><br><span class="line">			&#125;</span><br><span class="line">			</span><br><span class="line">			if(current - D &gt;=1 &amp;&amp; dist[current-D] == -1) &#123;</span><br><span class="line">				q.add(current-D);</span><br><span class="line">				dist[current-D] = dist[current]+1;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		if(dist[G] == -1) &#123;</span><br><span class="line">			System.out.println(&quot;Use&quot;);</span><br><span class="line">		&#125;else &#123;</span><br><span class="line">			System.out.println(dist[G]);</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2018/04/12/BOJ5014/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -371,36 +299,17 @@ D : 아래로 D층만큼 이동</p>
 
             </div>
             
-                <div class="postShorten-content">
+                <div class="postShorten-excerpt">
                     <p>문제 : <a href="https://www.acmicpc.net/problem/2251" target="_blank" rel="noopener">https://www.acmicpc.net/problem/2251</a></p>
-<p><code>Key Point</code></p>
-<p>처음에 a,b는 비어있고, c만 가득 채워져있는 상태이므로 c의 용량은<br>
-c = C - a - b로 계산할 수 있다.<br>
-a의 용량 &gt; b의 용량일 경우, a-&gt;b로 물을 부었을 경우<br>
-넘친 만큼을 a로 다시 부어주는 상황을 생각해야 한다.</p>
-<p><code>Explain</code></p>
-<p>각 물통의 용량을 입력으로 받는다. 그리고 처음에 앞에 두 물통은 비어있고, C만 가득차있다.<br>
-물을 옮기는 과정에서 손실되는 물이 없는 것이 중요한 점이다.<br>
-이 때, 첫 번쨰 물통 A가 비어있을 때, 세 번째 물통 C에 담겨 있을 수 있는 물의 양을 모두 구하는 것이다.<br>
-[오름차순] BFS를 이용해서 문제를 푼다.</p>
-<p><code>Code</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br></pre></td><td class="code"><pre><span class="line">class Pair implements Comparable&lt;Pair&gt;&#123;</span><br><span class="line">	int first; // 첫번째 물통</span><br><span class="line">	int second; // 두번째 물통</span><br><span class="line">	</span><br><span class="line">	Pair(int first,int second)&#123;</span><br><span class="line">		this.first = first;</span><br><span class="line">		this.second = second;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	@Override</span><br><span class="line">	public int compareTo(Pair pair) &#123;</span><br><span class="line">		if(this.first&lt;pair.first) &#123;</span><br><span class="line">			return -1;</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		if(this.first&gt;pair.first) &#123;</span><br><span class="line">			return 1;</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		if(this.second&lt;pair.second) &#123;</span><br><span class="line">			return -1;</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		if(this.second&gt;pair.second) &#123;</span><br><span class="line">			return 1;</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		return 0;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public class Exam2251 &#123;</span><br><span class="line">	</span><br><span class="line">	public static final int[] from = &#123;0,0,1,1,2,2&#125;;</span><br><span class="line">	public static final int[] to = &#123;1,2,0,2,0,1&#125;;</span><br><span class="line">	public static void main(String[] args) &#123;</span><br><span class="line">		Scanner sc = new Scanner(System.in);</span><br><span class="line">		int[] cap = new int[3];</span><br><span class="line">		for(int i=0;i&lt;3;i++) &#123;</span><br><span class="line">			cap[i] = sc.nextInt();</span><br><span class="line">		&#125;</span><br><span class="line">		int sun = cap[2]; // a+b+c = C</span><br><span class="line">		boolean[][] check = new boolean[201][201];</span><br><span class="line">		boolean[] ans = new boolean[201];</span><br><span class="line">		Queue&lt;Pair&gt; q = new LinkedList&lt;Pair&gt;();</span><br><span class="line">		q.add(new Pair(0,0));</span><br><span class="line">		check[0][0] = true;</span><br><span class="line">		ans[cap[2]] = true;</span><br><span class="line">		</span><br><span class="line">		while(!q.isEmpty()) &#123;</span><br><span class="line">			int[] current = new int[3];</span><br><span class="line">			Pair p = q.peek();</span><br><span class="line">			current[0] = p.first;</span><br><span class="line">			current[1] = p.second;</span><br><span class="line">			current[2] = sun - current[0] - current[1];</span><br><span class="line">			q.remove();</span><br><span class="line">			for(int i=0;i&lt;6;i++) &#123;</span><br><span class="line">				int[] next = &#123;current[0],current[1],current[2]&#125;;</span><br><span class="line">				next[to[i]] +=next[from[i]]; // 물통에 있는 물 따르기 ex) a-&gt;b</span><br><span class="line">				next[from[i]] = 0; // 물통비우기</span><br><span class="line">				</span><br><span class="line">				if(next[to[i]]&gt;=cap[to[i]]) &#123;</span><br><span class="line">					next[from[i]] = next[to[i]] - cap[to[i]];</span><br><span class="line">					next[to[i]] = cap[to[i]];</span><br><span class="line">				&#125;</span><br><span class="line">				</span><br><span class="line">				// q에 없던 친구들이라면!</span><br><span class="line">				// 즉, check[next[0]][next[1]]이 false라면</span><br><span class="line">				if(!check[next[0]][next[1]]) &#123;</span><br><span class="line">					check[next[0]][next[1]] = true;</span><br><span class="line">					q.add(new Pair(next[0],next[1]));</span><br><span class="line">					if(next[0] == 0) &#123;</span><br><span class="line">						ans[next[2]] = true;</span><br><span class="line">					&#125;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		for(int k=0;k&lt;=cap[2];k++) &#123;</span><br><span class="line">			if(ans[k] == true) &#123;</span><br><span class="line">				System.out.print(k+&quot; &quot;);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
                     
+                        <a
+                            href="/2018/04/11/BOJ2251/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [2251] 물통"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2018/04/11/BOJ2251/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             
@@ -409,7 +318,7 @@ a의 용량 &gt; b의 용량일 경우, a-&gt;b로 물을 부었을 경우<br>
     </article>
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -441,35 +350,17 @@ a의 용량 &gt; b의 용량일 경우, a-&gt;b로 물을 부었을 경우<br>
 
             </div>
             
-                <div class="postShorten-content">
+                <div class="postShorten-excerpt">
                     <p>문제 : <a href="https://www.acmicpc.net/problem/1525" target="_blank" rel="noopener">https://www.acmicpc.net/problem/1525</a></p>
-<p><code>Key Point</code><br>
-8 퍼즐 문제이므로  9!개의 경우의 수가 있다.<br>
-그리고 0 -&gt; 9로 바꿔서 9자리의 수가 나오므로 이를 이용해서 문제를 푼다.<br>
-네 방향으로 이동할 수 있다.</p>
-<p><code>Explain</code><br>
-큐를 이용해서 값을 꺼내면서 찾는다.<br>
-그리고 Map을 이용해서 상태 값을 저장한다.<br>
-큐에 있는 값들을 빼면서 가장 적게 걸리는 상태를 찾아낸다.<br>
-모든 경우의 수를 탐색하면서 상태값을 저장하고 원하는 <strong>123456789</strong>의 상태값만 찾아서 출력하면 된다.</p>
-<p><code>Code</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line">public class Exam1525 &#123;</span><br><span class="line">	</span><br><span class="line">	public static final int[] dx = &#123;0,0,1,-1&#125;;</span><br><span class="line">	public static final int[] dy = &#123;1,-1,0,0&#125;;</span><br><span class="line">	</span><br><span class="line">	public static void main(String[] args) &#123;</span><br><span class="line">		Scanner sc = new Scanner(System.in);</span><br><span class="line">		int n=3;</span><br><span class="line">		int start=0;</span><br><span class="line">		for(int i=0;i&lt;n;i++) &#123;</span><br><span class="line">			for(int j=0;j&lt;n;j++) &#123;</span><br><span class="line">				int temp = sc.nextInt();</span><br><span class="line">				if(temp == 0) &#123;</span><br><span class="line">					temp =9;</span><br><span class="line">				&#125;</span><br><span class="line">				start = start*10 + temp;</span><br><span class="line">				// 숫자를 문자열처럼 저장하기 위함</span><br><span class="line">				// 그리고 2차원 배열의 형태를 1차원 배열의 형태로 바꾸기 위해서</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		Queue&lt;Integer&gt; q = new LinkedList&lt;Integer&gt;();</span><br><span class="line">		Map&lt;Integer, Integer&gt; map = new HashMap&lt;Integer, Integer&gt;();</span><br><span class="line">		map.put(start, 0);</span><br><span class="line">		q.add(start);</span><br><span class="line">		while(!q.isEmpty()) &#123;</span><br><span class="line">			int now_num = q.poll(); // 제일 위에 있는 숫자 빼</span><br><span class="line">			String now = Integer.toString(now_num); // 숫자를 문자열로 변환</span><br><span class="line">			int z = now.indexOf(&apos;9&apos;); // 그리고 9[0]이 있는 위치를 찾는다. </span><br><span class="line">			int x = z/3; // 9가 위치한 인덱스를 나중에 구하기위해</span><br><span class="line">			int y = z%3; // 9가 위치한 인덱스를 나중에 구하기위해</span><br><span class="line">			for(int k=0;k&lt;4;k++) &#123;</span><br><span class="line">				int nx = x+dx[k]; // 네방향으로 이동하기 위해서</span><br><span class="line">				int ny = y+dy[k]; // 네 방향으로 이동하기 위해서</span><br><span class="line">				if(nx&gt;=0 &amp;&amp; nx&lt;n &amp;&amp; ny&gt;=0 &amp;&amp; ny&lt;n) &#123; //범위를 벗어나지 않도록 하기 위해서</span><br><span class="line">					StringBuilder next = new StringBuilder(now);</span><br><span class="line">					// 밑에는 9가 위치한 곳과 다른 곳의 위치를 교환하는 코드</span><br><span class="line">					char temp = next.charAt(x*3+y);</span><br><span class="line">					next.setCharAt(x*3+y, next.charAt(nx*3+ny));</span><br><span class="line">					next.setCharAt(nx*3+ny, temp);</span><br><span class="line">					</span><br><span class="line">					int number = Integer.parseInt(next.toString());</span><br><span class="line">					// map이 number를 포함하지 않으면 그 number의 상태를 1증가시킨다. </span><br><span class="line">					// 그리고 큐에 추가한다. </span><br><span class="line">		</span><br><span class="line">					if(!map.containsKey(number)) &#123;</span><br><span class="line">						map.put(number, map.get(now_num)+1);</span><br><span class="line">						q.add(number);</span><br><span class="line">					&#125;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">			</span><br><span class="line">		&#125;</span><br><span class="line">		if(map.containsKey(123456789)) &#123;</span><br><span class="line">			System.out.println(map.get(123456789));</span><br><span class="line">		&#125;else &#123;</span><br><span class="line">			System.out.println(-1);</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
                     
+                        <a
+                            href="/2018/04/05/BOJ1525/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [1525] 퍼즐문제"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2018/04/05/BOJ1525/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             
@@ -478,7 +369,7 @@ a의 용량 &gt; b의 용량일 경우, a-&gt;b로 물을 부었을 경우<br>
     </article>
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -510,35 +401,17 @@ a의 용량 &gt; b의 용량일 경우, a-&gt;b로 물을 부었을 경우<br>
 
             </div>
             
-                <div class="postShorten-content">
+                <div class="postShorten-excerpt">
                     <p>문제 : <a href="https://www.acmicpc.net/problem/1963" target="_blank" rel="noopener">https://www.acmicpc.net/problem/1963</a></p>
-<p><code>Key Point</code></p>
-<p>먼저, 에라토스테네스의 체를 이용해 4자리 소수를 구한다.<br>
-그리고 한자리씩 바꾸면서 바뀐 수가 소수인지 확인하면 된다.<br>
-정점의 개수 10000개 이하</p>
-<p><code>Explain</code></p>
-<p>N을 M으로 바꾸는 최소 변환 횟수를 구하는 문제이므로 <code>BFS</code><br>
-한번에 N에서 한자리만 바꿀 수 있고 바꾼 숫자도 <code>소수</code>여야 한다.<br>
-i번째 자리수를 j로 바꾼다. [change]<br>
-next = -1 -&gt; 바꿀 수 없음을 의미하며, 첫번째 자리가 0인 경우를 뜻한다.</p>
-<p><code>Code</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line">public class Exam1963 &#123;</span><br><span class="line">	</span><br><span class="line">	public static int change(int num, int index, int digit) &#123;</span><br><span class="line">		if(index == 0 &amp;&amp; digit == 0) &#123; // indext와 digit이 0이면 첫번째 자리수가 0을 뜻함</span><br><span class="line">			return -1;</span><br><span class="line">		&#125;</span><br><span class="line">		String s = Integer.toString(num);</span><br><span class="line">		StringBuilder sb = new StringBuilder(s);</span><br><span class="line">		sb.setCharAt(index, (char)(digit+&apos;0&apos;));</span><br><span class="line">		// index번째 자리를 digit으로 바꾼다. </span><br><span class="line">		return Integer.parseInt(sb.toString());</span><br><span class="line">	&#125;</span><br><span class="line">	public static void main(String[] args) &#123;</span><br><span class="line">		Scanner sc = new Scanner(System.in);</span><br><span class="line">		boolean[] prime = new boolean[10001];</span><br><span class="line">		</span><br><span class="line">		// 에라토스테네스의 체를 이용한 소수 구하기</span><br><span class="line">		for(int i=2;i&lt;=10000;i++) &#123;</span><br><span class="line">			if(prime[i] == false) &#123;</span><br><span class="line">				for(int j=i*i;j&lt;=10000;j+=i) &#123;</span><br><span class="line">					prime[j] = true;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		for(int i=0;i&lt;=10000;i++) &#123;</span><br><span class="line">			prime[i] = !prime[i];</span><br><span class="line">		&#125;</span><br><span class="line">		// prime[] 배열에 true로 check되어 있는 것들이 소수임!</span><br><span class="line">		</span><br><span class="line">		int test_case = sc.nextInt();</span><br><span class="line">		while(test_case-- &gt;0) &#123;</span><br><span class="line">			int n = sc.nextInt();</span><br><span class="line">			int m = sc.nextInt();</span><br><span class="line">			boolean[] check = new boolean[10001];</span><br><span class="line">			int[] dist = new int[10001];</span><br><span class="line">			dist[n] = 0;</span><br><span class="line">			check[n] = true; // 소수임을 의미</span><br><span class="line">			Queue&lt;Integer&gt; q = new LinkedList&lt;Integer&gt;();</span><br><span class="line">			q.add(n);</span><br><span class="line">			while(!q.isEmpty()) &#123;</span><br><span class="line">				int now_location = q.poll();</span><br><span class="line">				for(int i=0;i&lt;4;i++) &#123;</span><br><span class="line">					for(int j=0;j&lt;=9;j++) &#123;</span><br><span class="line">						int next_location = change(now_location,i,j);</span><br><span class="line">						if(next_location != -1) &#123;</span><br><span class="line">							if(prime[next_location] == true &amp;&amp; check[next_location] == false) &#123;</span><br><span class="line">								// next_location이 prime[] 배열에서 소수로 체크되어있는지와 check[] 배열에는 false로 체크되어있는지</span><br><span class="line">								// 조건을 확인한다. </span><br><span class="line">								// 조건에 맞으면 [prime 배열에 존재하면 ] 소수임을 뜻한다. </span><br><span class="line">								q.add(next_location);</span><br><span class="line">								dist[next_location] = dist[now_location]+1;</span><br><span class="line">								check[next_location] = true; // 소수로 check해버린다.</span><br><span class="line">							&#125; </span><br><span class="line">						&#125;</span><br><span class="line">					&#125;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">			System.out.println(dist[m]);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
                     
+                        <a
+                            href="/2018/04/05/BOJ1963/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [1963] 소수 경로"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2018/04/05/BOJ1963/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             
@@ -547,7 +420,7 @@ next = -1 -&gt; 바꿀 수 없음을 의미하며, 첫번째 자리가 0인 경�
     </article>
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -579,40 +452,17 @@ next = -1 -&gt; 바꿀 수 없음을 의미하며, 첫번째 자리가 0인 경�
 
             </div>
             
-                <div class="postShorten-content">
+                <div class="postShorten-excerpt">
                     <p>문제 : <a href="https://www.acmicpc.net/problem/10971" target="_blank" rel="noopener">https://www.acmicpc.net/problem/10971</a></p>
-<p><code>Key Point</code></p>
-<p><strong>go[i][j]</strong> = 도시 i에서 도시 j로 가기 위한 비용<br>
-어떤 도시를 방문할 지 <strong>city[]</strong> 라는 배열에 넣는다.<br>
-city[0] city[1] … city[N-1] 은 각각 도시1, 도시2, … 도시N-1을 나타냄</p>
-<p><code>Explain</code></p>
-<p>N의 범위 : 2&lt;=N&lt;=10 이므로 모든 경우를 시간 복잡도 안에 구할 수 있다.<br>
-모든 도시를 한번만 거친다고 하였므로 <code>순열</code>을 이용해서 풀 수 있다.<br>
-N = 4일 경우 순회할 수 있는 경우는 4개이다.</p>
-<p>1-&gt;2-&gt;3-&gt;4<br>
-2-&gt;3-&gt;4-&gt;1<br>
-3-&gt;4-&gt;1-&gt;2<br>
-4-&gt;1-&gt;2-&gt;3</p>
-<p>문제에서 N개의 도시를 거쳐 다시 시작했던 지점으로 돌아간다고 했으므로<br>
-1번 도시를 <strong>시작도시</strong>로 정해놓고 (N-1)!개의 경우를 구하면 된다.</p>
-<p><code>Code</code></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Exam10971</span> </span>&#123;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">// 다음 순열을 구하는 next_permutation() 함수</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">next_permutation</span><span class="params">(<span class="keyword">int</span>[] a)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">int</span> i = a.length-<span class="number">1</span>;</span><br><span class="line">		<span class="keyword">while</span>(i&gt;<span class="number">0</span> &amp;&amp; a[i-<span class="number">1</span>]&gt;=a[i]) &#123;</span><br><span class="line">			i--;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span>(i&lt;=<span class="number">0</span>) &#123;</span><br><span class="line">			<span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		<span class="keyword">int</span> j  = a.length-<span class="number">1</span>;</span><br><span class="line">		<span class="keyword">while</span>(a[j]&lt;=a[i-<span class="number">1</span>]) &#123;</span><br><span class="line">			j--;</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		<span class="keyword">int</span> tmp = a[i-<span class="number">1</span>];</span><br><span class="line">		a[i-<span class="number">1</span>] = a[j];</span><br><span class="line">		a[j] = tmp;</span><br><span class="line">		</span><br><span class="line">		j = a.length-<span class="number">1</span>;</span><br><span class="line">		<span class="keyword">while</span>(i&lt;j) &#123;</span><br><span class="line">			tmp = a[i];</span><br><span class="line">			a[i] = a[j];</span><br><span class="line">			a[j] = tmp;</span><br><span class="line">			i++;</span><br><span class="line">			j--;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> NumberFormatException, IOException </span>&#123;</span><br><span class="line">		BufferedReader bf = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(System.in));</span><br><span class="line">		<span class="keyword">int</span> test_case = Integer.parseInt(bf.readLine());</span><br><span class="line">		<span class="keyword">int</span>[][] cost = <span class="keyword">new</span> <span class="keyword">int</span>[test_case][test_case];</span><br><span class="line">		<span class="comment">// i에서 j로 가기 위한 비용</span></span><br><span class="line">		</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;test_case;i++) &#123;</span><br><span class="line">			<span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;test_case;j++) &#123;</span><br><span class="line">				StringTokenizer st = <span class="keyword">new</span> StringTokenizer(bf.readLine(), <span class="string">" "</span>);</span><br><span class="line">				cost[i][j] = Integer.parseInt(st.nextToken());</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		<span class="keyword">int</span>[] city = <span class="keyword">new</span> <span class="keyword">int</span>[test_case];</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;test_case;i++) &#123;</span><br><span class="line">			city[i] = i; <span class="comment">// 도시를 의미</span></span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		<span class="keyword">int</span> ans = Integer.MAX_VALUE;</span><br><span class="line">		</span><br><span class="line">		<span class="keyword">do</span> &#123;</span><br><span class="line">			<span class="keyword">boolean</span> possible = <span class="keyword">true</span>;</span><br><span class="line">			<span class="keyword">int</span> sum = <span class="number">0</span>;</span><br><span class="line">			<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;test_case-<span class="number">1</span>;i++) &#123;</span><br><span class="line">				<span class="keyword">if</span>(cost[city[i]][city[i+<span class="number">1</span>]] == <span class="number">0</span>) &#123;</span><br><span class="line">					possible = <span class="keyword">false</span>;</span><br><span class="line">				&#125;<span class="keyword">else</span> &#123;</span><br><span class="line">					sum += cost[city[i]][city[i+<span class="number">1</span>]];</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">			</span><br><span class="line">			<span class="keyword">if</span>(possible == <span class="keyword">true</span> &amp;&amp; cost[city[test_case-<span class="number">1</span>]][city[<span class="number">0</span>]] !=<span class="number">0</span>) &#123;</span><br><span class="line">				<span class="comment">// 다음 도시로 갈 수 있고, 처음 도시로 돌아갈 수 있다면</span></span><br><span class="line">				sum+=cost[city[test_case-<span class="number">1</span>]][city[<span class="number">0</span>]];</span><br><span class="line">				<span class="keyword">if</span>(ans&gt;sum)</span><br><span class="line">					ans = sum;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;<span class="keyword">while</span>(next_permutation(city));</span><br><span class="line">		</span><br><span class="line">		System.out.println(ans);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
                     
+                        <a
+                            href="/2018/04/03/BOJ10971/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [10971] 외판원 순회2"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2018/04/03/BOJ10971/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             
@@ -621,7 +471,7 @@ N = 4일 경우 순회할 수 있는 경우는 4개이다.</p>
     </article>
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -653,31 +503,17 @@ N = 4일 경우 순회할 수 있는 경우는 4개이다.</p>
 
             </div>
             
-                <div class="postShorten-content">
+                <div class="postShorten-excerpt">
                     <p>문제 : <a href="https://www.acmicpc.net/problem/1722" target="_blank" rel="noopener">https://www.acmicpc.net/problem/1722</a></p>
-<p><code>Key Point</code><br>
-N의 범위 : 0&lt;=N&lt;=20<br>
-그래서 next_permutation 함수를 구현해서 문제를 풀려고 하였는데, 시간초과가 발생하여서<br>
-다른 방식으로 풀어야 한다.</p>
-<p><code>Explain</code></p>
-<p><code>Code</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line">public class Exam1722 &#123;</span><br><span class="line"></span><br><span class="line">	public static void main(String[] args) &#123;</span><br><span class="line">		// TODO Auto-generated method stub</span><br><span class="line">		Scanner sc = new Scanner(System.in);</span><br><span class="line">		int num = sc.nextInt();</span><br><span class="line">		int check = sc.nextInt();</span><br><span class="line">		long[] fac = new long[num+1];</span><br><span class="line">		boolean[] c = new boolean[num+1];</span><br><span class="line">		</span><br><span class="line">		fac[0] = 1;</span><br><span class="line">		for(int i=1;i&lt;=num;i++) &#123;</span><br><span class="line">			fac[i] = fac[i-1] * i;</span><br><span class="line">		&#125;</span><br><span class="line">		// 팩토리얼 구하기</span><br><span class="line">		</span><br><span class="line">		if(check == 1) &#123;</span><br><span class="line">			long where = sc.nextLong();</span><br><span class="line">			int[] arr = new int[num];</span><br><span class="line">			for(int i=0;i&lt;num;i++) &#123;</span><br><span class="line">				for(int j=1;j&lt;=num;j++) &#123;</span><br><span class="line">					if(c[j] == true) &#123;</span><br><span class="line">						continue;</span><br><span class="line">					&#125;</span><br><span class="line">					</span><br><span class="line">					if(fac[num-i-1]&lt;where) &#123;</span><br><span class="line">						where = where - fac[num-i-1];</span><br><span class="line">					&#125;else &#123;</span><br><span class="line">						arr[i] = j;</span><br><span class="line">						c[j] = true;</span><br><span class="line">						break;</span><br><span class="line">					&#125;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">			</span><br><span class="line">			for(int i=0;i&lt;num;i++) &#123;</span><br><span class="line">				System.out.print(arr[i]+&quot; &quot;);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;else if(check == 2) &#123;</span><br><span class="line">			int[] arr = new int[num];</span><br><span class="line">			for(int i=0;i&lt;num;i++) &#123;</span><br><span class="line">				arr[i] = sc.nextInt();</span><br><span class="line">			&#125;</span><br><span class="line">			</span><br><span class="line">			long result = 0;</span><br><span class="line">			</span><br><span class="line">			for(int i=0;i&lt;num;i++) &#123;</span><br><span class="line">				for(int j=1;j&lt;arr[i];j++) &#123;</span><br><span class="line">					if(c[j] == false) &#123;</span><br><span class="line">						result = result + fac[num-i-1];</span><br><span class="line">					&#125;</span><br><span class="line">				&#125;</span><br><span class="line">				c[arr[i]] = true;</span><br><span class="line">			&#125;</span><br><span class="line">			System.out.println(result+1);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
                     
+                        <a
+                            href="/2018/03/31/BOJ1722/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [1722] 순열의 순서"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2018/03/31/BOJ1722/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             
@@ -686,7 +522,7 @@ N의 범위 : 0&lt;=N&lt;=20<br>
     </article>
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -718,31 +554,17 @@ N의 범위 : 0&lt;=N&lt;=20<br>
 
             </div>
             
-                <div class="postShorten-content">
+                <div class="postShorten-excerpt">
                     <p>문제 : <a href="https://www.acmicpc.net/problem/10974" target="_blank" rel="noopener">https://www.acmicpc.net/problem/10974</a></p>
-<p><code>Key Point</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">do&#123;</span><br><span class="line"></span><br><span class="line">&#125;while();</span><br></pre></td></tr></table></figure>
-<p>잘 사용하지 않은 반복문을 사용해서 첫번째 순열을 찍고 다음 순열을 계속해서 찍어내면 된다.<br>
-do ~ while문을 사용하지 않으면 사전순으로 첫 번째에 위치한 순열을 찍어낼 수 없으므로 do ~ while문을 사용한다.<br>
-<code>Explain</code><br>
-이전 순열과 모든 순열을 구하는 문제를 하나로 합치면 된다.</p>
-<p><code>Code</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">public class Exam10974 &#123;</span><br><span class="line">	</span><br><span class="line">	public static boolean next_permutation(int[] a) &#123;</span><br><span class="line">		int i = a.length-1;</span><br><span class="line">		while(i&gt;0 &amp;&amp; a[i-1]&gt;=a[i]) &#123;</span><br><span class="line">			i--;</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		if(i&lt;=0) &#123;</span><br><span class="line">			return false;</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		int j = a.length-1;</span><br><span class="line">		while(a[j]&lt;=a[i-1]) &#123;</span><br><span class="line">			j--;</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		int tmp = a[i-1];</span><br><span class="line">		a[i-1] = a[j];</span><br><span class="line">		a[j] = tmp;</span><br><span class="line">		</span><br><span class="line">		j = a.length-1;</span><br><span class="line">		while(i&lt;j) &#123;</span><br><span class="line">			tmp = a[i];</span><br><span class="line">			a[i] = a[j];</span><br><span class="line">			a[j] = tmp;</span><br><span class="line">			i++;</span><br><span class="line">			j--;</span><br><span class="line">		&#125;</span><br><span class="line">		return true;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	public static void main(String[] args) throws IOException &#123;</span><br><span class="line">		BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));</span><br><span class="line">		int N = Integer.parseInt(bf.readLine());</span><br><span class="line">		int[] a = new int[N];</span><br><span class="line">		for(int i=0;i&lt;N;i++) &#123;</span><br><span class="line">			a[i] = i+1;</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		do &#123;</span><br><span class="line">			for(int i=0;i&lt;N;i++) &#123;</span><br><span class="line">				System.out.print(a[i]+&quot; &quot;);</span><br><span class="line">			&#125;</span><br><span class="line">			System.out.println();</span><br><span class="line">		&#125;while(next_permutation(a));</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
                     
+                        <a
+                            href="/2018/03/31/BOJ10974/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [10974] 모든 순열"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2018/03/31/BOJ10974/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             
@@ -751,7 +573,7 @@ do ~ while문을 사용하지 않으면 사전순으로 첫 번째에 위치한 
     </article>
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -783,32 +605,17 @@ do ~ while문을 사용하지 않으면 사전순으로 첫 번째에 위치한 
 
             </div>
             
-                <div class="postShorten-content">
+                <div class="postShorten-excerpt">
                     <p>문제 : <a href="https://www.acmicpc.net/problem/10973" target="_blank" rel="noopener">https://www.acmicpc.net/problem/10973</a></p>
-<p><code>Key Point</code></p>
-<p>모든 순열을 구하는 문제를 반대로 생각해서 풀면된다.</p>
-<p><code>Explain</code><br>
-모든 순열을 구할 때와 반대로 생각하면 된다.<br>
-1 2 3 4<br>
-이 경우 이전 순열은 없으므로 <strong>-1</strong>을 출력하면 된다.</p>
-<p><code>Code</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line">public class Exam10973 &#123;</span><br><span class="line"></span><br><span class="line">	public static boolean next_permutation(int[] a) &#123;</span><br><span class="line">		int i = a.length - 1;</span><br><span class="line">		while(i&gt;0 &amp;&amp; a[i-1]&lt;=a[i]) &#123;</span><br><span class="line">			i--;</span><br><span class="line">		&#125;</span><br><span class="line">		if(i&lt;=0) &#123;</span><br><span class="line">			return false;</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		int j = a.length-1;</span><br><span class="line">		while(a[j]&gt;=a[i-1]) &#123;</span><br><span class="line">			j--;</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		int tmp = a[i-1];</span><br><span class="line">		a[i-1] = a[j];</span><br><span class="line">		a[j] = tmp;</span><br><span class="line">		</span><br><span class="line">		j = a.length-1;</span><br><span class="line">		while(i&lt;j) &#123;</span><br><span class="line">			tmp = a[i];</span><br><span class="line">			a[i] = a[j];</span><br><span class="line">			a[j] = tmp;</span><br><span class="line">			i++;</span><br><span class="line">			j--;</span><br><span class="line">		&#125;</span><br><span class="line">		return true;</span><br><span class="line">		</span><br><span class="line">	&#125;</span><br><span class="line">	public static void main(String[] args) throws IOException &#123;</span><br><span class="line">		BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));</span><br><span class="line">		</span><br><span class="line">		int N = Integer.parseInt(bf.readLine());</span><br><span class="line">		int[] arr = new int[N];</span><br><span class="line">		StringTokenizer st = new StringTokenizer(bf.readLine(), &quot; &quot;);</span><br><span class="line">		for(int i=0;i&lt;N;i++) &#123;</span><br><span class="line">			arr[i] = Integer.parseInt(st.nextToken());</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		if(next_permutation(arr)) &#123;</span><br><span class="line">			for(int i=0;i&lt;N;i++) &#123;</span><br><span class="line">				System.out.print(arr[i]+&quot; &quot;);</span><br><span class="line">			&#125;</span><br><span class="line">			System.out.println();</span><br><span class="line">		&#125;else &#123;</span><br><span class="line">			System.out.println(&quot;-1&quot;);</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
                     
+                        <a
+                            href="/2018/03/31/BOJ10973/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [10973] 이전 순열"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2018/03/31/BOJ10973/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             
@@ -817,7 +624,7 @@ do ~ while문을 사용하지 않으면 사전순으로 첫 번째에 위치한 
     </article>
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -849,49 +656,17 @@ do ~ while문을 사용하지 않으면 사전순으로 첫 번째에 위치한 
 
             </div>
             
-                <div class="postShorten-content">
+                <div class="postShorten-excerpt">
                     <p>문제 : <a href="https://www.acmicpc.net/problem/10972" target="_blank" rel="noopener">https://www.acmicpc.net/problem/10972</a></p>
-<p><code>Explain</code></p>
-<p>1부터 N까지의 수로 이루어진 순열이 있다. 이 떄, 사전순으로 다음에 오는 순열을 구해보자!<br>
-사전순으로 가장 앞서는 순열은 오름차순으로 이루어진 순열이고, 가장 마지막에 오는 순열은 내림차순으로 이루어진 순열이다.</p>
-<p>여기서 <strong>사전순</strong>이란 N=3인 경우에 사전순으로 나열하면 아래와 같다.</p>
-<p>1,2,3<br>
-1,3,2<br>
-2,1,3<br>
-2,3,1<br>
-3,1,2<br>
-3,2,1</p>
-<p>C++에서는 <code>STL</code>의 <em>next_permutation</em>을 사용하면 되지만, <strong>Java</strong>에서는 직접 구현해서 사용하면 된다.<br>
-직접 <em>next_permutation</em> 함수를 구현해서 다음 순열을 구하면 된다.</p>
-<p><code>Key Point</code></p>
-<p>순열을 사전순으로 나열했을 때, 사전순으로 다음에 오는 순열을 찾는 방법과 똑같다.</p>
-<ol>
-<li>i는 가장 오른쪽[마지막]원소부터 시작하며 a[i-1]&lt; a[i]를 만족하는 가장 큰 i를 찾는다.<br>
-즉, 순열의 마지막 수에서 끝나는 가장 긴 감소수열을 찾아야 한다.<br>
-7 2 3 6 5 4 1<br>
-여기서는 i:6, i-1:3이 된다.</li>
-<li>j&gt;=i이면서 a[j]&gt;a[i-1]를 만족하는 즉, i-1의 오른쪽에서 i-1보다 크면서 거기서 가장 작은 수를 찾는다.</li>
-<li>a[i-1]과 a[j]를 <code>swap</code>한다.</li>
-<li>a[i]부터 순열을 뒤집는다.</li>
-</ol>
-<p><code>Code</code></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Exam10972</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">next_permutation</span><span class="params">(<span class="keyword">int</span>[] a)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">int</span> i = a.length - <span class="number">1</span>;</span><br><span class="line">		<span class="keyword">while</span>(i&gt;<span class="number">0</span> &amp;&amp; a[i-<span class="number">1</span>]&gt;=a[i]) &#123;</span><br><span class="line">			i--;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span>(i&lt;=<span class="number">0</span>) &#123;</span><br><span class="line">			<span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		<span class="keyword">int</span> j = a.length-<span class="number">1</span>;</span><br><span class="line">		<span class="keyword">while</span>(a[j]&lt;=a[i-<span class="number">1</span>]) &#123;</span><br><span class="line">			j--;</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		<span class="keyword">int</span> tmp = a[i-<span class="number">1</span>];</span><br><span class="line">		a[i-<span class="number">1</span>] = a[j];</span><br><span class="line">		a[j] = tmp;</span><br><span class="line">		</span><br><span class="line">		j = a.length-<span class="number">1</span>;</span><br><span class="line">		<span class="keyword">while</span>(i&lt;j) &#123;</span><br><span class="line">			tmp = a[i];</span><br><span class="line">			a[i] = a[j];</span><br><span class="line">			a[j] = tmp;</span><br><span class="line">			i++;</span><br><span class="line">			j--;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">		</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">		BufferedReader bf = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(System.in));</span><br><span class="line">		</span><br><span class="line">		<span class="keyword">int</span> N = Integer.parseInt(bf.readLine());</span><br><span class="line">		<span class="keyword">int</span>[] arr = <span class="keyword">new</span> <span class="keyword">int</span>[N];</span><br><span class="line">		StringTokenizer st = <span class="keyword">new</span> StringTokenizer(bf.readLine(), <span class="string">" "</span>);</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;N;i++) &#123;</span><br><span class="line">			arr[i] = Integer.parseInt(st.nextToken());</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		<span class="keyword">if</span>(next_permutation(arr)) &#123;</span><br><span class="line">			<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;N;i++) &#123;</span><br><span class="line">				System.out.print(arr[i]+<span class="string">" "</span>);</span><br><span class="line">			&#125;</span><br><span class="line">			System.out.println();</span><br><span class="line">		&#125;<span class="keyword">else</span> &#123;</span><br><span class="line">			System.out.println(<span class="string">"-1"</span>);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
                     
+                        <a
+                            href="/2018/03/31/BOJ10972/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [10972] 다음 순열"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2018/03/31/BOJ10972/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             
@@ -900,7 +675,7 @@ do ~ while문을 사용하지 않으면 사전순으로 첫 번째에 위치한 
     </article>
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -932,37 +707,68 @@ do ~ while문을 사용하지 않으면 사전순으로 첫 번째에 위치한 
 
             </div>
             
-                <div class="postShorten-content">
+                <div class="postShorten-excerpt">
                     <p>문제 : <a href="https://www.acmicpc.net/problem/1107" target="_blank" rel="noopener">https://www.acmicpc.net/problem/1107</a></p>
-<p><code>key Point</code></p>
-<ol>
-<li><em>숫자</em> 누르고 <em>+/-</em> 버튼을 눌러야 한다.</li>
-<li>+와 -를 번갈아 누르는 것은 의미가 없다.</li>
-<li>문제에서 가능한 채널의 개수 : 500,000개</li>
-<li>하지만, 채널은 무한대이므로 500,000을 기준으로 0에서 +버튼을 누르는 것과 1000,000에서 -버튼을 누르는 것은 동일한 횟수를 가짐</li>
-</ol>
-<p><code>Explain</code></p>
-<p>이동할 채널 C를 구한 다음 -&gt; C에 포함되어 있는 숫자 중에서 고장난 버튼이 있는지 확인을 한다.<br>
-고장난 버튼이 없다면 |c-N|을 계산해서 +,- 버튼을 총 몇번 눌러야 하는지 계산한다.<br>
-그리고 C가 0일 경우 예외처리를 해주어야 한다.</p>
-<p>참고 : BufferedReader를 사용해 입력을 받으면 <strong>Runtime error</strong> 발생!</p>
-<p><code>Code</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line">public class Exam1107 &#123;</span><br><span class="line">	</span><br><span class="line">	static boolean[] broken = new boolean[10];</span><br><span class="line">	// 버튼이 고장났는지 확인하기 위한 배열</span><br><span class="line">	// true : 고장 false : 고장 X</span><br><span class="line">	</span><br><span class="line">	static int possible(int c) &#123;</span><br><span class="line">		// 채널의 길이를 구한다. </span><br><span class="line">		if(c == 0) &#123;</span><br><span class="line">			if(broken[0] == true) &#123;</span><br><span class="line">				return 0;</span><br><span class="line">			&#125;else &#123;</span><br><span class="line">				return 1;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		int len = 0;</span><br><span class="line">		while(c&gt;0) &#123;</span><br><span class="line">			if(broken[c%10] == true) &#123;</span><br><span class="line">				return 0;</span><br><span class="line">			&#125;</span><br><span class="line">			len+=1;</span><br><span class="line">			c = c/10;</span><br><span class="line">		&#125;</span><br><span class="line">		return len;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	public static void main(String[] args) &#123;</span><br><span class="line">		Scanner sc = new Scanner(System.in);</span><br><span class="line">		int n = sc.nextInt();</span><br><span class="line">		int m = sc.nextInt();</span><br><span class="line">		for(int i=0;i&lt;m;i++) &#123;</span><br><span class="line">			int button = sc.nextInt();</span><br><span class="line">			broken[button] = true;</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		int ans = n - 100;</span><br><span class="line">		if(ans&lt;0) &#123;</span><br><span class="line">			ans = -ans;</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		for(int i=0;i&lt;=1000000;i++) &#123;</span><br><span class="line">			int c = i;</span><br><span class="line">			int len = possible(c);</span><br><span class="line">			if(len&gt;0) &#123;</span><br><span class="line">				int press = c-n;</span><br><span class="line">				if(press&lt;0) &#123;</span><br><span class="line">					press = -press;</span><br><span class="line">				&#125;</span><br><span class="line">				if(ans&gt;press+len) &#123;</span><br><span class="line">					ans = len+press;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">			</span><br><span class="line">		&#125;</span><br><span class="line">		System.out.println(ans);</span><br><span class="line">		</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
                     
+                        <a
+                            href="/2018/03/30/BOJ1107/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [1107] 리모컨 문제"
+                        >
+                            Continue reading
+                        </a>
                         
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-right">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a
+                            class="link-unstyled"
+                            href="/2018/03/30/BOJ1476/"
+                            aria-label=": [1476] 날짜계산"
+                        >
+                            [1476] 날짜계산
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2018-03-30T18:17:29+09:00">
+	
+		    Mar 30, 2018
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/algorithm/">algorithm</a>, <a class="category-link" href="/categories/algorithm/BOJ/">BOJ</a>
 
 
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-excerpt">
+                    <p>문제 : <a href="https://www.acmicpc.net/problem/1476" target="_blank" rel="noopener">https://www.acmicpc.net/problem/1476</a></p>
                     
-                    
-                        <p>
-                            <a
-                                href="/2018/03/30/BOJ1107/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
+                        <a
+                            href="/2018/03/30/BOJ1476/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [1476] 날짜계산"
+                        >
+                            Continue reading
+                        </a>
+                        
                     
                 </div>
             

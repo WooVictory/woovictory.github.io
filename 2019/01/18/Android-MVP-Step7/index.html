@@ -6,26 +6,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="VictoryWoo">
-    <title>[안드로이드] MVP 따라하기 7 - VictoryWoo</title>
+    <title>[Android] MVP 따라하기 7 - VictoryWoo</title>
     <meta name="author" content="VictoryWoo">
     
     
         <link rel="icon" href="https://woovictory.github.io/assets/images/develop.ico">
     
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg"},"articleBody":"다음을 정리\n이전 영상을 보면서 배웠던 내용은 View -&gt; Presenter -&gt; Model -&gt; Presenter -&gt; View -&gt; Adapter을 정의하였다. 오늘은 아래 그림과 같이 View -&gt; Presenter -&gt; Model -&gt; Presenter -&gt; Adapter View/Model을 바로 갱신하게 된다. 그래서 Activity/Fragment의 View를 한 단계 더 분리하고, 이를 좀 더 편하게 관리하기 위함이다.\n\n\n생각해보기\nMVP를 공부하면서 이번에는 AdapterContract를 분리해서 그 안에 View와 Model을 만들었다. 이렇게 함으로써 View를 거쳐서 Adapter에 접근해야 하는 과정을 줄이고 Presenter에서 Adapter로 바로 update하거나 notify 하도록 함으로써 결합도를 낮출 수 있었다.\n하지만 내가 아직 이해가 잘 되지 않는 부분이 있다.\n123456789101112131415161718private lateinit var presenter : MainPresenterprivate lateinit var imageAdapter : ImageAdapteroverride fun onCreate(savedInstanceState: Bundle?) &#123;    super.onCreate(savedInstanceState)    setContentView(R.layout.activity_main)    setSupportActionBar(toolbar)    toolbar.setOnClickListener(this)    imageAdapter = ImageAdapter(this)    recycler_view.adapter = imageAdapter    presenter = MainPresenter().apply &#123;        view = this@MainActivity        imageData = SampleImageData        adapterModel = imageAdapter        adapterView = imageAdapter    &#125;\n이 부분은 View에서 Presenter를 사용하는 부분이다. View에서 데이터를 Presenter에게 요청하기 위함이다. 여기서 adapterModel = imageAdapter 이 부분이 나한테는 관건이었다.\n분명 adapterModel은 MainPresenter에 정의되어 있고 타입은 ImageAdapterContract.View이다. 그런데 imageAdapter를 대입함으로써 초기화를 진행하고 있다.\n깊게 생각해보고 구조를 손으로 그려보니 이해가 갔다. ImageAdapter는 ImageAdapterContract.View, ImageAdapterContract.Model을 상속 받고 있다. 즉, ImageAdapterContract가 부모 또는 상위가 되는 것이고 그를 상속받는 ImageAdapter는 자식 또는 서브가 되는 것이다. 그래서 자식은 상속을 통해서 부모의 메소드를 사용할 수 있는 것처럼 부모 객체에 자식 객체를 대입함으로써 자식 객체의 메소드에 접근할 수 있는 것이라고 생각을 했다.\n혹시나 나의 생각이 잘못되었다면 메일이나 댓글을 부탁한다.\n참고\n\nAndroid MVP 무작정 따라하기 - Adapter Contract 정의하기 2번째(동영상)\n\n","dateCreated":"2019-01-18T18:05:31+09:00","dateModified":"2020-10-08T22:21:31+09:00","datePublished":"2019-01-18T18:05:31+09:00","description":"다음을 정리\n이전 영상을 보면서 배웠던 내용은 View -&gt; Presenter -&gt; Model -&gt; Presenter -&gt; View -&gt; Adapter을 정의하였다. 오늘은 아래 그림과 같이 View -&gt; Presenter -&gt; Model -&gt; Presenter -&gt; Adapter View/Model을 바로 갱신하게 된다. 그래서 Activity/Fragment의 View를 한 단계 더 분리하고, 이를 좀 더 편하게 관리하기 위함이다.","headline":"[안드로이드] MVP 따라하기 7","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://woovictory.github.io/2019/01/18/Android-MVP-Step7/"},"publisher":{"@type":"Organization","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg","logo":{"@type":"ImageObject","url":"Victory.jpeg"}},"url":"https://woovictory.github.io/2019/01/18/Android-MVP-Step7/","keywords":"Android, MVP, Tip"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg"},"articleBody":"다음을 정리\n이전 영상을 보면서 배웠던 내용은 View -&gt; Presenter -&gt; Model -&gt; Presenter -&gt; View -&gt; Adapter을 정의하였다. 오늘은 아래 그림과 같이 View -&gt; Presenter -&gt; Model -&gt; Presenter -&gt; Adapter View/Model을 바로 갱신하게 된다. 그래서 Activity/Fragment의 View를 한 단계 더 분리하고, 이를 좀 더 편하게 관리하기 위함이다.\n\n\n생각해보기\nMVP를 공부하면서 이번에는 AdapterContract를 분리해서 그 안에 View와 Model을 만들었다. 이렇게 함으로써 View를 거쳐서 Adapter에 접근해야 하는 과정을 줄이고 Presenter에서 Adapter로 바로 update하거나 notify 하도록 함으로써 결합도를 낮출 수 있었다.\n하지만 내가 아직 이해가 잘 되지 않는 부분이 있다.\n123456789101112131415161718private lateinit var presenter : MainPresenterprivate lateinit var imageAdapter : ImageAdapteroverride fun onCreate(savedInstanceState: Bundle?) &#123;    super.onCreate(savedInstanceState)    setContentView(R.layout.activity_main)    setSupportActionBar(toolbar)    toolbar.setOnClickListener(this)    imageAdapter = ImageAdapter(this)    recycler_view.adapter = imageAdapter    presenter = MainPresenter().apply &#123;        view = this@MainActivity        imageData = SampleImageData        adapterModel = imageAdapter        adapterView = imageAdapter    &#125;\n이 부분은 View에서 Presenter를 사용하는 부분이다. View에서 데이터를 Presenter에게 요청하기 위함이다. 여기서 adapterModel = imageAdapter 이 부분이 나한테는 관건이었다.\n분명 adapterModel은 MainPresenter에 정의되어 있고 타입은 ImageAdapterContract.View이다. 그런데 imageAdapter를 대입함으로써 초기화를 진행하고 있다.\n깊게 생각해보고 구조를 손으로 그려보니 이해가 갔다. ImageAdapter는 ImageAdapterContract.View, ImageAdapterContract.Model을 상속 받고 있다. 즉, ImageAdapterContract가 부모 또는 상위가 되는 것이고 그를 상속받는 ImageAdapter는 자식 또는 서브가 되는 것이다. 그래서 자식은 상속을 통해서 부모의 메소드를 사용할 수 있는 것처럼 부모 객체에 자식 객체를 대입함으로써 자식 객체의 메소드에 접근할 수 있는 것이라고 생각을 했다.\n혹시나 나의 생각이 잘못되었다면 메일이나 댓글을 부탁한다.\n참고\n\nAndroid MVP 무작정 따라하기 - Adapter Contract 정의하기 2번째(동영상)\n\n","dateCreated":"2019-01-18T18:05:31+09:00","dateModified":"2020-11-18T16:12:45+09:00","datePublished":"2019-01-18T18:05:31+09:00","description":"다음을 정리\n이전 영상을 보면서 배웠던 내용은 View -&gt; Presenter -&gt; Model -&gt; Presenter -&gt; View -&gt; Adapter을 정의하였다. 오늘은 아래 그림과 같이 View -&gt; Presenter -&gt; Model -&gt; Presenter -&gt; Adapter View/Model을 바로 갱신하게 된다. 그래서 Activity/Fragment의 View를 한 단계 더 분리하고, 이를 좀 더 편하게 관리하기 위함이다.","headline":"[Android] MVP 따라하기 7","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://woovictory.github.io/2019/01/18/Android-MVP-Step7/"},"publisher":{"@type":"Organization","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg","logo":{"@type":"ImageObject","url":"Victory.jpeg"}},"url":"https://woovictory.github.io/2019/01/18/Android-MVP-Step7/","keywords":"Android, MVP, Tip"}</script>
     <meta name="description" content="다음을 정리 이전 영상을 보면서 배웠던 내용은 View -&amp;gt; Presenter -&amp;gt; Model -&amp;gt; Presenter -&amp;gt; View -&amp;gt; Adapter을 정의하였다. 오늘은 아래 그림과 같이 View -&amp;gt; Presenter -&amp;gt; Model -&amp;gt; Presenter -&amp;gt; Adapter View/Model을 바로">
 <meta name="keywords" content="Android,MVP,Tip">
 <meta property="og:type" content="blog">
-<meta property="og:title" content="[안드로이드] MVP 따라하기 7">
+<meta property="og:title" content="[Android] MVP 따라하기 7">
 <meta property="og:url" content="https://woovictory.github.io/2019/01/18/Android-MVP-Step7/index.html">
 <meta property="og:site_name" content="VictoryWoo">
 <meta property="og:description" content="다음을 정리 이전 영상을 보면서 배웠던 내용은 View -&amp;gt; Presenter -&amp;gt; Model -&amp;gt; Presenter -&amp;gt; View -&amp;gt; Adapter을 정의하였다. 오늘은 아래 그림과 같이 View -&amp;gt; Presenter -&amp;gt; Model -&amp;gt; Presenter -&amp;gt; Adapter View/Model을 바로">
 <meta property="og:locale" content="en">
 <meta property="og:image" content="https://woovictory.github.io/img/mvp_adapter_contract.png">
-<meta property="og:updated_time" content="2020-10-08T13:21:31.965Z">
+<meta property="og:updated_time" content="2020-11-18T07:12:45.807Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="[안드로이드] MVP 따라하기 7">
+<meta name="twitter:title" content="[Android] MVP 따라하기 7">
 <meta name="twitter:description" content="다음을 정리 이전 영상을 보면서 배웠던 내용은 View -&amp;gt; Presenter -&amp;gt; Model -&amp;gt; Presenter -&amp;gt; View -&amp;gt; Adapter을 정의하였다. 오늘은 아래 그림과 같이 View -&amp;gt; Presenter -&amp;gt; Model -&amp;gt; Presenter -&amp;gt; Adapter View/Model을 바로">
 <meta name="twitter:image" content="https://woovictory.github.io/img/mvp_adapter_contract.png">
     
@@ -279,7 +279,7 @@
         <div class="post-header main-content-wrap text-left">
     
         <h1 class="post-title">
-            [안드로이드] MVP 따라하기 7
+            [Android] MVP 따라하기 7
         </h1>
     
     
@@ -345,8 +345,8 @@
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
                     href="/2019/01/18/Android-MVP-Step8/"
-                    data-tooltip="[안드로이드] MVP 따라하기 8"
-                    aria-label="PREVIOUS: [안드로이드] MVP 따라하기 8"
+                    data-tooltip="[Android] MVP 따라하기 8"
+                    aria-label="PREVIOUS: [Android] MVP 따라하기 8"
                 >
                     
                         <i class="fa fa-angle-left" aria-hidden="true"></i>
@@ -359,8 +359,8 @@
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
                     href="/2019/01/18/Android-MVP-Step6/"
-                    data-tooltip="[안드로이드] MVP 따라하기 6"
-                    aria-label="NEXT: [안드로이드] MVP 따라하기 6"
+                    data-tooltip="[Android] MVP 따라하기 6"
+                    aria-label="NEXT: [Android] MVP 따라하기 6"
                 >
                     
                         <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
@@ -474,8 +474,8 @@
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
                     href="/2019/01/18/Android-MVP-Step8/"
-                    data-tooltip="[안드로이드] MVP 따라하기 8"
-                    aria-label="PREVIOUS: [안드로이드] MVP 따라하기 8"
+                    data-tooltip="[Android] MVP 따라하기 8"
+                    aria-label="PREVIOUS: [Android] MVP 따라하기 8"
                 >
                     
                         <i class="fa fa-angle-left" aria-hidden="true"></i>
@@ -488,8 +488,8 @@
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
                     href="/2019/01/18/Android-MVP-Step6/"
-                    data-tooltip="[안드로이드] MVP 따라하기 6"
-                    aria-label="NEXT: [안드로이드] MVP 따라하기 6"
+                    data-tooltip="[Android] MVP 따라하기 6"
+                    aria-label="NEXT: [Android] MVP 따라하기 6"
                 >
                     
                         <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>

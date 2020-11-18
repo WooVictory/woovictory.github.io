@@ -267,7 +267,7 @@
     <section class="postShorten-group main-content-wrap">
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -299,40 +299,20 @@
 
             </div>
             
-                <div class="postShorten-content">
+                <div class="postShorten-excerpt">
                     <ul>
 <li><a href="#%EC%86%8C%EC%88%98%EC%9D%98%ED%95%A9">소수의합</a></li>
 <li><a href="#%EC%97%90%EB%9D%BC%ED%86%A0%EC%8A%A4%ED%85%8C%EB%84%A4%EC%8A%A4%EC%9D%98%EC%B2%B4">에라토스테네스의체</a></li>
 </ul>
-<p>실력을 쌓아 알고리즘 문제를 풀려는 계획을 가지고 있었는데, <code>GoodGid</code>님께서 팩폭을 해주셔서 그 분의 커리큘럼을 따라가는 중입니다. 그래서 <strong>프로그래머스</strong>의 leve1,2 수준의 문제를 먼저 풀고 나태 지옥에 빠지지 않기 위해 푼 문제를 포스팅 할 계획입니다.</p>
-<p>level1을 못풀면 코딩 접어야 한다고 했는데, 다행히도 접을 정도는 아닌가봅니다.</p>
-<h1 id="소수의합">소수의합</h1>
-<p>어려울 줄 알았지만, 생각보다 간단한 문제입니다. N이 주어지면 2부터 N까지의 소수의 합을 구하면 됩니다. 소수의 대한 간단한 정의는 다음과 같습니다.</p>
-<blockquote>
-<p>1과 자기 자신으로만 나누어 떨어지는 수</p>
-</blockquote>
-<p>이에 반대로 1과 자기 자신이 아닌 수로 나누어 떨어지면 소수가 아니라는 생각을 했고 이를 아래와 같이 구현했습니다.</p>
-<ul>
-<li>이미 나누어 떨어짐에도 불구하고 for문을 돌면서 나머지를 계속 검사하기 때문에 <strong>break</strong> 추가해서 문제 해결!</li>
-</ul>
- <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ex1</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        BufferedReader bf = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(System.in));</span><br><span class="line">        BufferedWriter bw = <span class="keyword">new</span> BufferedWriter(<span class="keyword">new</span> OutputStreamWriter(System.out));</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> N = Integer.parseInt(bf.readLine());</span><br><span class="line">        <span class="keyword">int</span> total = <span class="number">0</span>; <span class="comment">// 소수의 합</span></span><br><span class="line">        Boolean isPrime = <span class="keyword">false</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">2</span>;i&lt;=N;i++)&#123;</span><br><span class="line">            isPrime = <span class="keyword">true</span>;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">2</span>;j&lt;i;j++) &#123;</span><br><span class="line">                <span class="comment">// 이 부분은 입력받은 수가 1과 자기 자신을 제외한 수로 나누는 과정</span></span><br><span class="line">                <span class="comment">// 이 과정에서 나누어 떨어진다는 것은 소수가 아닌 배수임을 의미</span></span><br><span class="line">                <span class="comment">// 그렇기 때문에 한번 들어오면 어차피 소수가 아님으로 낭비를 줄이고자</span></span><br><span class="line">                <span class="comment">// break문으로 빠져나옴.</span></span><br><span class="line">                <span class="keyword">if</span> (i % j == <span class="number">0</span>) &#123;</span><br><span class="line">                    isPrime = <span class="keyword">false</span>;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span>(isPrime == <span class="keyword">true</span>)</span><br><span class="line">                total += i;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        bw.write(total+<span class="string">""</span>);</span><br><span class="line">        bw.flush();</span><br><span class="line">        bw.close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="에라토스테네스의체">에라토스테네스의체</h2>
-
                     
+                        <a
+                            href="/2018/12/18/PGM14406/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [Programmers] 소수의 합"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2018/12/18/PGM14406/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             

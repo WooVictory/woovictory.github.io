@@ -6,18 +6,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="VictoryWoo">
-    <title>[안드로이드] MVP 따라하기 3 - VictoryWoo</title>
+    <title>[Android] MVP 따라하기 3 - VictoryWoo</title>
     <meta name="author" content="VictoryWoo">
     
     
         <link rel="icon" href="https://woovictory.github.io/assets/images/develop.ico">
     
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg"},"articleBody":"이번에는 Presenter와 View를 나누는 방법에 대해서 정리해보겠다.\n\nPresenter의 정의는?\n\nView : Presenter에서 전달받은 View의 이벤트이다.\nPresenter : View에서 전달된 이벤트에 대한 처리를 한다.(View와 무관한 처리만 한다.)\n\n\nPresenter를 구분하는 방법들\n\nView에 대한 interface만 정의하는 방법\n\n\ninterface View : View에 대한 interface만 정의\nPresenter : interface 정의 없이 함수를 생성하여 사용\nView : interface View를 상속받아서 정의\n\n\nGoogle architecture를 따른다.\n\n\nContract : View와 Presenter에 대한 interface을 작성\nPresenter : Contract.Presenter을 상속받아서 구현\nView : Contract.View을 상속받아서 구현\n\n\nPresenterImpl을 구현\n\n\nPresenter : Presenter와 View에 대한 interface을 구현\nPresenterImpl : Presenter을 상속받아서 구현\nView : Presenter.View을 상속받아서 구현\n\n위와 같이 구현하는 방법은 크게 3가지 정도로 나뉠 수 있다. 정답은 없고 편한 방법과 다른 사람과 공유했을 때의 장/단점을 따져서 작성하면 좋겠다.\ninterface 정의시의 장점은 처음 보는 사람이 파익이 쉽다이고, 단점은 여기나 interface 정의가 너무 많다는 것이 될 수 있습니다. 결국, View와 Presenter 간의 통신을 위한 리스너 역할의 interface view에 대한 정의는 처리가 되어야 한다.\nGoogl Architecture을 따르면\n구글에서 정의하는 Presenter의 생성 방법은 다음과 같다.\n\n\nPresenter의 생성은 View가 아닌 실제 View가 만들어지는 시점의 Activity/Fragment/View 등에서 생성을 하고 해당 Presenter에 setView를 실행한다.\nsetView가 호출되는 시점에 자기 자신(this)을 setPresenter 함수를 통해서 실제 Presenter가 사용되어야 할 View에 전달한다.\nView에서는 setPresenter을 통해서 전달받은 Presenter을 가지고 이후 loadItem, OnClickLstener 등의 처리를 한다.\n\n여기서 의문점\n\nActivity만 있는 경우는??\n\n\nActivity만 있는 경우인데 별도의 View를 생성해야 하는가?\n그냥 자기 자신이 받아도 되는가?\n\n의문에 대한 대답\n\n구글이 제안하는 방법대로라면 - 별도의 View가 있다고 생각하는게 좋겠죠? 코드의 통일성을 위해서 - 자기 자신이 받는 것은 없다고 보면 된다.\n\n정리하자면\n\n결국 자기 자신이 new Presenter을 처리할 수 있어야 한다.\n\n그럼 setPresenter라는 메소드가 필요하지 않게 된다.\n\n\nActivitiy/Fragment/View 등에서 필요한 경우 Presenter을 생성하고, 자기 자신이 사용할 수 있어야 한다.\n\n그럼 어떻게?\n위와 같은 문제점에 대한 제안된 방법은 아래와 같다.\n\n\nActivity/Fragment/View에서 필요한 Presenter을 직접 생성\nsetView를 전달한다.\nloadItem을 직접 호출\nView을 통해서 처리 결과에 다른 View을 갱신한다.\n\nContract 구현하기\n이번에는 구글의 Contract 정의를 따를 예정이므로 Contract를 구현한다. Contract를 사용하는 이유는 간단하다. View와 Presenter을 각각 정의하기 위함이며, 이해를 돕기 위한 이유도 있다.\n하나의 interface에 View/Presenter을 정의하고, 이를 각각의 View와 Presenter에서 정의하는 방식이다.\n먼저 View와 Presenter을 각각 다음과 같이 구현할 수 있다.\n12345678910public interface SampleContract&#123;    interface View&#123;        // View method    &#125;    interface Presenter&#123;        // Presenter method        void setView(View view);    &#125;&#125;\nPresenter 상속 정의\nPresenter는 다음과 같은 방식으로 구현한다.\nSampleContract.Presenter을 상속받아서 구현하며, SampleContract.View을 가지게 된다.\n1234567class SamplePresenter : SampleContract.Presenter&#123;    private var view : SampleContract.View? = null    override fun setView(view : SampleContract.View)&#123;        this.view = view    &#125;&#125;\nView 상속 정의\nSampleContract.View를 상속받으면 다음과 같이 정의해주면 된다.\n1234567891011121314151617181920class SampleActivity extends AppCompatActivity implements SampleContract.View &#123;\tprivate SampleContract.Presenter presenter;\t@Override  protected void onCreate(Bundle savedInstanceState) &#123;\t\tsuper.onCreate(savedInstanceState);    setContentView(R.layout.activity_main);\t\tpresenter = new SamplePresenter();\t\tpresenter.setView(this);\t\tpresenter.loadItem();\t&#125;\t@Override\tpublic void updateView(List&lt;Items&gt; items) &#123;\t\t// UI 갱신\t&#125;&#125;\n참고\n\nAndroid MVP 무작정 따라하기 - Presenter/View 생성하기\n\n","dateCreated":"2019-01-16T20:34:22+09:00","dateModified":"2020-10-08T22:21:39+09:00","datePublished":"2019-01-16T20:34:22+09:00","description":"이번에는 Presenter와 View를 나누는 방법에 대해서 정리해보겠다.","headline":"[안드로이드] MVP 따라하기 3","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://woovictory.github.io/2019/01/16/Android-MVP-Step3/"},"publisher":{"@type":"Organization","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg","logo":{"@type":"ImageObject","url":"Victory.jpeg"}},"url":"https://woovictory.github.io/2019/01/16/Android-MVP-Step3/","keywords":"Android, MVP, Tip"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg"},"articleBody":"이번에는 Presenter와 View를 나누는 방법에 대해서 정리해보겠다.\n\nPresenter의 정의는?\n\nView : Presenter에서 전달받은 View의 이벤트이다.\nPresenter : View에서 전달된 이벤트에 대한 처리를 한다.(View와 무관한 처리만 한다.)\n\n\nPresenter를 구분하는 방법들\n\nView에 대한 interface만 정의하는 방법\n\n\ninterface View : View에 대한 interface만 정의\nPresenter : interface 정의 없이 함수를 생성하여 사용\nView : interface View를 상속받아서 정의\n\n\nGoogle architecture를 따른다.\n\n\nContract : View와 Presenter에 대한 interface을 작성\nPresenter : Contract.Presenter을 상속받아서 구현\nView : Contract.View을 상속받아서 구현\n\n\nPresenterImpl을 구현\n\n\nPresenter : Presenter와 View에 대한 interface을 구현\nPresenterImpl : Presenter을 상속받아서 구현\nView : Presenter.View을 상속받아서 구현\n\n위와 같이 구현하는 방법은 크게 3가지 정도로 나뉠 수 있다. 정답은 없고 편한 방법과 다른 사람과 공유했을 때의 장/단점을 따져서 작성하면 좋겠다.\ninterface 정의시의 장점은 처음 보는 사람이 파익이 쉽다이고, 단점은 여기나 interface 정의가 너무 많다는 것이 될 수 있습니다. 결국, View와 Presenter 간의 통신을 위한 리스너 역할의 interface view에 대한 정의는 처리가 되어야 한다.\nGoogl Architecture을 따르면\n구글에서 정의하는 Presenter의 생성 방법은 다음과 같다.\n\n\nPresenter의 생성은 View가 아닌 실제 View가 만들어지는 시점의 Activity/Fragment/View 등에서 생성을 하고 해당 Presenter에 setView를 실행한다.\nsetView가 호출되는 시점에 자기 자신(this)을 setPresenter 함수를 통해서 실제 Presenter가 사용되어야 할 View에 전달한다.\nView에서는 setPresenter을 통해서 전달받은 Presenter을 가지고 이후 loadItem, OnClickLstener 등의 처리를 한다.\n\n여기서 의문점\n\nActivity만 있는 경우는??\n\n\nActivity만 있는 경우인데 별도의 View를 생성해야 하는가?\n그냥 자기 자신이 받아도 되는가?\n\n의문에 대한 대답\n\n구글이 제안하는 방법대로라면 - 별도의 View가 있다고 생각하는게 좋겠죠? 코드의 통일성을 위해서 - 자기 자신이 받는 것은 없다고 보면 된다.\n\n정리하자면\n\n결국 자기 자신이 new Presenter을 처리할 수 있어야 한다.\n\n그럼 setPresenter라는 메소드가 필요하지 않게 된다.\n\n\nActivitiy/Fragment/View 등에서 필요한 경우 Presenter을 생성하고, 자기 자신이 사용할 수 있어야 한다.\n\n그럼 어떻게?\n위와 같은 문제점에 대한 제안된 방법은 아래와 같다.\n\n\nActivity/Fragment/View에서 필요한 Presenter을 직접 생성\nsetView를 전달한다.\nloadItem을 직접 호출\nView을 통해서 처리 결과에 다른 View을 갱신한다.\n\nContract 구현하기\n이번에는 구글의 Contract 정의를 따를 예정이므로 Contract를 구현한다. Contract를 사용하는 이유는 간단하다. View와 Presenter을 각각 정의하기 위함이며, 이해를 돕기 위한 이유도 있다.\n하나의 interface에 View/Presenter을 정의하고, 이를 각각의 View와 Presenter에서 정의하는 방식이다.\n먼저 View와 Presenter을 각각 다음과 같이 구현할 수 있다.\n12345678910public interface SampleContract&#123;    interface View&#123;        // View method    &#125;    interface Presenter&#123;        // Presenter method        void setView(View view);    &#125;&#125;\nPresenter 상속 정의\nPresenter는 다음과 같은 방식으로 구현한다.\nSampleContract.Presenter을 상속받아서 구현하며, SampleContract.View을 가지게 된다.\n1234567class SamplePresenter : SampleContract.Presenter&#123;    private var view : SampleContract.View? = null    override fun setView(view : SampleContract.View)&#123;        this.view = view    &#125;&#125;\nView 상속 정의\nSampleContract.View를 상속받으면 다음과 같이 정의해주면 된다.\n1234567891011121314151617181920class SampleActivity extends AppCompatActivity implements SampleContract.View &#123;\tprivate SampleContract.Presenter presenter;\t@Override  protected void onCreate(Bundle savedInstanceState) &#123;\t\tsuper.onCreate(savedInstanceState);    setContentView(R.layout.activity_main);\t\tpresenter = new SamplePresenter();\t\tpresenter.setView(this);\t\tpresenter.loadItem();\t&#125;\t@Override\tpublic void updateView(List&lt;Items&gt; items) &#123;\t\t// UI 갱신\t&#125;&#125;\n참고\n\nAndroid MVP 무작정 따라하기 - Presenter/View 생성하기\n\n","dateCreated":"2019-01-16T20:34:22+09:00","dateModified":"2020-11-18T16:12:31+09:00","datePublished":"2019-01-16T20:34:22+09:00","description":"이번에는 Presenter와 View를 나누는 방법에 대해서 정리해보겠다.","headline":"[Android] MVP 따라하기 3","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://woovictory.github.io/2019/01/16/Android-MVP-Step3/"},"publisher":{"@type":"Organization","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg","logo":{"@type":"ImageObject","url":"Victory.jpeg"}},"url":"https://woovictory.github.io/2019/01/16/Android-MVP-Step3/","keywords":"Android, MVP, Tip"}</script>
     <meta name="description" content="이번에는 Presenter와 View를 나누는 방법에 대해서 정리해보겠다.">
 <meta name="keywords" content="Android,MVP,Tip">
 <meta property="og:type" content="blog">
-<meta property="og:title" content="[안드로이드] MVP 따라하기 3">
+<meta property="og:title" content="[Android] MVP 따라하기 3">
 <meta property="og:url" content="https://woovictory.github.io/2019/01/16/Android-MVP-Step3/index.html">
 <meta property="og:site_name" content="VictoryWoo">
 <meta property="og:description" content="이번에는 Presenter와 View를 나누는 방법에 대해서 정리해보겠다.">
@@ -25,9 +25,9 @@
 <meta property="og:image" content="https://woovictory.github.io/img/mvp_default.png">
 <meta property="og:image" content="https://woovictory.github.io/img/Google_Architecture.png">
 <meta property="og:image" content="https://woovictory.github.io/img/My_Architecture.png">
-<meta property="og:updated_time" content="2020-10-08T13:21:39.068Z">
+<meta property="og:updated_time" content="2020-11-18T07:12:31.618Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="[안드로이드] MVP 따라하기 3">
+<meta name="twitter:title" content="[Android] MVP 따라하기 3">
 <meta name="twitter:description" content="이번에는 Presenter와 View를 나누는 방법에 대해서 정리해보겠다.">
 <meta name="twitter:image" content="https://woovictory.github.io/img/mvp_default.png">
     
@@ -281,7 +281,7 @@
         <div class="post-header main-content-wrap text-left">
     
         <h1 class="post-title">
-            [안드로이드] MVP 따라하기 3
+            [Android] MVP 따라하기 3
         </h1>
     
     
@@ -420,8 +420,8 @@
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
                     href="/2019/01/16/Android-MVP-Step4/"
-                    data-tooltip="[안드로이드] MVP 따라하기 4"
-                    aria-label="PREVIOUS: [안드로이드] MVP 따라하기 4"
+                    data-tooltip="[Android] MVP 따라하기 4"
+                    aria-label="PREVIOUS: [Android] MVP 따라하기 4"
                 >
                     
                         <i class="fa fa-angle-left" aria-hidden="true"></i>
@@ -434,8 +434,8 @@
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
                     href="/2019/01/16/Android-MVP-Step2/"
-                    data-tooltip="[안드로이드] MVP 따라하기 2"
-                    aria-label="NEXT: [안드로이드] MVP 따라하기 2"
+                    data-tooltip="[Android] MVP 따라하기 2"
+                    aria-label="NEXT: [Android] MVP 따라하기 2"
                 >
                     
                         <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
@@ -549,8 +549,8 @@
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
                     href="/2019/01/16/Android-MVP-Step4/"
-                    data-tooltip="[안드로이드] MVP 따라하기 4"
-                    aria-label="PREVIOUS: [안드로이드] MVP 따라하기 4"
+                    data-tooltip="[Android] MVP 따라하기 4"
+                    aria-label="PREVIOUS: [Android] MVP 따라하기 4"
                 >
                     
                         <i class="fa fa-angle-left" aria-hidden="true"></i>
@@ -563,8 +563,8 @@
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
                     href="/2019/01/16/Android-MVP-Step2/"
-                    data-tooltip="[안드로이드] MVP 따라하기 2"
-                    aria-label="NEXT: [안드로이드] MVP 따라하기 2"
+                    data-tooltip="[Android] MVP 따라하기 2"
+                    aria-label="NEXT: [Android] MVP 따라하기 2"
                 >
                     
                         <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>

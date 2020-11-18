@@ -6,25 +6,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="VictoryWoo">
-    <title>[안드로이드] MVP 따라하기 5 - VictoryWoo</title>
+    <title>[Android] MVP 따라하기 5 - VictoryWoo</title>
     <meta name="author" content="VictoryWoo">
     
     
         <link rel="icon" href="https://woovictory.github.io/assets/images/develop.ico">
     
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg"},"articleBody":"이번에는 참고하는 블로그의 태환님께서 영상 올리신걸 참고하여 Presenter를 분리하는 방법을 배웠다.\n\n이를 기반으로 코틀린 주요 코드를 작성했지만, 현재(2019.01.30) 자바를 이용해 프로젝트를 진행하고 있고, MVP를 적용해야 하기 때문에 한 번 더 공부를 해서 주요 코드를 작성하고자 한다.\nJava의 주요 코드\nMainContractor 정의\nMainContractor는 View와 Presenter에 대한 인터페이스를 정의한다. 이해하는데 용이하게 하기 위한 용도이다.\n\nView 인터페이스에는 Presenter로부터 가공된 데이터를 받고 UI를 갱신하는 로직이 필요하다.\nPresenter 인터페이스에는 View로부터 이벤트를 받고 데이터를 가공하는 로직이 필요하다. 그리고 View로 데이터를 넘겨줘야 한다.\n\n123456789101112131415161718public interface MainContractor&#123;    interface View&#123;        void addItems(ArrayList&lt;ImageItem&gt; list, Boolean isClear);        void notifyAdapter();    &#125;    interface Presenter&#123;        void attachView(View view);        void detachView();        void setSampleImageData(SampleImageData data);        void loadItems(Context context, Boolean isClear);    &#125;&#125;\nMainPresenter 주요 코드\n\nPresenter는 View를 들고 있는다. View에게 가공된 데이터를 넘기기 위해서 View를 들고 있는 것이다. 또한, 여기서는 데이터를 세팅하는 과정까지 포함하고 있다.\n\n12345678910111213141516private MainContractor.View view;private SampleImageData sampleImageData;@Overridepublic void attachView(MainContractor.View view)&#123;    this.view = view;&#125;@Overridpublic void detachView()&#123;    view = null;&#125;@Overridepublic void setSampleImageData(SampleImageData sampleImageData) &#123;    this.sampleImageData = sampleImageData;&#125;\nMainPresenter의 loadItems 코드\n\n그리고 loadItems는 View에서 Presenter의 loadItems 함수를 호출한다. 그러면 Presenter에서는 이미지 데이터를 가져와서 view의 addItems와 notifyAdapter 함수를 호출함으로써 View에게 update된 데이터를 넘겨준다.\n\n123456@Override  public void loadItems(Context context, Boolean isClear) &#123;      ArrayList&lt;ImageItem&gt; imageItemList = sampleImageData.getSampleList(context, 10);      view.addItems(imageItemList, isClear);      view.notifyAdapter();  &#125;\nMainActivity 주요 코드\n\nMainActivity에서는 Presenter를 들고 있다. 그리고 Presenter의 loadItems 함수를 호출한다. 그러면 Presenter에서는 데이터를 가공하고 View에게 전달하는 로직을 가지고 있다. 아래는 loadItems()를 호출하는 부분이다.\n\n123456mMainPresenter = new MainPresenter();mMainPresenter.attachView(MainActivity.this);mMainPresenter.setSampleImageData(SampleImageData.getInstance());mMainPresenter.loadItems(this, false);\nUI 갱신을 위한 주요 코드\n\nUI 갱신을 위한 부분은 addItems()와 notifyAdapter() 부분이다. 이 함수는 결국 Presenter에 loadItems()를 호출하고 Presenter가 View에게 데이터를 전달하고 View에서 UI 갱신이 일어나는 과정이다.\n\n123456789101112@Overridepublic void addItems(ArrayList&lt;ImageItem&gt; items, boolean isClear) &#123;\t if (isClear) &#123;\t\t\t imageAdapter.clear();\t &#125;\t imageAdapter.setImageItems(items);&#125;@Overridepublic void notifyAdapter() &#123;\t imageAdapter.notifyDataSetChanged();&#125;\nKotlin의 주요 코드\nMainContract 정의\nKotlin에서 사용 가능한 interface 정의를 다음과 같이 한다. var view, var ImageData를 정의한다.\n12345678910111213141516interface MainContract&#123;    interface View&#123;        // View의 UI 갱신을 위한 메소드        fun updateItems(items : ArrayList&lt;ImageItem&gt;, isClear : Boolean)        fun notifyAdapter()    &#125;    interface Presenter&#123;        var view : view        var imageDat : SampleImageData        // Model에 접근하기 위한 메소드        fun loadItems(context : Context, isClear : Boolean)    &#125;&#125;\nMainPresenter 정의\n그리고 lateinit을 통해서 변수를 선언한다.\n자바에서는 이때 setView/getView가 자동으로 생성된다.\n12lateinit override var view: MainContract.Viewlateinit override var imageData: ImageData\n그리고 loadItems을 아래와 같이 생성한다. updateItems와 notifyAdapter을 각각 호출해주어서 UI를 갱신한다.\n123456override fun loadItems(context: Context, isClear: Boolean) &#123;    imageData.getSampleList(context, 10).let &#123;        view.updateItems(it, isClear)        view.notifyAdapter()    &#125;&#125;\nMainActivity 정의\n1234567891011privaet lateinit var presenter : MainPresenteroverride fun onCreate(savedInstancesState: Bundle?)&#123;    presenter = MainPresenter().apply&#123;        view = this@MainActivity        imageData = SampleImageData    &#125;    presenter.loadItems(context, false)&#125;\n그리고 presenter로부터 View에 대한 콜백을 다음과 같이 처리한다.\n123456789101112override fun updateItems(items: ArrayList&lt;ImageItem&gt;, isClear: Boolean) &#123;    imageAdapter?.apply &#123;        if (isClear) &#123;            imageList?.clear()        &#125;        imageList = items    &#125;&#125;override fun notifyAdapter() &#123;    imageAdapter?.notifyDataSetChanged()&#125;\n느낀점\nMVP로 나아가기 위해서 조금씩 걸어가고 있다. 하지만 아직 어려운 건 사실이다. 익숙해지기 위해서는 더 많이 코드를 짜보고 생각을 해봐야 할 것 같다.\nMVC가 보기에는 편하다. 몇 줄 적지 않았던 코드는 길게 늘어났고, 클래스도 많아졌다. 아직 MVP라고 하기엔 거리가 멀지만 단순히 생각해보면 Activity에서 Model을 분리했다?? 라는데 아니라고 보일지도 모른다. 그래도 최소한 View/Model 간의 결합도를 낮출 수 있고, View/Model에 대한 테스트도 가능하다.\n참고\n\nAndroid MVP 무작정 따라하기 - Presenter 분리하기(동영상)\n\n","dateCreated":"2019-01-17T09:32:11+09:00","dateModified":"2020-10-08T22:21:35+09:00","datePublished":"2019-01-17T09:32:11+09:00","description":"이번에는 참고하는 블로그의 태환님께서 영상 올리신걸 참고하여 Presenter를 분리하는 방법을 배웠다.","headline":"[안드로이드] MVP 따라하기 5","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://woovictory.github.io/2019/01/17/Android-MVP-Step5/"},"publisher":{"@type":"Organization","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg","logo":{"@type":"ImageObject","url":"Victory.jpeg"}},"url":"https://woovictory.github.io/2019/01/17/Android-MVP-Step5/","keywords":"Android, MVP, Tip"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg"},"articleBody":"이번에는 참고하는 블로그의 태환님께서 영상 올리신걸 참고하여 Presenter를 분리하는 방법을 배웠다.\n\n이를 기반으로 코틀린 주요 코드를 작성했지만, 현재(2019.01.30) 자바를 이용해 프로젝트를 진행하고 있고, MVP를 적용해야 하기 때문에 한 번 더 공부를 해서 주요 코드를 작성하고자 한다.\nJava의 주요 코드\nMainContractor 정의\nMainContractor는 View와 Presenter에 대한 인터페이스를 정의한다. 이해하는데 용이하게 하기 위한 용도이다.\n\nView 인터페이스에는 Presenter로부터 가공된 데이터를 받고 UI를 갱신하는 로직이 필요하다.\nPresenter 인터페이스에는 View로부터 이벤트를 받고 데이터를 가공하는 로직이 필요하다. 그리고 View로 데이터를 넘겨줘야 한다.\n\n123456789101112131415161718public interface MainContractor&#123;    interface View&#123;        void addItems(ArrayList&lt;ImageItem&gt; list, Boolean isClear);        void notifyAdapter();    &#125;    interface Presenter&#123;        void attachView(View view);        void detachView();        void setSampleImageData(SampleImageData data);        void loadItems(Context context, Boolean isClear);    &#125;&#125;\nMainPresenter 주요 코드\n\nPresenter는 View를 들고 있는다. View에게 가공된 데이터를 넘기기 위해서 View를 들고 있는 것이다. 또한, 여기서는 데이터를 세팅하는 과정까지 포함하고 있다.\n\n12345678910111213141516private MainContractor.View view;private SampleImageData sampleImageData;@Overridepublic void attachView(MainContractor.View view)&#123;    this.view = view;&#125;@Overridpublic void detachView()&#123;    view = null;&#125;@Overridepublic void setSampleImageData(SampleImageData sampleImageData) &#123;    this.sampleImageData = sampleImageData;&#125;\nMainPresenter의 loadItems 코드\n\n그리고 loadItems는 View에서 Presenter의 loadItems 함수를 호출한다. 그러면 Presenter에서는 이미지 데이터를 가져와서 view의 addItems와 notifyAdapter 함수를 호출함으로써 View에게 update된 데이터를 넘겨준다.\n\n123456@Override  public void loadItems(Context context, Boolean isClear) &#123;      ArrayList&lt;ImageItem&gt; imageItemList = sampleImageData.getSampleList(context, 10);      view.addItems(imageItemList, isClear);      view.notifyAdapter();  &#125;\nMainActivity 주요 코드\n\nMainActivity에서는 Presenter를 들고 있다. 그리고 Presenter의 loadItems 함수를 호출한다. 그러면 Presenter에서는 데이터를 가공하고 View에게 전달하는 로직을 가지고 있다. 아래는 loadItems()를 호출하는 부분이다.\n\n123456mMainPresenter = new MainPresenter();mMainPresenter.attachView(MainActivity.this);mMainPresenter.setSampleImageData(SampleImageData.getInstance());mMainPresenter.loadItems(this, false);\nUI 갱신을 위한 주요 코드\n\nUI 갱신을 위한 부분은 addItems()와 notifyAdapter() 부분이다. 이 함수는 결국 Presenter에 loadItems()를 호출하고 Presenter가 View에게 데이터를 전달하고 View에서 UI 갱신이 일어나는 과정이다.\n\n123456789101112@Overridepublic void addItems(ArrayList&lt;ImageItem&gt; items, boolean isClear) &#123;\t if (isClear) &#123;\t\t\t imageAdapter.clear();\t &#125;\t imageAdapter.setImageItems(items);&#125;@Overridepublic void notifyAdapter() &#123;\t imageAdapter.notifyDataSetChanged();&#125;\nKotlin의 주요 코드\nMainContract 정의\nKotlin에서 사용 가능한 interface 정의를 다음과 같이 한다. var view, var ImageData를 정의한다.\n12345678910111213141516interface MainContract&#123;    interface View&#123;        // View의 UI 갱신을 위한 메소드        fun updateItems(items : ArrayList&lt;ImageItem&gt;, isClear : Boolean)        fun notifyAdapter()    &#125;    interface Presenter&#123;        var view : view        var imageDat : SampleImageData        // Model에 접근하기 위한 메소드        fun loadItems(context : Context, isClear : Boolean)    &#125;&#125;\nMainPresenter 정의\n그리고 lateinit을 통해서 변수를 선언한다.\n자바에서는 이때 setView/getView가 자동으로 생성된다.\n12lateinit override var view: MainContract.Viewlateinit override var imageData: ImageData\n그리고 loadItems을 아래와 같이 생성한다. updateItems와 notifyAdapter을 각각 호출해주어서 UI를 갱신한다.\n123456override fun loadItems(context: Context, isClear: Boolean) &#123;    imageData.getSampleList(context, 10).let &#123;        view.updateItems(it, isClear)        view.notifyAdapter()    &#125;&#125;\nMainActivity 정의\n1234567891011privaet lateinit var presenter : MainPresenteroverride fun onCreate(savedInstancesState: Bundle?)&#123;    presenter = MainPresenter().apply&#123;        view = this@MainActivity        imageData = SampleImageData    &#125;    presenter.loadItems(context, false)&#125;\n그리고 presenter로부터 View에 대한 콜백을 다음과 같이 처리한다.\n123456789101112override fun updateItems(items: ArrayList&lt;ImageItem&gt;, isClear: Boolean) &#123;    imageAdapter?.apply &#123;        if (isClear) &#123;            imageList?.clear()        &#125;        imageList = items    &#125;&#125;override fun notifyAdapter() &#123;    imageAdapter?.notifyDataSetChanged()&#125;\n느낀점\nMVP로 나아가기 위해서 조금씩 걸어가고 있다. 하지만 아직 어려운 건 사실이다. 익숙해지기 위해서는 더 많이 코드를 짜보고 생각을 해봐야 할 것 같다.\nMVC가 보기에는 편하다. 몇 줄 적지 않았던 코드는 길게 늘어났고, 클래스도 많아졌다. 아직 MVP라고 하기엔 거리가 멀지만 단순히 생각해보면 Activity에서 Model을 분리했다?? 라는데 아니라고 보일지도 모른다. 그래도 최소한 View/Model 간의 결합도를 낮출 수 있고, View/Model에 대한 테스트도 가능하다.\n참고\n\nAndroid MVP 무작정 따라하기 - Presenter 분리하기(동영상)\n\n","dateCreated":"2019-01-17T09:32:11+09:00","dateModified":"2020-11-18T16:12:37+09:00","datePublished":"2019-01-17T09:32:11+09:00","description":"이번에는 참고하는 블로그의 태환님께서 영상 올리신걸 참고하여 Presenter를 분리하는 방법을 배웠다.","headline":"[Android] MVP 따라하기 5","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://woovictory.github.io/2019/01/17/Android-MVP-Step5/"},"publisher":{"@type":"Organization","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg","logo":{"@type":"ImageObject","url":"Victory.jpeg"}},"url":"https://woovictory.github.io/2019/01/17/Android-MVP-Step5/","keywords":"Android, MVP, Tip"}</script>
     <meta name="description" content="이번에는 참고하는 블로그의 태환님께서 영상 올리신걸 참고하여 Presenter를 분리하는 방법을 배웠다.">
 <meta name="keywords" content="Android,MVP,Tip">
 <meta property="og:type" content="blog">
-<meta property="og:title" content="[안드로이드] MVP 따라하기 5">
+<meta property="og:title" content="[Android] MVP 따라하기 5">
 <meta property="og:url" content="https://woovictory.github.io/2019/01/17/Android-MVP-Step5/index.html">
 <meta property="og:site_name" content="VictoryWoo">
 <meta property="og:description" content="이번에는 참고하는 블로그의 태환님께서 영상 올리신걸 참고하여 Presenter를 분리하는 방법을 배웠다.">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2020-10-08T13:21:35.795Z">
+<meta property="og:updated_time" content="2020-11-18T07:12:37.002Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="[안드로이드] MVP 따라하기 5">
+<meta name="twitter:title" content="[Android] MVP 따라하기 5">
 <meta name="twitter:description" content="이번에는 참고하는 블로그의 태환님께서 영상 올리신걸 참고하여 Presenter를 분리하는 방법을 배웠다.">
     
     
@@ -277,7 +277,7 @@
         <div class="post-header main-content-wrap text-left">
     
         <h1 class="post-title">
-            [안드로이드] MVP 따라하기 5
+            [Android] MVP 따라하기 5
         </h1>
     
     
@@ -379,8 +379,8 @@ Kotlin에서 사용 가능한 interface 정의를 다음과 같이 한다. var v
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
                     href="/2019/01/18/Android-MVP-Step6/"
-                    data-tooltip="[안드로이드] MVP 따라하기 6"
-                    aria-label="PREVIOUS: [안드로이드] MVP 따라하기 6"
+                    data-tooltip="[Android] MVP 따라하기 6"
+                    aria-label="PREVIOUS: [Android] MVP 따라하기 6"
                 >
                     
                         <i class="fa fa-angle-left" aria-hidden="true"></i>
@@ -393,8 +393,8 @@ Kotlin에서 사용 가능한 interface 정의를 다음과 같이 한다. var v
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
                     href="/2019/01/16/Android-MVP-Step4/"
-                    data-tooltip="[안드로이드] MVP 따라하기 4"
-                    aria-label="NEXT: [안드로이드] MVP 따라하기 4"
+                    data-tooltip="[Android] MVP 따라하기 4"
+                    aria-label="NEXT: [Android] MVP 따라하기 4"
                 >
                     
                         <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
@@ -508,8 +508,8 @@ Kotlin에서 사용 가능한 interface 정의를 다음과 같이 한다. var v
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
                     href="/2019/01/18/Android-MVP-Step6/"
-                    data-tooltip="[안드로이드] MVP 따라하기 6"
-                    aria-label="PREVIOUS: [안드로이드] MVP 따라하기 6"
+                    data-tooltip="[Android] MVP 따라하기 6"
+                    aria-label="PREVIOUS: [Android] MVP 따라하기 6"
                 >
                     
                         <i class="fa fa-angle-left" aria-hidden="true"></i>
@@ -522,8 +522,8 @@ Kotlin에서 사용 가능한 interface 정의를 다음과 같이 한다. var v
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
                     href="/2019/01/16/Android-MVP-Step4/"
-                    data-tooltip="[안드로이드] MVP 따라하기 4"
-                    aria-label="NEXT: [안드로이드] MVP 따라하기 4"
+                    data-tooltip="[Android] MVP 따라하기 4"
+                    aria-label="NEXT: [Android] MVP 따라하기 4"
                 >
                     
                         <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>

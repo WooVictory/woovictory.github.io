@@ -267,7 +267,7 @@
     <section class="postShorten-group main-content-wrap">
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -299,67 +299,18 @@
 
             </div>
             
-                <div class="postShorten-content">
-                    <h2 id="di">DI</h2>
+                <div class="postShorten-excerpt">
+                    <h2>DI</h2>
 <p><code>Dagger</code>는 DI 프레임워크이다 DI는 Dependency Injection(의존성 주입)의 준말이다. 의존성 주입이란 외부에서 의존 객체를 생성하여 넘겨주는 것을 의미한다. 예를 들어 A class가 B class를 의존할 때 B Object를 A가 직접 생성하지 않고 외부에서 생서아여 넘겨주면 의존성을 주입했다고 할 수 있다.</p>
-<img src="/img/di_sample.jpeg" width="500" height="200">
-<p>왼쪽은 A에서 B,C를 생성하는 일반적인 의존 형태이고, 오른쪽은 외부에서 의존 객체를 생성하고 주입하는 형태이다.</p>
-<p>DI를 위해서는 객체를 생성하고 넘겨주는 외부의 뭔가가 필요하다. 이것이 DI 프레임워크가 하는 일이다. 외부에서 넘겨주는 무언가를 스프링에서는 컨테이너, <code>Dagger</code>에서는 <strong>Component</strong>와 <strong>Module</strong>이라고 부른다. DI는 이렇게 의존성이 있는 객체의 제어를 외부 Framework로 올리면서 IoC 개념을 구현한다. IoC는 Inversion of Control(제어의 역전)의 준말이다.</p>
-<img src="/img/di_sample2.jpeg" width="500" height="200">
-<p>외부 컨테이너가 객체를 생성하고 주입한다. 제어가 거꾸로 가는 개념을 IoC라고 하고, DI는 IoC를 구현하는 방법 중 하나이다.</p>
-<p><strong>DI는 왜 필요할까?</strong></p>
-<ol>
-<li>의존성 파라미터를 생성자에 작성하지 않아도 되므로 보일러 플레이트 코드를 줄일 수 있다. 이를 통해서 유연한 프로그래밍이 가능하다.</li>
-<li>Interface에 구현체를 쉽게 교체하면서 상황에 따라 적절한 행동을 정의할 수 있다. 이것은 특히 Mock 객체와 실제 객체를 바꿔가며 테스트할 때 유용하다. 즉, 테스트 가능한 코드를 작성할 수 있다. 이로 인해 재사용성이 높아지고 유지보수가 용이해진다.</li>
-</ol>
-<p>DI를 구현하는 방법은 다음과 같다.</p>
-<ol>
-<li>직접 Provider를 구성해 코드로 작성하는 방법</li>
-<li>라이브러리로 넘겨서 처리하도록 하는 방법
-<ul>
-<li>Dagger2</li>
-<li>koin</li>
-</ul>
-</li>
-</ol>
-<h2 id="dagger-이해하기">Dagger 이해하기</h2>
-<p><strong>1. Inject</strong></p>
-<p>의존성 주입을 요청한다. <code>Inject</code> 어노테이션으로 주입을 요청하면 연결된 Component가 Module로부터 객체를 생성하여 넘겨준다.</p>
-<p><strong>2. Component</strong></p>
-<p>연결된 Module을 이용하여 의존성 객체를 생성하고, Inject로 요청받은 인스턴스에 생성한 객체를 주입한다. 의존성을 요청받고 주입하는 Dagger의 주된 역할을 수행한다.</p>
-<p><strong>3. Subcomponent</strong></p>
-<p>Component는 계층 관계를 만들 수 있다. Subcomponent는 Inner Class 방식의 하위 계층 Component이다. Sub의 Sub도 가능하다. Subcomponent는 Dagger의 중요한 컨셉인 그래프를 형성한다. Inject로 주입을 요청받으면 Subcomponent에서 먼저 의존성을 검색하고, 없으면 부모로 올라가면서 검색한다.</p>
-<p><strong>4. Module</strong></p>
-<p>Component에 연결되어 의존성 객체를 생성한다. 생성 후 Scope에 따라 관리도 한다.</p>
-<p><strong>5. Scope</strong></p>
-<p>생성된 객체의 Lifecycle 범위이다. 안드로이드에서는 주로 PerActivity, PerFragment 등으로 화면의 생명주기와 맞추어 사용한다. Module에서 Scope을 보고 객체를 관리한다.</p>
-<p>위의 5가지 개념을 따라 Dagger가 의존성을 주입하는 플로우는 다음과 같다.</p>
-<img src="/img/di_flow.png" width="700" height="200">
-<img src="/img/di_flow2.png" width="700" height="200">
-<ul>
-<li>Inject로 의존성을 요청하면 Subcomponent에서부터 Module을 검색하고, Scope에 따라 객체를 가져와 주입한다.</li>
-</ul>
-<p>koin과 관련된 글은 다음의 포스팅을 참고하면 된다.</p>
-<h2 id="참고">참고</h2>
-<ul>
-<li><a href="https://medium.com/@maryangmin/di-%EA%B8%B0%EB%B3%B8%EA%B0%9C%EB%85%90%EB%B6%80%ED%84%B0-%EC%82%AC%EC%9A%A9%EB%B2%95%EA%B9%8C%EC%A7%80-dagger2-%EC%8B%9C%EC%9E%91%ED%95%98%EA%B8%B0-3332bb93b4b9" target="_blank" rel="noopener">DI 기본개념부터 사용법까지, Dagger2 시작하기</a></li>
-</ul>
-
                     
+                        <a
+                            href="/2019/07/08/DI/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [Android] DI에 대해서"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2019/07/08/DI/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             

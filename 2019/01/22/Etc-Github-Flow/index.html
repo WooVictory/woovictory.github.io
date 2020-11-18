@@ -6,18 +6,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="VictoryWoo">
-    <title>2일차 [Git] Github-Flow - VictoryWoo</title>
+    <title>[Git] Github-Flow - VictoryWoo</title>
     <meta name="author" content="VictoryWoo">
     
     
         <link rel="icon" href="https://woovictory.github.io/assets/images/develop.ico">
     
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg"},"articleBody":"어제 Git-Flow를 공부해보았는데, 헷갈리는 부분이 너무 많다. 그래서 Github-Flow 방법에 대해서도 헷갈리는 부분이 많아 잘 정리된 블로그를 보고 공부했다.\n&quot;사전 과제 Repository를 fork 떠서 수정하고 PR 날려주세요.&quot;라는 메일을 받았다. 나는 Github을 사용하고 이런 비슷한 방식으로 프로젝트를 진행해왔지만 이게 이 방식이 맞는지도 모르고 있었다.\nPull Request\n협업을 하다보면 Pull Request를 보내서 코드 리뷰를 거쳐 원격 저장소에 merge가 된다. 분명 중요하다. Pull Request를 위해서 아래와 같은 절차를 거쳤다.\n\nFork\nclone, remote 설정\nbranch 생성(안할 수도 있음)\n수정 작업 후 add, commit, push\nPull Reqeust 생성\n코드 리뷰, Merge Pull Request\nMerge 이후 branch 삭제 및 동기화\n\nFork\n\n타켓 프로젝트의 저장소를 자신의 저장소로 Fork 한다.\n\n\nClone, remote 설정\n\nfork로 생성한 본인 계정의 저장소에서 clone or download 버튼을 누르고 표시되는 url을 복사한다.\n\n\n\nMac 기준에서 터미널을 켠다.\n자신의 컴퓨터에서 작업을 하기 위해서 지정한 디렉토리로 가서 Fork한 저장소를 로컬에 Clone하기 위해서 아래의 명령어를 실행한다.\n\n1git clone https://github.com/wayhome25/blog.github.io.git\n\n이제, 로컬 저장소에 원격 저장소를 추가한다. 위 작업과 동일하게 github 저장소에서 clone or download 메뉴를 통해서 확인한 url을 사용한다.\n\n원본 프로젝트 저장소 (직접 추가 필요)\nfork한 로컬 프로젝트 (origin이라는 별명으로 기본으로 추가되어 있다. 따로 추가할 필요 없음)\n\n\n\n123456# 원본 프로젝트 저장소를 원격 저장소로 추가# 보통 upstream 사용$ git remote add real-blog(별명) https://github.com/원본계정/blog.github.io.git# 원격 저장소 설정 현황 확인방법$ git remote -v\nbranch 생성\n\n자신의 로컬 컴퓨터에서 코드를 추가하는 작업은 branch를 만들어서 진행한다.\n\n개발을 하다보면 코드를 여러 개로 복사해야 하는 일이 자주 생긴다. 코드를 통째로 복사하고 나서 원래 코드와는 상관없이 독립적으로 개발을 진행할 수 있는데, 이렇게 독립적으로 개발하는 것이 브랜치다.\n12345678910git branch develop mastergit checkout develop# 하나의 명령어로 축약 가능git checkout -b develop# 이제 2개의 브랜치가 존재한다.git branch* masterdevelop\n수정 작업 후 add, commit, push\n\n자신이 사용하는 코드 편집 툴을 활용하여 수정 작업을 진행한다.\n작업이 완료되면 add, commit, push를 통해서 자신의 github repository(origin)에 수정사항을 반영한다.\n\n12345# add, commit 같이 수행git commit -a -m &quot;Modify code&quot;# pushgit push origin develop\n\npush 진행 시에 branch 이름을 명시해주어야 한다.\n위의 명령어는 develop 브랜치의 수정 내역을 origin으로 푸시한다는 것이다.\n\nPull Request 생성\n\npush 완료 후 본인 계정의 github 저장소에 들어오면 Compare &amp; pull request 버튼이 활성화 되어 있다.\n해당 버튼을 선택하여 메시지를 작성하고 PR을 생성한다.(날린다.)\n\n\n\n코드 리뷰, Merge Pull Request\n\nPR을 받은 원본 저장소 관리자는 코드 변경 내역을 확인하고 Merge 여부를 결정하기 전에 Review를 남긴다.\n팀의 정책에 따라 Review가 1개 이상이면 Merge를 하는 등의 조건이 있을 수 있다.\n\nMerge 이후 동기화 및 branch 삭제\n\n원본 저장소에 Merge가 완료되면 로컬 코드와 원본 저장소의 코드를 동기화 한다.\n작업하던 로컬의 branch를 삭제한다.\n\n12345678# 코드 동기화git pull real-blog(remote 별명)## exgit pull upstream# 브랜치 삭제(develop 브랜치 삭제)git branch -d develop(브랜치 별명)\n\n나중에 추가로 작업할 일이 있으면 git pull real-blog명령을 통해 원본 저장소와 동기화를 먼저 진행하고, 세번째부터 일곱번째 작업을 반복한다.\n\n느낀 점\n지금까지 내가 했던 방식이 Github-Flow 방법이라는 것을 알게 되었다. 원격 저장소를 자신의 개인 저장소로 fork 하는 방식으로 간단하게 사용할 수 있는 방법이다. 어제 공부했던 브랜치 전략은 Git-Flow로 브랜치를 나누어서 작업을 진행하는 것인데, 조금 더 복잡하다.\n참고\n\ngit 초보를 위한 풀리퀘스트(pull request) 방법\n\n","dateCreated":"2019-01-22T17:00:40+09:00","dateModified":"2020-05-12T20:31:14+09:00","datePublished":"2019-01-22T17:00:40+09:00","description":"","headline":"2일차 [Git] Github-Flow","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://woovictory.github.io/2019/01/22/Etc-Github-Flow/"},"publisher":{"@type":"Organization","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg","logo":{"@type":"ImageObject","url":"Victory.jpeg"}},"url":"https://woovictory.github.io/2019/01/22/Etc-Github-Flow/","keywords":"etc"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg"},"articleBody":"어제 Git-Flow를 공부해보았는데, 헷갈리는 부분이 너무 많다. 그래서 Github-Flow 방법에 대해서도 헷갈리는 부분이 많아 잘 정리된 블로그를 보고 공부했다.\n&quot;사전 과제 Repository를 fork 떠서 수정하고 PR 날려주세요.&quot;라는 메일을 받았다. 나는 Github을 사용하고 이런 비슷한 방식으로 프로젝트를 진행해왔지만 이게 이 방식이 맞는지도 모르고 있었다.\nPull Request\n협업을 하다보면 Pull Request를 보내서 코드 리뷰를 거쳐 원격 저장소에 merge가 된다. 분명 중요하다. Pull Request를 위해서 아래와 같은 절차를 거쳤다.\n\nFork\nclone, remote 설정\nbranch 생성(안할 수도 있음)\n수정 작업 후 add, commit, push\nPull Reqeust 생성\n코드 리뷰, Merge Pull Request\nMerge 이후 branch 삭제 및 동기화\n\nFork\n\n타켓 프로젝트의 저장소를 자신의 저장소로 Fork 한다.\n\n\nClone, remote 설정\n\nfork로 생성한 본인 계정의 저장소에서 clone or download 버튼을 누르고 표시되는 url을 복사한다.\n\n\n\nMac 기준에서 터미널을 켠다.\n자신의 컴퓨터에서 작업을 하기 위해서 지정한 디렉토리로 가서 Fork한 저장소를 로컬에 Clone하기 위해서 아래의 명령어를 실행한다.\n\n1git clone https://github.com/wayhome25/blog.github.io.git\n\n이제, 로컬 저장소에 원격 저장소를 추가한다. 위 작업과 동일하게 github 저장소에서 clone or download 메뉴를 통해서 확인한 url을 사용한다.\n\n원본 프로젝트 저장소 (직접 추가 필요)\nfork한 로컬 프로젝트 (origin이라는 별명으로 기본으로 추가되어 있다. 따로 추가할 필요 없음)\n\n\n\n123456# 원본 프로젝트 저장소를 원격 저장소로 추가# 보통 upstream 사용$ git remote add real-blog(별명) https://github.com/원본계정/blog.github.io.git# 원격 저장소 설정 현황 확인방법$ git remote -v\nbranch 생성\n\n자신의 로컬 컴퓨터에서 코드를 추가하는 작업은 branch를 만들어서 진행한다.\n\n개발을 하다보면 코드를 여러 개로 복사해야 하는 일이 자주 생긴다. 코드를 통째로 복사하고 나서 원래 코드와는 상관없이 독립적으로 개발을 진행할 수 있는데, 이렇게 독립적으로 개발하는 것이 브랜치다.\n12345678910git branch develop mastergit checkout develop# 하나의 명령어로 축약 가능git checkout -b develop# 이제 2개의 브랜치가 존재한다.git branch* masterdevelop\n수정 작업 후 add, commit, push\n\n자신이 사용하는 코드 편집 툴을 활용하여 수정 작업을 진행한다.\n작업이 완료되면 add, commit, push를 통해서 자신의 github repository(origin)에 수정사항을 반영한다.\n\n12345# add, commit 같이 수행git commit -a -m &quot;Modify code&quot;# pushgit push origin develop\n\npush 진행 시에 branch 이름을 명시해주어야 한다.\n위의 명령어는 develop 브랜치의 수정 내역을 origin으로 푸시한다는 것이다.\n\nPull Request 생성\n\npush 완료 후 본인 계정의 github 저장소에 들어오면 Compare &amp; pull request 버튼이 활성화 되어 있다.\n해당 버튼을 선택하여 메시지를 작성하고 PR을 생성한다.(날린다.)\n\n\n\n코드 리뷰, Merge Pull Request\n\nPR을 받은 원본 저장소 관리자는 코드 변경 내역을 확인하고 Merge 여부를 결정하기 전에 Review를 남긴다.\n팀의 정책에 따라 Review가 1개 이상이면 Merge를 하는 등의 조건이 있을 수 있다.\n\nMerge 이후 동기화 및 branch 삭제\n\n원본 저장소에 Merge가 완료되면 로컬 코드와 원본 저장소의 코드를 동기화 한다.\n작업하던 로컬의 branch를 삭제한다.\n\n12345678# 코드 동기화git pull real-blog(remote 별명)## exgit pull upstream# 브랜치 삭제(develop 브랜치 삭제)git branch -d develop(브랜치 별명)\n\n나중에 추가로 작업할 일이 있으면 git pull real-blog명령을 통해 원본 저장소와 동기화를 먼저 진행하고, 세번째부터 일곱번째 작업을 반복한다.\n\n느낀 점\n지금까지 내가 했던 방식이 Github-Flow 방법이라는 것을 알게 되었다. 원격 저장소를 자신의 개인 저장소로 fork 하는 방식으로 간단하게 사용할 수 있는 방법이다. 어제 공부했던 브랜치 전략은 Git-Flow로 브랜치를 나누어서 작업을 진행하는 것인데, 조금 더 복잡하다.\n참고\n\ngit 초보를 위한 풀리퀘스트(pull request) 방법\n\n","dateCreated":"2019-01-22T17:00:40+09:00","dateModified":"2020-11-18T16:10:56+09:00","datePublished":"2019-01-22T17:00:40+09:00","description":"","headline":"[Git] Github-Flow","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://woovictory.github.io/2019/01/22/Etc-Github-Flow/"},"publisher":{"@type":"Organization","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg","logo":{"@type":"ImageObject","url":"Victory.jpeg"}},"url":"https://woovictory.github.io/2019/01/22/Etc-Github-Flow/","keywords":"etc, 2일차"}</script>
     <meta name="description" content="어제 Git-Flow를 공부해보았는데, 헷갈리는 부분이 너무 많다. 그래서 Github-Flow 방법에 대해서도 헷갈리는 부분이 많아 잘 정리된 블로그를 보고 공부했다. &amp;quot;사전 과제 Repository를 fork 떠서 수정하고 PR 날려주세요.&amp;quot;라는 메일을 받았다. 나는 Github을 사용하고 이런 비슷한 방식으로 프로젝트를 진행해왔지만">
-<meta name="keywords" content="etc">
+<meta name="keywords" content="etc,2일차">
 <meta property="og:type" content="blog">
-<meta property="og:title" content="2일차 [Git] Github-Flow">
+<meta property="og:title" content="[Git] Github-Flow">
 <meta property="og:url" content="https://woovictory.github.io/2019/01/22/Etc-Github-Flow/index.html">
 <meta property="og:site_name" content="VictoryWoo">
 <meta property="og:description" content="어제 Git-Flow를 공부해보았는데, 헷갈리는 부분이 너무 많다. 그래서 Github-Flow 방법에 대해서도 헷갈리는 부분이 많아 잘 정리된 블로그를 보고 공부했다. &amp;quot;사전 과제 Repository를 fork 떠서 수정하고 PR 날려주세요.&amp;quot;라는 메일을 받았다. 나는 Github을 사용하고 이런 비슷한 방식으로 프로젝트를 진행해왔지만">
@@ -26,9 +26,9 @@
 <meta property="og:image" content="https://woovictory.github.io/img/git_clone.png">
 <meta property="og:image" content="https://woovictory.github.io/img/git_PR1.png">
 <meta property="og:image" content="https://woovictory.github.io/img/git_PR2.png">
-<meta property="og:updated_time" content="2020-05-12T11:31:14.892Z">
+<meta property="og:updated_time" content="2020-11-18T07:10:56.889Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="2일차 [Git] Github-Flow">
+<meta name="twitter:title" content="[Git] Github-Flow">
 <meta name="twitter:description" content="어제 Git-Flow를 공부해보았는데, 헷갈리는 부분이 너무 많다. 그래서 Github-Flow 방법에 대해서도 헷갈리는 부분이 많아 잘 정리된 블로그를 보고 공부했다. &amp;quot;사전 과제 Repository를 fork 떠서 수정하고 PR 날려주세요.&amp;quot;라는 메일을 받았다. 나는 Github을 사용하고 이런 비슷한 방식으로 프로젝트를 진행해왔지만">
 <meta name="twitter:image" content="https://woovictory.github.io/img/git_fork.png">
     
@@ -282,7 +282,7 @@
         <div class="post-header main-content-wrap text-left">
     
         <h1 class="post-title">
-            2일차 [Git] Github-Flow
+            [Git] Github-Flow
         </h1>
     
     
@@ -398,7 +398,7 @@
             <div class="post-footer-tags">
                 <span class="text-color-light text-small">TAGGED IN</span><br/>
                 
-    <a class="tag tag--primary tag--small t-link" href="/tags/etc/">etc</a>
+    <a class="tag tag--primary tag--small t-link" href="/tags/2일차/">2일차</a> <a class="tag tag--primary tag--small t-link" href="/tags/etc/">etc</a>
 
             </div>
         
@@ -412,8 +412,8 @@
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
                     href="/2019/01/23/Etc-Git-Flow-2/"
-                    data-tooltip="3일차 [Git] Git-Flow"
-                    aria-label="PREVIOUS: 3일차 [Git] Git-Flow"
+                    data-tooltip="[Git] Git-Flow"
+                    aria-label="PREVIOUS: [Git] Git-Flow"
                 >
                     
                         <i class="fa fa-angle-left" aria-hidden="true"></i>
@@ -426,8 +426,8 @@
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
                     href="/2019/01/21/Etc-Git-Flow/"
-                    data-tooltip="1일차 [Git] Git-Flow"
-                    aria-label="NEXT: 1일차 [Git] Git-Flow"
+                    data-tooltip="[Git] Git-Flow"
+                    aria-label="NEXT: [Git] Git-Flow"
                 >
                     
                         <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
@@ -541,8 +541,8 @@
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
                     href="/2019/01/23/Etc-Git-Flow-2/"
-                    data-tooltip="3일차 [Git] Git-Flow"
-                    aria-label="PREVIOUS: 3일차 [Git] Git-Flow"
+                    data-tooltip="[Git] Git-Flow"
+                    aria-label="PREVIOUS: [Git] Git-Flow"
                 >
                     
                         <i class="fa fa-angle-left" aria-hidden="true"></i>
@@ -555,8 +555,8 @@
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
                     href="/2019/01/21/Etc-Git-Flow/"
-                    data-tooltip="1일차 [Git] Git-Flow"
-                    aria-label="NEXT: 1일차 [Git] Git-Flow"
+                    data-tooltip="[Git] Git-Flow"
+                    aria-label="NEXT: [Git] Git-Flow"
                 >
                     
                         <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>

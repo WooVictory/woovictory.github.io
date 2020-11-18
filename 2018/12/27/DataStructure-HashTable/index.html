@@ -6,25 +6,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="VictoryWoo">
-    <title>[자료구조] Hash - VictoryWoo</title>
+    <title>[Data Structure] Hash - VictoryWoo</title>
     <meta name="author" content="VictoryWoo">
     
     
         <link rel="icon" href="https://woovictory.github.io/assets/images/develop.ico">
     
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg"},"articleBody":"HastTable\nHash(또는 HashMap)은 내부적으로 배열을 사용하여 데이터를 저장하기 때문에 인덱스를 이용한 빠른 검색 속도를 갖는다. 특정한 값을 searching하는데 데이터 고유의 인덱스로 접근하게 되므로 average case에 대하여 시간 복잡도가 O(1)이 되는 것이다.\n[항상 O(1)이 아니고 average case에 대해서 O(1)인 것은 collision 때문이다.]\n그리고 데이터의 삽입과 삭제 시 기존 데이터를 밀어내거나 다시 채우는 작업이 필요없도록 특별한 알고리즘을 이용하여 데이터와 연관된 고유한 숫자를 만들어 낸 뒤 이를 인덱스로 사용한다. 특정 데이터가 저장되는 인덱스는 그 데이터만의 고유한 위치이기 때문에 삽입 시 다른 데이터의 사이에 끼어들거나 삭제 시 다른 데이터로 채울 필요가 없으므로 추가적인 데이터의 이동이 없다.\n'특별한 알고리즘’이라는 것을 통해서 고유한 인덱스 값을 설정하는 것이 중요한 포인트이다.\n앞서 언급한 특별한 알고리즘을 해시 메소드 또는 해시 함수라고 하고 이 메소드에 의해 반환되는 데이터의 고유한 숫자 값을 hashCode라고 한다.\nJava에서는 Object 클래스의 _hashCode()_라는 메소드를 이용하여 모든 객체의 hashcode 값을 쉽게 구할 수 있다.\nhash 메소드를 구현하는 가장 간단한 방법은 나머지 연산자를 이용하는 것이다. 저장할 데이터의 값을 저장할 hash table의 크기로 나누고 나머지 연산 결과를 데이터의 인덱스로 사용하는 것이다. 하지만 이렇게 하면 문제점이 발생한다.\n만약 3의 배수로 이루어진 데이터 9개를 저장한다고 가정해보자.\n저장하려는 데이터 : 3,6,9,12,15,18,21,24,27\nhashcode 값 계산\n3 % 9 == 3\n6 % 9 == 6\n9 % 9 == 0\n12 % 9 == 3\n15 % 9 == 6\n18 % 9 == 0\n21 % 9 == 3\n24 % 9 == 6\n27 % 9 == 3\n계산 결과 hashcode 값이 0,3,6으로 집중되고 있다. 이렇게 되면 같은 index로 접근하게 되는 value가 많아져 데이터를 저장할 수 없게 되는 충돌 현상이 발생한다. 이를 Collision이라고 한다.\n이런 충돌을 최소화 하기 위한 가장 간단한 방법은 나머지 연산의 값이 중복되지 않도록 테이블의 크기를 소수(Prime number)로 만드는 것이다. 위와 동일한 입장일 경우, 저장하려는 데이터의 크기가 9이므로 9보다 큰 소수인 11로 나머지 연산을 해보자.\nhashcode 값 계산\n3 % 11 == 3\n6 % 11 == 6\n9 % 11 == 9\n12 % 11 == 1\n15 % 11 == 4\n18 % 11 == 7\n21 % 11 == 10\n24 % 11 == 2\n27 % 11 == 5\n중복되는 값이 깨끗하게 사라진 것을 확인할 수 있다. 하지만 이 방법으로 모든 것이 해결된 것일까?? 위의 과정에서 데이터의 성질이 달라져 다른 값이 들어올 수 있게 된 경우는 어떨까?\n예를 들어 26이라는 데이터를 추가적으로 저장해야 한다면 데이터의 크기는 10이 되고 10보다 큰 소수는 11로 나머지 연산자 방법을 수행해준다.\n26 % 11 == 4\n결과를 확인해보니 다시 중복이 발생하였다. 바로 Collision이 발생한 것이다. Hash Table의 크기를 소수로 만드는 것은 충돌을 줄일 수는 있지만 원천적으로 해결해주지는 못한다.\n충돌이 많아질수록 Searching에 필요한 시간 복잡도가 O(1)에서 O(n)에 가까워진다.\n어설픈 해쉬 함수는 해시를 해시답게 사용하지 못하도록 한다. 좋은 해쉬 함수를 선택하는 것은 해쉬 테이블의 성능 향상에 필수적인 것이다.\n두 개의 키가 같은 인덱스로 hashing(hash 함수를 통해 계산됨을 의미)되면 같은 곳에 저장할 수 없게 된다.(Collision)\n따라서 해싱된 인덱스에 이미 다른 값이 들어가 있다면 데이터를 저장할 다른 위치를 찾은 뒤에야 저장할 수 있는 것이다. 따라서 충돌 해결은 필수적이며 그 방법들에 대해 알아보고자 한다.\n기본적인 두 가지 방법을 알아보자. 해시 충돌을 해결하기 위한 다양한 자료가 있지만, 다음 두 가지 방법을 응용한 방법들이다.\nOpen Address 방식(개방 주소법)\n해시 충돌이 발생하면 즉 삽입하려는 해시 버킷이 이미 사용 중인 경우, 다른 해시 버킷에 해당 자료를 삽입하는 방식이다.\n\n버킷(bucket)이란 바구니와 같은 개념으로 데이터를 저장하기 위한 공간이라고 생각하면 된다.\n\n공개 주소 방식이라고도 불리는 이 알고리즘은 Collision(충돌)이 발생하면 데이터를 저장할 장소. 즉 다른 해시 버킷을 찾아 헤맨다. 이 과정에서도 여러 방법들이 존재하는데 다음 3가지에 대해 간단하게 알아보자.\n\n\nLinear Probing\n순차적으로 탐색하며 비어있는 버킷을 찾을 때까지 계속 진행된다. Worst case의 경우 비어있는 버킷을 찾지 못하고 탐색을 시작한 위치까지 되돌아 올 수 있다.\n\n\nQuadratic probing\n2차 함수를 이용해 탐색할 위치를 찾는다.\n\n\nDouble hashing probing\n\n\n하나의 해쉬 함수에서 충돌이 발생하면 2차 해쉬 함수를 이용해 새로운 주소를 할당한다. 위 두가지 방법에 비해 많은 연산량을 요구한다.\nSeperate Chaining 방식(분리 연결법)\n참고로 Java 7에서는 Seperate Chaining 방식을 사용하여 HashMap을 구현하고 있다.\n\nWhy?\n\nHashMap의 특성상 remove() 메소드가 빈번하게 일어날 수 있는데 데이터를 삭제할 때 OpenAddress 방식은 처리가 효율적이기 어렵다. 또한 저장된 Key-value 쌍의 개수가 일정 개수 이상 많아지면 보통 Seperate Chaining 방식에 비해 Open Address 방식이 느리다.\n연결 리스트를 사용하는 방식(LinkedList)\n각각의 버킷들을 연결리스트(Linked List)로 만들어 Collision이 발생하면 해당 버킷의 list에 추가하는 방식이다. 연결 리스트의 특징을 그대로 이어받아 삭제 또는 삽입 간단하다. 하지만 단점도 그대로 물려받아 작은 데이터들을 저장할 때 연결 리스트 자체의 오버헤드가 부담이 된다.\n일반적으로 Open Address 방법은 Seperate Chaining 방식보다 느리다. Open Address의 경우 해시 버킷을 채운 밀도가 높아질수록 Worst Case 발생 빈도가 더 높아지기 때문이다. 반면에 Seperate Chaining 방식의 경우 해시 충돌이 잘 발생하지 않도록 보조 해시 함수를 통해 조정할 수 있다면 Worst Case에 가까워지는 것을 줄일 수 있다.\n보조 해시 함수에 대한 글\nTree를 사용하는 방식(Red-Black-Tree)\n기본적인 알고리즘은 Seperate Chaining 방식과 동일하며 연결 리스트 대신 트리를 사용하는 방식이다. 여기서 연결 리스트를 사용할 것인가와 트리를 사용할 것인가에 대한 기준은 하나의 버킷에 할당된 Key-Value 쌍의 개수이다.\n트리는 기본적으로 메모리 사용량이 많고 데이터 개수가 적을 때 Worst Case를 살펴보면 트리와 연결 리스트의 성능 상의 차이가 거의 없다. 따라서 메모리 측면을 봤을 때 데이터 개수가 적을 때는 연결 리스트를 사용한다.\n\n데이터가 적다는 것은 얼마나 적다는 것을 의미할까??\n\n앞에서 언급한 것처럼 기준은 하나의 버킷에 할당되는 Key-Value 쌍의 개수이다. 이 Key-Value 쌍의 개수가 6개, 8개를 기준으로 결정한다.\n오잉…? 왜 기준이 2개인가?? 이는 아래에서 설명하겠다.\n결론부터 말하자면 연결 리스트의 기준과 트리의 기준을 6과 8로 잡은 것은 변경하는데 소요되는 비용을 줄이기 위함이다.\n한 가지 상황을 가정해보자.\n해시 버킷에 6개의 Key-Value 쌍이 들어있다. 그리고 하나의 값이 추가되었다. 만약 기준이 6과 7이라면 자료 구조를 연결 리스트에서 트리로 변경해야 한다. 그러다가 바로 하나의 값이 삭제된다면 다시 트리에서 연결 리스트로 자료구조를 변경해야 한다.\n각각 자료구조로 넘어가는 기준이 1이라면 Switching 할 때 생기는 비용이 너무 많이 필요하게 되는 것이다. 그래서 2라는 여유를 남겨두고 기준을 잡아준 것이다.\n따라서 데이터의 개수가 6개 -&gt; 7개로 증가했을 때는 연결 리스트의 자료구조를 취하고 있을 것이고\n8개 -&gt; 7개로 감소했을 때는 트리의 자료 구조를 취하고 있을 것이다.\n\n참고로 Java 8을 구현하는데 사용하는 트리는 RBT이다.\n\n해시 버킷 동적 확장(Resize)\n해시 버킷의 개수가 적다면 메모리 사용을 아낄 수 있지만 해시 충돌로 인해 성능상 손실이 발생할 수도 있다. 그래서 HashMap은 Key-Value 쌍 데이터 개수가 일정 개수 이상이 되면 해시 버킷의 개수를 두배로 늘린다. 이렇게 늘리면 해시 충돌로 인한 성능 손실 문제를 어느 정도 해결할 수 있다.\n\n일정 개수 이상??\n\n해시 버킷 크기를 두 배로 확장하는 임계점은 현재 데이터 개수가 해시 버킷의 개수의 75%가 될 때이다. 0.75라는 숫자는 load factor로 HashMap의 생성자에서 지정할 수도 있다.\n참고\n\nhashcode와 HashMap에 대해서\n\n","dateCreated":"2018-12-27T23:17:04+09:00","dateModified":"2020-05-12T15:34:52+09:00","datePublished":"2018-12-27T23:17:04+09:00","description":"","headline":"[자료구조] Hash","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://woovictory.github.io/2018/12/27/DataStructure-HashTable/"},"publisher":{"@type":"Organization","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg","logo":{"@type":"ImageObject","url":"Victory.jpeg"}},"url":"https://woovictory.github.io/2018/12/27/DataStructure-HashTable/","keywords":"Data Structure, 자료구조, Hash"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg"},"articleBody":"HastTable\nHash(또는 HashMap)은 내부적으로 배열을 사용하여 데이터를 저장하기 때문에 인덱스를 이용한 빠른 검색 속도를 갖는다. 특정한 값을 searching하는데 데이터 고유의 인덱스로 접근하게 되므로 average case에 대하여 시간 복잡도가 O(1)이 되는 것이다.\n[항상 O(1)이 아니고 average case에 대해서 O(1)인 것은 collision 때문이다.]\n\n그리고 데이터의 삽입과 삭제 시 기존 데이터를 밀어내거나 다시 채우는 작업이 필요없도록 특별한 알고리즘을 이용하여 데이터와 연관된 고유한 숫자를 만들어 낸 뒤 이를 인덱스로 사용한다. 특정 데이터가 저장되는 인덱스는 그 데이터만의 고유한 위치이기 때문에 삽입 시 다른 데이터의 사이에 끼어들거나 삭제 시 다른 데이터로 채울 필요가 없으므로 추가적인 데이터의 이동이 없다.\n'특별한 알고리즘’이라는 것을 통해서 고유한 인덱스 값을 설정하는 것이 중요한 포인트이다.\n앞서 언급한 특별한 알고리즘을 해시 메소드 또는 해시 함수라고 하고 이 메소드에 의해 반환되는 데이터의 고유한 숫자 값을 hashCode라고 한다.\nJava에서는 Object 클래스의 _hashCode()_라는 메소드를 이용하여 모든 객체의 hashcode 값을 쉽게 구할 수 있다.\nhash 메소드를 구현하는 가장 간단한 방법은 나머지 연산자를 이용하는 것이다. 저장할 데이터의 값을 저장할 hash table의 크기로 나누고 나머지 연산 결과를 데이터의 인덱스로 사용하는 것이다. 하지만 이렇게 하면 문제점이 발생한다.\n만약 3의 배수로 이루어진 데이터 9개를 저장한다고 가정해보자.\n저장하려는 데이터 : 3,6,9,12,15,18,21,24,27\nhashcode 값 계산\n3 % 9 == 3\n6 % 9 == 6\n9 % 9 == 0\n12 % 9 == 3\n15 % 9 == 6\n18 % 9 == 0\n21 % 9 == 3\n24 % 9 == 6\n27 % 9 == 3\n계산 결과 hashcode 값이 0,3,6으로 집중되고 있다. 이렇게 되면 같은 index로 접근하게 되는 value가 많아져 데이터를 저장할 수 없게 되는 충돌 현상이 발생한다. 이를 Collision이라고 한다.\n이런 충돌을 최소화 하기 위한 가장 간단한 방법은 나머지 연산의 값이 중복되지 않도록 테이블의 크기를 소수(Prime number)로 만드는 것이다. 위와 동일한 입장일 경우, 저장하려는 데이터의 크기가 9이므로 9보다 큰 소수인 11로 나머지 연산을 해보자.\nhashcode 값 계산\n3 % 11 == 3\n6 % 11 == 6\n9 % 11 == 9\n12 % 11 == 1\n15 % 11 == 4\n18 % 11 == 7\n21 % 11 == 10\n24 % 11 == 2\n27 % 11 == 5\n중복되는 값이 깨끗하게 사라진 것을 확인할 수 있다. 하지만 이 방법으로 모든 것이 해결된 것일까?? 위의 과정에서 데이터의 성질이 달라져 다른 값이 들어올 수 있게 된 경우는 어떨까?\n예를 들어 26이라는 데이터를 추가적으로 저장해야 한다면 데이터의 크기는 10이 되고 10보다 큰 소수는 11로 나머지 연산자 방법을 수행해준다.\n26 % 11 == 4\n결과를 확인해보니 다시 중복이 발생하였다. 바로 Collision이 발생한 것이다. Hash Table의 크기를 소수로 만드는 것은 충돌을 줄일 수는 있지만 원천적으로 해결해주지는 못한다.\n충돌이 많아질수록 Searching에 필요한 시간 복잡도가 O(1)에서 O(n)에 가까워진다.\n어설픈 해쉬 함수는 해시를 해시답게 사용하지 못하도록 한다. 좋은 해쉬 함수를 선택하는 것은 해쉬 테이블의 성능 향상에 필수적인 것이다.\n두 개의 키가 같은 인덱스로 hashing(hash 함수를 통해 계산됨을 의미)되면 같은 곳에 저장할 수 없게 된다.(Collision)\n따라서 해싱된 인덱스에 이미 다른 값이 들어가 있다면 데이터를 저장할 다른 위치를 찾은 뒤에야 저장할 수 있는 것이다. 따라서 충돌 해결은 필수적이며 그 방법들에 대해 알아보고자 한다.\n기본적인 두 가지 방법을 알아보자. 해시 충돌을 해결하기 위한 다양한 자료가 있지만, 다음 두 가지 방법을 응용한 방법들이다.\nOpen Address 방식(개방 주소법)\n해시 충돌이 발생하면 즉 삽입하려는 해시 버킷이 이미 사용 중인 경우, 다른 해시 버킷에 해당 자료를 삽입하는 방식이다.\n\n버킷(bucket)이란 바구니와 같은 개념으로 데이터를 저장하기 위한 공간이라고 생각하면 된다.\n\n공개 주소 방식이라고도 불리는 이 알고리즘은 Collision(충돌)이 발생하면 데이터를 저장할 장소. 즉 다른 해시 버킷을 찾아 헤맨다. 이 과정에서도 여러 방법들이 존재하는데 다음 3가지에 대해 간단하게 알아보자.\n\n\nLinear Probing\n순차적으로 탐색하며 비어있는 버킷을 찾을 때까지 계속 진행된다. Worst case의 경우 비어있는 버킷을 찾지 못하고 탐색을 시작한 위치까지 되돌아 올 수 있다.\n\n\nQuadratic probing\n2차 함수를 이용해 탐색할 위치를 찾는다.\n\n\nDouble hashing probing\n\n\n하나의 해쉬 함수에서 충돌이 발생하면 2차 해쉬 함수를 이용해 새로운 주소를 할당한다. 위 두가지 방법에 비해 많은 연산량을 요구한다.\nSeperate Chaining 방식(분리 연결법)\n참고로 Java 7에서는 Seperate Chaining 방식을 사용하여 HashMap을 구현하고 있다.\n\nWhy?\n\nHashMap의 특성상 remove() 메소드가 빈번하게 일어날 수 있는데 데이터를 삭제할 때 OpenAddress 방식은 처리가 효율적이기 어렵다. 또한 저장된 Key-value 쌍의 개수가 일정 개수 이상 많아지면 보통 Seperate Chaining 방식에 비해 Open Address 방식이 느리다.\n연결 리스트를 사용하는 방식(LinkedList)\n각각의 버킷들을 연결리스트(Linked List)로 만들어 Collision이 발생하면 해당 버킷의 list에 추가하는 방식이다. 연결 리스트의 특징을 그대로 이어받아 삭제 또는 삽입 간단하다. 하지만 단점도 그대로 물려받아 작은 데이터들을 저장할 때 연결 리스트 자체의 오버헤드가 부담이 된다.\n일반적으로 Open Address 방법은 Seperate Chaining 방식보다 느리다. Open Address의 경우 해시 버킷을 채운 밀도가 높아질수록 Worst Case 발생 빈도가 더 높아지기 때문이다. 반면에 Seperate Chaining 방식의 경우 해시 충돌이 잘 발생하지 않도록 보조 해시 함수를 통해 조정할 수 있다면 Worst Case에 가까워지는 것을 줄일 수 있다.\n보조 해시 함수에 대한 글\nTree를 사용하는 방식(Red-Black-Tree)\n기본적인 알고리즘은 Seperate Chaining 방식과 동일하며 연결 리스트 대신 트리를 사용하는 방식이다. 여기서 연결 리스트를 사용할 것인가와 트리를 사용할 것인가에 대한 기준은 하나의 버킷에 할당된 Key-Value 쌍의 개수이다.\n트리는 기본적으로 메모리 사용량이 많고 데이터 개수가 적을 때 Worst Case를 살펴보면 트리와 연결 리스트의 성능 상의 차이가 거의 없다. 따라서 메모리 측면을 봤을 때 데이터 개수가 적을 때는 연결 리스트를 사용한다.\n\n데이터가 적다는 것은 얼마나 적다는 것을 의미할까??\n\n앞에서 언급한 것처럼 기준은 하나의 버킷에 할당되는 Key-Value 쌍의 개수이다. 이 Key-Value 쌍의 개수가 6개, 8개를 기준으로 결정한다.\n오잉…? 왜 기준이 2개인가?? 이는 아래에서 설명하겠다.\n결론부터 말하자면 연결 리스트의 기준과 트리의 기준을 6과 8로 잡은 것은 변경하는데 소요되는 비용을 줄이기 위함이다.\n한 가지 상황을 가정해보자.\n해시 버킷에 6개의 Key-Value 쌍이 들어있다. 그리고 하나의 값이 추가되었다. 만약 기준이 6과 7이라면 자료 구조를 연결 리스트에서 트리로 변경해야 한다. 그러다가 바로 하나의 값이 삭제된다면 다시 트리에서 연결 리스트로 자료구조를 변경해야 한다.\n각각 자료구조로 넘어가는 기준이 1이라면 Switching 할 때 생기는 비용이 너무 많이 필요하게 되는 것이다. 그래서 2라는 여유를 남겨두고 기준을 잡아준 것이다.\n따라서 데이터의 개수가 6개 -&gt; 7개로 증가했을 때는 연결 리스트의 자료구조를 취하고 있을 것이고\n8개 -&gt; 7개로 감소했을 때는 트리의 자료 구조를 취하고 있을 것이다.\n\n참고로 Java 8을 구현하는데 사용하는 트리는 RBT이다.\n\n해시 버킷 동적 확장(Resize)\n해시 버킷의 개수가 적다면 메모리 사용을 아낄 수 있지만 해시 충돌로 인해 성능상 손실이 발생할 수도 있다. 그래서 HashMap은 Key-Value 쌍 데이터 개수가 일정 개수 이상이 되면 해시 버킷의 개수를 두배로 늘린다. 이렇게 늘리면 해시 충돌로 인한 성능 손실 문제를 어느 정도 해결할 수 있다.\n\n일정 개수 이상??\n\n해시 버킷 크기를 두 배로 확장하는 임계점은 현재 데이터 개수가 해시 버킷의 개수의 75%가 될 때이다. 0.75라는 숫자는 load factor로 HashMap의 생성자에서 지정할 수도 있다.\n참고\n\nhashcode와 HashMap에 대해서\n\n","dateCreated":"2018-12-27T23:17:04+09:00","dateModified":"2020-11-18T16:16:50+09:00","datePublished":"2018-12-27T23:17:04+09:00","description":"HastTable\nHash(또는 HashMap)은 내부적으로 배열을 사용하여 데이터를 저장하기 때문에 인덱스를 이용한 빠른 검색 속도를 갖는다. 특정한 값을 searching하는데 데이터 고유의 인덱스로 접근하게 되므로 average case에 대하여 시간 복잡도가 O(1)이 되는 것이다.\n[항상 O(1)이 아니고 average case에 대해서 O(1)인 것은 collision 때문이다.]","headline":"[Data Structure] Hash","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://woovictory.github.io/2018/12/27/DataStructure-HashTable/"},"publisher":{"@type":"Organization","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg","logo":{"@type":"ImageObject","url":"Victory.jpeg"}},"url":"https://woovictory.github.io/2018/12/27/DataStructure-HashTable/","keywords":"Data Structure, 자료구조, Hash"}</script>
     <meta name="description" content="HastTable Hash(또는 HashMap)은 내부적으로 배열을 사용하여 데이터를 저장하기 때문에 인덱스를 이용한 빠른 검색 속도를 갖는다. 특정한 값을 searching하는데 데이터 고유의 인덱스로 접근하게 되므로 average case에 대하여 시간 복잡도가 O(1)이 되는 것이다. [항상 O(1)이 아니고 average case에 대해서 O(1)인">
 <meta name="keywords" content="Data Structure,자료구조,Hash">
 <meta property="og:type" content="blog">
-<meta property="og:title" content="[자료구조] Hash">
+<meta property="og:title" content="[Data Structure] Hash">
 <meta property="og:url" content="https://woovictory.github.io/2018/12/27/DataStructure-HashTable/index.html">
 <meta property="og:site_name" content="VictoryWoo">
 <meta property="og:description" content="HastTable Hash(또는 HashMap)은 내부적으로 배열을 사용하여 데이터를 저장하기 때문에 인덱스를 이용한 빠른 검색 속도를 갖는다. 특정한 값을 searching하는데 데이터 고유의 인덱스로 접근하게 되므로 average case에 대하여 시간 복잡도가 O(1)이 되는 것이다. [항상 O(1)이 아니고 average case에 대해서 O(1)인">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2020-05-12T06:34:52.068Z">
+<meta property="og:updated_time" content="2020-11-18T07:16:50.327Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="[자료구조] Hash">
+<meta name="twitter:title" content="[Data Structure] Hash">
 <meta name="twitter:description" content="HastTable Hash(또는 HashMap)은 내부적으로 배열을 사용하여 데이터를 저장하기 때문에 인덱스를 이용한 빠른 검색 속도를 갖는다. 특정한 값을 searching하는데 데이터 고유의 인덱스로 접근하게 되므로 average case에 대하여 시간 복잡도가 O(1)이 되는 것이다. [항상 O(1)이 아니고 average case에 대해서 O(1)인">
     
     
@@ -277,7 +277,7 @@
         <div class="post-header main-content-wrap text-left">
     
         <h1 class="post-title">
-            [자료구조] Hash
+            [Data Structure] Hash
         </h1>
     
     
@@ -305,6 +305,7 @@
             <h2 id="hasttable">HastTable</h2>
 <p><code>Hash(또는 HashMap)</code>은 내부적으로 배열을 사용하여 데이터를 저장하기 때문에 인덱스를 이용한 빠른 검색 속도를 갖는다. 특정한 값을 searching하는데 데이터 고유의 <strong>인덱스</strong>로 접근하게 되므로 average case에 대하여 시간 복잡도가 O(1)이 되는 것이다.<br>
 [항상 O(1)이 아니고 average case에 대해서 O(1)인 것은 collision 때문이다.]</p>
+<a id="more"></a>
 <p>그리고 데이터의 삽입과 삭제 시 기존 데이터를 밀어내거나 다시 채우는 작업이 필요없도록 <strong>특별한 알고리즘</strong>을 이용하여 데이터와 연관된 고유한 숫자를 만들어 낸 뒤 이를 인덱스로 사용한다. 특정 데이터가 저장되는 인덱스는 그 데이터만의 고유한 위치이기 때문에 삽입 시 다른 데이터의 사이에 끼어들거나 삭제 시 다른 데이터로 채울 필요가 없으므로 추가적인 데이터의 이동이 없다.</p>
 <p><strong>'특별한 알고리즘’이라는 것을 통해서 고유한 인덱스 값을 설정하는 것이 중요한 포인트이다.</strong><br>
 앞서 언급한 특별한 알고리즘을 해시 메소드 또는 해시 함수라고 하고 이 메소드에 의해 반환되는 데이터의 <strong>고유한 숫자 값</strong>을 <strong>hashCode</strong>라고 한다.<br>
@@ -425,8 +426,8 @@ hashcode 값 계산<br>
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
                     href="/2018/12/28/DataStructure-Graph/"
-                    data-tooltip="[자료구조] Graph"
-                    aria-label="PREVIOUS: [자료구조] Graph"
+                    data-tooltip="[Data Structure] Graph"
+                    aria-label="PREVIOUS: [Data Structure] Graph"
                 >
                     
                         <i class="fa fa-angle-left" aria-hidden="true"></i>
@@ -439,8 +440,8 @@ hashcode 값 계산<br>
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
                     href="/2018/12/27/DataStructure-RBT/"
-                    data-tooltip="[자료구조] Red-Black Tree"
-                    aria-label="NEXT: [자료구조] Red-Black Tree"
+                    data-tooltip="[Data Structure] Red-Black Tree"
+                    aria-label="NEXT: [Data Structure] Red-Black Tree"
                 >
                     
                         <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
@@ -554,8 +555,8 @@ hashcode 값 계산<br>
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
                     href="/2018/12/28/DataStructure-Graph/"
-                    data-tooltip="[자료구조] Graph"
-                    aria-label="PREVIOUS: [자료구조] Graph"
+                    data-tooltip="[Data Structure] Graph"
+                    aria-label="PREVIOUS: [Data Structure] Graph"
                 >
                     
                         <i class="fa fa-angle-left" aria-hidden="true"></i>
@@ -568,8 +569,8 @@ hashcode 값 계산<br>
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
                     href="/2018/12/27/DataStructure-RBT/"
-                    data-tooltip="[자료구조] Red-Black Tree"
-                    aria-label="NEXT: [자료구조] Red-Black Tree"
+                    data-tooltip="[Data Structure] Red-Black Tree"
+                    aria-label="NEXT: [Data Structure] Red-Black Tree"
                 >
                     
                         <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>

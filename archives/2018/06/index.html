@@ -423,7 +423,7 @@
     </article>
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -455,37 +455,17 @@
 
             </div>
             
-                <div class="postShorten-content">
+                <div class="postShorten-excerpt">
                     <p>한 동안 졸업 작품과 다른 것들로 인해서 바빠서 알고리즘을 풀지 못했다… 이런 나를 반성하면서 다시 꾸준하게 알고리즘을 풀면서 공부해야겠다!!</p>
-<h2 id="문제-httpswwwacmicpcnetproblem11723">문제 : <a href="https://www.acmicpc.net/problem/11723" target="_blank" rel="noopener">https://www.acmicpc.net/problem/11723</a></h2>
-<p><code>Explain</code></p>
-<p>비어있는 공집합 S가 있고, 문제에 나온 명령어가 주어졌을 때 명령어에 따라 연산을 진행한다.</p>
-<blockquote>
-<p>입력 : 첫 줄에 수행하는 연산의 수인 M이 주어진다. (1&lt;=M&lt;=3,000,000)</p>
-</blockquote>
-<blockquote>
-<p>출력 : check 연산이 주어질 때마다, 출력한다.</p>
-</blockquote>
-<p><code>Key Points</code></p>
-<p>간단하게 <code>비트 마스크</code>를 이용하여 문제를 풀어보았다. 비트 마스크를 이용하여 문제에 원하는 추가, 삭제, 검색 등을 구현할 수 있다.</p>
-<p>문제에서 집합에 추가하는 수인 x의 범위가 1&lt;=x&lt;=20이다. 하지만, 비트 마스크는 0 ~ N-1 까지의 수를 저장하고 있기 때문에 문제를 풀기 위해서는 입력 받은 수 모두 1을 빼주어서 0 ~ 19 로 맞추고 문제를 풀면 된다.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.BufferedReader;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.io.InputStreamReader;</span><br><span class="line"><span class="keyword">import</span> java.util.StringTokenizer;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BOJ11723</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> NumberFormatException, IOException </span>&#123;</span><br><span class="line">		</span><br><span class="line">		</span><br><span class="line">		<span class="comment">// 내가 배운 비트마스크는 0~N-1 까지의 수를 저장하고 있기 때문에</span></span><br><span class="line">		<span class="comment">// 이 문제를 풀기 위해서는 입력으로 받은 수를 모두 1을 빼주고 0~19로 만든 다음에 구현하면 된다.</span></span><br><span class="line">		<span class="comment">// 왜냐하면 문제에서 집합에 추가할 수 있는 x의 범위가 1~20이기 때문에 내가 배운 비트마스크의 범위인 0~N-1을 맞추기 위해서</span></span><br><span class="line">		<span class="comment">// 입력받은 집합에서 1씩 빼주어 0~19 사이의 범위로 맞춘다.</span></span><br><span class="line">		</span><br><span class="line">		</span><br><span class="line">		BufferedReader bf = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(System.in));</span><br><span class="line">		<span class="keyword">int</span> N = <span class="number">20</span>;</span><br><span class="line">		<span class="keyword">int</span> s = <span class="number">0</span>; <span class="comment">// 처음에 비어있는 집합 생성</span></span><br><span class="line">		<span class="keyword">int</span> M = Integer.parseInt(bf.readLine()); <span class="comment">// test_case</span></span><br><span class="line">		StringBuilder sb = <span class="keyword">new</span> StringBuilder();</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;M;i++) &#123;</span><br><span class="line">			StringTokenizer st = <span class="keyword">new</span> StringTokenizer(bf.readLine(), <span class="string">" "</span>);</span><br><span class="line">			String command = st.nextToken();</span><br><span class="line">			</span><br><span class="line">			<span class="keyword">if</span>(command.equals(<span class="string">"add"</span>)) &#123;</span><br><span class="line">				<span class="keyword">int</span> x = Integer.parseInt(st.nextToken());</span><br><span class="line">				x--;</span><br><span class="line">				s = s | (<span class="number">1</span>&lt;&lt;x);</span><br><span class="line">				</span><br><span class="line">			&#125; <span class="keyword">else</span> <span class="keyword">if</span>(command.equals(<span class="string">"remove"</span>)) &#123;</span><br><span class="line">				<span class="keyword">int</span> x = Integer.parseInt(st.nextToken());</span><br><span class="line">				x--;</span><br><span class="line">				s = s &amp; ~(<span class="number">1</span>&lt;&lt;x);</span><br><span class="line">				</span><br><span class="line">			&#125; <span class="keyword">else</span> <span class="keyword">if</span>(command.equals(<span class="string">"check"</span>)) &#123;</span><br><span class="line">				<span class="keyword">int</span> x = Integer.parseInt(st.nextToken());</span><br><span class="line">				x--;</span><br><span class="line">				<span class="keyword">int</span> tmp = s &amp; (<span class="number">1</span>&lt;&lt;x);</span><br><span class="line">				<span class="keyword">if</span>(tmp !=<span class="number">0</span>) &#123;</span><br><span class="line">					sb.append(<span class="string">"1"</span>);</span><br><span class="line">					sb.append(<span class="string">"\n"</span>);</span><br><span class="line">				&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">					sb.append(<span class="string">"0"</span>);</span><br><span class="line">					sb.append(<span class="string">"\n"</span>);</span><br><span class="line">				&#125;</span><br><span class="line">				</span><br><span class="line">			&#125; <span class="keyword">else</span> <span class="keyword">if</span>(command.equals(<span class="string">"toggle"</span>)) &#123;</span><br><span class="line">				<span class="keyword">int</span> x = Integer.parseInt(st.nextToken());</span><br><span class="line">				x--;</span><br><span class="line">				s = s ^ (<span class="number">1</span>&lt;&lt;x);</span><br><span class="line">			&#125; <span class="keyword">else</span> <span class="keyword">if</span>(command.equals(<span class="string">"all"</span>)) &#123;</span><br><span class="line">				s = (<span class="number">1</span>&lt;&lt;N) - <span class="number">1</span>;</span><br><span class="line">			&#125; <span class="keyword">else</span> <span class="keyword">if</span>(command.equals(<span class="string">"empty"</span>)) &#123;</span><br><span class="line">				s = <span class="number">0</span>;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		System.out.println(sb.toString());</span><br><span class="line">		</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
                     
+                        <a
+                            href="/2018/06/08/BOJ11723/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [11723] 집합"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2018/06/08/BOJ11723/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             

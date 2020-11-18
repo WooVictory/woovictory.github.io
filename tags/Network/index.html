@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="VictoryWoo">
-    <title>Tag: Network - VictoryWoo</title>
+    <title>Tag: network - VictoryWoo</title>
     <meta name="author" content="VictoryWoo">
     
     
@@ -16,7 +16,7 @@
     <script type="application/ld+json">{}</script>
     <meta property="og:type" content="blog">
 <meta property="og:title" content="VictoryWoo">
-<meta property="og:url" content="https://woovictory.github.io/tags/Network/index.html">
+<meta property="og:url" content="https://woovictory.github.io/tags/network/index.html">
 <meta property="og:site_name" content="VictoryWoo">
 <meta property="og:locale" content="en">
 <meta name="twitter:card" content="summary">
@@ -267,112 +267,6 @@
     <section class="postShorten-group main-content-wrap">
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2019/01/03/Android-What-is-retrofit/"
-                            aria-label=": [안드로이드] Retrofit"
-                        >
-                            [안드로이드] Retrofit
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2019-01-03T18:14:23+09:00">
-	
-		    Jan 03, 2019
-    	
-    </time>
-    
-        <span>in </span>
-        
-    <a class="category-link" href="/categories/Android/">Android</a>
-
-
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-content">
-                    <h2 id="안드로이드-통신-라이브러리-요약">안드로이드 통신 라이브러리 요약</h2>
-<p>저는 안드로이드 앱을 개발하면 서버와 통신을 하기 위해서 편리한 방법인 Retrofit은 사용했다. 하지만 이러한 편리함을 알기 전에 왜 이렇게 편리하게 사용하는지 살펴보아야 할 것 같다.</p>
-<p>초기에 안드로이드에서의 통신이라면 <strong>HttpClient</strong>를 사용하는 것이었다. HttpClient라고 해도 DefaultHttpClient라고 불리는 Apache HTTP Client와 AndroidHttpClient라는 Http Client 변종 등이 사용되고 있었다. 하지만, HttpClient에는 몇 가지 버그가 있어 2011년에는 Google의 Android Develpoers의 블로그에서 HttpUrlConnection이 권장되고 나서 이쪽이 주로 사용되고 있었다.</p>
-<p>그후, Volley는 사용법이 복잡했던 HttpUrlConnection의 대안으로 Google이 만들었다는 것도 있고 표준 라이브러리로 사용되었다. Square의 OkHttp도 인기가 높고, 많이 사용되어왔다.</p>
-<p>하지만 Android 5.1에서 HttpClient가 Deprecated된 후, HTTPClient에 의존하는 Volley도 Deprecated되었다. Square에서 만들어진 라이브러리인 OkHttp와 그 래퍼인 Retrofit은 단 하나 선택 같은 상태가 되었다.</p>
-<h2 id="retrofit">Retrofit</h2>
-<p>Retrofit은 OkHttp의 상위 구현체로 enqueue와 excute를 사용하여 동기, 비동기 처리를 지원한다. 이러한 비동기 처리를 쉽게 지원하는 volley, retrofit 중에 무엇을 사용할지 고민했으나 인터페이스 내에 어노테이션으로 HTTP 메소드를 정의하여 그 행위를 알아보기 쉽게 표현하여 가독성이 높은 Retrofit을 사용했다. 추가적으로 Retrofit은 플러그인 형태로 클라이언트와 직렬화를 위한 convert를 선택할 수 있어 유지보수에 편하다.</p>
-<p>반면에 volley는 이미지 캐시, 요청에 우선순위를 부여하는 등 추가적인 기능이 있지만 직렬화를 직접 세팅해줘야하고 멀티파트 업로드 시에도 리퀘스트의 재정의가 필요하다.</p>
-<p>이렇듯 추가적인 기능이 더 많은건 volley이지만 간편하고 유지보수에 능하며 좀 더 REST api에 적합한 라이브러리라 생각되어 Retrofit을 사용했다.</p>
-<h2 id="retrofit을-사용한-이유">Retrofit을 사용한 이유?</h2>
-<p>서버와 통신을 하려면 Http 통신을 해야한다. 기본적으로 <code>HttpUrlConnection</code>을 이용한 네트워크 통신이 있지만 매번 connection 설정, input / output stream 생성 및 할당 등 반복적인 작업이 발생한다. 이것을 도와주는 라이브러리가 <code>Okhttp</code>이다. 나는 Okhttp의 존재를 알기만 했고 사용해보지는 않았다.</p>
-<p>Retrofit의 장점은 속도, 편의성, 가독성이 있다. 가장 비교하기 좋은 <code>Okhttp</code>는 사용시 대개 <code>Asynctask</code>를 통해 비동기로 실행하게 되는데 <strong>Asynctask</strong>가 성능상 느리다는 이슈가 있었다. <code>Retrofit</code>에서는 <strong>Asynctask</strong>를 사용하지 않고 자체적인 비동기 실행과 스레드 관리를 통해 속도를 훨씬 빠르게 끌어올렸다. 약 3~10배 차이가 난다고 한다.</p>
-<p>또한 Okhttp에서도 쿼리스트링, <em>request</em>, <em>response</em> 설정 등 반복적인 작업이 필요한데, Retrofit에서는 이런 과정을 모두 라이브러리에 넘겨서 처리하도록 하였다. 따라서 사용자는 함수 호출시에 파라미터만 넘기면 되기에 훨씬 작업량이 줄어들고 사용하기 편리하다.</p>
-<p>마지막으로 <strong>가독성</strong>이 매우 좋다. interface 내에 <strong>annotation</strong>을 사용하여 호출할 함수를 파라미터와 함께 정의해놓고, 네트워크 통신이 필요한 순간에 구현없이 해당 함수를 호출하기만 하면 통신이 이루어지기에 <strong>코드를 읽기가 매우 편하다.</strong> <code>Asynctask</code>를 쓰지 않기에 불필요하게 코드가 길어질 필요도 없으며, 콜백 함수를 통해 결과가 넘어오도록 되어있어 매우 직관적인 설계가 장점이다.</p>
-<p>네트워크 통신에 <code>Volley</code>라는 라이브러리도 있지만 몇가지 문제점이 있었다. StringRequest 생성시 파라미터 값을 <strong>encoding</strong>해주어야 하는 불편함과 통신 실패시 <strong>ErrorResponse</strong> 안에 <strong>ResponseBody</strong>가 담기지 않는 문제가 있다.</p>
-<h3 id="구현-방법">구현 방법</h3>
-<p>application 클래스를 상속받은 <strong>ApplicationController</strong>라는 클래스를 만들고 싱글톤으로 구현하여 onCreate() 내부에 레트로핏 빌더를 이용해 클라이언트와 컨버터를 설정하고 인터페이스를 선택한다.</p>
-<p><strong>application 클래스를 상속받은 이유는?</strong><br>
-메인 액티비티의 통신 부 이전에 retrofit에 대한 세팅을 하기 위해 상속받았다. application 클래스는 애플리케이션 컴포넌트들이 공통으로 사용하는 공유 클래스이다. 해당 클래스를 상속받아 구현한 클래스의 onCreate 메소드는 시스템의 진입점이 되어 가장 먼저 실행된다.</p>
-<h3 id="동기와-비동기란">동기와 비동기란?</h3>
-<p>데이터를 받는 방식인 동기와 비동기. 이 둘의 개념에 대해서 알고 넘어가자.</p>
-<ol>
-<li>동기(synchronous : 동시에 일어나는)</li>
-</ol>
-<p>동기는 말 그대로 동시에 일어난다는 뜻이다. 요청과 그 결과가 동시에 일어난다는 약속인데, 바로 요청을 하면 시간이 얼마가 걸리던지 요청한 자리에서 결과가 즉시 주어져야 한다.</p>
-<ul>
-<li>요청과 결과가 한 자리에서 동시에 일어남</li>
-<li>A 노드와 B 노ㄷ 사이의 작업 처리 단위를 동시에 맞추겠다.</li>
-<li>동기적 일처리 방식 : 순차적으로 일을 스스로 끝내 나가는 방식</li>
-</ul>
-<ol start="2">
-<li>비동기(Asynchronous : 동시에 일어나지 않는)</li>
-</ol>
-<p>비동기는 동시에 일어나지 않는다를 의미한다. 요청과 결과가 동시에 일어나지 않을거라는 약속이다.</p>
-<ul>
-<li>요청한 결과가 그 자리에서 결과가 주어지지 않는다.</li>
-<li>노드 사이의 작업 처리 단위를 동시에 맞추지 않아도 된다.</li>
-<li>비동기적 일처리 방식 : 해야할 일을 위임하고 기다리는 방식</li>
-</ul>
-<p>동기와 비동기는 상황에 따라서 각각의 <strong>장단점</strong>이 존재한다.<br>
-<code>동기방식</code>은 설계가 매우 간단하고 직관적이지만 결과가 주어질 때까지 아무것도 못하고 대기해야 하는 단점이 있고,<br>
-<code>비동기방식</code>은 동기보다 복잡하지만 결과가 주어지는데 시간이 걸리더라도 그 시간 동안 다른 작업을 할 수 있으므로 자원을 효율적으로 사용할 수 있다는 장점이 있다.</p>
-<p>동기와 비동기 방식의 예는 아래의 블로그를 참고하자.</p>
-<p><a href="http://private.tistory.com/24" target="_blank" rel="noopener">공부해서 남주자</a></p>
-<h2 id="참고">참고</h2>
-<ul>
-<li><a href="http://private.tistory.com/24" target="_blank" rel="noopener">동기와 비동기의 개념과 차이</a></li>
-<li><a href="https://wayhome25.github.io/nodejs/2017/02/18/nodejs-06-Asynchronous-synchronous/" target="_blank" rel="noopener">동기와 비동기 프로그래밍 (Asynchronous-synchronous)</a></li>
-</ul>
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2019/01/03/Android-What-is-retrofit/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
     <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
@@ -381,23 +275,23 @@
                     
                         <a
                             class="link-unstyled"
-                            href="/2018/12/09/android-network/"
-                            aria-label=": [안드로이드] 네트워크"
+                            href="/2018/05/17/network/"
+                            aria-label=": 네트워크 :: 네트워크?"
                         >
-                            [안드로이드] 네트워크
+                            네트워크 :: 네트워크?
                         </a>
                     
                 </h1>
                 <div class="postShorten-meta">
-    <time datetime="2018-12-09T16:12:07+09:00">
+    <time datetime="2018-05-17T23:09:03+09:00">
 	
-		    Dec 09, 2018
+		    May 17, 2018
     	
     </time>
     
         <span>in </span>
         
-    <a class="category-link" href="/categories/Android/">Android</a>
+    <a class="category-link" href="/categories/네트워크/">네트워크</a>
 
 
     
@@ -406,7 +300,92 @@
             </div>
             
                 <div class="postShorten-excerpt">
-                    <p>부스트 캠프 사전 작업을 진행하는 과정에서 네이버 검색 API를 사용했습니다. 하지만, Main Thread에서 검색 결과를 받아오는 과정에서 <code>NetworkOnMainThreadException</code>가 발생했습니다. 그래서 저는 인터넷 연결의 문제라고 생각을 하여 Manifest에 인터넷 권한을 추가 해주었지만, 똑같은 에러를 겪었습니다.</p>
+                    <h1>HTTP 소개</h1>
+                    
+                        <a
+                            href="/2018/05/17/network/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": 네트워크 :: 네트워크?"
+                        >
+                            Continue reading
+                        </a>
+                        
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    <div class="pagination-bar">
+    <ul class="pagination">
+        
+        
+        <li class="pagination-number">page 1 of 1</li>
+    </ul>
+</div>
+
+</section>
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2020 VictoryWoo. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+        </div>
+        
+
+
+    
+        
+    
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <img id="about-card-picture" src="/assets/images/Victory.jpeg" alt="Author&#39;s picture"/>
+        
+            <h4 id="about-card-name">VictoryWoo</h4>
+        
+            <div id="about-card-bio"><p>기록을 통해 사람들과 공유하는 것을 좋아합니다.</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>Android Developer</p>
+
+            </div>
+        
+        
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/color_blue.jpeg');"></div>
+        <!--SCRIPTS-->
+<script src="/assets/js/jquery.js"></script>
+<script src="/assets/js/jquery.fancybox.js"></script>
+<script src="/assets/js/thumbs.js"></script>
+<script src="/assets/js/tranquilpeak.js"></script>
+<!--SCRIPTS END-->
+
+
+
+
+
+    </body>
+</html>
+adException</code>가 발생했습니다. 그래서 저는 인터넷 연결의 문제라고 생각을 하여 Manifest에 인터넷 권한을 추가 해주었지만, 똑같은 에러를 겪었습니다.</p>
                     
                         <a
                             href="/2018/12/09/android-network/"

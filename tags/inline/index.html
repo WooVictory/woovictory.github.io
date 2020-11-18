@@ -267,7 +267,7 @@
     <section class="postShorten-group main-content-wrap">
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -299,86 +299,17 @@
 
             </div>
             
-                <div class="postShorten-content">
+                <div class="postShorten-excerpt">
                     <p>커니의 코틀린이라는 책을 참고하여 코틀린을 공부했다. inline이라는 개념이 나왔지만 간단하게만 설명이 되어있었고, 필자도 간단하게만 정리하고 넘어갔다. 그런데 다시 보니 무슨 개념인지 모르겠어서 정리하려고 한다.</p>
-<h2 id="overview">OverView</h2>
-<p>문서는 다음과 같이 설명되어있다.</p>
-<blockquote>
-<p>고차 함수를 사용하면 런타임 패널티가 있기 때문에 함수 구현 자체를 코드 내부에 넣음으로써 오버헤드를 없앨 수 있다.</p>
-</blockquote>
-<p>무슨 내용인지 잘 와닿지 않는다. 다음의 글을 보고 다시 생각해보자.</p>
-<p><strong>일급 함수</strong></p>
-<ul>
-<li><strong>일급 함수</strong>는 스스로 객체로써 취급되는 함수로 다른 함수를 파라미터로 전달받고 반환할 수 있는 함수를 뜻한다.</li>
-<li>코드를 통해서 확인해보자.</li>
-</ul>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">print</span><span class="params">(body: (<span class="type">Int</span>, <span class="built_in">Int</span>)</span></span> -&gt; <span class="built_in">Int</span>)&#123;</span><br><span class="line">    println(body(<span class="number">5</span>,<span class="number">5</span>))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">print(&#123;a,b -&gt; a&#125;)</span><br></pre></td></tr></table></figure>
-<ul>
-<li>위 함수는 두 개의 정수를 받아 하나의 정수값만을 출력하는 함수이다.</li>
-<li>위와 같은 선언을 하게 된다면 Java에서 아래와 같은 코드로 변화을 하여 사용할 수 있다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">(@NotNull Fuction2 body)</span></span>&#123;</span><br><span class="line">    Intrinsics.checkParameterIsNotNull(body, <span class="string">"body"</span>);</span><br><span class="line">    Object result = body.invoke(<span class="number">5</span>,<span class="number">5</span>);</span><br><span class="line">    System.out.println(result);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>위와 같이 자동으로 컨버팅이 될 수 있기 때문에 아래와 같은 유동적인 방법도 사용이 가능하다.</li>
-</ul>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">fun</span> <span class="title">printResult</span><span class="params">(body: (<span class="type">Int</span>, <span class="built_in">Int</span>)</span></span> -&gt; <span class="built_in">Int</span>)&#123;</span><br><span class="line">    println(body(<span class="number">10</span>,<span class="number">5</span>))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">sum</span><span class="params">(a: <span class="type">Int</span>, b: <span class="type">Int</span>)</span></span> = a + b</span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">subtract</span><span class="params">(a: <span class="type">Int</span>, b: <span class="type">Int</span>)</span></span> = a - b</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">(args:<span class="type">Array</span>&lt;<span class="type">String</span>&gt;)</span></span>&#123;</span><br><span class="line">    printResult(::sum)</span><br><span class="line">    printResult(::subtract)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 결과</span></span><br><span class="line"><span class="number">15</span></span><br><span class="line"><span class="number">5</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li>위의 코드처럼 sum이나 subtract를 유동적으로 붙일 수 있다.</li>
-</ul>
-<h2 id="inline">inline</h2>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">doSomething</span><span class="params">(body: ()</span></span> -&gt; <span class="built_in">Unit</span>)&#123;</span><br><span class="line">    body()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">callFunction</span><span class="params">()</span></span>&#123;</span><br><span class="line">    doSomething&#123;</span><br><span class="line">        print(<span class="string">"문자열 출력!"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>위의 코드를 자바로 표현하면 다음과 같다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doSomething</span><span class="params">(Function body)</span></span>&#123;</span><br><span class="line">    body.invoke();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">callFunction</span><span class="params">()</span></span>&#123;</span><br><span class="line">    doSomething(System.out.println(<span class="string">"문자열 출력!"</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>위의 코드와 같이 자바로 표현된다. 그리고 이 자바코드는 아래와 같이 변환된다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">callFunction</span><span class="params">()</span></span>&#123;</span><br><span class="line">    doSomething(<span class="keyword">new</span> Function()&#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">invoke</span><span class="params">()</span></span>&#123;</span><br><span class="line">            System.out.println(<span class="string">"문자열 출력!"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>문제는 위의 sum이나 subtract처럼 조합하는 함수가 많아질수록 계속 N개만큼의 function 오브젝트가 생성된다. 이럴때 사용하게 되는 것이 <code>inline</code> 키워드이다.</li>
-</ul>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">inline</span> <span class="function"><span class="keyword">fun</span> <span class="title">doSomething</span><span class="params">(body: ()</span></span> -&gt; <span class="built_in">Unit</span>)&#123;</span><br><span class="line">    body()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">callFunction</span><span class="params">()</span></span>&#123;</span><br><span class="line">    doSomething&#123;</span><br><span class="line">        println(<span class="string">"문자열 출력"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>위의 코드는 아래와 같이 변환된다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">callFunction</span><span class="params">()</span></span>&#123;</span><br><span class="line">    System.out.println(<span class="string">"문자열 출력!"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>그리고 실제로 컴파일 시 doSomething()의 body()를 호출하는 부분에 저렇게 선언된 함수가 그대로 들어가게 된다.</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// body() 부분에 그대로 들어온다.</span></span><br><span class="line">System.out.println(<span class="string">"문자열 출력!"</span>);</span><br></pre></td></tr></table></figure>
-<ul>
-<li>위와 같이 Fuction 인스턴스를 만들지 않고 callFunction 내부에 삽입되어 바로 선언되어지게 된다. 때문에 람다함수와 1급 함수가 호출된 곳에서 해당 함수를 가지게 된다.</li>
-<li>하지만 inline 함수는 주의할 점이 있는데, <code>private</code> 키워드를 사용하여 함수를 정의할 수 없다. 대신 다른 접근 한정자인 <code>internal</code>을 사용해야 한다.</li>
-</ul>
-<h2 id="noinline">noinline</h2>
-<ul>
-<li>모든 람다함수에 inline을 쓰고싶지 않을 수 있다. 이 경우 아래와 같이 해당 람다 함수에 noinline 키워드를 추가해준다.</li>
-</ul>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">inline</span> <span class="function"><span class="keyword">fun</span> <span class="title">callLambda</span><span class="params">(aLambda: ()</span></span> -&gt; <span class="built_in">Unit</span>, <span class="keyword">noinline</span> dontInlineLambda: () -&gt; <span class="built_in">Unit</span>,</span><br><span class="line">    aLambda2: () -&gt; <span class="built_in">Unit</span>)&#123;</span><br><span class="line">    <span class="comment">// 실행.</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>모든 함수를 <strong>inline</strong>을 사용하여 내부로 컨버팅 되어지길 원치않을 수 있다. 이 경우 위처럼 <strong>inline</strong>을 먼저 선언한 뒤 람다함수 중 사용하지 않을 함수에 <code>noinline</code> 키워드를 붙여준다.</li>
-</ul>
-<h2 id="참고">참고</h2>
-<ul>
-<li><a href="https://medium.com/harrythegreat/kotlin-inline-noinline-%ED%95%9C%EB%B2%88%EC%97%90-%EC%9D%B4%ED%95%B4%ED%95%98%EA%B8%B0-1d54ff34151c" target="_blank" rel="noopener">[kotlin] inline, noinline 한번에 이해하기</a></li>
-</ul>
-
                     
+                        <a
+                            href="/2019/08/04/Kotlin-inline/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [Kotlin] inline, infix"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2019/08/04/Kotlin-inline/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             

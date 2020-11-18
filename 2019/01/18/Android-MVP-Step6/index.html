@@ -6,27 +6,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="VictoryWoo">
-    <title>[안드로이드] MVP 따라하기 6 - VictoryWoo</title>
+    <title>[Android] MVP 따라하기 6 - VictoryWoo</title>
     <meta name="author" content="VictoryWoo">
     
     
         <link rel="icon" href="https://woovictory.github.io/assets/images/develop.ico">
     
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg"},"articleBody":"이번에는 Adapter에 대한 Contract 정의하는 방법을 살펴보려 한다. 여기서는 Adapter에 대한 Contract를 정의하고 이를 상속받아서 사용하는 방법을 정리해보겠다.\n\nAdapter Contract 정의란?\n이전 글에서 Activity/Fragment에서 사용할 Contract을 정의하고, 분리해보았다. 하지만 아래와 같이 처리한다.\n\n복잡해보이지만 정리하면 아래와 같다.\n\nView : Presenter에게 데이터를 요청\nPresenter : Model에게 데이터를 요청\nModel : 데이터를 Presenter로 전달\nPresenter : Model로부터 전달받은 데이터를 View에게 전달\nView : View에서 가지고 있던 Adapter에게 데이터를 추가하고, notify를 처리\n\nPresenter에서 직접 data를 전달하지 않으면?\nMVP 방식을 분리만 하면 위에서 설명한 그림과 같이 동작한다. 그럼 단점은 무엇일까??\n단점\nPresenter에서 Adapter의 데이터를 저장하고 불러오는 모든 부분에 항상 View가 함께 해야 한다.\n\nPresenter에서 Adapter에 데이터를 세팅하는 경우\n\nView에서 이를 전달받아 Adapter에 저장\n\n\n사용자의 onClick 시에 필요한 데이터를 Adapter로부터 전달받아야 하므로 필요한 함수(getItem)가 만들어져야 한다.\n\n위와 같은 상황이 아니더라도 모두 View에서 이를 대신 받아서 전달해야 한다. 그럼 복잡도를 낮추려는 목적이 사라짐과 동시에 복잡도가 높아지고 귀찮아진다.\n그래서 좀 더 좋은 방법은??\n좀 더 좋은 방법은 GDE 스티브님의 글에서 소개된 방법이다. 이 글은 아래에 참고 링크를 걸어두었으니 나중에 확인해보자!\n다음과 같이 Adapter에 대한 Contract를 다시 생성해준다.\n123456789interface AdapterContract&#123;    interface View&#123;    &#125;    interface Model&#123;    &#125;&#125;\nContract을 Adapter에 상속받아 구현\nView/Model을 구분해서 Contract을 생성하였으니, Adapter에서 이를 상속받아서 구현해준다.\n123class SampleAdapter : RecyclerView.Adapter(), AdapterContract.View, AdapterContract.Model&#123;    // 생략&#125;\nPresenter에서는?\nPresenter에서는 AdapterContract.View와 AdapterContract.Model을 구현한다.\n123456789101112class SamplePresenter implements SampleContract.Presenter&#123;    private AdapterContract.View adapterView;    private AdapterContract.Model adapterModel;    public void setAdapterView(AdapterContact.View adapterView)&#123;        this.adapterView = adapterView    &#125;    public void setAdapterModel(AdapterContract.Model adapterModel)&#123;        this.adapterModel = adapterModel    &#125;&#125;\n이렇게 구현해주면 이후에는 adapterVie/adapterModel을 통해서 직접 Adapter를 접근하게 된다. 기존에서와 같이 View를 통해서 접근할 필요성이 없어진다. 그래서 다시 그리면 아래와 같다.\n\n참고\n\nAndroid MVP 무작정 따라하기 - Adapter Contract 정의하기\nAdapter, 누구냐 넌? — Data? View?\n\n","dateCreated":"2019-01-18T12:05:53+09:00","dateModified":"2020-10-08T22:21:34+09:00","datePublished":"2019-01-18T12:05:53+09:00","description":"이번에는 Adapter에 대한 Contract 정의하는 방법을 살펴보려 한다. 여기서는 Adapter에 대한 Contract를 정의하고 이를 상속받아서 사용하는 방법을 정리해보겠다.","headline":"[안드로이드] MVP 따라하기 6","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://woovictory.github.io/2019/01/18/Android-MVP-Step6/"},"publisher":{"@type":"Organization","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg","logo":{"@type":"ImageObject","url":"Victory.jpeg"}},"url":"https://woovictory.github.io/2019/01/18/Android-MVP-Step6/","keywords":"Android, MVP, Tip"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg"},"articleBody":"이번에는 Adapter에 대한 Contract 정의하는 방법을 살펴보려 한다. 여기서는 Adapter에 대한 Contract를 정의하고 이를 상속받아서 사용하는 방법을 정리해보겠다.\n\nAdapter Contract 정의란?\n이전 글에서 Activity/Fragment에서 사용할 Contract을 정의하고, 분리해보았다. 하지만 아래와 같이 처리한다.\n\n복잡해보이지만 정리하면 아래와 같다.\n\nView : Presenter에게 데이터를 요청\nPresenter : Model에게 데이터를 요청\nModel : 데이터를 Presenter로 전달\nPresenter : Model로부터 전달받은 데이터를 View에게 전달\nView : View에서 가지고 있던 Adapter에게 데이터를 추가하고, notify를 처리\n\nPresenter에서 직접 data를 전달하지 않으면?\nMVP 방식을 분리만 하면 위에서 설명한 그림과 같이 동작한다. 그럼 단점은 무엇일까??\n단점\nPresenter에서 Adapter의 데이터를 저장하고 불러오는 모든 부분에 항상 View가 함께 해야 한다.\n\nPresenter에서 Adapter에 데이터를 세팅하는 경우\n\nView에서 이를 전달받아 Adapter에 저장\n\n\n사용자의 onClick 시에 필요한 데이터를 Adapter로부터 전달받아야 하므로 필요한 함수(getItem)가 만들어져야 한다.\n\n위와 같은 상황이 아니더라도 모두 View에서 이를 대신 받아서 전달해야 한다. 그럼 복잡도를 낮추려는 목적이 사라짐과 동시에 복잡도가 높아지고 귀찮아진다.\n그래서 좀 더 좋은 방법은??\n좀 더 좋은 방법은 GDE 스티브님의 글에서 소개된 방법이다. 이 글은 아래에 참고 링크를 걸어두었으니 나중에 확인해보자!\n다음과 같이 Adapter에 대한 Contract를 다시 생성해준다.\n123456789interface AdapterContract&#123;    interface View&#123;    &#125;    interface Model&#123;    &#125;&#125;\nContract을 Adapter에 상속받아 구현\nView/Model을 구분해서 Contract을 생성하였으니, Adapter에서 이를 상속받아서 구현해준다.\n123class SampleAdapter : RecyclerView.Adapter(), AdapterContract.View, AdapterContract.Model&#123;    // 생략&#125;\nPresenter에서는?\nPresenter에서는 AdapterContract.View와 AdapterContract.Model을 구현한다.\n123456789101112class SamplePresenter implements SampleContract.Presenter&#123;    private AdapterContract.View adapterView;    private AdapterContract.Model adapterModel;    public void setAdapterView(AdapterContact.View adapterView)&#123;        this.adapterView = adapterView    &#125;    public void setAdapterModel(AdapterContract.Model adapterModel)&#123;        this.adapterModel = adapterModel    &#125;&#125;\n이렇게 구현해주면 이후에는 adapterVie/adapterModel을 통해서 직접 Adapter를 접근하게 된다. 기존에서와 같이 View를 통해서 접근할 필요성이 없어진다. 그래서 다시 그리면 아래와 같다.\n\n참고\n\nAndroid MVP 무작정 따라하기 - Adapter Contract 정의하기\nAdapter, 누구냐 넌? — Data? View?\n\n","dateCreated":"2019-01-18T12:05:53+09:00","dateModified":"2020-11-18T16:12:43+09:00","datePublished":"2019-01-18T12:05:53+09:00","description":"이번에는 Adapter에 대한 Contract 정의하는 방법을 살펴보려 한다. 여기서는 Adapter에 대한 Contract를 정의하고 이를 상속받아서 사용하는 방법을 정리해보겠다.","headline":"[Android] MVP 따라하기 6","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://woovictory.github.io/2019/01/18/Android-MVP-Step6/"},"publisher":{"@type":"Organization","name":"VictoryWoo","sameAs":["https://github.com/WooVictory","https://www.facebook.com/WooVictory","https://www.linkedin.com/profile/","jhsw0375@gmail.com"],"image":"Victory.jpeg","logo":{"@type":"ImageObject","url":"Victory.jpeg"}},"url":"https://woovictory.github.io/2019/01/18/Android-MVP-Step6/","keywords":"Android, MVP, Tip"}</script>
     <meta name="description" content="이번에는 Adapter에 대한 Contract 정의하는 방법을 살펴보려 한다. 여기서는 Adapter에 대한 Contract를 정의하고 이를 상속받아서 사용하는 방법을 정리해보겠다.">
 <meta name="keywords" content="Android,MVP,Tip">
 <meta property="og:type" content="blog">
-<meta property="og:title" content="[안드로이드] MVP 따라하기 6">
+<meta property="og:title" content="[Android] MVP 따라하기 6">
 <meta property="og:url" content="https://woovictory.github.io/2019/01/18/Android-MVP-Step6/index.html">
 <meta property="og:site_name" content="VictoryWoo">
 <meta property="og:description" content="이번에는 Adapter에 대한 Contract 정의하는 방법을 살펴보려 한다. 여기서는 Adapter에 대한 Contract를 정의하고 이를 상속받아서 사용하는 방법을 정리해보겠다.">
 <meta property="og:locale" content="en">
 <meta property="og:image" content="https://woovictory.github.io/img/mvp_adapter.png">
 <meta property="og:image" content="https://woovictory.github.io/img/mvp_adapter_contract.png">
-<meta property="og:updated_time" content="2020-10-08T13:21:34.053Z">
+<meta property="og:updated_time" content="2020-11-18T07:12:43.399Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="[안드로이드] MVP 따라하기 6">
+<meta name="twitter:title" content="[Android] MVP 따라하기 6">
 <meta name="twitter:description" content="이번에는 Adapter에 대한 Contract 정의하는 방법을 살펴보려 한다. 여기서는 Adapter에 대한 Contract를 정의하고 이를 상속받아서 사용하는 방법을 정리해보겠다.">
 <meta name="twitter:image" content="https://woovictory.github.io/img/mvp_adapter.png">
     
@@ -280,7 +280,7 @@
         <div class="post-header main-content-wrap text-left">
     
         <h1 class="post-title">
-            [안드로이드] MVP 따라하기 6
+            [Android] MVP 따라하기 6
         </h1>
     
     
@@ -373,8 +373,8 @@ Presenter에서 Adapter의 데이터를 저장하고 불러오는 모든 부분�
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
                     href="/2019/01/18/Android-MVP-Step7/"
-                    data-tooltip="[안드로이드] MVP 따라하기 7"
-                    aria-label="PREVIOUS: [안드로이드] MVP 따라하기 7"
+                    data-tooltip="[Android] MVP 따라하기 7"
+                    aria-label="PREVIOUS: [Android] MVP 따라하기 7"
                 >
                     
                         <i class="fa fa-angle-left" aria-hidden="true"></i>
@@ -387,8 +387,8 @@ Presenter에서 Adapter의 데이터를 저장하고 불러오는 모든 부분�
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
                     href="/2019/01/17/Android-MVP-Step5/"
-                    data-tooltip="[안드로이드] MVP 따라하기 5"
-                    aria-label="NEXT: [안드로이드] MVP 따라하기 5"
+                    data-tooltip="[Android] MVP 따라하기 5"
+                    aria-label="NEXT: [Android] MVP 따라하기 5"
                 >
                     
                         <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
@@ -502,8 +502,8 @@ Presenter에서 Adapter의 데이터를 저장하고 불러오는 모든 부분�
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
                     href="/2019/01/18/Android-MVP-Step7/"
-                    data-tooltip="[안드로이드] MVP 따라하기 7"
-                    aria-label="PREVIOUS: [안드로이드] MVP 따라하기 7"
+                    data-tooltip="[Android] MVP 따라하기 7"
+                    aria-label="PREVIOUS: [Android] MVP 따라하기 7"
                 >
                     
                         <i class="fa fa-angle-left" aria-hidden="true"></i>
@@ -516,8 +516,8 @@ Presenter에서 Adapter의 데이터를 저장하고 불러오는 모든 부분�
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
                     href="/2019/01/17/Android-MVP-Step5/"
-                    data-tooltip="[안드로이드] MVP 따라하기 5"
-                    aria-label="NEXT: [안드로이드] MVP 따라하기 5"
+                    data-tooltip="[Android] MVP 따라하기 5"
+                    aria-label="NEXT: [Android] MVP 따라하기 5"
                 >
                     
                         <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>

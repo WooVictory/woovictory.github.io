@@ -267,7 +267,7 @@
     <section class="postShorten-group main-content-wrap">
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -276,9 +276,9 @@
                         <a
                             class="link-unstyled"
                             href="/2018/12/27/DataStructure-HashTable/"
-                            aria-label=": [자료구조] Hash"
+                            aria-label=": [Data Structure] Hash"
                         >
-                            [자료구조] Hash
+                            [Data Structure] Hash
                         </a>
                     
                 </h1>
@@ -299,121 +299,19 @@
 
             </div>
             
-                <div class="postShorten-content">
-                    <h2 id="hasttable">HastTable</h2>
+                <div class="postShorten-excerpt">
+                    <h2>HastTable</h2>
 <p><code>Hash(또는 HashMap)</code>은 내부적으로 배열을 사용하여 데이터를 저장하기 때문에 인덱스를 이용한 빠른 검색 속도를 갖는다. 특정한 값을 searching하는데 데이터 고유의 <strong>인덱스</strong>로 접근하게 되므로 average case에 대하여 시간 복잡도가 O(1)이 되는 것이다.<br>
 [항상 O(1)이 아니고 average case에 대해서 O(1)인 것은 collision 때문이다.]</p>
-<p>그리고 데이터의 삽입과 삭제 시 기존 데이터를 밀어내거나 다시 채우는 작업이 필요없도록 <strong>특별한 알고리즘</strong>을 이용하여 데이터와 연관된 고유한 숫자를 만들어 낸 뒤 이를 인덱스로 사용한다. 특정 데이터가 저장되는 인덱스는 그 데이터만의 고유한 위치이기 때문에 삽입 시 다른 데이터의 사이에 끼어들거나 삭제 시 다른 데이터로 채울 필요가 없으므로 추가적인 데이터의 이동이 없다.</p>
-<p><strong>'특별한 알고리즘’이라는 것을 통해서 고유한 인덱스 값을 설정하는 것이 중요한 포인트이다.</strong><br>
-앞서 언급한 특별한 알고리즘을 해시 메소드 또는 해시 함수라고 하고 이 메소드에 의해 반환되는 데이터의 <strong>고유한 숫자 값</strong>을 <strong>hashCode</strong>라고 한다.<br>
-Java에서는 Object 클래스의 _hashCode()_라는 메소드를 이용하여 모든 객체의 hashcode 값을 쉽게 구할 수 있다.</p>
-<p>hash 메소드를 구현하는 가장 간단한 방법은 <strong>나머지 연산자를 이용</strong>하는 것이다. <em>저장할 데이터의 값을 저장할 hash table의 크기로 나누고 나머지 연산 결과를 데이터의 인덱스로 사용하는 것이다.</em> 하지만 이렇게 하면 문제점이 발생한다.</p>
-<p>만약 3의 배수로 이루어진 데이터 9개를 저장한다고 가정해보자.<br>
-저장하려는 데이터 : 3,6,9,12,15,18,21,24,27<br>
-hashcode 값 계산<br>
-3 % 9 == 3<br>
-6 % 9 == 6<br>
-9 % 9 == 0<br>
-12 % 9 == 3<br>
-15 % 9 == 6<br>
-18 % 9 == 0<br>
-21 % 9 == 3<br>
-24 % 9 == 6<br>
-27 % 9 == 3</p>
-<p>계산 결과 hashcode 값이 0,3,6으로 집중되고 있다. <em>이렇게 되면 같은 index로 접근하게 되는 value가 많아져 데이터를 저장할 수 없게 되는 충돌 현상이 발생한다.</em> 이를 <strong>Collision</strong>이라고 한다.</p>
-<p>이런 충돌을 최소화 하기 위한 가장 간단한 방법은 나머지 연산의 값이 중복되지 않도록 테이블의 크기를 <code>소수(Prime number)</code>로 만드는 것이다. 위와 동일한 입장일 경우, 저장하려는 데이터의 크기가 9이므로 9보다 큰 소수인 11로 나머지 연산을 해보자.</p>
-<p>hashcode 값 계산<br>
-3 % 11 == 3<br>
-6 % 11 == 6<br>
-9 % 11 == 9<br>
-12 % 11 == 1<br>
-15 % 11 == 4<br>
-18 % 11 == 7<br>
-21 % 11 == 10<br>
-24 % 11 == 2<br>
-27 % 11 == 5</p>
-<p>중복되는 값이 깨끗하게 사라진 것을 확인할 수 있다. 하지만 이 방법으로 모든 것이 해결된 것일까?? 위의 과정에서 데이터의 성질이 달라져 다른 값이 들어올 수 있게 된 경우는 어떨까?</p>
-<p>예를 들어 26이라는 데이터를 추가적으로 저장해야 한다면 데이터의 크기는 10이 되고 10보다 큰 소수는 11로 나머지 연산자 방법을 수행해준다.</p>
-<p>26 % 11 == 4</p>
-<p>결과를 확인해보니 다시 중복이 발생하였다. 바로 <code>Collision</code>이 발생한 것이다. <em>Hash Table의 크기를 소수로 만드는 것은 충돌을 줄일 수는 있지만 원천적으로 해결해주지는 못한다.</em></p>
-<p>충돌이 많아질수록 Searching에 필요한 시간 복잡도가 O(1)에서 O(n)에 가까워진다.<br>
-<em>어설픈 해쉬 함수는 해시를 해시답게 사용하지 못하도록 한다. 좋은 해쉬 함수를 선택하는 것은 해쉬 테이블의 성능 향상에 필수적인 것이다.</em></p>
-<p>두 개의 키가 같은 인덱스로 hashing(hash 함수를 통해 계산됨을 의미)되면 같은 곳에 저장할 수 없게 된다.(Collision)<br>
-따라서 해싱된 인덱스에 이미 다른 값이 들어가 있다면 데이터를 저장할 다른 위치를 찾은 뒤에야 저장할 수 있는 것이다. 따라서 충돌 해결은 필수적이며 그 방법들에 대해 알아보고자 한다.</p>
-<p>기본적인 두 가지 방법을 알아보자. 해시 충돌을 해결하기 위한 다양한 자료가 있지만, 다음 두 가지 방법을 응용한 방법들이다.</p>
-<h2 id="open-address-방식개방-주소법">Open Address 방식(개방 주소법)</h2>
-<p>해시 충돌이 발생하면 즉 삽입하려는 해시 버킷이 이미 사용 중인 경우, <code>다른</code> 해시 버킷에 해당 자료를 삽입하는 방식이다.</p>
-<ul>
-<li>버킷(bucket)이란 바구니와 같은 개념으로 데이터를 저장하기 위한 공간이라고 생각하면 된다.</li>
-</ul>
-<p>공개 주소 방식이라고도 불리는 이 알고리즘은 Collision(충돌)이 발생하면 데이터를 저장할 장소. 즉 다른 해시 버킷을 찾아 헤맨다. 이 과정에서도 여러 방법들이 존재하는데 다음 3가지에 대해 간단하게 알아보자.</p>
-<ol>
-<li>
-<p>Linear Probing<br>
-순차적으로 탐색하며 비어있는 버킷을 찾을 때까지 계속 진행된다. Worst case의 경우 비어있는 버킷을 찾지 못하고 탐색을 시작한 위치까지 되돌아 올 수 있다.</p>
-</li>
-<li>
-<p>Quadratic probing<br>
-2차 함수를 이용해 탐색할 위치를 찾는다.</p>
-</li>
-<li>
-<p>Double hashing probing</p>
-</li>
-</ol>
-<p>하나의 해쉬 함수에서 충돌이 발생하면 2차 해쉬 함수를 이용해 새로운 주소를 할당한다. 위 두가지 방법에 비해 많은 연산량을 요구한다.</p>
-<h2 id="seperate-chaining-방식분리-연결법">Seperate Chaining 방식(분리 연결법)</h2>
-<p>참고로 Java 7에서는 Seperate Chaining 방식을 사용하여 HashMap을 구현하고 있다.</p>
-<blockquote>
-<p>Why?</p>
-</blockquote>
-<p>HashMap의 특성상 remove() 메소드가 빈번하게 일어날 수 있는데 데이터를 삭제할 때 OpenAddress 방식은 처리가 효율적이기 어렵다. 또한 저장된 Key-value 쌍의 개수가 일정 개수 이상 많아지면 보통 Seperate Chaining 방식에 비해 Open Address 방식이 느리다.</p>
-<p><strong>연결 리스트를 사용하는 방식(LinkedList)</strong></p>
-<p>각각의 버킷들을 연결리스트(Linked List)로 만들어 Collision이 발생하면 해당 버킷의 list에 추가하는 방식이다. 연결 리스트의 특징을 그대로 이어받아 삭제 또는 삽입 간단하다. 하지만 단점도 그대로 물려받아 작은 데이터들을 저장할 때 연결 리스트 자체의 오버헤드가 부담이 된다.</p>
-<p>일반적으로 Open Address 방법은 Seperate Chaining 방식보다 느리다. Open Address의 경우 해시 버킷을 채운 밀도가 높아질수록 Worst Case 발생 빈도가 더 높아지기 때문이다. 반면에 Seperate Chaining 방식의 경우 해시 충돌이 잘 발생하지 않도록 <strong>보조 해시 함수</strong>를 통해 조정할 수 있다면 Worst Case에 가까워지는 것을 줄일 수 있다.</p>
-<p><a href="https://d2.naver.com/helloworld/831311" target="_blank" rel="noopener">보조 해시 함수에 대한 글</a></p>
-<p><strong>Tree를 사용하는 방식(Red-Black-Tree)</strong></p>
-<p>기본적인 알고리즘은 Seperate Chaining 방식과 동일하며 연결 리스트 대신 트리를 사용하는 방식이다. 여기서 연결 리스트를 사용할 것인가와 트리를 사용할 것인가에 대한 기준은 <strong>하나의 버킷에 할당된 Key-Value 쌍의 개수</strong>이다.</p>
-<p>트리는 기본적으로 메모리 사용량이 많고 데이터 개수가 적을 때 Worst Case를 살펴보면 트리와 연결 리스트의 성능 상의 차이가 거의 없다. 따라서 메모리 측면을 봤을 때 데이터 개수가 적을 때는 연결 리스트를 사용한다.</p>
-<blockquote>
-<p>데이터가 적다는 것은 얼마나 적다는 것을 의미할까??</p>
-</blockquote>
-<p>앞에서 언급한 것처럼 기준은 하나의 버킷에 할당되는 Key-Value 쌍의 개수이다. 이 Key-Value 쌍의 개수가 6개, 8개를 기준으로 결정한다.</p>
-<p>오잉…? 왜 기준이 2개인가?? 이는 아래에서 설명하겠다.</p>
-<p>결론부터 말하자면 연결 리스트의 기준과 트리의 기준을 6과 8로 잡은 것은 변경하는데 <strong>소요되는 비용을 줄이기 위함</strong>이다.<br>
-한 가지 상황을 가정해보자.<br>
-해시 버킷에 6개의 Key-Value 쌍이 들어있다. 그리고 하나의 값이 추가되었다. 만약 기준이 6과 7이라면 자료 구조를 연결 리스트에서 트리로 변경해야 한다. 그러다가 바로 하나의 값이 삭제된다면 다시 트리에서 연결 리스트로 자료구조를 변경해야 한다.</p>
-<p>각각 자료구조로 넘어가는 기준이 1이라면 Switching 할 때 생기는 비용이 너무 많이 필요하게 되는 것이다. <strong>그래서 2라는 여유를 남겨두고 기준을 잡아준 것이다.</strong><br>
-따라서 데이터의 개수가 6개 -&gt; 7개로 증가했을 때는 연결 리스트의 자료구조를 취하고 있을 것이고<br>
-8개 -&gt; 7개로 감소했을 때는 트리의 자료 구조를 취하고 있을 것이다.</p>
-<ul>
-<li>참고로 Java 8을 구현하는데 사용하는 트리는 RBT이다.</li>
-</ul>
-<p><strong>해시 버킷 동적 확장(Resize)</strong></p>
-<p>해시 버킷의 개수가 적다면 메모리 사용을 아낄 수 있지만 해시 충돌로 인해 성능상 손실이 발생할 수도 있다. 그래서 HashMap은 Key-Value 쌍 데이터 개수가 <strong>일정 개수 이상</strong>이 되면 해시 버킷의 개수를 두배로 늘린다. 이렇게 늘리면 해시 충돌로 인한 성능 손실 문제를 어느 정도 해결할 수 있다.</p>
-<blockquote>
-<p>일정 개수 이상??</p>
-</blockquote>
-<p>해시 버킷 크기를 두 배로 확장하는 임계점은 현재 데이터 개수가 해시 버킷의 개수의 75%가 될 때이다. 0.75라는 숫자는 load factor로 HashMap의 생성자에서 지정할 수도 있다.</p>
-<h2 id="참고">참고</h2>
-<ul>
-<li><a href="http://asfirstalways.tistory.com/332?category=688193" target="_blank" rel="noopener">hashcode와 HashMap에 대해서</a></li>
-</ul>
-
                     
+                        <a
+                            href="/2018/12/27/DataStructure-HashTable/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [Data Structure] Hash"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2018/12/27/DataStructure-HashTable/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             
@@ -422,7 +320,7 @@ hashcode 값 계산<br>
     </article>
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -431,9 +329,9 @@ hashcode 값 계산<br>
                         <a
                             class="link-unstyled"
                             href="/2018/12/27/DataStructure-RBT/"
-                            aria-label=": [자료구조] Red-Black Tree"
+                            aria-label=": [Data Structure] Red-Black Tree"
                         >
-                            [자료구조] Red-Black Tree
+                            [Data Structure] Red-Black Tree
                         </a>
                     
                 </h1>
@@ -454,57 +352,18 @@ hashcode 값 계산<br>
 
             </div>
             
-                <div class="postShorten-content">
+                <div class="postShorten-excerpt">
                     <p>RBT(Red-Black Tree)는 BST를 기반으로 하는 트리 형식의 자료구조이다.</p>
 <p>먼저 레드 블랙 트리를 알아보기 전에 BST가 무엇인지 한번 더 알고 넘어가자.</p>
-<p>BST(Binary Search Tree)는 이진 탐색 트리이다.<br>
-효율적인 탐색을 위해 어떻게 찾을까만 고민해서는 안된다. 그보다는 효율적인 탐색을 위한 <strong>저장 방법이 무엇일까</strong>를 고민해야 한다. 이진 탐색 트리는 이진 트리의 일종이다. 단 이진 탐색 트리에는 데이터를 저장하는 규칙이 있다. 그 규칙은 특정 데이터의 위치를 찾는데 사용할 수 있다.</p>
-<ul>
-<li>규칙1 : 이진 탐색 트리의 노드에 저장된 키는 유일하다.</li>
-<li>규칙2 : 루트 노드의 키가 왼쪽 서브트리를 구성하는 어떠한 노드의 키보다 크다.</li>
-<li>규칙3 : 루트 노드의 키가 오른쪽 서브트리를 구성하는 어떠한 노드의 키보다 작다.</li>
-<li>규칙4 : 왼쪽과 오른쪽 서브트리도 이진 탐색 트리이다.</li>
-</ul>
-<h2 id="red-black-tree">Red Black Tree</h2>
-<p>결론부터 말하자면 <code>Red-Black-Tree</code>에 데이터를 저장하게 되면 Search, Insert, Delete에 O(log n)의 시간 복잡도가 소요된다. 동일한 노드의 개수일 때, depth를 최소화하여 시간 복잡도를 줄이는 것이 핵심 아이디어이다. 동일한 노드의 개수일 때, depth가 최소가 되는 경우는 tree가 Complete Binary Tree인 경우이다.</p>
-<p></p><h5 id="1-red-black-tree의-정의">1. Red-Black-Tree의 정의</h5><p></p>
-<p>Red-Black-Tree를 앞으로 RBT라고 부르도록 하겠다.<br>
-RBT는 다음의 성질을 만족하는 BST이다.</p>
-<ul>
-<li>각 노드는 <code>Red</code> 혹은 <code>Black</code>라는 색깔을 갖는다.</li>
-<li>Root node의 색깔을 Black이다.</li>
-<li>각 leaf node(단말 노드)는 black이다.</li>
-<li>어떤 노드의 색깔이 red라면 두 개의 children의 색깔은 모두 black이다.</li>
-<li>각 노드에 대해서 노드로부터 descendant leaves까지의 단순 경로는 모두 같은 수의 black node들을 포함하고 있다. 이를 해당 노드의 <code>Black-Height</code>라고 한다. [노드 x로부터 노드 x를 포함하지 않은 leaf node까지의 simple path 상에 있는 black node들의 개수]</li>
-</ul>
-<p>[무슨 말일까…? 어렵다!]</p>
-<p><strong>2. RBT의 특징</strong></p>
-<ul>
-<li>Binary Search Tree이므로 BST의 특징을 모두 갖는다.</li>
-<li>Root node부터 leaf node까지의 모든 경로 중 최소 경로와 최대 경로의 크기 비율은 2보다 크지 않다. 이러한 상태를 <strong>balanced</strong> 상태라고 한다.</li>
-<li>노드의 child가 없을 경우, child를 가리키는 포인터는 NIL 값을 저장한다. 이러한 NIL은 leaf node로 간주한다.</li>
-</ul>
-<p>RBT는 BST의 삽입, 삭제 연산 과정에서 발생할 수 있는 문제점을 해결하기 위해 만들어진 자료구조이다. 그렇다면 이를 어떻게 해결할 것인가??</p>
-<h3 id="삽입">삽입</h3>
-<p>우선 BST의 특성을 유지하면서 노드를 삽입한다. 그리고 삽입된 노드의 색깔을 <code>Red</code>로 지정한다. Red로 지정하는 이유는 Black-Height의 변경을 최소화하기 위함이다. 삽입 결과 RBT의 특성 위배시 노드의 색깔을 조정하고 Black-Height가 위배되었다면 rotation을 통해 height를 조정한다. 이러한 과정을 통해 RBT의 동일한 height에 존재하는 internal node 들의 Black-Height가 같아지게 되고 최소 경로와 최대 경로의 크기 비율이 2미만으로 유지된다.</p>
-<h3 id="삭제">삭제</h3>
-<p>삭제도 삽입과 마찬가지로 BST의 특성을 유지하면서 해당 노드를 삭제한다. 삭제될 노드의 child의 개수에 따라 rotation 방법이 달라지게 된다. 그리고 만약 지워진 노드의 색깔이 Black이라면 Black-Height가 1 감소한 경로에 black node가 1개 추가되도록 rotation을 하고 노드의 색깔을 조정한다. &lt;지워진 노드의 색깔이 red라면 Violation이 발생하지 않으므로 RBT가 그대로 유지된다.</p>
-
                     
+                        <a
+                            href="/2018/12/27/DataStructure-RBT/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [Data Structure] Red-Black Tree"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2018/12/27/DataStructure-RBT/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             
@@ -513,7 +372,7 @@ RBT는 다음의 성질을 만족하는 BST이다.</p>
     </article>
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -522,9 +381,9 @@ RBT는 다음의 성질을 만족하는 BST이다.</p>
                         <a
                             class="link-unstyled"
                             href="/2018/12/27/DataStructure-Heap/"
-                            aria-label=": [자료구조] Heap"
+                            aria-label=": [Data Structure] Heap"
                         >
-                            [자료구조] Heap
+                            [Data Structure] Heap
                         </a>
                     
                 </h1>
@@ -545,36 +404,19 @@ RBT는 다음의 성질을 만족하는 BST이다.</p>
 
             </div>
             
-                <div class="postShorten-content">
+                <div class="postShorten-excerpt">
                     <ul>
 <li><a href="#Heap">Heap</a></li>
 </ul>
-<h2 id="heap">Heap</h2>
-<p>Heap 자료구조는 일종의 Tree의 형식을 하고 있으며, Tree 중에서도 <strong>배열</strong>에 기반한 Complete Binary Tree(완전 이진 트리)이다.</p>
-<p>배열에 트리의 값을 넣어줄 때, 0번째는 건너뛰고 1부터 루트노드가 시작된다. 이는 노드의 고유번호 값과 배열의 index를 일치시켜 혼동을 줄이기 위함이다.</p>
-<p>힙에는 최소 힙(min heap)과 최대 힙(max heap) 두 종류가 있다.</p>
-<p><code>Max Heap</code>이란, 각 노드의 값이 해당 children의 값보다 크거나 같은 Complete Binary Tree(완전 이진 트리)를 말한다.[Min Heap은 그 반대.]</p>
-<p>Max Heap에서는 Root node에 있는 값이 제일 크므로 최대값을 찾는데 소요되는 연산의 시간 복잡도는 O(1)이다. 그리고 Complete Binary Tree이기 때문에 배열을 사용하여 효율적으로 관리할 수 있다.<br>
-(즉, 배열의 장점 중 하나인 Random Access가 가능하다)<br>
-Min Heap에서는 최소값을 찾는데 소요되는 연산의 시간 복잡도가 O(1)이다.</p>
-<p>Heap의 구조를 계속 유지하기 위해서는 제거된 루트 노드를 대체할 다른 노드가 필요하다. 여기서 Heap은 맨 마지막 노드를 루트 노드로 대체시킨 후, 다시 <code>Heapify</code> 과정을 거쳐 Heap 구조를 유지한다. 이런 경우 결국에는 O(log n)의 시간 복잡도로 최대값 또는 최소값에 접근할 수 있다.</p>
-<p>[Heap 구조를 유지시키는 더 자세한 내용을 추가 예정.]</p>
-
                     
+                        <a
+                            href="/2018/12/27/DataStructure-Heap/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [Data Structure] Heap"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2018/12/27/DataStructure-Heap/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             
@@ -583,7 +425,7 @@ Min Heap에서는 최소값을 찾는데 소요되는 연산의 시간 복잡도
     </article>
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -592,9 +434,9 @@ Min Heap에서는 최소값을 찾는데 소요되는 연산의 시간 복잡도
                         <a
                             class="link-unstyled"
                             href="/2018/12/27/DataStructure-Tree/"
-                            aria-label=": [자료구조] Tree 개념"
+                            aria-label=": [Data Structure] Tree 개념"
                         >
-                            [자료구조] Tree 개념
+                            [Data Structure] Tree 개념
                         </a>
                     
                 </h1>
@@ -615,89 +457,20 @@ Min Heap에서는 최소값을 찾는데 소요되는 연산의 시간 복잡도
 
             </div>
             
-                <div class="postShorten-content">
-                    <h2 id="tree">Tree</h2>
+                <div class="postShorten-excerpt">
+                    <h2>Tree</h2>
 <p>트리는 스택이나 큐와 같은 선형 구조가 아닌 <strong>비선형 자료구조</strong>이다.<br>
 트리는 계층적 관계를 표현하는 자료구조이며, 표현에 집중한다.<br>
 무엇인가를 저장하고 꺼내야 한다는 사고를 벗어나 트리라는 자료구조를 보자.</p>
-<p><strong>트리를 구성하고 있는 구성요소들</strong></p>
-<ul>
-<li>Node(노드) : 트리를 구성하고 있는 각각의 요소를 의미</li>
-<li>Edge(간선) : 트리를 구성하기 위해 노드와 노드를 연결하는 선을 의미</li>
-<li>Root Node(루트 노드) : 트리 구조에서 최상위에 있는 노드를 의미</li>
-<li>Terminal Node(=leaf Noed, 단말 노드) : 하위에 다른 노드가 연결되어 있지 않은 노드를 의미</li>
-<li>Internal Node(내부 노드, 비단말 노드) : 단말 노드를 제외한 모든 노드로 루트 노드를 포함한다.</li>
-</ul>
-<p>트리의 속성 중 가장 중요한 것은 <strong>루트 노드를 제외한 모든 노드는 단 하나의 부모 노드만을 가진다</strong>는 것이다. 이 속성 때문에 트리는 다음의 성질을 만족한다.</p>
-<ul>
-<li>임의의 노드에서 다른 노드로 가는 경로(path)는 유일하다.</li>
-<li>회로(cycle)가 존재하지 않는다.</li>
-<li>모든 노드는 서로 연결되어 있다.</li>
-<li>엣지를 하나 자르면 트리가 두 개로 분리된다.</li>
-<li>엣지의 수(E) = 노드의 수(V) - 1</li>
-</ul>
-<h3 id="binary-tree이진-트리">Binary Tree(이진 트리)</h3>
-<p>루트 노드를 중심으로 두 개의 서브 트리(큰 트리에 속하는 작은 트리)로 나누어진다. 또한 나뉘어진 두 서브 트리 모두 이진 트리어야 한다.</p>
-<p><strong>즉, 각 노드가 자식을 최대 2명을 가지는 트리를 의미한다.</strong> 재귀적인 정의라 맞는듯 하면서도 이해가 쉽지 않다. 덧붙이자면 공집합도 이진 트리로 포함시켜야 한다. 그래야 재귀적으로 조건을 확인해갔을 때, leaf Node에 다 달았을 때 정의가 만족되기 때문이다.</p>
-<p>트리에서는 각 <strong>층 별</strong>로 숫자를 매겨서 이를 트리의 Level이라고 한다. 루트 노드부터 시작하고 루트 노드의 Level은 1이다. 그리고 트리의 최고 Level을 가리켜 해당 트리의 <code>height(높이)</code>라고 한다.</p>
-<ol>
-<li>완전 이진 트리(Complete Binary Tree)</li>
-</ol>
-<p>위에서 아래로, 왼쪽에서 오른쪽으로 순서대로 차곡차곡 채워진 이진 트리를 가리켜 <strong>완전 이진 트리</strong>라고 한다.</p>
-<img src="/img/complete_binary_tree.png" width="400" height="200">
-<ol start="2">
-<li>포화 이진 트리(Full Binary Tree)</li>
-</ol>
-<p>모든 레벨에서 노드들이 꽉 채워진 이진트리를 말한다.(= 잎새 노드를 제외한 모든 노드가 자식 노드를 2개 가진다.)</p>
-<img src="/img/full_binary_tree.png" width="400" height="200">
-<p>포화 이진 트리의 노드 수가 n개라면 잎새노드의 수는 n/2를 올림한 숫자가 된다. 그리고 노드의 개수는 2^(k+1) - 1이 된다.</p>
-<ol start="3">
-<li>편향 이진 트리(skewed binary tree)</li>
-</ol>
-<p>모든 노드가 부모의 왼쪽 자식이기 때문에 왼편으로 편향되어 있거나 반대로 모든 노드가 부모의 오른쪽 자식으로 되어 오른쪽으로 편향되어 있는 이진트리를 말한다.</p>
-<img src="/img/skewed_binary_tree.png" width="400" height="200">
-<p>이러한 경우 사실 트리를 쓰는 이유가 사라지게 된다. 트리의 특정한 경우이지만 이렇게 된다면 탐색, 삽입, 삭제, 메모리 성능 등 모든 면에서 배열에 비해 좋은 것이 없다.</p>
-<h2 id="bstbinary-search-tree">BST(Binary Search Tree)</h2>
-<p>효율적인 탐색을 위한 저장 방법이 무엇일까를 고민해야 한다.<br>
-이진 탐색 트리는 이진 트리의 일종이다.<br>
-단, 이진 탐색 트리에는 <strong>데이터를 저장하는 규칙이 있다.</strong><br>
-그리고 그 규칙은 특정 데이터의 위치를 찾는데 사용할 수 있다.</p>
-<ul>
-<li>규칙1 : 이진 탐색 트리의 노드에 저장된 키는 유일하다.</li>
-<li>규칙2 : 루트 노드의 키가 왼쪽 서브트리를 구성하는 어떤 노드의 키보다 크다.</li>
-<li>규칙3 : 루트 노드의 키가 오른쪽 서브트리를 구성하는 어떤 노드의 키보다 작다.</li>
-<li>규칙4 : 왼쪽과 오른쪽 서브트리도 이진 탐색 트리이다.</li>
-</ul>
-<p>이진 탐색 트리의 탐색 연산은 O(log n)의 시간 복잡도를 갖는다.<br>
-사실 정확히 말하면 O(h)라고 표현하는 것이 맞다. 트리의 높이를 하나씩 더해갈수록 추가할 수 있는 노드의 수가 두배씩 증가하기 때문이다.<br>
-이러한 이진 탐색 트리는 <strong>편항 트리</strong>가 될 수 있다. 저장 순서에 따라 계속 한 쪽으로만 노드가 추가되는 경우가 발생할 수 있기 때문이다.<br>
-이럴 경우 성능에 영향을 미치게 되며, 탐색의 <code>Worst cost</code>가 발생하고 시간 복잡도는 O(n)이 된다.</p>
-<p>배열보다 많은 메모리를 사용하여 데이터를 저장했지만 탐색에 필요한 시간 복잡도가 같게 되는 비효율적인 상황이 발생했다.<br>
-이를 해결하기 위해 <code>Rebalancing</code> 기법이 등장했다.</p>
-<p>균형을 잡기 위한 트리 구조의 재조정을 Rebalancing이라고 한다. 이 기법을 구현한 트리에는 여러 종류가 존재하는데 그 중에서 하나는 추후에 살펴볼 Red-black-Tree 이다.</p>
-<h2 id="이진-트리의-순회-방법">이진 트리의 순회 방법</h2>
-<p>이진 트리의 순회 방법을 간단하게 정리하면 아래와 같다. 루트의 위치를 기준으로 이름을 기억하면 된다.</p>
-<ol>
-<li>전위 순회(Preorder) : 루트 -&gt; 왼쪽 서브트리 -&gt; 오른쪽 서브트리</li>
-<li>중위 순회(Inorder) : 왼쪽 서브트리 -&gt; 루트 -&gt; 오른쪽 서브트리</li>
-<li>후위 순회(Postorder) : 왼쪽 서브트리 -&gt; 오른쪽 서브트리 -&gt; 루트</li>
-</ol>
-
                     
+                        <a
+                            href="/2018/12/27/DataStructure-Tree/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [Data Structure] Tree 개념"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2018/12/27/DataStructure-Tree/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             
@@ -706,7 +479,7 @@ Min Heap에서는 최소값을 찾는데 소요되는 연산의 시간 복잡도
     </article>
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -715,9 +488,9 @@ Min Heap에서는 최소값을 찾는데 소요되는 연산의 시간 복잡도
                         <a
                             class="link-unstyled"
                             href="/2018/12/27/DataStructure-Diff-of-Array-LinkedList/"
-                            aria-label=": [자료구조] Array vs LinkedList"
+                            aria-label=": [Data Structure] Array vs LinkedList"
                         >
-                            [자료구조] Array vs LinkedList
+                            [Data Structure] Array vs LinkedList
                         </a>
                     
                 </h1>
@@ -738,129 +511,17 @@ Min Heap에서는 최소값을 찾는데 소요되는 연산의 시간 복잡도
 
             </div>
             
-                <div class="postShorten-content">
+                <div class="postShorten-excerpt">
                     <p>2019.03.20 일자 기준으로 공부했던 내용을 수정하려고 한다. 이유는 이렇게 정리해놨지만 머리에 기억으로 남지 않기 때문이다.</p>
-<p>먼저, Array VS LinkedList를 비교해보겠다.</p>
-<h2 id="array배열">Array(배열)</h2>
-<ul>
-<li>논리적 저장순서와 물리적 저장 순서가 일치한다.</li>
-<li><code>인덱스</code>로 해당 원소에 접근이 가능하다.</li>
-<li>인덱스만 알고 있다면 시간 복잡도 O(1)만에 해당 원소로 접근할 수 있다.</li>
-<li>즉, Random Access가 가능하다.</li>
-<li>배열의 원소를 삭제할 경우 삭제한 원소보다 큰 인덱스를 가진 원소들을 옮겨줘야(Shift) 하기 때문에 시간 복잡도 O(n)이 걸린다.</li>
-<li>삽입의 경우, 새로운 원소를 추가하고 모든 원소들의 인덱스를 1씩 Shift 해줘야 하므로 시간 복잡도 O(n)이 걸린다.</li>
-<li>제한적인 크기를 갖는다.</li>
-</ul>
-<p>즉, 삭제 또는 삽입 과정에서 해당 원소에 접근하여 작업을 완료한 뒤 Shift를 해줘야 하는 cost가 발생해 O(n)의 시간복잡도를 갖는다.</p>
-<h2 id="linkedlist">LinkedList</h2>
-<ul>
-<li>자료의 주소 값으로 노드를 이용해 서로 연결되어 있는 구조를 갖는다.</li>
-<li>삽입과 삭제의 경우 LinkedList가 Array보다 속도가 빠르다고 하지만 엄밀히 말하면 경우에 따라 다르다고 하는게 맞다. (아래에서 설명하겠다.)</li>
-<li>원하는 값을 찾기 위해서 최소 한 번은 리스트를 순회하여야 하므로 O(n)의 시간 복잡도를 갖는다.</li>
-<li>트리의 근간이 되는 자료구조이다.</li>
-</ul>
-<p>LinkedList 역시 삽입과 삭제를 위해서 해당 노드를 찾아가는 동안 O(n)의 시간 복잡도를 갖는다. 추가적으로 데이터를 삽입 / 삭제하기 위한 시간 복잡도까지 계산하면 결국 O(n)의 시간 복잡도를 갖는 셈이다.</p>
-<p>하지만 위에서 경우에 따라서 다르다고 하지 않았는가?<br>
-<strong>삽입의 경우</strong><br>
-일단, <strong>LinkedList</strong>는 어느 곳에 삽입하던지 O(n)의 시간복잡도를 갖는다. (만약, 중간 삽입이 없다면 즉 맨 앞과 맨 뒤에만 삽입한다면 -&gt; 시간 복잡도 : O(1))</p>
-<p><strong>삭제의 경우</strong><br>
-삭제의 경우도 삽입과 마찬가지이다. 어느 곳에 삽입하던지 O(n)의 시간 복잡도를 갖는다. (만약, 중간 삭제가 없고 맨 앞과 뒤에서만 삭제한다면 -&gt; 시간 복잡도 : O(1))</p>
-<h2 id="array-vs-linkedlist">Array VS LinkedList</h2>
-<p><strong># 데이터 접근 속도</strong></p>
-<p><strong>Array</strong>는 인덱스를 사용해 빠르게 원소에 접근할 수 있다. 따라서 Random Access를 지원한다. <code>시간 복잡도 O(1)</code>로 빠르게 찾을 수 있다.</p>
-<p><strong>LinkedList</strong>는 순차 접근 방식을 사용한다. 특정 원소에 접근하기 위해서는 처음부터 원소에 도달할 때까지 순차적으로 검색하면서 찾는다. <code>시간 복잡도 O(N)</code></p>
-<p><strong># 데이터의 삽입 속도</strong></p>
-<p>경우에 따라 다르다.<br>
-만약 배열에 공간이 많이 남아있고 맨 끝에 삽입한다면 삽입 속도 역시 O(1)에 가능하다. 하지만 이런 경우는 발생하기 힘든 케이스이다.</p>
-<p><strong>Array</strong>(배열)의 경우 데이터를 중간이나 맨 앞에 삽입할 경우 그 이후의 데이터를 한 칸씩 미뤄야 하는 추가 과정과 시간이 소요된다. 데이터가 많을 경우 비효율적이다. 그렇기 때문에 <strong>LinkedList</strong>가 필요하게 되었다.</p>
-<p><strong>LinkedList</strong>는 어느 곳에 삽입하던지 O(N)의 시간 복잡도를 갖는다.(만약, 중간 삽입이 없다면 O(1)의 시간복잡도를 갖는다.) 이유는 삽입할 위치를 찾고(O(N)) 삽입 연산을 진행하기 때문에 O(N)의 시간 복잡도를 갖는다. 그럼에도 Array보다 빠른 성능을 보인다.</p>
-<p>또한 <strong>Array</strong>의 경우 데이터 삽입 시 모든 공간이 다 차버렸다면 새로운 메모리 공간을 할당받지만 <strong>LinkedList</strong>는 그럴 필요가 없다. 추가할 때마다 동적으로 할당하는 것으로 알고 있다.</p>
-<p><strong># 데이터의 삭제 속도</strong></p>
-<p>이 부분도 경우에 따라 다르다.<br>
-<strong>Array</strong>는 데이터 삭제의 경우 그 위치의 데이터를 삭제 후, 전체적으로 Shift 해줘야 한다. (O(N))</p>
-<p><strong>LinkedList</strong>의 경우 삭제할 원소를 찾기 위해서 O(N)의 시간 복잡도를 갖고 삭제를 한다. 결구 O(N)의 시간 복잡도를 갖는다. 하지만 Array 보다 빠르게 삭제 연산을 수행한다.</p>
-<p><strong># 메모리 할당</strong></p>
-<ul>
-<li>
-<p><code>Array</code>에서 메모리는 Array가 선언되자 마자 Compile time에 할당되어 진다. 이것을 정적 메모리 할당이라고 한다.</p>
-</li>
-<li>
-<p><strong>Stack</strong> 영역에 메모리 할당이 이루어진다.</p>
-</li>
-<li>
-<p><code>LinkedList</code>에서 메모리는 새로운 node가 추가될 때 runtime에 할당되어 진다. 이것은 동적 메모리 할당이라고 한다.</p>
-</li>
-<li>
-<p><strong>Heap</strong> 영역에 메모리 할당이 이루어진다.</p>
-</li>
-</ul>
-<p><strong># size</strong></p>
-<p>Array의 size는 반드시 선언 시점에 지정되어있어야 한다.</p>
-<p>LinkedList의 size는 다양할 수 있다. node들이 추가될 때 runtime 시점에서 LinkedList의 size가 커질 수 있기 때문이다.</p>
-<h2 id="결론">결론</h2>
-<ul>
-<li>삽입과 삭제가 빈번하다면 <strong>LinkedList</strong>를 사용하는 것이 더 좋다.</li>
-<li>데이터의 접근하는 게 중요하다면 <strong>Array</strong>를 사용하는 것이 좋다.</li>
-</ul>
-<p>전반적인 내용을 보면 Array보다 LinkedList(포괄적인 범위에서 List라고 하겠다.)의 사용이 훨씬 좋아보인다. 하지만 일반적인 알고리즘 문제를 풀 때는 List보다 Array가 훨씬 빠르고 좋다. 왜냐하면 대부분의 알고리즘 문제는 메모리 공간의 범위를 파악할 수 있도록 N의 크기가 주어지기 때문이다.</p>
-<p>그래서 배열의 크기를 MAX로 초반에 잡을 수 있다면 훨씬 더 편리하고 List와는 다른 속도를 보인다. 왜냐하면 위에서 본 것처럼 List의 입력마다 메모리의 할당이 일어나고 삭제에서는 메모리 해제가 일어난다. 이런 작업은 시간복잡도에 포함되지는 않지만 <strong>시스템 콜</strong>(System Call)을 사용하는 구문은 <code>시간 소요</code>가 꽤 걸린다.</p>
-<p>사용하려는 목적에 따라서 Array와 List를 구분해서 사용하면 된다.</p>
-<p>자자, 위에서는 Array와 LinkedList의 차이점을 살펴보았다. 이번에는 ArrayList와 LinkedList의 차이를 살펴보겠다. 사실 위에서 본 것과 차이는 거의 없다고 생각한다. 이유는 ArrayList가 단지 내부적으로 Array(배열)를 사용하고 List 인터페이스를 구현했기 때문에 거의 똑같다고 생각한다. 그래도 한 번 살펴보자.</p>
-<h3 id="arraylist-vs-linkedlist">ArrayList vs LinkedList</h3>
-<p><strong>1. ArrayList</strong></p>
-<ul>
-<li>내부적으로 데이터를 배열에서 관리하며 데이터의 추가, 삭제를 위해서 임시 배열을 생성해 데이터를 복사하는 방법을 사용한다.</li>
-<li>대량의 자료를 추가/삭제 하는 경우 그만큼 데이터의 복사가 많이 일어나게 되어 성능 저하가 발생</li>
-<li>중간에 데이터를 삽입하기 위해서는 연속된 빈 공간이 존재해야 한다.</li>
-<li>반면 <strong>인덱스</strong>를 가지고 있어서 한 번에 참조가 가능해 데이터 검색에 유리하다.</li>
-</ul>
-<p><strong>ArrayList</strong>는 삽입과 삭제를 할 일이 없거나 배열의 끝에서만 하게 될 경우 유용하게 쓰일 수 있다. 원소에 대해 빠르게 접근할 수 있을 뿐만 아니라, 원소들이 메모리에 연속으로 배치해 있어 CPU 캐시 효율도 더욱 높다.</p>
-<p><strong>2.LinkedList</strong></p>
-<ul>
-<li>데이터를 저장하는 각 노드가 이전 노드와 다음 노드의 상태만 알고 있으면 된다.</li>
-<li>ArrayList와 달리 데이터의 추가, 삭제시 불필요한 데이터의 복사가 없어 데이터의 추가, 삭제시에 유리하다.</li>
-<li>반면, 데이터 검색 시에는 처음부터 노드를 순회하기 때문에 성능상 불리하다.</li>
-</ul>
-<p><strong>3. 데이터의 검색,삽입,삭제시 성능 비교</strong></p>
-<blockquote>
-<p>검색</p>
-</blockquote>
-<ul>
-<li>ArrayList : 인덱스 기반이기 때문에 O(1)의 시간복잡도를 갖는다.</li>
-<li>LinkedList : 검색 시 모든 요소를 순차적으로 탐색해야 하기 때문에 O(N)의 시간 복잡도를 갖는다.</li>
-</ul>
-<blockquote>
-<p>삽입,삭제</p>
-</blockquote>
-<ul>
-<li>ArrayList : 삽입,삭제 이후 다른 데이터를 복사해야 하기 때문에 O(N)의 시간복잡도를 갖는다.</li>
-<li>LinkedList : 이전 노드와 다음 노드를 참조하는 상태만 변경하면 되기 때문에 삽입, 삭제 시에 O(1)의 시간 복잡도를 갖는다. 하지만 이 부분도 경우에 따라 다르다.</li>
-</ul>
-<img src="/img/arraylist_linkedlist_diff.png" width="600" height="200">
-<h2 id="참고">참고</h2>
-<ul>
-<li><a href="https://medium.com/@audrl1010/linked-list-%EC%99%80-array-%EC%B0%A8%EC%9D%B4%EC%A0%90-4ba873c2e5f5" target="_blank" rel="noopener">Linked List 와 Array</a></li>
-<li><a href="https://makefortune2.tistory.com/191" target="_blank" rel="noopener">배열(Array)과 연결리스트(Linked List) 차이</a></li>
-<li><a href="https://www.holaxprogramming.com/2014/02/12/java-list-interface/" target="_blank" rel="noopener">Java의 LinkedList와 ArrayList에 대한 비교</a></li>
-<li><a href="https://manducku.tistory.com/33" target="_blank" rel="noopener">자료구조 List - ArrayList와 LinkedList 비교</a></li>
-<li><a href="https://coding-factory.tistory.com/228?category=794828" target="_blank" rel="noopener">[Algorism] ArrayList와 LinkedList란 무엇인가?</a></li>
-</ul>
-
                     
+                        <a
+                            href="/2018/12/27/DataStructure-Diff-of-Array-LinkedList/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [Data Structure] Array vs LinkedList"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2018/12/27/DataStructure-Diff-of-Array-LinkedList/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             
@@ -869,7 +530,7 @@ Min Heap에서는 최소값을 찾는데 소요되는 연산의 시간 복잡도
     </article>
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
+    <article class="postShorten postShorten--thumbnailimg-right">
         <div class="postShorten-wrap">
             
             <div class="postShorten-header">
@@ -878,9 +539,9 @@ Min Heap에서는 최소값을 찾는데 소요되는 연산의 시간 복잡도
                         <a
                             class="link-unstyled"
                             href="/2018/03/20/DataStructure-Diff-of-Stack-Queue/"
-                            aria-label=": [자료구조] Stack vs Queue"
+                            aria-label=": [Data Structure] Stack vs Queue"
                         >
-                            [자료구조] Stack vs Queue
+                            [Data Structure] Stack vs Queue
                         </a>
                     
                 </h1>
@@ -901,38 +562,22 @@ Min Heap에서는 최소값을 찾는데 소요되는 연산의 시간 복잡도
 
             </div>
             
-                <div class="postShorten-content">
-                    <h2 id="stack">Stack</h2>
+                <div class="postShorten-excerpt">
+                    <h2>Stack</h2>
 <ul>
 <li>Last In First Out(LIFO)의 구조로 나중에 들어간 원소가 가장 먼저 나오는 자료구조이다.</li>
 <li>반대로 제일 먼저 들어간 원소가 가장 늦게 나온다.</li>
 <li>함수의 콜스택에 쓰이고 문자열을 역순으로 출력할 때, 연산자 후위표기법 등에 쓰인다.</li>
 </ul>
-<h2 id="queue">Queue</h2>
-<ul>
-<li>First In First Out(FIFO)의 구조로 먼저 들어간 원소가 먼저 나오는 구조를 갖는다.</li>
-<li>컴퓨터 <strong>버퍼</strong>에서 주로 사용된다. 마구 입력이 되었으나 처리를 하지 못할 때, 버퍼를 만들어 대기 시킨다.</li>
-</ul>
-<h2 id="참고">참고</h2>
-<ul>
-<li><a href="https://jeong-pro.tistory.com/97" target="_blank" rel="noopener">스택, 큐, 덱(Stack, queue, deque)의 특징에 대해 설명해보세요!</a></li>
-</ul>
-
                     
+                        <a
+                            href="/2018/03/20/DataStructure-Diff-of-Stack-Queue/"
+                            class="postShorten-excerpt_link link"
+                            aria-label=": [Data Structure] Stack vs Queue"
+                        >
+                            Continue reading
+                        </a>
                         
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2018/03/20/DataStructure-Diff-of-Stack-Queue/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                Comment and share
-                            </a>
-                        </p>
                     
                 </div>
             
